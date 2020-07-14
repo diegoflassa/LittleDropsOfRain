@@ -1,0 +1,1 @@
+Contains all classes related to data management such as ContentProvider and SQLiteHelper.
