@@ -56,7 +56,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val notification: RemoteMessage.Notification? = remoteMessage.notification
         if (notification != null) {
-            createNotification(notification)
+            notification.body?.let { sendNotification(it) }
         }
 
         // TODO(developer): Handle FCM messages here.

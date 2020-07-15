@@ -51,13 +51,13 @@ class GalleryFragment : Fragment(), MyRecyclerViewAdapter.ItemClickListener {
         recyclerView.adapter = adapter
         val dividerItemDecoration = DividerItemDecoration(
             recyclerView.context,
-            (recyclerView.layoutManager as LinearLayoutManager).getOrientation()
+            (recyclerView.layoutManager as LinearLayoutManager).orientation
         )
         recyclerView.addItemDecoration(dividerItemDecoration)
         return root
     }
 
     override fun onItemClick(view: View?, position: Int) {
-        Toast.makeText(context, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show()
     }
 }
