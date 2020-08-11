@@ -32,6 +32,7 @@ import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentAdminBinding
+import io.github.diegoflassa.littledropsofrain.databinding.FragmentHomeBinding
 import io.github.diegoflassa.littledropsofrain.ui.SettingsActivity
 import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.android.synthetic.main.nav_header_main.view.*
@@ -51,7 +52,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
     }
 
     private lateinit var mAuth : FirebaseAuth
-    private lateinit var navView: NavigationView
     private lateinit var fab: FloatingActionButton
     private lateinit var binding : ActivityMainBinding
     private val ioScope = CoroutineScope(Dispatchers.IO)
@@ -62,13 +62,13 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        binding = ActivityMainBinding.inflate(layoutInflater)
         fab = findViewById(R.id.fab)
         fab.isEnabled= false
         fab.setOnClickListener {
             startActivity(Intent(this, SendMessageActivity::class.java))
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        navView = findViewById(R.id.nav_view)
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawerLayout.addDrawerListener(toggle)
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
                 Log.i(TAG, "onDrawerOpened")
                 val currentUser = mAuth.currentUser
                 if( currentUser != null ){
-                    Picasso.get().load(currentUser.photoUrl).placeholder(R.drawable.image_placeholder).into(navView.imageView)
+                    Picasso.get().load(currentUser.photoUrl).placeholder(R.drawable.image_placeholder).into( binding.navView.imageView)
                 }
             }
         })
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
         appBarConfiguration = AppBarConfiguration(setOf(
             R.id.nav_iluria, R.id.nav_home, R.id.nav_gallery, R.id.nav_admin), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        binding.navView.setupWithNavController(navController)
 
         mAuth = FirebaseAuth.getInstance()
         if(mAuth.currentUser==null){
