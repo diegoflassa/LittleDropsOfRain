@@ -21,7 +21,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import io.github.diegoflassa.littledropsofrain.activities.SendMessageActivity
@@ -31,8 +30,6 @@ import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
-import io.github.diegoflassa.littledropsofrain.databinding.FragmentAdminBinding
-import io.github.diegoflassa.littledropsofrain.databinding.FragmentHomeBinding
 import io.github.diegoflassa.littledropsofrain.ui.SettingsActivity
 import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.android.synthetic.main.nav_header_main.view.*
@@ -58,11 +55,11 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
         fab = findViewById(R.id.fab)
         fab.isEnabled= false
         fab.setOnClickListener {

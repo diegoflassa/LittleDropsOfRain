@@ -77,9 +77,9 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int> {
 
         productViewModel = ViewModelProvider(this, ProductViewModelFactory(requireActivity().application)).get(
             ProductViewModel::class.java)
-        productViewModel.allProducts.observe(viewLifecycleOwner, Observer { words ->
-            // Update the cached copy of the words in the adapter.
-            words?.let { adapter.setWords(it) }
+        productViewModel.allProducts.observe(viewLifecycleOwner, Observer { products ->
+            // Update the cached copy of the products in the adapter.
+            products?.let { adapter.setProducts(it) }
         })
 
         Log.i(TAG,"$TAG activity successfully created>")

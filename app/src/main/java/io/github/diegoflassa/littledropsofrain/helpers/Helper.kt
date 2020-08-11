@@ -10,7 +10,7 @@ class Helper {
         fun getDateTime(date: String): String? {
             return try {
                 val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
-                sdf.parse(date).toString()
+                sdf.parse(date)?.toString()
             } catch (e: Exception) {
                 e.toString()
             }

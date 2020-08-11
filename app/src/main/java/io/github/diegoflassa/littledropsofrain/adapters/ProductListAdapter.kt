@@ -48,8 +48,8 @@ class ProductListAdapter internal constructor(
         holder.productStoreLink.text = HtmlCompat.fromHtml(link, HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 
-    internal fun setWords(words: List<Product?>) {
-        this.products = words as List<Product>
+    internal fun setProducts(products: List<Product>) {
+        this.products = products
         notifyDataSetChanged()
     }
 
