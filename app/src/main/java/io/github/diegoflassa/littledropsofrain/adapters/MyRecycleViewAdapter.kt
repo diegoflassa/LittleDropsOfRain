@@ -14,8 +14,8 @@ class MyRecyclerViewAdapter internal constructor(
     data: List<String>
 ) :
     RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>() {
-    private val mData: List<String>
-    private val mInflater: LayoutInflater
+    private val mData: List<String> = data
+    private val mInflater: LayoutInflater = LayoutInflater.from(context)
     private var mClickListener: ItemClickListener? = null
 
     // inflates the row layout from xml when needed
@@ -44,13 +44,12 @@ class MyRecyclerViewAdapter internal constructor(
     // stores and recycles views as they are scrolled off screen
     inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
-        var myTextView: TextView
+        var myTextView: TextView = itemView.findViewById(R.id.tvAnimalName)
         override fun onClick(view: View?) {
             if (mClickListener != null) mClickListener!!.onItemClick(view, adapterPosition)
         }
 
         init {
-            myTextView = itemView.findViewById(R.id.tvAnimalName)
             itemView.setOnClickListener(this)
         }
     }
@@ -70,9 +69,4 @@ class MyRecyclerViewAdapter internal constructor(
         fun onItemClick(view: View?, position: Int)
     }
 
-    // data is passed into the constructor
-    init {
-        mInflater = LayoutInflater.from(context)
-        mData = data
-    }
 }

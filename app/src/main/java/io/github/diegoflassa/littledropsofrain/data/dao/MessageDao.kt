@@ -1,0 +1,174 @@
+package io.github.diegoflassa.littledropsofrain.data.dao
+
+import android.util.Log
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
+import io.github.diegoflassa.littledropsofrain.data.entities.Message
+import java.util.*
+
+
+//DFL - Classe de Acesso a dados. Aqui vc coloca as FORMAS DE ACESSAR os dados
+object MessageDao {
+
+    private const val TAG: String = "MessageDao"
+    private const val COLLECTION_PATH: String = "messages"
+    private val db : FirebaseFirestore = Firebase.firestore
+
+    fun loadAll(listener: DataChangeListener<List<Message>>){
+        val messages: MutableList<Message> = ArrayList()
+        db.collection(COLLECTION_PATH).orderBy("creationDate", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                var message : Message
+                for (document in result) {
+                    message = document.toObject(Message::class.java)
+                    message.uid = document.id
+                    //message = Message(document.data)
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    messages.add(message)
+                }
+                listener.onDataLoaded(messages)
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
+    }
+
+    fun loadAllByIds(messageIds: List<String>, listener: DataChangeListener<List<Message>>) {
+        val messages: MutableList<Message> = ArrayList()
+        val itemsRef = db.collection(COLLECTION_PATH)
+        itemsRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                var message: Message
+                for (document in task.result) {
+                    if (messageIds.contains(document.id)) {
+                        message = document.toObject(Message::class.java)
+                        message.uid = document.id
+                        messages.add(message)
+                    }
+                }
+                listener.onDataLoaded(messages)
+            } else {
+                Log.d(TAG, "Error deleting documents: ", task.exception)
+            }
+        }
+    }
+
+    fun findByTitle(title: String, listener: DataChangeListener<List<Message>>) {
+        val messages: MutableList<Message> = ArrayList()
+        db.collection(COLLECTION_PATH)
+            .get()
+            .addOnSuccessListener { result ->
+                var message : Message
+                for (document in result) {
+                    if(document.get("title").toString().contains(title)) {
+                        message = document.toObject(Message::class.java)
+                        message.uid = document.id
+                        Log.d(TAG, "${document.id} => ${document.data}")
+                        messages.add(message)
+                    }
+                }
+                listener.onDataLoaded(messages)
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting messages: ", exception)
+            }
+    }
+
+    fun findByCreationDate(date: Date, listener: DataChangeListener<List<Message>>) {
+        val creationDate= Timestamp(date)
+        val messages: MutableList<Message> = ArrayList()
+        db.collection(COLLECTION_PATH).whereEqualTo("creationDate", creationDate)
+            .get()
+            .addOnSuccessListener { result ->
+                var message : Message
+                for (document in result) {
+                    message = document.toObject(Message::class.java)
+                    message.uid = document.id
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    messages.add(message)
+                }
+                listener.onDataLoaded(messages)
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting messages: ", exception)
+            }
+    }
+
+    fun findByRead(read: Boolean, listener: DataChangeListener<List<Message>>) {
+        val messages: MutableList<Message> = ArrayList()
+        db.collection(COLLECTION_PATH).whereEqualTo("read", read.toString())
+            .get()
+            .addOnSuccessListener { result ->
+                var message : Message
+                for (document in result) {
+                    message = document.toObject(Message::class.java)
+                    message.uid = document.id
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    messages.add(message)
+                }
+                listener.onDataLoaded(messages)
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting messages: ", exception)
+            }
+    }
+
+    fun insertAll(vararg messages: Message,
+                  onSuccessListener: DataChangeListener<DocumentReference>? = null,
+                  onFailureListener: DataChangeListener<Exception>? = null) {
+        for( message in messages) {
+            insert(message, onSuccessListener, onFailureListener)
+        }
+    }
+
+    fun insert(
+        message: Message,
+        onSuccessListener: DataChangeListener<DocumentReference>? = null,
+        onFailureListener: DataChangeListener<Exception>? = null
+    ) {
+        val data = message.toMap()
+        db.collection(COLLECTION_PATH).add(data).addOnSuccessListener{
+            onSuccessListener?.onDataLoaded(it)
+        }.addOnFailureListener{
+            onFailureListener?.onDataLoaded(it)
+        }
+    }
+
+    fun update(
+        message: Message,
+        onSuccessListener: DataChangeListener<Void?>? = null,
+        onFailureListener: DataChangeListener<Exception>? = null
+    ) {
+        val data = message.toMap()
+        db.collection(COLLECTION_PATH).document(message.uid.toString()).set(data).addOnSuccessListener{
+            onSuccessListener?.onDataLoaded(it)
+        }.addOnFailureListener{
+            onFailureListener?.onDataLoaded(it)
+        }
+    }
+
+    fun delete(message: Message?) {
+        db.collection(COLLECTION_PATH).document(message?.uid.toString()).delete().addOnSuccessListener {
+            Log.i(TAG, "Message ${message?.uid} deleted successfully")
+        }
+    }
+
+    fun deleteAll() {
+        val itemsRef = db.collection(COLLECTION_PATH)
+        itemsRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                for (document in task.result) {
+                    itemsRef.document(document.id).delete()
+                }
+            } else {
+                Log.d(TAG, "Error deleting documents: ", task.exception)
+            }
+        }
+    }
+}

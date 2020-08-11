@@ -1,13 +1,19 @@
 package io.github.diegoflassa.littledropsofrain.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.preference.PreferenceFragmentCompat
 import io.github.diegoflassa.littledropsofrain.R
 
+
 class SettingsActivity : AppCompatActivity() {
+
+    companion object {
+        private const val TAG = "SettingsActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,6 +23,7 @@ class SettingsActivity : AppCompatActivity() {
             .replace(R.id.settings, SettingsFragment())
             .commit()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        Log.d(TAG, "Settings activity created!")
     }
 
     class SettingsFragment : PreferenceFragmentCompat() {

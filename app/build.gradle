@@ -3,30 +3,42 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 apply plugin: 'kotlin-kapt'
+apply from: "$projectDir/buildsystem/config.gradle"
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.1'
-
+    compileSdkVersion config.compileSdkVersion
     defaultConfig {
-        applicationId "io.github.diegoflassa.littledropsofrain"
-        minSdkVersion 22
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        applicationId config.applicationId
+        minSdkVersion config.minimumSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode buildVersionCode()
+        versionName buildVersionName()
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-
+    sourceSets {
+        //DFL - Não use por enquanto
+    }
     buildTypes {
+        debug {
+
+        }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    signingConfigs {
+        // DFL - Configuração para assinar o APK. Nao se preocupe agora
+        release {
+            storeFile file(KEYSTORE_FILE)
+            storePassword KEYSTORE_PASSWORD
+            keyAlias KEYSTORE_ALIAS
+            keyPassword KEYSTORE_PASSWORD
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -34,87 +46,112 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
+ext.version = [
+    work_version : "2.4.0",
+]
+def version = ext.version
+apply from: "$projectDir/buildSystem/library.gradle"
+//def library = ext.library
 dependencies {
-    implementation 'com.google.android.gms:play-services-auth:18.0.0'
-    def work_version = "2.3.4"
+
     // Kotlin + coroutines
-    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation "androidx.work:work-runtime-ktx:$version.work_version"
     // optional - RxJava2 support
-    implementation "androidx.work:work-rxjava2:$work_version"
+    implementation "androidx.work:work-rxjava2:$version.work_version"
     // optional - GCMNetworkManager support
-    implementation "androidx.work:work-gcm:$work_version"
+    implementation "androidx.work:work-gcm:$version.work_version"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'com.google.firebase:firebase-auth:19.3.2'
-    implementation 'androidx.room:room-runtime:2.2.5'
-    implementation 'com.google.firebase:firebase-database:19.3.1'
-    // Add the Firebase SDK for Google Analytics
-    implementation 'com.google.firebase:firebase-analytics:17.4.4'
 
-    // Add the SDK for Firebase Cloud Messaging
-    implementation 'com.google.firebase:firebase-messaging:20.2.3'
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation "androidx.recyclerview:recyclerview-selection:1.1.0-rc01"
-
-    implementation 'com.google.gms:google-services:4.3.3'
-    implementation 'com.google.firebase:firebase-analytics:17.4.4'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.navigation:navigation-fragment:2.3.0'
-    implementation 'androidx.navigation:navigation-ui:2.3.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
-    implementation 'androidx.preference:preference:1.1.1'
-    implementation 'com.google.firebase:firebase-inappmessaging-display:19.1.0'
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-    implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
-    implementation 'androidx.core:core:1.3.0'
-
-    // Firebase Authentication (Kotlin)
-    implementation 'com.google.firebase:firebase-auth-ktx:19.3.2'
+    // OkHTTP
+    implementation 'com.squareup.okhttp3:okhttp:4.8.0'
 
     // Firebase UI
-    // Used in FirebaseUIActivity.
+    implementation 'com.firebaseui:firebase-ui-database:4.0.0'
     implementation 'com.firebaseui:firebase-ui-auth:6.2.1'
 
-    kapt 'androidx.databinding:databinding-compiler-common:4.0.0'
-
-    // Google Sign In SDK (only required for Google Sign In)
-    implementation 'com.google.android.gms:play-services-auth:18.0.0'
-
-    implementation 'com.google.android.material:material:1.1.0'
-
-    implementation 'com.google.firebase:firebase-iid:20.2.3'
-    implementation 'com.google.firebase:firebase-messaging:20.2.3'
-
+    //com.google.firebase
+    implementation 'com.google.firebase:firebase-auth:19.3.2'
+    implementation 'com.google.firebase:firebase-database:19.3.1'
+    // Add the Firebase SDK for Google Analytics
     // For an optimal experience using FCM, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.
     implementation 'com.google.firebase:firebase-analytics:17.4.4'
+    // Firebase Authentication (Kotlin)
+    implementation 'com.google.firebase:firebase-auth-ktx:19.3.2'
+    implementation 'com.google.firebase:firebase-iid:20.2.4'
+    // Add the SDK for Firebase Cloud Messaging
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    implementation 'com.google.firebase:firebase-inappmessaging-display:19.1.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:21.5.0'
 
-    // Facebook Android SDK (only required for Facebook Login)
-    // Used in FacebookLoginActivity.
-    implementation 'com.facebook.android:facebook-login:[5,6)'
+    // Parcel
+    implementation 'org.parceler:parceler-api:1.1.12'
+    kapt 'org.parceler:parceler:1.1.12'
+
+    // GSon
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    // Leak Canary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+
+    // Google Sign In SDK (only required for Google Sign In)
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation 'com.google.android.material:material:1.2.0'
+    implementation 'com.google.gms:google-services:4.3.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview-selection:1.1.0-rc01'
+    implementation 'androidx.room:room-runtime:2.2.5'
+    implementation 'androidx.room:room-ktx:2.2.5'
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
+    implementation 'androidx.activity:activity-ktx:1.2.0-alpha07'
+    implementation 'androidx.fragment:fragment-ktx:1.3.0-alpha07'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-alpha06'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha06'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.browser:browser:1.2.0'
 
-    implementation 'androidx.work:work-runtime:2.3.4'
+    // Icons
+    implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
+    implementation 'com.joanzapata.iconify:android-iconify-entypo:2.2.2' // (v3,2015)
+    implementation 'com.joanzapata.iconify:android-iconify-typicons:2.2.2' // (v2.0.7)
+    implementation 'com.joanzapata.iconify:android-iconify-material:2.2.2' // (v2.0.0)
+    implementation 'com.joanzapata.iconify:android-iconify-material-community:2.2.2' // (v1.4.57)
+    implementation 'com.joanzapata.iconify:android-iconify-meteocons:2.2.2' // (latest)
+    implementation 'com.joanzapata.iconify:android-iconify-weathericons:2.2.2' // (v2.0)
+    implementation 'com.joanzapata.iconify:android-iconify-simplelineicons:2.2.2' // (v1.0.0)
+    implementation 'com.joanzapata.iconify:android-iconify-ionicons:2.2.2' // (v2.0.1)
+
+    implementation 'com.google.firebase:firebase-firestore:21.5.0'
+    kapt 'androidx.databinding:databinding-compiler-common:4.0.1'
+    kapt 'androidx.room:room-compiler:2.2.5'
 
     // Testing dependencies
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72"
+
+    testImplementation 'junit:junit:4.13'
 }

@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_home">
 
     <fragment
@@ -18,14 +17,14 @@
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="io.github.diegoflassa.littledropsofrain.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_admin"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.admin.AdminFragment"
+        android:label="@string/menu_admin"
+        tools:layout="@layout/fragment_admin" />
 
     <fragment
-        android:id="@+id/nav_illuria"
-        android:name="io.github.diegoflassa.littledropsofrain.ui.illuria.IlluriaFragment"
-        android:label="@string/menu_illuria"
-        tools:layout="@layout/fragment_illuria" />
+        android:id="@+id/nav_iluria"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.iluria.IluriaFragment"
+        android:label="@string/menu_iluria"
+        tools:layout="@layout/fragment_iluria" />
 </navigation>

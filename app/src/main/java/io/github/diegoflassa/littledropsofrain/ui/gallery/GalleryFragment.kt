@@ -4,34 +4,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.adapters.MyRecyclerViewAdapter
+import io.github.diegoflassa.littledropsofrain.databinding.FragmentGalleryBinding
 
 
 class GalleryFragment : Fragment(), MyRecyclerViewAdapter.ItemClickListener {
 
     private lateinit var galleryViewModel: GalleryViewModel
     private lateinit var adapter: MyRecyclerViewAdapter
+    private lateinit var binding :FragmentGalleryBinding
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentGalleryBinding.inflate(inflater, container, false)
         galleryViewModel =
             ViewModelProvider.NewInstanceFactory().create(GalleryViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_gallery, container, false)
-        val textView: TextView = root.findViewById(R.id.text_gallery)
         galleryViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+            binding.textGallery.text = it
         })
         // set up the RecyclerView
 
@@ -44,17 +42,16 @@ class GalleryFragment : Fragment(), MyRecyclerViewAdapter.ItemClickListener {
         animalNames.add("Goat")
 
         // set up the RecyclerView
-        val recyclerView: RecyclerView = root.findViewById(R.id.my_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.myRecyclerView.layoutManager = LinearLayoutManager(context)
         adapter = MyRecyclerViewAdapter(context, animalNames)
         adapter.setClickListener(this)
-        recyclerView.adapter = adapter
+        binding.myRecyclerView.adapter = adapter
         val dividerItemDecoration = DividerItemDecoration(
-            recyclerView.context,
-            (recyclerView.layoutManager as LinearLayoutManager).orientation
+            binding.myRecyclerView.context,
+            (binding.myRecyclerView.layoutManager as LinearLayoutManager).orientation
         )
-        recyclerView.addItemDecoration(dividerItemDecoration)
-        return root
+        binding.myRecyclerView.addItemDecoration(dividerItemDecoration)
+        return binding.root
     }
 
     override fun onItemClick(view: View?, position: Int) {

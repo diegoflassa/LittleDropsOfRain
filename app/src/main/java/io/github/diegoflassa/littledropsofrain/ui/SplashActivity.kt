@@ -3,9 +3,9 @@ package io.github.diegoflassa.littledropsofrain.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.firebase.ui.auth.data.model.User
 import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.R
-import io.github.diegoflassa.littledropsofrain.data.entities.User
 
 class SplashActivity: AppCompatActivity() {
 
@@ -23,8 +23,6 @@ class SplashActivity: AppCompatActivity() {
         // Example routing
         when (user) {
             null -> startActivity(Intent(this, MainActivity::class.java))
-            //else -> MainActivity.start(this)
         }
     }
-
 }

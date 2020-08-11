@@ -20,18 +20,8 @@ import io.github.diegoflassa.littledropsofrain.workers.MyWorker
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
-    private val MESSAGE_NOTIFICATION_ID = System.currentTimeMillis()
-
-    // Creates notification based on title and body received
-    private fun createNotification(notification: RemoteMessage.Notification) {
-        val context = baseContext
-        val mBuilder =
-            NotificationCompat.Builder(context, getString(R.string.notification_channel_myfirebasemessagingservice))
-                .setSmallIcon(R.mipmap.ic_launcher).setContentTitle(notification.title)
-                .setContentText(notification.body)
-        val mNotificationManager = context
-            .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        mNotificationManager.notify(MESSAGE_NOTIFICATION_ID.toInt(), mBuilder.build())
+    companion object {
+        private const val TAG = "MyFirebaseMsgService"
     }
 
     /**
@@ -67,7 +57,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         data.isNotEmpty().let {
             Log.d(TAG, "Message data payload: $data")
 
-            if (/* Check if data needs to be processed by long running job */ true) {
+            if (data.isNotEmpty()) {
                 // For long-running tasks (10 seconds or more) use WorkManager.
                 scheduleJob()
             } else {
@@ -164,10 +154,5 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
-    }
-
-    companion object {
-
-        private const val TAG = "MyFirebaseMsgService"
     }
 }

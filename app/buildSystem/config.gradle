@@ -1,0 +1,27 @@
+//https://medium.com/@rey5137/how-i-organize-android-project-structure-5ed9b849dc30
+
+ext.config = [
+    applicationId     : "io.github.diegoflassa.littledropsofrain",
+    versionMajor      : 1,
+    versionMinor      : 0,
+    versionPatch      : 0,
+    versionClassifier : "",
+    minimumSdkVersion : 23,
+    compileSdkVersion : 30,
+    targetSdkVersion  : 30,
+    buildToolsVersion : "28.0.2"
+]
+
+def config = ext.config
+
+ext.buildVersionCode = {
+    return config.minimumSdkVersion * 10000000 + config.versionMajor * 10000 + config.versionMinor * 100 + config.versionPatch
+}
+
+ext.buildVersionName = {
+    String versionName = ""//ext.buildVersionNameWithoutClassifier();
+    if (config.versionClassifier != null && !config.versionClassifier.isEmpty()) {
+        versionName = versionName + "-" + config.versionClassifier
+    }
+    return versionName
+}
