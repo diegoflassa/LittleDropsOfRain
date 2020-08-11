@@ -24,6 +24,9 @@ import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 
 class AdminFragment : Fragment(), DataChangeListener<List<Message>> {
@@ -67,13 +70,15 @@ class AdminFragment : Fragment(), DataChangeListener<List<Message>> {
 
 
     private fun fetchProducts(){
-        // Coroutine has mutliple dispatchers suited for different type of workloads
-        ioScope.launch {
-            val productParser = ProductParser()
-            val products = productParser.parse()
-            AppDatabase.getDatabase(requireContext(),ioScope).productDao().deleteAll()
-            AppDatabase.getDatabase(requireContext(),ioScope).productDao().insertAll(*products.toTypedArray<Product?>())
-        }
+        val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+        scheduler.scheduleAtFixedRate({
+            ioScope.launch {
+                val productParser = ProductParser()
+                val products = productParser.parse()
+                AppDatabase.getDatabase(requireContext(),ioScope).productDao().deleteAll()
+                AppDatabase.getDatabase(requireContext(),ioScope).productDao().insertAll(*products.toTypedArray<Product?>())
+            }
+        }, 0, 12, TimeUnit.HOURS)
     }
 
     override fun onDataLoaded(item: List<Message>) {

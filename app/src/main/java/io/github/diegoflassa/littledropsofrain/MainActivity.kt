@@ -26,10 +26,21 @@ import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import io.github.diegoflassa.littledropsofrain.activities.SendMessageActivity
 import io.github.diegoflassa.littledropsofrain.auth.AuthActivityResultContract
+import io.github.diegoflassa.littledropsofrain.data.AppDatabase
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
+import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.data.entities.User
+import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
+import io.github.diegoflassa.littledropsofrain.databinding.FragmentAdminBinding
 import io.github.diegoflassa.littledropsofrain.ui.SettingsActivity
+import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
@@ -41,6 +52,9 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
 
     private lateinit var mAuth : FirebaseAuth
     private lateinit var navView: NavigationView
+    private lateinit var fab: FloatingActionButton
+    private lateinit var binding : ActivityMainBinding
+    private val ioScope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +62,8 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
+        fab = findViewById(R.id.fab)
+        fab.isEnabled= false
         fab.setOnClickListener {
             startActivity(Intent(this, SendMessageActivity::class.java))
         }
@@ -97,11 +112,34 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
         }else{
             Toast.makeText(applicationContext, getString(R.string.user_logged_as, mAuth.currentUser!!.displayName), Toast.LENGTH_LONG).show()
         }
+
+        fetchProducts()
+    }
+
+    private fun fetchProducts(){
+        val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+        scheduler.scheduleAtFixedRate({
+            ioScope.launch {
+                val productParser = ProductParser()
+                val products = productParser.parse()
+                AppDatabase.getDatabase(applicationContext, ioScope).productDao().deleteAll()
+                AppDatabase.getDatabase(applicationContext, ioScope).productDao().insertAll(*products.toTypedArray<Product?>())
+            }
+        }, 0, 12, TimeUnit.HOURS)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
+        val menuItem = menu.findItem(R.id.action_authentication)
+        val mAuth = FirebaseAuth.getInstance()
+        if(mAuth.currentUser==null){
+            menuItem.title = getString(R.string.login)
+            fab.isEnabled= false
+        }else{
+            menuItem.title = getString(R.string.logout)
+            fab.isEnabled= true
+        }
         return true
     }
 
@@ -117,12 +155,24 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 ret= true
             }
+            R.id.action_authentication -> {
+                fab.isEnabled= false
+                if(mAuth.currentUser==null){
+                    // Create and launch sign-in intent
+                    registerForActivityResult(AuthActivityResultContract(), this ).launch(null)
+                    item.title = getString(R.string.logout)
+                }else{
+                    logout()
+                    item.title = getString(R.string.login)
+                }
+            }
         }
         return ret
     }
 
     override fun onActivityResult(result : Int) {
         if (result == Activity.RESULT_OK) {
+            fab.isEnabled= true
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
             if(user!=null) {
