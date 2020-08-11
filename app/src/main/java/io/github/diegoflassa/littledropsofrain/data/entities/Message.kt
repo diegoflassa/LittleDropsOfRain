@@ -7,7 +7,7 @@ import org.parceler.Parcel
 import java.util.*
 
 
-@Parcel
+@Parcel(Parcel.Serialization.BEAN)
 data class Message (
     var uid : String? = null,
     var emailSender : String? = FirebaseAuth.getInstance().currentUser!!.email,

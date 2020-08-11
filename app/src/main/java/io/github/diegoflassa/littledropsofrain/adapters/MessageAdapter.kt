@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.activities.SendMessageActivity
 import io.github.diegoflassa.littledropsofrain.data.dao.MessageDao
@@ -72,7 +72,7 @@ internal class MessageAdapter(
         private val creationDate: TextView = itemView.findViewById(R.id.msg_creation_date)
         private val sender: TextView = itemView.findViewById(R.id.msg_sender)
         private val edtMessage: EditText = itemView.findViewById(R.id.msg_message)
-        val read: Switch = itemView.findViewById(R.id.msg_read)
+        val read: SwitchMaterial = itemView.findViewById(R.id.msg_read)
         val reply: Button = itemView.findViewById(R.id.btn_reply)
         val delete: Button = itemView.findViewById(R.id.btn_delete)
 

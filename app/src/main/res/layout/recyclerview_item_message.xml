@@ -48,7 +48,7 @@
             android:hint="@string/message_to_send"
             android:autofillHints="" />
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/msg_read"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
