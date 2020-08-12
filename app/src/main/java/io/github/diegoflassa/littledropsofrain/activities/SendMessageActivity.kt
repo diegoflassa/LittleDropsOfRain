@@ -17,7 +17,6 @@ import io.github.diegoflassa.littledropsofrain.databinding.ActivitySendMesssageB
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.parceler.Parcels
 
 
 class SendMessageActivity : AppCompatActivity(), DataChangeListener<List<User>> {
@@ -56,26 +55,31 @@ class SendMessageActivity : AppCompatActivity(), DataChangeListener<List<User>> 
     @Suppress("UNCHECKED_CAST")
     private fun setSelectedMessageSender(){
         if(intent.action == ACTION_EDIT) {
-            val message = Parcels.unwrap<Message>(intent.extras?.getParcelable(KEY_MESSAGE))
-            val user = User()
-            var name= message.sender
-            if(message.sender?.contains(":")!!) {
-                name = message.sender?.split(":")?.get(1)
+            val message = intent.extras?.getParcelable<Message>(KEY_MESSAGE)
+            if(message!=null) {
+                val user = User()
+                var name = message.sender
+                if (message.sender?.contains(":")!!) {
+                    name = message.sender?.split(":")?.get(1)
+                }
+                user.name = name?.trim()
+                user.uid = message.senderId
+                user.email = message.emailSender
+                val dataAdapter: ArrayAdapter<User> =
+                    binding.spnrContacts.adapter as ArrayAdapter<User>
+                val spinnerPosition: Int = dataAdapter.getPosition(user)
+                binding.spnrContacts.setSelection(spinnerPosition)
             }
-            user.name = name?.trim()
-            user.uid = message.senderId
-            user.email = message.emailSender
-            val dataAdapter: ArrayAdapter<User> = binding.spnrContacts.adapter as ArrayAdapter<User>
-            val spinnerPosition: Int = dataAdapter.getPosition(user)
-            binding.spnrContacts.setSelection(spinnerPosition)
         }
     }
 
     private fun handleIntent() {
         if(intent.action == ACTION_EDIT) {
-            val message = Parcels.unwrap<Message>(intent.extras?.getParcelable(KEY_MESSAGE))
-            binding.edttxtTitle.setText(message.title)
-            binding.mltxtMessage.setText(message.message)
+            val message = intent.extras?.getParcelable<Message>(KEY_MESSAGE)
+            if(message!=null) {
+                binding.edttxtTitle.setText(message.title)
+                binding.mltxtMessage.setText(message.message)
+            }
         }
     }
 

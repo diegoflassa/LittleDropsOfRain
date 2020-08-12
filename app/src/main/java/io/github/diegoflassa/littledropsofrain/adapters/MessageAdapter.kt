@@ -18,7 +18,6 @@ import io.github.diegoflassa.littledropsofrain.helpers.Helper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.parceler.Parcels
 
 
 internal class MessageAdapter(
@@ -44,7 +43,7 @@ internal class MessageAdapter(
     ) {
         holder.bind(data[position], context)
         holder.reply.setOnClickListener {
-            context.startActivity(Intent(SendMessageActivity.ACTION_EDIT).putExtra(SendMessageActivity.KEY_MESSAGE, Parcels.wrap(data[position])))
+            context.startActivity(Intent(SendMessageActivity.ACTION_EDIT).putExtra(SendMessageActivity.KEY_MESSAGE, data[position]))
         }
         holder.delete.setOnClickListener {
             ioScope.launch {
@@ -93,7 +92,7 @@ internal class MessageAdapter(
             message.sender = sender.text.toString()
             message.title = title.text.toString()
             message.message = edtMessage.text.toString()
-            context.startActivity(Intent(SendMessageActivity.ACTION_EDIT).putExtra(SendMessageActivity.KEY_MESSAGE, Parcels.wrap(message)))
+            context.startActivity(Intent(SendMessageActivity.ACTION_EDIT).putExtra(SendMessageActivity.KEY_MESSAGE, message))
         }
     }
 

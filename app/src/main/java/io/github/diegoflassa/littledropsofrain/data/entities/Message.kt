@@ -1,13 +1,14 @@
 package io.github.diegoflassa.littledropsofrain.data.entities
 
+import android.os.Parcelable
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ServerTimestamp
-import org.parceler.Parcel
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 
-@Parcel(Parcel.Serialization.BEAN)
+@Parcelize
 data class Message (
     var uid : String? = null,
     var emailSender : String? = FirebaseAuth.getInstance().currentUser!!.email,
@@ -18,7 +19,7 @@ data class Message (
     @ServerTimestamp
     var creationDate : Timestamp? = Timestamp.now(),
     var read : Boolean? = false
-){
+) : Parcelable {
 
     companion object{
         private const val UID= "uid"

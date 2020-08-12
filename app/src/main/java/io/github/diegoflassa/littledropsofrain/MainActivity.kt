@@ -89,6 +89,8 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
                 val currentUser = mAuth.currentUser
                 if( currentUser != null ){
                     Picasso.get().load(currentUser.photoUrl).placeholder(R.drawable.image_placeholder).into( binding.navView.imageView)
+                }else{
+                    Picasso.get().load(R.mipmap.ic_launcher_round).placeholder(R.drawable.image_placeholder).into( binding.navView.imageView)
                 }
             }
         })

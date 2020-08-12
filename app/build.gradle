@@ -93,10 +93,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-inappmessaging-display:19.1.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:21.5.0'
 
-    // Parcel
-    implementation 'org.parceler:parceler-api:1.1.12'
-    kapt 'org.parceler:parceler:1.1.12'
-
     // GSon
     implementation 'com.google.code.gson:gson:2.8.6'
 
