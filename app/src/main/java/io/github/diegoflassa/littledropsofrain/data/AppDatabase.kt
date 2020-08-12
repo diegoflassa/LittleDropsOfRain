@@ -5,16 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
-import io.github.diegoflassa.littledropsofrain.data.entities.Product
+import io.github.diegoflassa.littledropsofrain.data.dao.IluriaProductDao
+import io.github.diegoflassa.littledropsofrain.data.entities.IluriaProduct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 //DFL - Represents your APPs database.
-@Database(entities = [Product::class], version = 1, exportSchema = false)
+@Database(entities = [IluriaProduct::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun productDao(): ProductDao
+    abstract fun iluriaProductDao(): IluriaProductDao
 
     private class AppDatabaseCallback(
         private val scope: CoroutineScope

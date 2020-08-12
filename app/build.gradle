@@ -92,6 +92,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:20.2.4'
     implementation 'com.google.firebase:firebase-inappmessaging-display:19.1.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:21.5.0'
+    implementation "com.google.firebase:firebase-storage-ktx:19.1.1"
+    implementation 'com.firebaseui:firebase-ui-storage:6.2.1'
 
     // GSon
     implementation 'com.google.code.gson:gson:2.8.6'

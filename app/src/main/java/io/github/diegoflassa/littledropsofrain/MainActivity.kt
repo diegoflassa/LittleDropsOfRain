@@ -27,7 +27,7 @@ import io.github.diegoflassa.littledropsofrain.activities.SendMessageActivity
 import io.github.diegoflassa.littledropsofrain.auth.AuthActivityResultContract
 import io.github.diegoflassa.littledropsofrain.data.AppDatabase
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
-import io.github.diegoflassa.littledropsofrain.data.entities.Product
+import io.github.diegoflassa.littledropsofrain.data.entities.IluriaProduct
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
 import io.github.diegoflassa.littledropsofrain.ui.SettingsActivity
@@ -121,8 +121,8 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
             ioScope.launch {
                 val productParser = ProductParser()
                 val products = productParser.parse()
-                AppDatabase.getDatabase(applicationContext, ioScope).productDao().deleteAll()
-                AppDatabase.getDatabase(applicationContext, ioScope).productDao().insertAll(*products.toTypedArray<Product?>())
+                AppDatabase.getDatabase(applicationContext, ioScope).iluriaProductDao().deleteAll()
+                AppDatabase.getDatabase(applicationContext, ioScope).iluriaProductDao().insertAll(*products.toTypedArray<IluriaProduct?>())
             }
         }, 0, 12, TimeUnit.HOURS)
     }

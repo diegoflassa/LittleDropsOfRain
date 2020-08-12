@@ -14,12 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.activities.SendMessageActivity
 import io.github.diegoflassa.littledropsofrain.adapters.MessageAdapter
-import io.github.diegoflassa.littledropsofrain.data.AppDatabase
 import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
 import io.github.diegoflassa.littledropsofrain.data.dao.MessageDao
+import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Message
-import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentAdminBinding
+import io.github.diegoflassa.littledropsofrain.helpers.Helper
 import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -75,8 +75,7 @@ class AdminFragment : Fragment(), DataChangeListener<List<Message>> {
             ioScope.launch {
                 val productParser = ProductParser()
                 val products = productParser.parse()
-                AppDatabase.getDatabase(requireContext(),ioScope).productDao().deleteAll()
-                AppDatabase.getDatabase(requireContext(),ioScope).productDao().insertAll(*products.toTypedArray<Product?>())
+                ProductDao.insertAll(Helper.iluriaProductToProduct(products))
             }
         }, 0, 12, TimeUnit.HOURS)
     }

@@ -1,7 +1,7 @@
 package io.github.diegoflassa.littledropsofrain.data
 
 import androidx.lifecycle.LiveData
-import io.github.diegoflassa.littledropsofrain.data.entities.Product
+import io.github.diegoflassa.littledropsofrain.data.entities.IluriaProduct
 
 /**
  * This class observes the current FirebaseUser. If there is no logged in user, FirebaseUser will
@@ -11,7 +11,7 @@ import io.github.diegoflassa.littledropsofrain.data.entities.Product
  * example when the device is rotated). This may be undesirable or expensive depending on the
  * nature of your LiveData object.
  */
-class ProductLiveData : LiveData<Product?>() {
+class IluriaProductLiveData : LiveData<IluriaProduct?>() {
 
     // When this object has an active observer, start observing the FirebaseAuth state to see if
     // there is currently a logged in user.

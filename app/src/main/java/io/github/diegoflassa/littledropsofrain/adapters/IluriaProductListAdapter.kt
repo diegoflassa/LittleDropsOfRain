@@ -11,15 +11,15 @@ import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import io.github.diegoflassa.littledropsofrain.R
-import io.github.diegoflassa.littledropsofrain.data.entities.Product
+import io.github.diegoflassa.littledropsofrain.data.entities.IluriaProduct
 
 
-class ProductListAdapter internal constructor(
+class IluriaProductListAdapter internal constructor(
     private var context: Context
-) : RecyclerView.Adapter<ProductListAdapter.ProductViewHolder>() {
+) : RecyclerView.Adapter<IluriaProductListAdapter.ProductViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var products = emptyList<Product>() // Cached copy of products
+    private var products = emptyList<IluriaProduct>() // Cached copy of products
 
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val productImage: ImageView = itemView.findViewById(R.id.picture)
@@ -48,8 +48,8 @@ class ProductListAdapter internal constructor(
         holder.productStoreLink.text = HtmlCompat.fromHtml(link, HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 
-    internal fun setProducts(products: List<Product>) {
-        this.products = products
+    internal fun setProducts(iluriaProducts: List<IluriaProduct>) {
+        this.products = iluriaProducts
         notifyDataSetChanged()
     }
 

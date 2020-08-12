@@ -4,7 +4,7 @@ import android.util.Log
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 import com.squareup.okhttp.Response
-import io.github.diegoflassa.littledropsofrain.data.entities.Product
+import io.github.diegoflassa.littledropsofrain.data.entities.IluriaProduct
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.ByteArrayInputStream
@@ -29,8 +29,8 @@ class ProductParser {
     }
 
     var text: String? = null
-    private var products = ArrayList<Product>()
-    fun parse(): List<Product>{
+    private var products = ArrayList<IluriaProduct>()
+    fun parse(): List<IluriaProduct>{
         val client = OkHttpClient()
         val request: Request = Request.Builder()
                 .url("http://admin.iluria.com/xml/buscape/?user=7C36F628368750071BFF6FF1FCBF56F5E5BB31A40DD39535")
@@ -40,7 +40,7 @@ class ProductParser {
         return parse(inputStream)
     }
 
-    private fun parse(`is`: InputStream?): List<Product> {
+    private fun parse(`is`: InputStream?): List<IluriaProduct> {
         try {
             val factory =
                 XmlPullParserFactory.newInstance()
@@ -48,7 +48,7 @@ class ProductParser {
             val parser = factory.newPullParser()
             parser.setInput(`is`, null)
             var eventType = parser.eventType
-            var product = Product("0")
+            var product = IluriaProduct("0")
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 val tagname = parser.name
                 when (eventType) {
@@ -58,7 +58,7 @@ class ProductParser {
                             Log.i(TAG, "Starting parsing products")
                         }else if (tagname == PRODUTO){
                             Log.i(TAG, "Created new product object")
-                            product= Product("0")
+                            product= IluriaProduct("0")
                         }
                     XmlPullParser.END_TAG ->
                         when (tagname) {
