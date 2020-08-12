@@ -26,10 +26,12 @@ import com.squareup.picasso.Picasso
 import io.github.diegoflassa.littledropsofrain.activities.SendMessageActivity
 import io.github.diegoflassa.littledropsofrain.auth.AuthActivityResultContract
 import io.github.diegoflassa.littledropsofrain.data.AppDatabase
+import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.data.entities.IluriaProduct
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
+import io.github.diegoflassa.littledropsofrain.helpers.Helper
 import io.github.diegoflassa.littledropsofrain.ui.SettingsActivity
 import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.android.synthetic.main.nav_header_main.view.*
@@ -121,8 +123,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
             ioScope.launch {
                 val productParser = ProductParser()
                 val products = productParser.parse()
-                AppDatabase.getDatabase(applicationContext, ioScope).iluriaProductDao().deleteAll()
-                AppDatabase.getDatabase(applicationContext, ioScope).iluriaProductDao().insertAll(*products.toTypedArray<IluriaProduct?>())
+                ProductDao.insertAll(Helper.iluriaProductToProduct(products))
             }
         }, 0, 12, TimeUnit.HOURS)
     }

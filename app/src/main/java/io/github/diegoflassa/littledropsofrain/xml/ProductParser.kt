@@ -10,6 +10,7 @@ import org.xmlpull.v1.XmlPullParserFactory
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
+import java.util.concurrent.TimeUnit
 
 
 class ProductParser {
@@ -32,6 +33,8 @@ class ProductParser {
     private var products = ArrayList<IluriaProduct>()
     fun parse(): List<IluriaProduct>{
         val client = OkHttpClient()
+        client.setConnectTimeout(30, TimeUnit.SECONDS); // connect timeout
+        client.setReadTimeout(30, TimeUnit.SECONDS);    // socket timeout
         val request: Request = Request.Builder()
                 .url("http://admin.iluria.com/xml/buscape/?user=7C36F628368750071BFF6FF1FCBF56F5E5BB31A40DD39535")
                 .build()

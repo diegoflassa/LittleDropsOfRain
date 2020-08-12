@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 //DFL - Classe de Acesso a dados. Aqui vc coloca as FORMAS DE ACESSAR os dados
@@ -127,6 +128,8 @@ object ProductDao {
         ioScope.launch {
             val reference = storage.reference.child("$COLLECTION_PATH/${product.uid}.jpg")
             val client = OkHttpClient()
+            client.setConnectTimeout(30, TimeUnit.SECONDS); // connect timeout
+            client.setReadTimeout(30, TimeUnit.SECONDS);    // socket timeout
             val request = Request.Builder().url(product.imageUrl!!).build()
             val response = client.newCall(request).execute()
             reference.putStream(response.body().byteStream()).continueWithTask { task ->
