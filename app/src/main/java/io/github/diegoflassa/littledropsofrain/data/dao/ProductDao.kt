@@ -138,7 +138,6 @@ object ProductDao {
                     reference.downloadUrl
                 }.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val downloadUri = task.result
                         product.imageUrl = task.result.toString()
                         update(product, false)
                         Log.d(TAG, "[insertBlob]Image successfully saved for product ${product.uid} at ${product.imageUrl}")

@@ -131,16 +131,12 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         onFilter()
 
         // Start listening for Firestore updates
-        if (mAdapter != null) {
-            mAdapter.startListening()
-        }
+        mAdapter.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-        if (mAdapter != null) {
-            mAdapter.stopListening()
-        }
+        mAdapter.stopListening()
     }
 
     private fun logout(){
@@ -163,7 +159,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         mAdapter = object : ProductAdapter(mQuery, this, this.requireContext()) {
             override fun onDataChanged() {
                 // Show/hide content if the query returns empty.
-                if (itemCount === 0) {
+                if (itemCount == 0) {
                     //binding.recyclerview.visibility = View.GONE
                     //mEmptyView.setVisibility(View.VISIBLE)
                 } else {
