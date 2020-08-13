@@ -9,7 +9,7 @@ ext.config = [
     minimumSdkVersion : 23,
     compileSdkVersion : 30,
     targetSdkVersion  : 30,
-    buildToolsVersion : "28.0.2"
+    buildToolsVersion : "30.0.2"
 ]
 
 def config = ext.config

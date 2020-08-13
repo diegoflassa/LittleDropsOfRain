@@ -55,4 +55,7 @@
     <string name="send">Send</string>
     <string name="title">Title</string>
     <string name="logout">Logout</string>
+    <string name="no_messages_found">No messages found</string>
+    <string name="no_products_found">No products found</string>
+    <string name="rv_categories">Categories : %1$s</string>
 </resources>

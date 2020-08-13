@@ -48,15 +48,10 @@ abstract class FirestoreAdapter<VH : RecyclerView.ViewHolder?>(private var mQuer
         // Dispatch the event
         for (change in value?.documentChanges!!) {
             // Snapshot of the changed document
-            val snapshot: DocumentSnapshot = change.document
             when (change.type) {
                 DocumentChange.Type.ADDED -> onDocumentAdded(change)
-                DocumentChange.Type.MODIFIED -> onDocumentModified(
-                    change
-                )
-                DocumentChange.Type.REMOVED -> onDocumentRemoved(
-                    change
-                )
+                DocumentChange.Type.MODIFIED -> onDocumentModified(change)
+                DocumentChange.Type.REMOVED -> onDocumentRemoved(change)
             }
         }
         onDataChanged()

@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.navigation.findNavController
@@ -25,22 +26,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import io.github.diegoflassa.littledropsofrain.activities.SendMessageActivity
 import io.github.diegoflassa.littledropsofrain.auth.AuthActivityResultContract
-import io.github.diegoflassa.littledropsofrain.data.AppDatabase
-import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
-import io.github.diegoflassa.littledropsofrain.data.entities.IluriaProduct
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
-import io.github.diegoflassa.littledropsofrain.helpers.Helper
 import io.github.diegoflassa.littledropsofrain.ui.SettingsActivity
-import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.android.synthetic.main.nav_header_main.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
@@ -53,7 +43,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
     private lateinit var mAuth : FirebaseAuth
     private lateinit var fab: FloatingActionButton
     private lateinit var binding : ActivityMainBinding
-    private val ioScope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +81,8 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
                 if( currentUser != null ){
                     Picasso.get().load(currentUser.photoUrl).placeholder(R.drawable.image_placeholder).into( binding.navView.imageView)
                 }else{
-                    Picasso.get().load(R.mipmap.ic_launcher_round).placeholder(R.drawable.image_placeholder).into( binding.navView.imageView)
+                    //Picasso.get().load(R.mipmap.ic_launcher_round).placeholder(R.drawable.image_placeholder).into( binding.navView.imageView)
+                    binding.navView.imageView.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.mipmap.ic_launcher_round))
                 }
             }
         })
@@ -113,19 +103,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int> {
         }else{
             Toast.makeText(applicationContext, getString(R.string.user_logged_as, mAuth.currentUser!!.displayName), Toast.LENGTH_LONG).show()
         }
-
-        fetchProducts()
-    }
-
-    private fun fetchProducts(){
-        val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
-        scheduler.scheduleAtFixedRate({
-            ioScope.launch {
-                val productParser = ProductParser()
-                val products = productParser.parse()
-                ProductDao.insertAll(Helper.iluriaProductToProduct(products))
-            }
-        }, 0, 12, TimeUnit.HOURS)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

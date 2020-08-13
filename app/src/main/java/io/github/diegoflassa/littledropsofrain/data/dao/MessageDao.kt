@@ -5,10 +5,9 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
 import io.github.diegoflassa.littledropsofrain.data.entities.Message
+import java.lang.ref.WeakReference
 import java.util.*
 
 
@@ -16,14 +15,14 @@ import java.util.*
 object MessageDao {
 
     private const val TAG: String = "MessageDao"
-    private const val COLLECTION_PATH: String = "messages"
-    private val db : FirebaseFirestore = Firebase.firestore
+    const val COLLECTION_PATH: String = "messages"
+    private val db : WeakReference<FirebaseFirestore> = WeakReference(FirebaseFirestore.getInstance())
 
     fun loadAll(listener: DataChangeListener<List<Message>>){
         val messages: MutableList<Message> = ArrayList()
-        db.collection(COLLECTION_PATH).orderBy("creationDate", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { result ->
+       db.get()?.collection(COLLECTION_PATH)?.orderBy("creationDate", Query.Direction.DESCENDING)
+           ?.get()
+           ?.addOnSuccessListener { result ->
                 var message : Message
                 for (document in result) {
                     message = document.toObject(Message::class.java)
@@ -34,15 +33,15 @@ object MessageDao {
                 }
                 listener.onDataLoaded(messages)
             }
-            .addOnFailureListener { exception ->
+           ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting documents: ", exception)
             }
     }
 
     fun loadAllByIds(messageIds: List<String>, listener: DataChangeListener<List<Message>>) {
         val messages: MutableList<Message> = ArrayList()
-        val itemsRef = db.collection(COLLECTION_PATH)
-        itemsRef.get().addOnCompleteListener { task ->
+        val itemsRef =db.get()?.collection(COLLECTION_PATH)
+        itemsRef?.get()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 var message: Message
                 for (document in task.result) {
@@ -61,9 +60,9 @@ object MessageDao {
 
     fun findByTitle(title: String, listener: DataChangeListener<List<Message>>) {
         val messages: MutableList<Message> = ArrayList()
-        db.collection(COLLECTION_PATH)
-            .get()
-            .addOnSuccessListener { result ->
+       db.get()?.collection(COLLECTION_PATH)
+           ?.get()
+           ?.addOnSuccessListener { result ->
                 var message : Message
                 for (document in result) {
                     if(document.get("title").toString().contains(title)) {
@@ -75,7 +74,7 @@ object MessageDao {
                 }
                 listener.onDataLoaded(messages)
             }
-            .addOnFailureListener { exception ->
+           ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting messages: ", exception)
             }
     }
@@ -83,9 +82,9 @@ object MessageDao {
     fun findByCreationDate(date: Date, listener: DataChangeListener<List<Message>>) {
         val creationDate= Timestamp(date)
         val messages: MutableList<Message> = ArrayList()
-        db.collection(COLLECTION_PATH).whereEqualTo("creationDate", creationDate)
-            .get()
-            .addOnSuccessListener { result ->
+       db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("creationDate", creationDate)
+           ?.get()
+           ?.addOnSuccessListener { result ->
                 var message : Message
                 for (document in result) {
                     message = document.toObject(Message::class.java)
@@ -95,16 +94,16 @@ object MessageDao {
                 }
                 listener.onDataLoaded(messages)
             }
-            .addOnFailureListener { exception ->
+           ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting messages: ", exception)
             }
     }
 
     fun findByRead(read: Boolean, listener: DataChangeListener<List<Message>>) {
         val messages: MutableList<Message> = ArrayList()
-        db.collection(COLLECTION_PATH).whereEqualTo("read", read.toString())
-            .get()
-            .addOnSuccessListener { result ->
+       db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("read", read.toString())
+           ?.get()
+           ?.addOnSuccessListener { result ->
                 var message : Message
                 for (document in result) {
                     message = document.toObject(Message::class.java)
@@ -114,7 +113,7 @@ object MessageDao {
                 }
                 listener.onDataLoaded(messages)
             }
-            .addOnFailureListener { exception ->
+           ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting messages: ", exception)
             }
     }
@@ -133,9 +132,9 @@ object MessageDao {
         onFailureListener: DataChangeListener<Exception>? = null
     ) {
         val data = message.toMap()
-        db.collection(COLLECTION_PATH).add(data).addOnSuccessListener{
+       db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener{
             onSuccessListener?.onDataLoaded(it)
-        }.addOnFailureListener{
+        }?.addOnFailureListener{
             onFailureListener?.onDataLoaded(it)
         }
     }
@@ -146,22 +145,22 @@ object MessageDao {
         onFailureListener: DataChangeListener<Exception>? = null
     ) {
         val data = message.toMap()
-        db.collection(COLLECTION_PATH).document(message.uid.toString()).set(data).addOnSuccessListener{
+       db.get()?.collection(COLLECTION_PATH)?.document(message.uid.toString())?.set(data)?.addOnSuccessListener{
             onSuccessListener?.onDataLoaded(it)
-        }.addOnFailureListener{
+        }?.addOnFailureListener{
             onFailureListener?.onDataLoaded(it)
         }
     }
 
     fun delete(message: Message?) {
-        db.collection(COLLECTION_PATH).document(message?.uid.toString()).delete().addOnSuccessListener {
+       db.get()?.collection(COLLECTION_PATH)?.document(message?.uid.toString())?.delete()?.addOnSuccessListener {
             Log.i(TAG, "Message ${message?.uid} deleted successfully")
         }
     }
 
     fun deleteAll() {
-        val itemsRef = db.collection(COLLECTION_PATH)
-        itemsRef.get().addOnCompleteListener { task ->
+        val itemsRef =db.get()?.collection(COLLECTION_PATH)
+        itemsRef?.get()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 for (document in task.result) {
                     itemsRef.document(document.id).delete()

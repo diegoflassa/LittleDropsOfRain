@@ -9,15 +9,6 @@ class Helper {
 
     companion object{
 
-        fun getDateTime(date: String): String? {
-            return try {
-                val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
-                sdf.parse(date)?.toString()
-            } catch (e: Exception) {
-                e.toString()
-            }
-        }
-
         fun getDateTime(date: Date): String? {
             return try {
                 val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
@@ -34,10 +25,13 @@ class Helper {
             return productsList
         }
 
-        fun iluriaProductToProduct(iluriaProduct : IluriaProduct) : Product{
-            val product : Product= Product()
+        private fun iluriaProductToProduct(iluriaProduct : IluriaProduct) : Product{
+            val product = Product()
             product.title= iluriaProduct.title
-            product.category= iluriaProduct.category
+            val st = StringTokenizer(iluriaProduct.category, ">")
+            while(st.hasMoreTokens()){
+                product.categories.add(st.nextToken().trim())
+            }
             product.idIluria= iluriaProduct.idProduct
             product.price= iluriaProduct.price
             product.disponibility= iluriaProduct.disponibility

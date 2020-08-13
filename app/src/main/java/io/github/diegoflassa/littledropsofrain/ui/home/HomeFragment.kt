@@ -10,11 +10,9 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -24,15 +22,10 @@ import com.google.firebase.firestore.Query
 import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.adapters.ProductAdapter
-import io.github.diegoflassa.littledropsofrain.auth.AuthActivityResultContract
-import io.github.diegoflassa.littledropsofrain.data.dao.MessageDao
 import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
-import io.github.diegoflassa.littledropsofrain.data.entities.Message
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentHomeBinding
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment(), ActivityResultCallback<Int>,
@@ -57,26 +50,8 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         homeViewModel =
             ViewModelProvider.NewInstanceFactory().create(HomeViewModel::class.java)
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            binding.textHome.text = it
-        })
-        binding.authButton.setOnClickListener {
-            val mAuth = FirebaseAuth.getInstance()
-            if(mAuth.currentUser==null){
-                // Create and launch sign-in intent
-                registerForActivityResult(AuthActivityResultContract(), this ).launch(null)
-            }else{
-                GlobalScope.launch {
-                    val message = Message()
-                    message.title = "Title title title"
-                    message.message = "Aaaaaaaa"
-                    MessageDao.insert( message )
-                }
-                logout()
-                Toast.makeText(requireContext(), getString(R.string.user_logged_as, mAuth.currentUser!!.displayName), Toast.LENGTH_LONG).show()
-            }
-        }
 
+        showLoadingScreen()
         initFirestore()
         initRecyclerView()
 
@@ -84,10 +59,19 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         return binding.root
     }
 
-    fun onFilter() {
+    private fun showLoadingScreen(){
+        binding.homeProgress.visibility = View.VISIBLE
+        binding.homeProgress.z = 5F
+    }
+
+    fun hideLoadingScreen(){
+        binding.homeProgress.visibility = View.GONE
+    }
+
+    private fun onFilter() {
         // Construct query basic query
         var query: Query = mFirestore.collection(ProductDao.COLLECTION_PATH)
-
+        query.orderBy("idIluria", Query.Direction.ASCENDING)
         /*
         // Category (equality filter)
         if (filters.hasCategory()) {
@@ -139,10 +123,6 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         mAdapter.stopListening()
     }
 
-    private fun logout(){
-        AuthUI.getInstance().signOut(requireContext())
-    }
-
     private fun initFirestore() {
         mFirestore = FirebaseFirestore.getInstance()
     }
@@ -156,15 +136,16 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = object : ProductAdapter(mQuery, this@HomeFragment, requireContext()) {
+        mAdapter = object : ProductAdapter(mQuery, this@HomeFragment) {
             override fun onDataChanged() {
+                hideLoadingScreen()
                 // Show/hide content if the query returns empty.
                 if (itemCount == 0) {
-                    //binding.recyclerview.visibility = View.GONE
-                    //mEmptyView.setVisibility(View.VISIBLE)
+                    binding.recyclerview.visibility = View.GONE
+                    binding.homeViewEmpty.visibility = View.VISIBLE
                 } else {
-                    //binding.recyclerview.visibility = View.VISIBLE
-                    //mEmptyView.setVisibility(View.GONE)
+                    binding.recyclerview.visibility = View.VISIBLE
+                    binding.homeViewEmpty.visibility = View.GONE
                 }
             }
 
@@ -204,8 +185,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     }
 
     override fun onProductSelected(product: DocumentSnapshot?) {
-        TODO("Not yet implemented")
+        Log.d(TAG, "Product ${product?.id} clicked")
     }
-
 
 }

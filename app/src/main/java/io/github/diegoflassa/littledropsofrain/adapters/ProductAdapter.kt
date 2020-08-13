@@ -1,6 +1,5 @@
 package io.github.diegoflassa.littledropsofrain.adapters
 
-import android.content.Context
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.squareup.picasso.Picasso
@@ -18,7 +19,7 @@ import io.github.diegoflassa.littledropsofrain.data.entities.Product
 /**
  * RecyclerView adapter for a list of Restaurants.
  */
-open class ProductAdapter(query: Query?, private val mListener: OnProductSelectedListener, private var context: Context)
+open class ProductAdapter(query: Query?, private val mListener: OnProductSelectedListener)
     : FirestoreAdapter<ProductAdapter.ViewHolder?>(query) {
 
     interface OnProductSelectedListener {
@@ -45,6 +46,8 @@ open class ProductAdapter(query: Query?, private val mListener: OnProductSelecte
         RecyclerView.ViewHolder(itemView) {
         private val productImage: ImageView = itemView.findViewById(R.id.picture)
         private val productTitle: TextView = itemView.findViewById(R.id.title)
+        private val productCategories: TextView = itemView.findViewById(R.id.categories)
+        private val productChipCategories: ChipGroup = itemView.findViewById(R.id.chipCategories)
         private val productDisponibility: TextView = itemView.findViewById(R.id.disponibility)
         private val productPrice: TextView = itemView.findViewById(R.id.price)
         private val productStoreLink: TextView = itemView.findViewById(R.id.store_link)
@@ -60,9 +63,17 @@ open class ProductAdapter(query: Query?, private val mListener: OnProductSelecte
             // Load image
             Picasso.get().load(product?.imageUrl).placeholder(R.drawable.image_placeholder).into(productImage)
             productTitle.text = resources.getString(R.string.rv_title, product?.title)
-            productDisponibility.text = resources.getString(R.string.rv_disponibility,  product?.disponibility)
-            productPrice.text = resources.getString(R.string.rv_price, product?.price)
-            val link = resources.getString(R.string.rv_store_link, product?.linkProduct)
+            productCategories.text = resources.getString(R.string.rv_categories, product?.categories)
+            var chipCategory : Chip
+            for(category in product?.categories!!) {
+                chipCategory = Chip(itemView.context)
+                chipCategory.isCheckable= true
+                chipCategory.text = category
+                productChipCategories.addView(chipCategory)
+            }
+            productDisponibility.text = resources.getString(R.string.rv_disponibility,  product.disponibility)
+            productPrice.text = resources.getString(R.string.rv_price, product.price)
+            val link = resources.getString(R.string.rv_store_link, product.linkProduct)
             productStoreLink.text = HtmlCompat.fromHtml(link, HtmlCompat.FROM_HTML_MODE_LEGACY)
             productStoreLink.isClickable = true
             productStoreLink.movementMethod = LinkMovementMethod.getInstance()

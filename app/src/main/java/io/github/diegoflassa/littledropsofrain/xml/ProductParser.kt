@@ -29,14 +29,15 @@ class ProductParser {
         const val CATEGORIA = "categoria"
     }
 
+    private val xmlIluriaSource= "http://admin.iluria.com/xml/buscape/?user=7C36F628368750071BFF6FF1FCBF56F5E5BB31A40DD39535"
     var text: String? = null
     private var products = ArrayList<IluriaProduct>()
     fun parse(): List<IluriaProduct>{
         val client = OkHttpClient()
-        client.setConnectTimeout(30, TimeUnit.SECONDS); // connect timeout
-        client.setReadTimeout(30, TimeUnit.SECONDS);    // socket timeout
+        client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
+        client.setReadTimeout(30, TimeUnit.SECONDS)    // socket timeout
         val request: Request = Request.Builder()
-                .url("http://admin.iluria.com/xml/buscape/?user=7C36F628368750071BFF6FF1FCBF56F5E5BB31A40DD39535")
+                .url(xmlIluriaSource)
                 .build()
         val response : Response = client.newCall(request).execute()
         val inputStream: InputStream = ByteArrayInputStream(response.body().bytes())

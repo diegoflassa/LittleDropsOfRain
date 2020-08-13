@@ -14,6 +14,12 @@ android {
         versionCode buildVersionCode()
         versionName buildVersionName()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.incremental":"true"]
+            }
+        }
     }
     sourceSets {
         //DFL - Não use por enquanto
@@ -49,7 +55,7 @@ android {
     lintOptions {
         abortOnError false
     }
-    buildToolsVersion '30.0.1'
+    buildToolsVersion config.buildToolsVersion
 }
 
 ext.version = [

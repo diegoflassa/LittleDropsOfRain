@@ -18,7 +18,7 @@ data class Product (
     var disponibility : String? = null,
     var imageUrl : String? = null,
     var image : @RawValue Blob? = null,
-    var category : String? = null
+    var categories : MutableList<String> = ArrayList()
 ) : Parcelable {
 
     companion object{
@@ -31,7 +31,7 @@ data class Product (
         private const val DISPONIBILITY= "disponibility"
         private const val IMAGE_URL= "imageUrl"
         private const val IMAGE= "image"
-        private const val CATEGORY= "category"
+        private const val CATEGORIES= "categories"
     }
 
     constructor(map: Map<String, Any>) : this() {
@@ -49,7 +49,7 @@ data class Product (
         result[DISPONIBILITY] = disponibility
         result[IMAGE_URL] = imageUrl
         result[IMAGE] = image
-        result[CATEGORY] = category
+        result[CATEGORIES] = categories
         return result
     }
 
@@ -63,6 +63,6 @@ data class Product (
         disponibility = map[DISPONIBILITY] as String?
         imageUrl = map[IMAGE_URL] as String?
         image = map[IMAGE] as @RawValue Blob?
-        category = map[CATEGORY] as String?
+        categories = map[CATEGORIES] as MutableList<String>
     }
 }
