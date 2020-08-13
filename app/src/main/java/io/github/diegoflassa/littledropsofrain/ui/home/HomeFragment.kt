@@ -43,10 +43,10 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     private lateinit var mAdapter: ProductAdapter
     private lateinit var mFirestore: FirebaseFirestore
     private var mQuery: Query? = null
-    private val LIMIT = 50
 
     companion object{
         const val TAG ="HomeFragment"
+        const val LIMIT = 50
     }
 
     override fun onCreateView(
@@ -156,7 +156,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = object : ProductAdapter(mQuery, this, this.requireContext()) {
+        mAdapter = object : ProductAdapter(mQuery, this@HomeFragment, requireContext()) {
             override fun onDataChanged() {
                 // Show/hide content if the query returns empty.
                 if (itemCount == 0) {
@@ -206,4 +206,6 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     override fun onProductSelected(product: DocumentSnapshot?) {
         TODO("Not yet implemented")
     }
+
+
 }
