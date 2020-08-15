@@ -1,9 +1,7 @@
 package io.github.diegoflassa.littledropsofrain.data.entities
 
 import android.os.Parcelable
-import com.google.firebase.firestore.Blob
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
 import java.util.*
 
 
@@ -13,11 +11,10 @@ data class Product (
     var idIluria : String? = null,
     var linkProduct : String? = null,
     var title : String? = null,
-    var price : String? = null,
+    var price : Int? = null,
     var installment : String? = null,
     var disponibility : String? = null,
     var imageUrl : String? = null,
-    var image : @RawValue Blob? = null,
     var categories : MutableList<String> = ArrayList()
 ) : Parcelable {
 
@@ -26,12 +23,11 @@ data class Product (
         private const val ID_ILURIA= "idIluria"
         private const val LINK_PRODUCT= "linkProduct"
         private const val TITLE= "title"
-        private const val PRICE= "price"
+        const val PRICE= "price"
         private const val INSTALLMENT= "installment"
         private const val DISPONIBILITY= "disponibility"
         private const val IMAGE_URL= "imageUrl"
-        private const val IMAGE= "image"
-        private const val CATEGORIES= "categories"
+        const val CATEGORIES : String= "categories"
     }
 
     constructor(map: Map<String, Any>) : this() {
@@ -48,7 +44,6 @@ data class Product (
         result[INSTALLMENT] = installment
         result[DISPONIBILITY] = disponibility
         result[IMAGE_URL] = imageUrl
-        result[IMAGE] = image
         result[CATEGORIES] = categories
         return result
     }
@@ -58,11 +53,10 @@ data class Product (
         idIluria = map[ID_ILURIA] as String?
         linkProduct = map[LINK_PRODUCT] as String?
         title = map[TITLE] as String?
-        price = map[PRICE] as String?
+        price = map[PRICE] as Int?
         installment = map[INSTALLMENT] as String?
         disponibility = map[DISPONIBILITY] as String?
         imageUrl = map[IMAGE_URL] as String?
-        image = map[IMAGE] as @RawValue Blob?
         categories = map[CATEGORIES] as MutableList<String>
     }
 }

@@ -1,6 +1,8 @@
 package io.github.diegoflassa.littledropsofrain.ui.home
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,22 +22,28 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import io.github.diegoflassa.littledropsofrain.FilterDialogFragment
+import io.github.diegoflassa.littledropsofrain.Filters
 import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.adapters.ProductAdapter
 import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
+import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentHomeBinding
 
 
 class HomeFragment : Fragment(), ActivityResultCallback<Int>,
+    View.OnClickListener,
+    FilterDialogFragment.FilterListener,
     ProductAdapter.OnProductSelectedListener {
 
-    private lateinit var homeViewModel: HomeViewModel
-    private lateinit var binding: FragmentHomeBinding
+    private lateinit var homeFragmentViewModel: HomeFragmentViewModel
+    lateinit var binding: FragmentHomeBinding
     private lateinit var mAdapter: ProductAdapter
     private lateinit var mFirestore: FirebaseFirestore
+    private lateinit var mFilterDialog: FilterDialogFragment
     private var mQuery: Query? = null
 
     companion object{
@@ -48,71 +57,100 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        homeViewModel =
-            ViewModelProvider.NewInstanceFactory().create(HomeViewModel::class.java)
+        homeFragmentViewModel =
+            ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
+
+        binding.filterBar.setOnClickListener(this)
+        binding.buttonClearFilter.setOnClickListener(this)
+
+        // Filter Dialog
+        mFilterDialog = FilterDialogFragment(this@HomeFragment)
+        mFilterDialog.filterListener = this
 
         showLoadingScreen()
         initFirestore()
         initRecyclerView()
 
+        binding.filterBar.isEnabled = false
         Log.i(TAG,"$TAG activity successfully created>")
         return binding.root
     }
 
+    private fun onFilterClicked() {
+        binding.filterBar.isEnabled = false
+        // Show the dialog containing filter options
+        mFilterDialog.show(parentFragmentManager, FilterDialogFragment.TAG)
+    }
+
+    private fun onClearFilterClicked() {
+        mFilterDialog.resetFilters()
+        onFilter(Filters.default)
+    }
+
     private fun showLoadingScreen(){
         binding.homeProgress.visibility = View.VISIBLE
-        binding.homeProgress.z = 5F
     }
 
     fun hideLoadingScreen(){
         binding.homeProgress.visibility = View.GONE
     }
 
-    private fun onFilter() {
+    override fun onFilter(filters : Filters) {
+
         // Construct query basic query
         var query: Query = mFirestore.collection(ProductDao.COLLECTION_PATH)
-        query.orderBy("idIluria", Query.Direction.ASCENDING)
-        /*
+        query.orderBy(Product.PRICE, Query.Direction.ASCENDING)
+
         // Category (equality filter)
         if (filters.hasCategory()) {
-            query = query.whereEqualTo("category", filters.getCategory())
+            query = query.whereArrayContainsAny(Product.CATEGORIES, filters.categories.toList())
         }
-
+        /*
         // City (equality filter)
         if (filters.hasCity()) {
             query = query.whereEqualTo("city", filters.getCity())
         }
-
+        */
         // Price (equality filter)
         if (filters.hasPrice()) {
-            query = query.whereEqualTo("price", filters.getPrice())
+            val price0=  filters.price?.get(0)
+            val price1=  filters.price?.get(1)
+            query = query.whereGreaterThanOrEqualTo(Product.PRICE, Integer.valueOf(price0!!))
+                .whereLessThanOrEqualTo(Product.PRICE, Integer.valueOf(price1!!))
         }
 
         // Sort by (orderBy with direction)
         if (filters.hasSortBy()) {
-            query = query.orderBy(filters.getSortBy(), filters.getSortDirection())
+            query = query.orderBy(filters.sortBy!!, filters.sortDirection!!)
         }
-        */
         // Limit items
         query = query.limit(LIMIT.toLong())
 
         // Update the query
         mQuery = query
         mAdapter.setQuery(query)
+        showLoadingScreen()
 
         // Set header
-        //mCurrentSearchView.setText(Html.fromHtml(filters.getSearchDescription(this)))
-        //mCurrentSortByView.setText(filters.getOrderDescription(this))
+        binding.textCurrentSearch.text = HtmlCompat.fromHtml(filters.getSearchDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        //mViewModel.setFilters(filters)
+        homeFragmentViewModel.filters = filters
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.filter_bar -> onFilterClicked()
+            R.id.button_clear_filter -> onClearFilterClicked()
+        }
     }
 
     override fun onStart() {
         super.onStart()
 
         // Apply filters
-        onFilter()
+        onFilter(homeFragmentViewModel.filters)
 
         // Start listening for Firestore updates
         mAdapter.startListening()
@@ -138,6 +176,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
         mAdapter = object : ProductAdapter(mQuery, this@HomeFragment) {
             override fun onDataChanged() {
+                binding.filterBar.isEnabled = true
                 hideLoadingScreen()
                 // Show/hide content if the query returns empty.
                 if (itemCount == 0) {
@@ -185,7 +224,10 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     }
 
     override fun onProductSelected(product: DocumentSnapshot?) {
-        Log.d(TAG, "Product ${product?.id} clicked")
+        val i = Intent(Intent.ACTION_VIEW)
+        val productParsed: Product? = product?.toObject(Product::class.java)
+        i.data = Uri.parse(productParsed?.linkProduct)
+        startActivity(i)
     }
 
 }

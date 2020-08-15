@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/filters_form"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/header_filters" />
+
+    <!-- Categories Type -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/icon_category"
+            android:layout_centerVertical="true"
+            app:tint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_filter_list_white_24px"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:contentDescription="@string/icon_category" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:paddingStart="64dp"
+            android:paddingEnd="64dp"
+            android:id="@+id/category_chip_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-24dp"
+            android:layout_toEndOf="@+id/icon_category">
+
+        </com.google.android.material.chip.ChipGroup>
+
+    </RelativeLayout>
+
+    <!-- Price -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/icon_price"
+            android:layout_centerVertical="true"
+            app:tint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_monetization_on_white_24px"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:contentDescription="@string/icon_price" />
+
+        <Spinner
+            android:id="@+id/spinner_price"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/icon_price"
+            android:entries="@array/prices"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+
+    </RelativeLayout>
+
+    <!-- Sort by -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/icon_sort"
+            android:layout_centerVertical="true"
+            app:tint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_sort_white_24px"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:contentDescription="@string/icon_sort" />
+
+        <Spinner
+            android:id="@+id/spinner_sort"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/icon_sort"
+            android:entries="@array/sort_by"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+    </RelativeLayout>
+
+    <!-- Cancel and apply buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:textColor="@color/colorAccent"
+            tools:ignore="ButtonOrder" />
+
+
+        <Button
+            android:id="@+id/button_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/apply" />
+
+    </LinearLayout>
+
+</LinearLayout>
+

@@ -15,6 +15,7 @@ import com.google.firebase.firestore.Query
 import com.squareup.picasso.Picasso
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
+import java.text.DecimalFormatSymbols
 
 /**
  * RecyclerView adapter for a list of Restaurants.
@@ -63,16 +64,21 @@ open class ProductAdapter(query: Query?, private val mListener: OnProductSelecte
             // Load image
             Picasso.get().load(product?.imageUrl).placeholder(R.drawable.image_placeholder).into(productImage)
             productTitle.text = resources.getString(R.string.rv_title, product?.title)
-            productCategories.text = resources.getString(R.string.rv_categories, product?.categories)
+            productCategories.text = if(!product?.categories.isNullOrEmpty()){resources.getString(R.string.rv_categories, product?.categories)}else{""}
             var chipCategory : Chip
+            productChipCategories.removeAllViews()
             for(category in product?.categories!!) {
-                chipCategory = Chip(itemView.context)
-                chipCategory.isCheckable= true
-                chipCategory.text = category
-                productChipCategories.addView(chipCategory)
+                if(!product.categories.isNullOrEmpty()) {
+                    chipCategory = Chip(itemView.context)
+                    chipCategory.isCheckable = true
+                    chipCategory.text = category
+                    productChipCategories.addView(chipCategory)
+                }
             }
             productDisponibility.text = resources.getString(R.string.rv_disponibility,  product.disponibility)
-            productPrice.text = resources.getString(R.string.rv_price, product.price)
+            var priceStr= (product.price?.div(100)).toString()
+            priceStr+= DecimalFormatSymbols.getInstance().decimalSeparator +"00"
+            productPrice.text = resources.getString(R.string.rv_price, priceStr)
             val link = resources.getString(R.string.rv_store_link, product.linkProduct)
             productStoreLink.text = HtmlCompat.fromHtml(link, HtmlCompat.FROM_HTML_MODE_LEGACY)
             productStoreLink.isClickable = true

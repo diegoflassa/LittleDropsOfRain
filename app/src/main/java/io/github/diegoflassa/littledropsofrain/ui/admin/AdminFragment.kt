@@ -79,7 +79,6 @@ class AdminFragment : Fragment(),
 
     private fun showLoadingScreen(){
         binding.adminProgress.visibility = View.VISIBLE
-        binding.adminProgress.z = 5F
     }
 
     fun hideLoadingScreen(){

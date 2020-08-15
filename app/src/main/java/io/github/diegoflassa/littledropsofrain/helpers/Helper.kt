@@ -33,12 +33,25 @@ class Helper {
                 product.categories.add(st.nextToken().trim())
             }
             product.idIluria= iluriaProduct.idProduct
-            product.price= iluriaProduct.price
+            val price= iluriaProduct.price!!.replace(',','.')
+            product.price= (price.toFloat()*100).toInt()
             product.disponibility= iluriaProduct.disponibility
             product.imageUrl= iluriaProduct.image
             product.installment= iluriaProduct.installment
             product.linkProduct= iluriaProduct.linkProduct
             return product
+        }
+
+        /**
+         * Get price represented as dollar signs.
+         */
+        fun getPriceString(price: MutableList<Int>): String? {
+            return when (price[0]) {
+                in 0..5000 -> "$"
+                in 5100..10000 -> "$$"
+                in 10100..100000 -> "$$$"
+                else -> "$$$"
+            }
         }
     }
 }

@@ -58,4 +58,41 @@
     <string name="no_messages_found">No messages found</string>
     <string name="no_products_found">No products found</string>
     <string name="rv_categories">Categories : %1$s</string>
+    <string name="sorted_by_category">Sorted by Category</string>
+    <string name="sorted_by_categories">sorted by categories</string>
+
+
+    <string name="value_any_price">Any price</string>
+
+    <string name="price_1">$</string>
+    <string name="price_2">$$</string>
+    <string name="price_3">$$$</string>
+
+    <string name="all_products">All Products</string>
+    <string name="header_filters">Filter</string>
+
+    <string name="sort_by_price">Sort by Price</string>
+
+    <string name="sorted_by_price">sorted by price</string>
+    <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
+    <string name="icon_sort">Icon sort</string>
+    <string name="icon_price">Icon price</string>
+    <string name="icon_category">Icon category</string>
+    <string name="button_filter">Button filter</string>
+    <string name="button_clear_filter">Button clear filter</string>
+
+    <!-- Price filters -->
+    <string-array name="prices">
+        <item>@string/value_any_price</item>
+
+        <item>@string/price_1</item>
+        <item>@string/price_2</item>
+        <item>@string/price_3</item>
+    </string-array>
+
+    <!-- Ways you can sort restaurants -->
+    <string-array name="sort_by">
+        <item>@string/sort_by_price</item>
+    </string-array>
 </resources>
