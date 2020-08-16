@@ -48,6 +48,7 @@ data class Product (
         return result
     }
 
+    @SuppressWarnings("unchecked")
     private fun fromMap(map: Map<String, Any>){
         uid = map[UID] as String?
         idIluria = map[ID_ILURIA] as String?

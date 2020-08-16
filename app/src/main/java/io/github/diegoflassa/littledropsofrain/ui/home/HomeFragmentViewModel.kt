@@ -3,7 +3,7 @@ package io.github.diegoflassa.littledropsofrain.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.github.diegoflassa.littledropsofrain.Filters
+import io.github.diegoflassa.littledropsofrain.fragments.Filters
 
 class HomeFragmentViewModel : ViewModel() {
 

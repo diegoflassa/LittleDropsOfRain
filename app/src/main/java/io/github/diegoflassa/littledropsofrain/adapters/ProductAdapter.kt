@@ -12,7 +12,6 @@ import com.google.android.material.chip.ChipGroup
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.squareup.picasso.Picasso
-import io.github.diegoflassa.littledropsofrain.Filters
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
@@ -21,7 +20,7 @@ import java.text.DecimalFormatSymbols
 /**
  * RecyclerView adapter for a list of Restaurants.
  */
-open class ProductAdapter(var homeFragment: HomeFragment, query: Query?, private val mListener: OnProductSelectedListener)
+open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?, private val mListener: OnProductSelectedListener)
     : FirestoreAdapter<ProductAdapter.ViewHolder?>(query) {
 
     interface OnProductSelectedListener {
@@ -85,11 +84,9 @@ open class ProductAdapter(var homeFragment: HomeFragment, query: Query?, private
         }
 
         override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
-            homeFragment.mFilterDialog.mCategories.clear()
             homeFragment.mFilterDialog.onCheckedChanged(p0, p1)
             homeFragment.onFilter(homeFragment.mFilterDialog.filters)
         }
 
     }
-
 }

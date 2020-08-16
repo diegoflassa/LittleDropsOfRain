@@ -2,13 +2,17 @@ package io.github.diegoflassa.littledropsofrain
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.*
+import java.lang.ref.WeakReference
 
 class MyApplication : Application() {
 
@@ -28,7 +32,20 @@ class MyApplication : Application() {
             .with(IoniconsModule())
         setup()
         setupCacheSize()
-        context = this
+        subscribeToNews()
+        context =  WeakReference(this)
+    }
+
+    private fun subscribeToNews() {
+        FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topic_news))
+            .addOnCompleteListener { task ->
+                var msg = getString(R.string.msg_subscribed)
+                if (!task.isSuccessful) {
+                    msg = getString(R.string.msg_subscribe_failed)
+                }
+                Log.d(TAG, msg)
+                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun setup() {
@@ -54,9 +71,10 @@ class MyApplication : Application() {
     }
 
     companion object{
-        private lateinit var context: Context
+        private val TAG= MyApplication::class.simpleName
+        private lateinit var context: WeakReference<Context>
         fun getContext():Context{
-            return context
+            return context.get()!!
         }
     }
 }

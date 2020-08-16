@@ -1,8 +1,10 @@
-package io.github.diegoflassa.littledropsofrain
+package io.github.diegoflassa.littledropsofrain.fragments
 
 import android.content.Context
 import android.text.TextUtils
 import com.google.firebase.firestore.Query
+import io.github.diegoflassa.littledropsofrain.MyApplication
+import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.helpers.Helper
 
@@ -34,7 +36,9 @@ class Filters {
             desc.append("</b>")
         }else{
             desc.append("<b>")
-            desc.append(MyApplication.getContext().getString(R.string.all))
+            desc.append(
+                MyApplication.getContext()
+                    .getString(R.string.all))
             desc.append("</b>")
         }
         if (price != null) {
@@ -57,7 +61,8 @@ class Filters {
     companion object {
         val default: Filters
             get() {
-                val filters = Filters()
+                val filters =
+                    Filters()
                 filters.categories.clear()
                 filters.sortBy = Product.PRICE
                 filters.sortDirection = Query.Direction.DESCENDING

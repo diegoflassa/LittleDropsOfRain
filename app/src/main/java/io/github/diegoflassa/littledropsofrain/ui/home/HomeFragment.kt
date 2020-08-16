@@ -22,8 +22,8 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import io.github.diegoflassa.littledropsofrain.FilterDialogFragment
-import io.github.diegoflassa.littledropsofrain.Filters
+import io.github.diegoflassa.littledropsofrain.fragments.FilterDialogFragment
+import io.github.diegoflassa.littledropsofrain.fragments.Filters
 import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.adapters.ProductAdapter
@@ -64,7 +64,10 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         binding.buttonClearFilter.setOnClickListener(this)
 
         // Filter Dialog
-        mFilterDialog = FilterDialogFragment(this@HomeFragment)
+        mFilterDialog =
+            FilterDialogFragment(
+                this@HomeFragment
+            )
         mFilterDialog.filterListener = this
 
         showLoadingScreen()

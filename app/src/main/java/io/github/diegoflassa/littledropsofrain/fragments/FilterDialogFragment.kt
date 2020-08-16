@@ -1,4 +1,4 @@
-package io.github.diegoflassa.littledropsofrain
+package io.github.diegoflassa.littledropsofrain.fragments
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -14,6 +14,8 @@ import com.google.android.material.chip.ChipGroup
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.FontAwesomeIcons
+import io.github.diegoflassa.littledropsofrain.MyApplication
+import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
 import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
@@ -95,17 +97,20 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
     private val selectedPrice: MutableList<Int>
         get() {
             val priceRange = ArrayList<Int>()
-            if(mRootView!=null) {
+            if(mRootView!=null&&!isDetached) {
                 when (mPriceSpinner!!.selectedItem as String) {
-                    getString(R.string.price_1) -> {
+                    MyApplication.getContext()
+                        .getString(R.string.price_1) -> {
                         priceRange.add(0)
                         priceRange.add(5000)
                     }
-                    getString(R.string.price_2) -> {
+                    MyApplication.getContext()
+                        .getString(R.string.price_2) -> {
                         priceRange.add(5100)
                         priceRange.add(10000)
                     }
-                    getString(R.string.price_3) -> {
+                    MyApplication.getContext()
+                        .getString(R.string.price_3) -> {
                         priceRange.add(10100)
                         priceRange.add(100000)
                     }
@@ -119,9 +124,10 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
 
     private val selectedSortBy: String?
         get() {
-            if(mRootView!=null){
+            if(mRootView!=null&&!isDetached) {
                 val selected = mSortSpinner!!.selectedItem as String
-                return if (getString(R.string.sort_by_price) == selected) {
+                return if (MyApplication.getContext()
+                        .getString(R.string.sort_by_price) == selected) {
                     return Product.PRICE
                 } else null
             }
@@ -130,9 +136,10 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
 
     private val sortDirection: Query.Direction?
         get() {
-            if(mRootView!=null) {
+            if(mRootView!=null&&!isDetached) {
                 val selected = mSortSpinner!!.selectedItem as String
-                return if (getString(R.string.sort_by_price) == selected) {
+                return if (MyApplication.getContext()
+                        .getString(R.string.sort_by_price) == selected) {
                     return Query.Direction.DESCENDING
                 } else null
             }
@@ -140,7 +147,7 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
         }
 
     fun resetFilters() {
-        if(mRootView!=null) {
+        if(mRootView!=null&&!isDetached) {
             for (chip in mCategoryChipGroup.children) {
                 chip.isSelected = false
             }
@@ -152,7 +159,8 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
 
     val filters: Filters
         get() {
-            val filters = Filters()
+            val filters =
+                Filters()
             filters.categories.addAll(this.selectedCategories)
             filters.price = if(selectedPrice.isEmpty()){null}else{selectedPrice}
             filters.sortBy = selectedSortBy

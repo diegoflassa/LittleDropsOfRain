@@ -19,8 +19,7 @@ import java.util.*
 abstract class FirestoreAdapter<VH : RecyclerView.ViewHolder?>(private var mQuery: Query?) :
     RecyclerView.Adapter<VH>(), EventListener<QuerySnapshot> {
     private var mRegistration: ListenerRegistration? = null
-    private val mSnapshots =
-        ArrayList<DocumentSnapshot>()
+    private val mSnapshots = ArrayList<DocumentSnapshot>()
 
     fun startListening() {
         if (mQuery != null && mRegistration == null) {

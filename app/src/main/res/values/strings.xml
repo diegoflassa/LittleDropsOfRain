@@ -16,7 +16,7 @@
     <!-- Recycle View Items-->
     <string name="rv_title">%1$s</string>
     <string name="rv_disponibility">%1$s</string>
-    <string name="rv_price">%1$s</string>
+    <string name="rv_price">R$%1$s</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
@@ -80,6 +80,10 @@
     <string name="button_filter">Button filter</string>
     <string name="button_clear_filter">Button clear filter</string>
     <string name="all">All</string>
+    <string name="send_global_message">Send global message</string>
+    <string name="msg_subscribed">Subscribed</string>
+    <string name="msg_subscribe_failed">Subscription failed</string>
+    <string name="topic_news">news</string>
 
     <!-- Price filters -->
     <string-array name="prices">
