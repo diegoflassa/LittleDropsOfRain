@@ -1,13 +1,13 @@
-package io.github.diegoflassa.littledropsofrain.ui.gallery
+package io.github.diegoflassa.littledropsofrain.ui.facebook
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class GalleryViewModel : ViewModel() {
+class FacebookViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is gallery Fragment"
+        value = "This is facebook Fragment"
     }
     val text: LiveData<String> = _text
 }

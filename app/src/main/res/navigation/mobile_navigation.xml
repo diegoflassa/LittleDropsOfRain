@@ -11,10 +11,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="io.github.diegoflassa.littledropsofrain.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_facebook"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.facebook.FacebookFragment"
+        android:label="@string/menu_facebook"
+        tools:layout="@layout/fragment_facebook" />
 
     <fragment
         android:id="@+id/nav_admin"

@@ -43,7 +43,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     lateinit var binding: FragmentHomeBinding
     private lateinit var mAdapter: ProductAdapter
     private lateinit var mFirestore: FirebaseFirestore
-    private lateinit var mFilterDialog: FilterDialogFragment
+    lateinit var mFilterDialog: FilterDialogFragment
     private var mQuery: Query? = null
 
     companion object{
@@ -99,7 +99,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
         // Construct query basic query
         var query: Query = mFirestore.collection(ProductDao.COLLECTION_PATH)
-        query.orderBy(Product.PRICE, Query.Direction.ASCENDING)
+        query.orderBy(Product.PRICE, Query.Direction.DESCENDING)
 
         // Category (equality filter)
         if (filters.hasCategory()) {
@@ -174,7 +174,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = object : ProductAdapter(mQuery, this@HomeFragment) {
+        mAdapter = object : ProductAdapter(this@HomeFragment, mQuery, this@HomeFragment) {
             override fun onDataChanged() {
                 binding.filterBar.isEnabled = true
                 hideLoadingScreen()

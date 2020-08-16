@@ -1,6 +1,7 @@
 package io.github.diegoflassa.littledropsofrain
 
 import android.app.Application
+import android.content.Context
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
@@ -27,6 +28,7 @@ class MyApplication : Application() {
             .with(IoniconsModule())
         setup()
         setupCacheSize()
+        context = this
     }
 
     private fun setup() {
@@ -49,5 +51,12 @@ class MyApplication : Application() {
         }
         db.firestoreSettings = settings
         // [END fs_setup_cache]
+    }
+
+    companion object{
+        private lateinit var context: Context
+        fun getContext():Context{
+            return context
+        }
     }
 }

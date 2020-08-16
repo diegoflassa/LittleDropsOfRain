@@ -32,6 +32,10 @@ class Filters {
             desc.append("<b>")
             desc.append(categories)
             desc.append("</b>")
+        }else{
+            desc.append("<b>")
+            desc.append(MyApplication.getContext().getString(R.string.all))
+            desc.append("</b>")
         }
         if (price != null) {
             desc.append(" for ")

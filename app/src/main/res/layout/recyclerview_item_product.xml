@@ -29,39 +29,33 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/rv_title" />
-
-        <TextView
-            android:id="@+id/categories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/rv_categories" />
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/rv_title"
+            android:textStyle="bold" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipCategories"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/price"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/rv_price" />
 
         <TextView
             android:id="@+id/disponibility"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/rv_disponibility" />
-
-        <TextView
-            android:id="@+id/store_link"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/rv_store_link"
-            android:textColor="#112B8E"
-            android:textStyle="bold"
-            android:typeface="normal" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

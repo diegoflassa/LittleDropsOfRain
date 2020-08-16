@@ -31,12 +31,13 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
     }
 
     private var homeFragment : HomeFragment= fragment
-    private var mCategories: LinkedHashSet<String> = LinkedHashSet()
+    var mCategories: LinkedHashSet<String> = LinkedHashSet()
     private lateinit var mCategoryChipGroup: ChipGroup
     private var mSortSpinner: Spinner? = null
     private var mPriceSpinner: Spinner? = null
     var filterListener: FilterListener? = null
     private lateinit var binding: FragmentFiltersBinding
+    private var mRootView : View?= null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +52,7 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
         binding.buttonSearch.setOnClickListener(this)
         binding.buttonCancel.setOnClickListener(this)
         ProductDao.loadAll(this)
+        mRootView= binding.root
         return binding.root
     }
 
@@ -93,21 +95,23 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
     private val selectedPrice: MutableList<Int>
         get() {
             val priceRange = ArrayList<Int>()
-            when (mPriceSpinner!!.selectedItem as String) {
-                getString(R.string.price_1) -> {
-                    priceRange.add(0)
-                    priceRange.add(5000)
-                }
-                getString(R.string.price_2) -> {
-                    priceRange.add(5100)
-                    priceRange.add(10000)
-                }
-                getString(R.string.price_3) -> {
-                    priceRange.add(10100)
-                    priceRange.add(100000)
-                }
-                else -> {
-                    //Do nothing
+            if(mRootView!=null) {
+                when (mPriceSpinner!!.selectedItem as String) {
+                    getString(R.string.price_1) -> {
+                        priceRange.add(0)
+                        priceRange.add(5000)
+                    }
+                    getString(R.string.price_2) -> {
+                        priceRange.add(5100)
+                        priceRange.add(10000)
+                    }
+                    getString(R.string.price_3) -> {
+                        priceRange.add(10100)
+                        priceRange.add(100000)
+                    }
+                    else -> {
+                        //Do nothing
+                    }
                 }
             }
             return priceRange
@@ -115,31 +119,38 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
 
     private val selectedSortBy: String?
         get() {
-            val selected = mSortSpinner!!.selectedItem as String
-            return if (getString(R.string.sort_by_price) == selected) {
-                return Product.PRICE
-            } else null
+            if(mRootView!=null){
+                val selected = mSortSpinner!!.selectedItem as String
+                return if (getString(R.string.sort_by_price) == selected) {
+                    return Product.PRICE
+                } else null
+            }
+            return null
         }
 
     private val sortDirection: Query.Direction?
         get() {
-            val selected = mSortSpinner!!.selectedItem as String
-            return if (getString(R.string.sort_by_price) == selected) {
-                return Query.Direction.ASCENDING
-            } else null
+            if(mRootView!=null) {
+                val selected = mSortSpinner!!.selectedItem as String
+                return if (getString(R.string.sort_by_price) == selected) {
+                    return Query.Direction.DESCENDING
+                } else null
+            }
+            return null
         }
 
     fun resetFilters() {
-        if(mCategoryChipGroup!=null)
-            for(chip in mCategoryChipGroup.children){
-                chip.isSelected =false
+        if(mRootView!=null) {
+            for (chip in mCategoryChipGroup.children) {
+                chip.isSelected = false
             }
-        mCategories.clear()
-        mPriceSpinner!!.setSelection(0)
-        mSortSpinner!!.setSelection(0)
+            mCategories.clear()
+            mPriceSpinner!!.setSelection(0)
+            mSortSpinner!!.setSelection(0)
+        }
     }
 
-    private val filters: Filters
+    val filters: Filters
         get() {
             val filters = Filters()
             filters.categories.addAll(this.selectedCategories)
