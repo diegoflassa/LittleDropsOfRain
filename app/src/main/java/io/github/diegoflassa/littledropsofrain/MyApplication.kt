@@ -2,8 +2,10 @@ package io.github.diegoflassa.littledropsofrain
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
+import androidx.preference.PreferenceManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
@@ -12,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.*
+import io.github.diegoflassa.littledropsofrain.preferences.MyOnSharedPreferenceChangeListener
 import java.lang.ref.WeakReference
 
 class MyApplication : Application() {
@@ -32,20 +35,49 @@ class MyApplication : Application() {
             .with(IoniconsModule())
         setup()
         setupCacheSize()
+        registerPreferencesListener()
         subscribeToNews()
+        subscribeToPromotions()
         context =  WeakReference(this)
     }
 
+    private fun registerPreferencesListener() {
+        val mpcl = MyOnSharedPreferenceChangeListener(this)
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mpcl)
+    }
+
     private fun subscribeToNews() {
-        FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topic_news))
-            .addOnCompleteListener { task ->
-                var msg = getString(R.string.msg_subscribed)
-                if (!task.isSuccessful) {
-                    msg = getString(R.string.msg_subscribe_failed)
+        val sp : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        if(sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_NEWS, false)) {
+            FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topic_news))
+                .addOnCompleteListener { task ->
+                    var msg = getString(R.string.msg_subscribed)
+                    if (!task.isSuccessful) {
+                        msg = getString(R.string.msg_subscribe_failed)
+                    }
+                    Log.d(TAG, msg)
+                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                 }
-                Log.d(TAG, msg)
-                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-            }
+        }else{
+            Log.d(TAG, "Not registered to receive news")
+        }
+    }
+
+    private fun subscribeToPromotions() {
+        val sp : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        if(sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_PROMOS, false)) {
+            FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topic_promo))
+                .addOnCompleteListener { task ->
+                    var msg = getString(R.string.msg_subscribed)
+                    if (!task.isSuccessful) {
+                        msg = getString(R.string.msg_subscribe_failed)
+                    }
+                    Log.d(TAG, msg)
+                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                }
+        }else{
+            Log.d(TAG, "Not registered to receive news")
+        }
     }
 
     private fun setup() {

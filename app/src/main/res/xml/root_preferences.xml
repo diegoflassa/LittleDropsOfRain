@@ -17,18 +17,19 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory app:title="Subscription">
 
         <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
+            app:key="subs_news"
+            app:summaryOff="Click to subscribe to news"
+            app:summaryOn="You will receive the latest news!"
+            app:title="Receive News" />
 
         <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+            app:key="subs_promos"
+            app:summaryOff="Click to subscribe to promotions"
+            app:summaryOn="You will receive the latest promotions!"
+            app:title="Receive Promotions" />
 
     </PreferenceCategory>
 

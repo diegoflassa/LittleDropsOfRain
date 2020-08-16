@@ -13,9 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.AuthFailureError
-import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.snackbar.Snackbar
@@ -95,7 +93,7 @@ class AdminFragment : Fragment(),
 
         val url = "https://fcm.googleapis.com/fcm/send"
         val myReq: StringRequest = object : StringRequest(
-            Request.Method.POST, url,
+            Method.POST, url,
             Response.Listener<String> { Toast.makeText(activity, "Bingo Success", Toast.LENGTH_SHORT).show() },
             Response.ErrorListener { Toast.makeText(activity, "Oops error", Toast.LENGTH_SHORT).show() }) {
 
