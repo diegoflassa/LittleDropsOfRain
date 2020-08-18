@@ -6,16 +6,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.volley.AuthFailureError
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,16 +28,14 @@ import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentAdminBinding
 import io.github.diegoflassa.littledropsofrain.helpers.Helper
 import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
+import io.github.diegoflassa.littledropsofrain.ui.subscription.SendSubscriptionMessageFragment
 import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
-import kotlin.collections.HashMap
 
 
 class AdminFragment : Fragment(),
@@ -54,12 +50,13 @@ class AdminFragment : Fragment(),
 
     companion object {
         const val TAG = "AdminFragment"
+        fun newInstance() = AdminFragment()
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAdminBinding.inflate(inflater, container, false)
         adminViewModel =
@@ -69,13 +66,14 @@ class AdminFragment : Fragment(),
             AppCompatResources.getDrawable(
                 requireContext(),
                 R.drawable.card_item_divider
-            )!!)
+            )!!
+        )
         binding.btnReloadProducts.setOnClickListener {
             fetchProducts()
         }
 
         binding.sendGlobalMessage.setOnClickListener {
-            senGlobalMessage()
+            findNavController().navigate(R.id.action_nav_admin_to_sendSubscriptionMessageFragment)
         }
 
         binding.fab.setOnClickListener {
@@ -89,40 +87,15 @@ class AdminFragment : Fragment(),
         return binding.root
     }
 
-    private fun senGlobalMessage() {
-
-        val url = "https://fcm.googleapis.com/fcm/send"
-        val myReq: StringRequest = object : StringRequest(
-            Method.POST, url,
-            Response.Listener<String> { Toast.makeText(activity, "Bingo Success", Toast.LENGTH_SHORT).show() },
-            Response.ErrorListener { Toast.makeText(activity, "Oops error", Toast.LENGTH_SHORT).show() }) {
-
-            @Throws(AuthFailureError::class)
-            override fun getBody(): ByteArray {
-                val rawParameters: MutableMap<Any?, Any?> = Hashtable()
-                val dataValue : MutableMap<Any?, Any?> = HashMap()
-                rawParameters["data"] = JSONObject(dataValue).toString()
-                rawParameters["topic"] = "topics/news"
-                return JSONObject(rawParameters).toString().toByteArray()
-            }
-
-            override fun getBodyContentType(): String {
-                return "application/json; charset=utf-8"
-            }
-
-            var YOUR_LEGACY_SERVER_KEY_FROM_FIREBASE_CONSOLE = "AAAA9E171CQ:APA91bEIxK6ptOXRXwKiI2XsHKkXKYP5CzM9HQdP56Lj1OcBK69HTkvTf0b1If7Zp0F1c1VbrnLopZrmDnM-fC3krTnO4BkXlZ2A2V_aCar4s0iK9KP1fa4bCrM2chdMj1_O7WAlOfBj"
-            @Throws(AuthFailureError::class)
-            override fun getHeaders(): Map<String, String> {
-                val headers =
-                    HashMap<String, String>()
-                headers["Authorization"] = "key=$YOUR_LEGACY_SERVER_KEY_FROM_FIREBASE_CONSOLE"
-                return headers
-            }
-        }
-        Volley.newRequestQueue(activity).add(myReq)
+    private fun showSendSubscription(){
+        val manager: FragmentManager? = requireActivity().supportFragmentManager
+        val transaction: FragmentTransaction = manager?.beginTransaction()!!
+        transaction.replace(R.id.nav_host_fragment, SendSubscriptionMessageFragment.newInstance(), SendSubscriptionMessageFragment.TAG)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
-    private fun showLoadingScreen(){
+     private fun showLoadingScreen(){
         binding.adminProgress.visibility = View.VISIBLE
     }
 
@@ -195,7 +168,8 @@ class AdminFragment : Fragment(),
             AppCompatResources.getDrawable(
                 requireContext(),
                 R.drawable.card_item_divider
-            )!!)
+            )!!
+        )
         binding.recyclerviewAdmin.addItemDecoration(itemDecoration)
 
         if (mQuery == null) {
@@ -241,7 +215,7 @@ class AdminFragment : Fragment(),
     }
 
     override fun onMessageSelected(message: DocumentSnapshot?) {
-        Log.d(TAG,"Message ${message?.id} selected")
+        Log.d(TAG, "Message ${message?.id} selected")
     }
 
 }

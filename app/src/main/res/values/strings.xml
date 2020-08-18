@@ -80,6 +80,14 @@
     <string name="msg_subscribe_failed">Subscription failed</string>
     <string name="topic_news">news</string>
     <string name="topic_promo">promo</string>
+    <string name="msg_subscribed_to_news">Subscribed to News!</string>
+    <string name="msg_subscribed_to_promos">Subscribed to Promos!</string>
+    <string name="msg_subscribe_promos_failed">Unable to subscribe to promotions</string>
+    <string name="msg_subscribe_news_failed">Unable to subscribe to News</string>
+    <string name="message_title">Title</string>
+    <string name="message_body">Message Body</string>
+    <string name="not_logged_in">Not logged in</string>
+    <string name="label_subscription">Subscription Messages</string>
 
     <!-- Price filters -->
     <string-array name="prices">

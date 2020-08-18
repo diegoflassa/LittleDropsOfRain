@@ -20,11 +20,21 @@
         android:id="@+id/nav_admin"
         android:name="io.github.diegoflassa.littledropsofrain.ui.admin.AdminFragment"
         android:label="@string/menu_admin"
-        tools:layout="@layout/fragment_admin" />
+        tools:layout="@layout/fragment_admin" >
+        <action
+            android:id="@+id/action_nav_admin_to_sendSubscriptionMessageFragment"
+            app:destination="@id/sendSubscriptionMessageFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_iluria"
         android:name="io.github.diegoflassa.littledropsofrain.ui.iluria.IluriaFragment"
         android:label="@string/menu_iluria"
         tools:layout="@layout/fragment_iluria" />
+
+    <fragment
+        android:id="@+id/sendSubscriptionMessageFragment"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.subscription.SendSubscriptionMessageFragment"
+        android:label="@string/label_subscription"
+        tools:layout="@layout/fragment_send_subsctiption_message" />
 </navigation>

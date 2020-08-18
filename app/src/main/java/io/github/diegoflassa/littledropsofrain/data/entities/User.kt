@@ -4,12 +4,13 @@ import java.util.*
 import kotlin.collections.HashMap
 
 
-data class User(var email : String? = null, var name : String? = null, var uid: String? = null ) {
+data class User(var email : String? = null, var name : String? = null, var uid: String? = null, @field:JvmField var isAdmin : Boolean = false ) {
 
     companion object{
         private const val UID= "uid"
         private const val EMAIL= "email"
         private const val NAME= "name"
+        private const val IS_ADMIN= "isAdmin"
     }
 
     constructor(map: Map<String, Any>) : this() {
@@ -44,6 +45,7 @@ data class User(var email : String? = null, var name : String? = null, var uid: 
         result[UID] = uid
         result[EMAIL] = email
         result[NAME] = name
+        result[IS_ADMIN] = isAdmin
         return result
     }
 
@@ -51,6 +53,7 @@ data class User(var email : String? = null, var name : String? = null, var uid: 
         uid = map[UID] as String?
         email = map[EMAIL] as String?
         name = map[NAME] as String?
+        isAdmin = map[IS_ADMIN] as Boolean
     }
 
     override fun toString():String{

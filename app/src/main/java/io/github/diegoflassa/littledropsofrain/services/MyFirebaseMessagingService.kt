@@ -21,10 +21,10 @@ import io.github.diegoflassa.littledropsofrain.workers.MyWorker
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     companion object {
-        private const val TAG = "MyFirebaseMsgService"
+        private val TAG = MyFirebaseMessagingService::class.simpleName
     }
 
-    /**
+     /**
      * Called when message is received.
      *
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.

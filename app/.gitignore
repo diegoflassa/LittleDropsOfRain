@@ -101,3 +101,4 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+/src/main/res/raw/littledropsofrain_72ae8_firebase_adminsdk_jsxhc_7bdfe4ab91.json

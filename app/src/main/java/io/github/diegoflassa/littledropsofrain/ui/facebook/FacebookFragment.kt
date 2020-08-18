@@ -14,6 +14,9 @@ import io.github.diegoflassa.littledropsofrain.databinding.FragmentFacebookBindi
 
 class FacebookFragment : Fragment() {
 
+    companion object{
+        fun newInstance() = FacebookFragment()
+    }
     private lateinit var facebookViewModel: FacebookViewModel
     private lateinit var binding :FragmentFacebookBinding
     private var facebookUrl = "https://www.facebook.com/m.andrea.littledrops/"

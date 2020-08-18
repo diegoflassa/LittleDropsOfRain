@@ -35,25 +35,20 @@ class MyApplication : Application() {
             .with(IoniconsModule())
         setup()
         setupCacheSize()
-        registerPreferencesListener()
+
         subscribeToNews()
         subscribeToPromotions()
         context =  WeakReference(this)
     }
 
-    private fun registerPreferencesListener() {
-        val mpcl = MyOnSharedPreferenceChangeListener(this)
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mpcl)
-    }
-
     private fun subscribeToNews() {
         val sp : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        if(sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_NEWS, false)) {
+        if(sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_NEWS, true)) {
             FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topic_news))
                 .addOnCompleteListener { task ->
-                    var msg = getString(R.string.msg_subscribed)
+                    var msg = getString(R.string.msg_subscribed_to_news)
                     if (!task.isSuccessful) {
-                        msg = getString(R.string.msg_subscribe_failed)
+                        msg = getString(R.string.msg_subscribe_news_failed)
                     }
                     Log.d(TAG, msg)
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
@@ -65,12 +60,12 @@ class MyApplication : Application() {
 
     private fun subscribeToPromotions() {
         val sp : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        if(sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_PROMOS, false)) {
+        if(sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_PROMOS, true)) {
             FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topic_promo))
                 .addOnCompleteListener { task ->
-                    var msg = getString(R.string.msg_subscribed)
+                    var msg = getString(R.string.msg_subscribed_to_promos)
                     if (!task.isSuccessful) {
-                        msg = getString(R.string.msg_subscribe_failed)
+                        msg = getString(R.string.msg_subscribe_promos_failed)
                     }
                     Log.d(TAG, msg)
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()

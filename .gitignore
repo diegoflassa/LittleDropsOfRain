@@ -101,3 +101,7 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+libs/
+lint.xml
+src/main/res/raw/
+/Litttle Drops Of Rain.zip

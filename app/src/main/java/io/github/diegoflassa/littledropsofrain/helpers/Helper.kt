@@ -1,7 +1,9 @@
 package io.github.diegoflassa.littledropsofrain.helpers
 
+import com.google.firebase.auth.FirebaseUser
 import io.github.diegoflassa.littledropsofrain.data.entities.IluriaProduct
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
+import io.github.diegoflassa.littledropsofrain.data.entities.User
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -16,6 +18,14 @@ class Helper {
             } catch (e: Exception) {
                 e.toString()
             }
+        }
+
+        fun firebaseUserToUser(user : FirebaseUser) : User {
+            val userFb = User()
+            userFb.uid = user.uid
+            userFb.name = user.displayName
+            userFb.email = user.email
+            return userFb
         }
 
         fun iluriaProductToProduct(iluriaProducts : List<IluriaProduct>) : List<Product>{

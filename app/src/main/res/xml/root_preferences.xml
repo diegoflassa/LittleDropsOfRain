@@ -1,4 +1,6 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory app:title="@string/messages_header">
 
@@ -23,13 +25,15 @@
             app:key="subs_news"
             app:summaryOff="Click to subscribe to news"
             app:summaryOn="You will receive the latest news!"
-            app:title="Receive News" />
+            app:title="Receive News"
+            android:defaultValue="true" />
 
         <SwitchPreferenceCompat
             app:key="subs_promos"
             app:summaryOff="Click to subscribe to promotions"
             app:summaryOn="You will receive the latest promotions!"
-            app:title="Receive Promotions" />
+            app:title="Receive Promotions"
+            android:defaultValue="true" />
 
     </PreferenceCategory>
 

@@ -22,8 +22,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import io.github.diegoflassa.littledropsofrain.fragments.FilterDialogFragment
-import io.github.diegoflassa.littledropsofrain.fragments.Filters
 import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.adapters.ProductAdapter
@@ -32,6 +30,8 @@ import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentHomeBinding
+import io.github.diegoflassa.littledropsofrain.fragments.FilterDialogFragment
+import io.github.diegoflassa.littledropsofrain.fragments.Filters
 
 
 class HomeFragment : Fragment(), ActivityResultCallback<Int>,
@@ -49,6 +49,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     companion object{
         const val TAG ="HomeFragment"
         const val LIMIT = 50
+        fun newInstance() = HomeFragment()
     }
 
     override fun onCreateView(
