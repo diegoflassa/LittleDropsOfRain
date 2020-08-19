@@ -1,4 +1,4 @@
-package io.github.diegoflassa.littledropsofrain.ui.admin
+package io.github.diegoflassa.littledropsofrain.models
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

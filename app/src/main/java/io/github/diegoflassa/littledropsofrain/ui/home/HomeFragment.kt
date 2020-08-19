@@ -13,9 +13,10 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -32,6 +33,7 @@ import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentHomeBinding
 import io.github.diegoflassa.littledropsofrain.fragments.FilterDialogFragment
 import io.github.diegoflassa.littledropsofrain.fragments.Filters
+import io.github.diegoflassa.littledropsofrain.models.HomeFragmentViewModel
 
 
 class HomeFragment : Fragment(), ActivityResultCallback<Int>,
@@ -39,7 +41,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     FilterDialogFragment.FilterListener,
     ProductAdapter.OnProductSelectedListener {
 
-    private lateinit var homeFragmentViewModel: HomeFragmentViewModel
+    private val homeFragmentViewModel: HomeFragmentViewModel by viewModels()
     lateinit var binding: FragmentHomeBinding
     private lateinit var mAdapter: ProductAdapter
     private lateinit var mFirestore: FirebaseFirestore
@@ -47,7 +49,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     private var mQuery: Query? = null
 
     companion object{
-        const val TAG ="HomeFragment"
+        val TAG = HomeFragment::class.simpleName
         const val LIMIT = 50
         fun newInstance() = HomeFragment()
     }
@@ -58,9 +60,6 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        homeFragmentViewModel =
-            ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
-
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
 
@@ -76,6 +75,10 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         initRecyclerView()
 
         binding.filterBar.isEnabled = false
+
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.VISIBLE
+
         Log.i(TAG,"$TAG activity successfully created>")
         return binding.root
     }
@@ -195,10 +198,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             override fun onError(e: FirebaseFirestoreException?) {
                 // Show a snackbar on errors
                 activity?.findViewById<View>(android.R.id.content)?.let {
-                    Snackbar.make(
-                        it,
-                        "Error: check logs for info.", Snackbar.LENGTH_LONG
-                    ).show()
+                    Snackbar.make(it,"Error: check logs for info.", Snackbar.LENGTH_LONG).show()
                 }
             }
         }

@@ -1,22 +1,22 @@
 package io.github.diegoflassa.littledropsofrain.adapters
 
-import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import io.github.diegoflassa.littledropsofrain.R
-import io.github.diegoflassa.littledropsofrain.activities.SendMessageActivity
 import io.github.diegoflassa.littledropsofrain.data.dao.MessageDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Message
 import io.github.diegoflassa.littledropsofrain.helpers.Helper
+import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
 
 
 open class MessageAdapter(query: Query?, private val mListener: OnMessageSelectedListener)
@@ -83,7 +83,10 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
             message.sender = sender.text.toString()
             message.title = title.text.toString()
             message.message = edtMessage.text.toString()
-            startActivity(v?.context!!, Intent(SendMessageActivity.ACTION_EDIT).putExtra(SendMessageActivity.KEY_MESSAGE, message), null)
+            val bundle = Bundle()
+            bundle.putString(SendMessageFragment.ACTION_EDIT_KEY, SendMessageFragment.ACTION_EDIT)
+            bundle.putParcelable(SendMessageFragment.KEY_MESSAGE, message)
+            v?.findNavController()?.navigate(R.id.sendMessageFragment, bundle)
         }
     }
 }

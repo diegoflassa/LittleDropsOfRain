@@ -65,7 +65,7 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
             var chipCategory : Chip
             productChipCategories.removeAllViews()
             for(category in product?.categories!!) {
-                if(!product.categories.isNullOrEmpty()) {
+                if(!category.isEmpty()) {
                     chipCategory = Chip(itemView.context)
                     chipCategory.isCheckable = true
                     chipCategory.isChecked = homeFragment.mFilterDialog.mCategories.contains(category)

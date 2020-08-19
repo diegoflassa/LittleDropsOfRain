@@ -1,7 +1,6 @@
 package io.github.diegoflassa.littledropsofrain
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -17,23 +16,19 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.*
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
-import io.github.diegoflassa.littledropsofrain.activities.SendMessageActivity
 import io.github.diegoflassa.littledropsofrain.auth.AuthActivityResultContract
 import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
 import io.github.diegoflassa.littledropsofrain.helpers.Helper
-import io.github.diegoflassa.littledropsofrain.ui.SettingsActivity
+import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 
@@ -58,11 +53,14 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         setContentView(binding.root)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         fab = findViewById(R.id.fab)
         fab.isEnabled= false
         fab.setOnClickListener {
-            startActivity(Intent(this, SendMessageActivity::class.java))
+            val bundle = Bundle()
+            bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.sendMessageFragment, bundle)
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
@@ -96,7 +94,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                         .placeholder(R.drawable.image_placeholder).into(
                             binding.navView.nav_vw_image
                         )
-                    binding.navView.nav_vw_name.text= currentUser.displayName
+                    binding.navView.nav_vw_name.text = currentUser.displayName
                     binding.navView.nav_vw_email.text = currentUser.email
                 } else {
                     binding.navView.nav_vw_image.setImageDrawable(
@@ -105,7 +103,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                             R.mipmap.ic_launcher_round
                         )
                     )
-                    binding.navView.nav_vw_name.text= getString(R.string.not_logged_in)
+                    binding.navView.nav_vw_name.text = getString(R.string.not_logged_in)
                     binding.navView.nav_vw_email.text = ""
                 }
             }
@@ -146,9 +144,9 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         val firebaseUserLiveData = viewModel.getFirebaseAuthLiveData()
         firebaseUserLiveData.observe(this,
             { firebaseUser ->
-                if(firebaseUser!=null) {
+                if (firebaseUser != null) {
                     UserDao.findByEMail(firebaseUser.email, this)
-                }else{
+                } else {
                     setupDrawerMenuIntems()
                 }
             })
@@ -169,6 +167,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        super.onSupportNavigateUp()
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
@@ -176,8 +175,12 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         var ret= false
         when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                ret = true
+            }
             R.id.action_settings -> {
-                startActivity(Intent(this, SettingsActivity::class.java))
+                findNavController(R.id.nav_host_fragment).navigate(R.id.settingsFragment)
                 ret = true
             }
             R.id.action_authentication -> {

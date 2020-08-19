@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics' // Apply the Crashlytics Gradle plugin
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply from: "$projectDir/buildsystem/config.gradle"
 
 android {

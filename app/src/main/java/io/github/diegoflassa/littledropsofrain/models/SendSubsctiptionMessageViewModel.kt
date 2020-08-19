@@ -1,4 +1,4 @@
-package io.github.diegoflassa.littledropsofrain.ui.subscription
+package io.github.diegoflassa.littledropsofrain.models
 
 import androidx.lifecycle.ViewModel
 

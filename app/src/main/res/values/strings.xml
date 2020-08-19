@@ -11,7 +11,6 @@
     <string name="menu_home">Home</string>
     <string name="menu_facebook">Facebook</string>
     <string name="menu_admin">Admin</string>
-    <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Recycle View Items-->
     <string name="rv_title">%1$s</string>
@@ -42,7 +41,6 @@
     <string name="msg_sender">Sender: %1$s</string>
     <string name="msg_read">Read</string>
     <string name="user_logged_as">User logged as : %1$s</string>
-    <string name="title_activity_send_message">Send Message</string>
     <string name="message_to_send">Message to send</string>
     <string name="delete">Delete</string>
     <string name="reply">Reply</string>
@@ -102,4 +100,6 @@
     <string-array name="sort_by">
         <item>@string/sort_by_price</item>
     </string-array>
+
+    <!-- Sync Preferences -->
 </resources>

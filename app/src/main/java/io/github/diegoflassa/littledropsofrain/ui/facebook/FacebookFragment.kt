@@ -10,6 +10,7 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentFacebookBinding
+import io.github.diegoflassa.littledropsofrain.models.FacebookViewModel
 
 
 class FacebookFragment : Fragment() {

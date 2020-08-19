@@ -1,10 +1,11 @@
 package io.github.diegoflassa.littledropsofrain.data.entities
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
-
+@Keep
 @Parcelize
 data class Product (
     var uid : String? = null,

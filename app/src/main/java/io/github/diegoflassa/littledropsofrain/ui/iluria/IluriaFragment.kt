@@ -5,15 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentIluriaBinding
+import io.github.diegoflassa.littledropsofrain.models.IluriaViewModel
 
 class IluriaFragment : Fragment() {
 
     companion object{
         fun newInstance() = IluriaFragment()
     }
-    private lateinit var homeViewModel: IluriaViewModel
+    private val homeViewModel: IluriaViewModel by viewModels()
     private lateinit var binding: FragmentIluriaBinding
 
     override fun onCreateView(
@@ -22,8 +23,6 @@ class IluriaFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         binding = FragmentIluriaBinding.inflate(inflater, container, false)
-        homeViewModel =
-            ViewModelProvider.NewInstanceFactory().create(IluriaViewModel::class.java)
         homeViewModel.text.observe(viewLifecycleOwner, {
             binding.textIluria.text = it
         })

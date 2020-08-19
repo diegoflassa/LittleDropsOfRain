@@ -173,21 +173,24 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
     }
 
     override fun onDataLoaded(item: List<Product>) {
-        val hashSet = LinkedHashSet<String>()
-        for(product in item) {
-            for(category in product.categories) {
-                hashSet.add(category)
+        if(isVisible) {
+            val hashSet = LinkedHashSet<String>()
+            for (product in item) {
+                for (category in product.categories) {
+                    hashSet.add(category)
+                }
             }
-        }
-        mCategoryChipGroup.removeAllViews()
-        for(category in hashSet)
-            if(category.trim().isNotEmpty()) {
-            val chipCategory = Chip(context)
-            chipCategory.isCheckable = true
-            chipCategory.isChecked = mCategories.contains(category)
-            chipCategory.text = category
-            chipCategory.setOnCheckedChangeListener(this)
-            mCategoryChipGroup.addView(chipCategory)
+            mCategoryChipGroup.removeAllViews()
+            for (category in hashSet) {
+                if (category.trim().isNotEmpty()) {
+                    val chipCategory = Chip(requireContext())
+                    chipCategory.isCheckable = true
+                    chipCategory.isChecked = mCategories.contains(category)
+                    chipCategory.text = category
+                    chipCategory.setOnCheckedChangeListener(this)
+                    mCategoryChipGroup.addView(chipCategory)
+                }
+            }
         }
     }
 

@@ -22,10 +22,10 @@
 
     <EditText
         android:id="@+id/edtTxtTitle"
-        android:layout_width="411dp"
-        android:layout_height="35dp"
+        android:layout_width="387dp"
+        android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="16dp"
         android:autofillHints=""
         android:ems="10"
@@ -39,8 +39,8 @@
 
     <EditText
         android:id="@+id/edtTxtMlMessage"
-        android:layout_width="407dp"
-        android:layout_height="185dp"
+        android:layout_width="387dp"
+        android:layout_height="179dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
@@ -50,20 +50,20 @@
         android:hint="@string/message_body"
         android:inputType="textMultiLine"
         android:paddingHorizontal="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/edtTxtTitle"
+        app:layout_constraintStart_toStartOf="@+id/edtTxtTitle"
         app:layout_constraintTop_toBottomOf="@+id/edtTxtTitle" />
 
     <Button
         android:id="@+id/btnSend"
-        android:layout_width="419dp"
-        android:layout_height="48dp"
+        android:layout_width="392dp"
+        android:layout_height="49dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:paddingHorizontal="16dp"
         android:text="@string/send"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/edtTxtMlMessage"
+        app:layout_constraintStart_toStartOf="@+id/edtTxtMlMessage"
         app:layout_constraintTop_toBottomOf="@+id/edtTxtMlMessage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

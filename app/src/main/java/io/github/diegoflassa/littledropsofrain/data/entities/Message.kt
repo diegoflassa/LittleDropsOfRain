@@ -1,6 +1,7 @@
 package io.github.diegoflassa.littledropsofrain.data.entities
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ServerTimestamp
@@ -8,6 +9,7 @@ import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 
+@Keep
 @Parcelize
 data class Message (
     var uid : String? = null,

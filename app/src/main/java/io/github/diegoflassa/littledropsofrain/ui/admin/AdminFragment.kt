@@ -1,6 +1,5 @@
 package io.github.diegoflassa.littledropsofrain.ui.admin
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,14 +19,14 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.R
-import io.github.diegoflassa.littledropsofrain.activities.SendMessageActivity
 import io.github.diegoflassa.littledropsofrain.adapters.MessageAdapter
 import io.github.diegoflassa.littledropsofrain.data.dao.MessageDao
 import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentAdminBinding
 import io.github.diegoflassa.littledropsofrain.helpers.Helper
+import io.github.diegoflassa.littledropsofrain.models.AdminViewModel
 import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
-import io.github.diegoflassa.littledropsofrain.ui.subscription.SendSubscriptionMessageFragment
+import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
 import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +39,7 @@ import java.util.concurrent.TimeUnit
 class AdminFragment : Fragment(),
     MessageAdapter.OnMessageSelectedListener {
 
-    private lateinit var adminViewModel: AdminViewModel
+    private val adminViewModel: AdminViewModel by viewModels()
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private lateinit var mAdapter: MessageAdapter
     private lateinit var binding : FragmentAdminBinding
@@ -59,8 +57,6 @@ class AdminFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAdminBinding.inflate(inflater, container, false)
-        adminViewModel =
-            ViewModelProvider.NewInstanceFactory().create(AdminViewModel::class.java)
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(
             AppCompatResources.getDrawable(
@@ -77,22 +73,19 @@ class AdminFragment : Fragment(),
         }
 
         binding.fab.setOnClickListener {
-            startActivity(Intent(context, SendMessageActivity::class.java))
+            val bundle = Bundle()
+            bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
+            findNavController().navigate(R.id.action_nav_admin_to_sendMessageFragment, bundle)
         }
 
         showLoadingScreen()
         initFirestore()
         initRecyclerView()
 
-        return binding.root
-    }
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.VISIBLE
 
-    private fun showSendSubscription(){
-        val manager: FragmentManager? = requireActivity().supportFragmentManager
-        val transaction: FragmentTransaction = manager?.beginTransaction()!!
-        transaction.replace(R.id.nav_host_fragment, SendSubscriptionMessageFragment.newInstance(), SendSubscriptionMessageFragment.TAG)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        return binding.root
     }
 
      private fun showLoadingScreen(){

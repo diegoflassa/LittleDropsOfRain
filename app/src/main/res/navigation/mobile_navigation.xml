@@ -8,13 +8,27 @@
         android:id="@+id/nav_home"
         android:name="io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_sendMessageFragment"
+            app:destination="@id/sendMessageFragment"
+            app:popUpTo="@id/nav_home" />
+        <action
+            android:id="@+id/action_nav_home_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:popUpTo="@id/nav_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_facebook"
         android:name="io.github.diegoflassa.littledropsofrain.ui.facebook.FacebookFragment"
         android:label="@string/menu_facebook"
-        tools:layout="@layout/fragment_facebook" />
+        tools:layout="@layout/fragment_facebook" >
+        <action
+            android:id="@+id/action_nav_facebook_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:popUpTo="@id/nav_facebook" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_admin"
@@ -23,18 +37,55 @@
         tools:layout="@layout/fragment_admin" >
         <action
             android:id="@+id/action_nav_admin_to_sendSubscriptionMessageFragment"
-            app:destination="@id/sendSubscriptionMessageFragment" />
+            app:destination="@id/sendSubscriptionMessageFragment"
+            app:popUpTo="@id/nav_admin"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_nav_admin_to_sendMessageFragment"
+            app:destination="@id/sendMessageFragment"
+            app:popUpTo="@id/nav_admin" />
+        <action
+            android:id="@+id/action_nav_admin_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:popUpTo="@id/nav_admin" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_iluria"
         android:name="io.github.diegoflassa.littledropsofrain.ui.iluria.IluriaFragment"
         android:label="@string/menu_iluria"
-        tools:layout="@layout/fragment_iluria" />
+        tools:layout="@layout/fragment_iluria" >
+        <action
+            android:id="@+id/action_nav_iluria_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:popUpTo="@id/nav_iluria" />
+    </fragment>
 
     <fragment
         android:id="@+id/sendSubscriptionMessageFragment"
         android:name="io.github.diegoflassa.littledropsofrain.ui.subscription.SendSubscriptionMessageFragment"
         android:label="@string/label_subscription"
-        tools:layout="@layout/fragment_send_subsctiption_message" />
+        tools:layout="@layout/fragment_send_subsctiption_message" >
+        <action
+            android:id="@+id/action_sendSubscriptionMessageFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:launchSingleTop="false"
+            app:popUpTo="@id/sendSubscriptionMessageFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.SettingsFragment"
+        android:label="Settings" />
+    <fragment
+        android:id="@+id/sendMessageFragment"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment"
+        android:label="Send Message"
+        tools:layout="@layout/fragment_send_message">
+        <action
+            android:id="@+id/action_sendMessageFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:popUpTo="@id/sendMessageFragment" />
+    </fragment>
+
 </navigation>
