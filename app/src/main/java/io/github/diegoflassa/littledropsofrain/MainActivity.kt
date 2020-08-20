@@ -15,6 +15,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.findNavController
 import androidx.navigation.ui.*
 import com.firebase.ui.auth.AuthUI
@@ -28,8 +34,11 @@ import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
 import io.github.diegoflassa.littledropsofrain.helpers.Helper
+import io.github.diegoflassa.littledropsofrain.models.MainActivityViewModel
 import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 
 class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
@@ -45,6 +54,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
     private lateinit var mAuth : FirebaseAuth
     private lateinit var fab: FloatingActionButton
     private lateinit var binding : ActivityMainBinding
+    private lateinit var lastSelectedMenuItem : MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,15 +148,13 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             ).show()
         }
 
-        if(mAuth.currentUser!=null)
-            UserDao.findByEMail(mAuth.currentUser!!.email, this)
-
         val firebaseUserLiveData = viewModel.getFirebaseAuthLiveData()
         firebaseUserLiveData.observe(this,
             { firebaseUser ->
                 if (firebaseUser != null) {
                     UserDao.findByEMail(firebaseUser.email, this)
                 } else {
+                    currentUser = User()
                     setupDrawerMenuIntems()
                 }
             })
@@ -188,13 +196,14 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 if (mAuth.currentUser == null) {
                     // Create and launch sign-in intent
                     registerForActivityResult(AuthActivityResultContract(), this).launch(null)
-                    item.title = getString(R.string.logout)
+                    item.isEnabled= false
                 } else {
                     logout()
                     item.title = getString(R.string.login)
                 }
             }
         }
+        lastSelectedMenuItem= item
         return ret
     }
 
@@ -210,14 +219,17 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 }
                 UserDao.insert(userFb)
             }
+            lastSelectedMenuItem.title = getString(R.string.logout)
             Toast.makeText(this, getString(R.string.log_in_successful), Toast.LENGTH_SHORT).show()
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
             // response.getError().getErrorCode() and handle the error.
             // ...
+            lastSelectedMenuItem.title = getString(R.string.login)
             Toast.makeText(this, R.string.unable_to_log_in, Toast.LENGTH_SHORT).show()
         }
+        lastSelectedMenuItem.isEnabled= true
     }
 
     private fun logout(){

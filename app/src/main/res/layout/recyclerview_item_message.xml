@@ -67,4 +67,5 @@
             android:text="@string/delete" />
 
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

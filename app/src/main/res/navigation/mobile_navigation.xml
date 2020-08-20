@@ -74,10 +74,6 @@
             app:popUpToInclusive="false" />
     </fragment>
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="io.github.diegoflassa.littledropsofrain.ui.SettingsFragment"
-        android:label="Settings" />
-    <fragment
         android:id="@+id/sendMessageFragment"
         android:name="io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment"
         android:label="Send Message"
@@ -87,5 +83,8 @@
             app:destination="@id/settingsFragment"
             app:popUpTo="@id/sendMessageFragment" />
     </fragment>
-
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.SettingsFragment"
+        android:label="Settings" />
 </navigation>

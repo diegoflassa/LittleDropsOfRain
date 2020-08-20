@@ -54,14 +54,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun registerPreferencesListener() {
         mpcl = MyOnSharedPreferenceChangeListener(requireContext())
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(
-            mpcl
-        )
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mpcl)
     }
 
     private fun unregisterPreferencesListener() {
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(
-            mpcl
-        )
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(mpcl)
     }
 }

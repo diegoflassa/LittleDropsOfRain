@@ -21,6 +21,7 @@ import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentFiltersBinding
 import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
+import viewLifecycle
 
 /**
  * Dialog Fragment containing filter form.
@@ -38,7 +39,7 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
     private var mSortSpinner: Spinner? = null
     private var mPriceSpinner: Spinner? = null
     var filterListener: FilterListener? = null
-    private lateinit var binding: FragmentFiltersBinding
+    private var binding: FragmentFiltersBinding by viewLifecycle()
     private var mRootView : View?= null
 
     override fun onCreateView(

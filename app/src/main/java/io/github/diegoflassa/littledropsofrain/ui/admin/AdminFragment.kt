@@ -31,6 +31,7 @@ import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import viewLifecycle
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -42,7 +43,7 @@ class AdminFragment : Fragment(),
     private val adminViewModel: AdminViewModel by viewModels()
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private lateinit var mAdapter: MessageAdapter
-    private lateinit var binding : FragmentAdminBinding
+    private var binding : FragmentAdminBinding by viewLifecycle()
     private lateinit var mFirestore: FirebaseFirestore
     private var mQuery: Query? = null
 
@@ -69,10 +70,11 @@ class AdminFragment : Fragment(),
         }
 
         binding.sendGlobalMessage.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_admin_to_sendSubscriptionMessageFragment)
+            findNavController().navigate(AdminFragmentDirections.actionNavAdminToSendSubscriptionMessageFragment())
         }
-
-        binding.fab.setOnClickListener {
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.GONE
+        fab?.setOnClickListener {
             val bundle = Bundle()
             bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
             findNavController().navigate(R.id.action_nav_admin_to_sendMessageFragment, bundle)
@@ -81,9 +83,6 @@ class AdminFragment : Fragment(),
         showLoadingScreen()
         initFirestore()
         initRecyclerView()
-
-        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
-        fab?.visibility = View.VISIBLE
 
         return binding.root
     }

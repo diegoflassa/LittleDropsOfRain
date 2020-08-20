@@ -1,4 +1,4 @@
-package io.github.diegoflassa.littledropsofrain
+package io.github.diegoflassa.littledropsofrain.models
 
 import androidx.lifecycle.ViewModel
 import io.github.diegoflassa.littledropsofrain.auth.FirebaseAuthLiveData

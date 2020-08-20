@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentIluriaBinding
 import io.github.diegoflassa.littledropsofrain.models.IluriaViewModel
+import viewLifecycle
 
 class IluriaFragment : Fragment() {
 
@@ -15,7 +16,7 @@ class IluriaFragment : Fragment() {
         fun newInstance() = IluriaFragment()
     }
     private val homeViewModel: IluriaViewModel by viewModels()
-    private lateinit var binding: FragmentIluriaBinding
+    private var binding: FragmentIluriaBinding by viewLifecycle()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -28,4 +29,5 @@ class IluriaFragment : Fragment() {
         })
         return binding.root
     }
+
 }

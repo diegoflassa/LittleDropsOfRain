@@ -29,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import viewLifecycle
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
@@ -44,7 +45,7 @@ class SendSubscriptionMessageFragment : Fragment() {
     }
 
     private val viewModel: SendSubsctiptionMessageViewModel by viewModels()
-    private lateinit var binding : FragmentSendSubsctiptionMessageBinding
+    private var binding : FragmentSendSubsctiptionMessageBinding by viewLifecycle()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,7 +62,11 @@ class SendSubscriptionMessageFragment : Fragment() {
         }
         (activity as AppCompatActivity?)!!.supportActionBar?.title = "Subscription Message"
         binding.btnSend.setOnClickListener {
-            sendMessage(getSelectedTopics(), binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
+            sendMessage(
+                getSelectedTopics(),
+                binding.edtTxtTitle.text.toString(),
+                binding.edtTxtMlMessage.text.toString()
+            )
         }
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
@@ -87,65 +92,87 @@ class SendSubscriptionMessageFragment : Fragment() {
         val chipIds = binding.cpGrpTopics.checkedChipIds
         for(chipId in chipIds){
             val chip = binding.cpGrpTopics.findViewById<Chip>(chipId)
-            ret.add(SubscriptionMessage.Topic.valueOf(chip.text.toString().toUpperCase(Locale.ROOT)))
+            ret.add(
+                SubscriptionMessage.Topic.valueOf(
+                    chip?.text.toString().toUpperCase(Locale.ROOT)
+                )
+            )
         }
         return ret
     }
 
-    private fun sendMessage(topics: Set<SubscriptionMessage.Topic>, title :String, messageContent:String) {
+    private fun sendMessage(
+        topics: Set<SubscriptionMessage.Topic>,
+        title: String,
+        messageContent: String
+    ) {
         ioScope.launch {
             if(topics.isNotEmpty()) {
-                val tokenValue = getAccessToken()?.tokenValue
-                for (topic in topics) {
-                    val url =
-                        "https://content-fcm.googleapis.com/v1/projects/littledropsofrain-72ae8/messages:send"
-                    val myReq: StringRequest = object : StringRequest(
-                        Method.POST, url,
-                        Response.Listener {
-                            Toast.makeText(
-                                requireContext(),
-                                "Message sent successfully",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        },
-                        Response.ErrorListener {
-                            Toast.makeText(
-                                requireContext(),
-                                "Error sending message",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }) {
-
-                        @Throws(AuthFailureError::class)
-                        override fun getBody(): ByteArray {
-                            val rawParameters: MutableMap<Any?, Any?> = Hashtable()
-                            val parameters: MutableMap<Any?, Any?> = Hashtable()
-                            val message: MutableMap<Any?, Any?> = Hashtable()
-                            message["title"] = title
-                            message["body"] = messageContent
-                            parameters["topic"] = topic.toString()
-                            parameters["notification"] = message
-                            rawParameters["message"] = parameters
-                            return JSONObject(rawParameters).toString().toByteArray()
-                        }
-
-                        override fun getBodyContentType(): String {
-                            return "application/json; charset=utf-8"
-                        }
-
-                        var YOUR_LEGACY_SERVER_KEY_FROM_FIREBASE_CONSOLE = tokenValue
-
-                        @Throws(AuthFailureError::class)
-                        override fun getHeaders(): Map<String, String> {
-                            val headers =
-                                HashMap<String, String>()
-                            headers["Authorization"] =
-                                "Bearer $YOUR_LEGACY_SERVER_KEY_FROM_FIREBASE_CONSOLE"
-                            return headers
-                        }
-                    }
-                    Volley.newRequestQueue(activity).add(myReq)
+                activity?.runOnUiThread {
+                    binding.btnSend.isEnabled = false
                 }
+                val tokenValue = getAccessToken()?.tokenValue
+                Log.d(TAG, "Got access token : $tokenValue")
+                var condition = ""
+                for (topic in topics) {
+                    if(condition.isNotEmpty())
+                        condition+= " || "
+                    condition+= "'${topic.toString().toLowerCase(Locale.ROOT)}' in topics"
+                }
+                val url = "https://content-fcm.googleapis.com/v1/projects/littledropsofrain-72ae8/messages:send"
+                val myReq: StringRequest = object : StringRequest(
+                    Method.POST, url,
+                    Response.Listener {
+                        Toast.makeText(
+                            requireContext(),
+                            "Message sent successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        activity?.runOnUiThread {
+                            binding.btnSend.isEnabled = true
+                        }
+                    },
+                    Response.ErrorListener {
+                        Toast.makeText(
+                            requireContext(),
+                            "Error sending message",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        activity?.runOnUiThread {
+                            binding.btnSend.isEnabled = true
+                        }
+                    }) {
+
+                    @Throws(AuthFailureError::class)
+                    override fun getBody(): ByteArray {
+                        val rawParameters: MutableMap<Any?, Any?> = Hashtable()
+                        val parameters: MutableMap<Any?, Any?> = Hashtable()
+                        val message: MutableMap<Any?, Any?> = Hashtable()
+                        message["title"] = title
+                        message["body"] = messageContent
+                        parameters["condition"] = condition
+                        parameters["notification"] = message
+                        rawParameters["message"] = parameters
+                        return JSONObject(rawParameters).toString().toByteArray()
+                    }
+
+                    override fun getBodyContentType(): String {
+                        return "application/json; charset=utf-8"
+                    }
+
+                    var YOUR_LEGACY_SERVER_KEY_FROM_FIREBASE_CONSOLE = tokenValue
+
+                    @Throws(AuthFailureError::class)
+                    override fun getHeaders(): Map<String, String> {
+                        val headers =
+                            HashMap<String, String>()
+                        headers["Authorization"] =
+                            "Bearer $YOUR_LEGACY_SERVER_KEY_FROM_FIREBASE_CONSOLE"
+                        return headers
+                    }
+                }
+                Volley.newRequestQueue(activity).add(myReq)
+
             }else{
                 Log.d(TAG, "No topic selected!")
             }
@@ -157,7 +184,6 @@ class SendSubscriptionMessageFragment : Fragment() {
         val scopes : MutableList<String> = ArrayList<String>()
         scopes.add("https://www.googleapis.com/auth/firebase.messaging")
         val credential = GoogleCredentials.fromStream(resource).createScoped(scopes)
-        //Log.d(TAG, "Got access token : ${accessToken.tokenValue}")
         return credential.refreshAccessToken()
     }
 

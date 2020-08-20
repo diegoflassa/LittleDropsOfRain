@@ -28,6 +28,7 @@ import io.github.diegoflassa.littledropsofrain.models.SendMessageViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import viewLifecycle
 
 class SendMessageFragment : Fragment(), DataChangeListener<List<User>> {
 
@@ -43,7 +44,7 @@ class SendMessageFragment : Fragment(), DataChangeListener<List<User>> {
     }
 
     private val viewModel: SendMessageViewModel by viewModels()
-    private lateinit var binding : FragmentSendMessageBinding
+    private var binding : FragmentSendMessageBinding by viewLifecycle()
     private val ioScope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreateView(

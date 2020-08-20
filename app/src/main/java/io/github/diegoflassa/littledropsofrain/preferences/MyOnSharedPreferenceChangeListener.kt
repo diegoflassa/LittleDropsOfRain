@@ -33,7 +33,7 @@ class MyOnSharedPreferenceChangeListener(var context: Context): SharedPreference
     private fun unsubscribeToPromos() {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(context.getString(R.string.topic_promo))
             .addOnCompleteListener { task ->
-                var msg = context.getString(R.string.msg_subscribed)
+                var msg = context.getString(R.string.msg_unsubscribed)
                 if (!task.isSuccessful) {
                     msg = context.getString(R.string.msg_subscribe_failed)
                 }
@@ -56,7 +56,7 @@ class MyOnSharedPreferenceChangeListener(var context: Context): SharedPreference
     private fun unsubscribeToNews() {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(context.getString(R.string.topic_news))
             .addOnCompleteListener { task ->
-                var msg = context.getString(R.string.msg_subscribed)
+                var msg = context.getString(R.string.msg_unsubscribed)
                 if (!task.isSuccessful) {
                     msg = context.getString(R.string.msg_subscribe_failed)
                 }

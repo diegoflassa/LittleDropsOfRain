@@ -145,8 +145,10 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-alpha06'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha06'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.browser:browser:1.2.0'
+
 
     // Icons
     implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)

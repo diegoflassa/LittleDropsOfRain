@@ -34,6 +34,7 @@ import io.github.diegoflassa.littledropsofrain.databinding.FragmentHomeBinding
 import io.github.diegoflassa.littledropsofrain.fragments.FilterDialogFragment
 import io.github.diegoflassa.littledropsofrain.fragments.Filters
 import io.github.diegoflassa.littledropsofrain.models.HomeFragmentViewModel
+import viewLifecycle
 
 
 class HomeFragment : Fragment(), ActivityResultCallback<Int>,
@@ -42,7 +43,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     ProductAdapter.OnProductSelectedListener {
 
     private val homeFragmentViewModel: HomeFragmentViewModel by viewModels()
-    lateinit var binding: FragmentHomeBinding
+    var binding: FragmentHomeBinding by viewLifecycle()
     private lateinit var mAdapter: ProductAdapter
     private lateinit var mFirestore: FirebaseFirestore
     lateinit var mFilterDialog: FilterDialogFragment

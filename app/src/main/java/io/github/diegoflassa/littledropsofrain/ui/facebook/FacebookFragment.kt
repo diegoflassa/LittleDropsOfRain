@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentFacebookBinding
 import io.github.diegoflassa.littledropsofrain.models.FacebookViewModel
+import viewLifecycle
 
 
 class FacebookFragment : Fragment() {
@@ -19,7 +20,7 @@ class FacebookFragment : Fragment() {
         fun newInstance() = FacebookFragment()
     }
     private lateinit var facebookViewModel: FacebookViewModel
-    private lateinit var binding :FragmentFacebookBinding
+    private var binding :FragmentFacebookBinding by viewLifecycle()
     private var facebookUrl = "https://www.facebook.com/m.andrea.littledrops/"
 
     override fun onCreateView(
@@ -52,6 +53,7 @@ class FacebookFragment : Fragment() {
     private fun showProgressDialog() {
         binding.facebookProgress.visibility = View.VISIBLE
     }
+
     fun hideProgressDialog(){
         binding.facebookProgress.visibility = View.GONE
     }
