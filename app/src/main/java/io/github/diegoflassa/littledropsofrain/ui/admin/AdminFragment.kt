@@ -31,7 +31,7 @@ import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import viewLifecycle
+import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -48,7 +48,7 @@ class AdminFragment : Fragment(),
     private var mQuery: Query? = null
 
     companion object {
-        const val TAG = "AdminFragment"
+        const val TAG = AdminFragment::class.simpleName
         fun newInstance() = AdminFragment()
     }
 

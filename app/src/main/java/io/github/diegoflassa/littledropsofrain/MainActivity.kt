@@ -15,12 +15,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.findNavController
 import androidx.navigation.ui.*
 import com.firebase.ui.auth.AuthUI
@@ -37,8 +31,6 @@ import io.github.diegoflassa.littledropsofrain.helpers.Helper
 import io.github.diegoflassa.littledropsofrain.models.MainActivityViewModel
 import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
 import kotlinx.android.synthetic.main.nav_header_main.view.*
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 
 
 class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
@@ -46,7 +38,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     companion object{
-        const val TAG ="MainActivity"
+        val TAG = MainActivity::class.simpleName
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
@@ -54,7 +46,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
     private lateinit var mAuth : FirebaseAuth
     private lateinit var fab: FloatingActionButton
     private lateinit var binding : ActivityMainBinding
-    private lateinit var lastSelectedMenuItem : MenuItem
+    private lateinit var authMenuItem : MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +69,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             this,
             drawerLayout,
             toolbar,
-            R.string.navigation_drawer_open,
+            R.string,
             R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
@@ -163,12 +155,12 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
-        val menuItem = menu.findItem(R.id.action_authentication)
+        authMenuItem = menu.findItem(R.id.action_authentication)
         if(mAuth.currentUser==null){
-            menuItem.title = getString(R.string.login)
+            authMenuItem.title = getString(R.string.login)
             fab.isEnabled= false
         }else{
-            menuItem.title = getString(R.string.logout)
+            authMenuItem.title = getString(R.string.logout)
             fab.isEnabled= true
         }
         return true
@@ -182,6 +174,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         var ret= false
+        authMenuItem= item
         when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
@@ -203,7 +196,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 }
             }
         }
-        lastSelectedMenuItem= item
         return ret
     }
 
@@ -219,17 +211,17 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 }
                 UserDao.insert(userFb)
             }
-            lastSelectedMenuItem.title = getString(R.string.logout)
+            authMenuItem.title = getString(R.string.logout)
             Toast.makeText(this, getString(R.string.log_in_successful), Toast.LENGTH_SHORT).show()
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
             // response.getError().getErrorCode() and handle the error.
             // ...
-            lastSelectedMenuItem.title = getString(R.string.login)
+            authMenuItem.title = getString(R.string.login)
             Toast.makeText(this, R.string.unable_to_log_in, Toast.LENGTH_SHORT).show()
         }
-        lastSelectedMenuItem.isEnabled= true
+        authMenuItem.isEnabled= true
     }
 
     private fun logout(){

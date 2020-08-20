@@ -34,7 +34,7 @@ import io.github.diegoflassa.littledropsofrain.databinding.FragmentHomeBinding
 import io.github.diegoflassa.littledropsofrain.fragments.FilterDialogFragment
 import io.github.diegoflassa.littledropsofrain.fragments.Filters
 import io.github.diegoflassa.littledropsofrain.models.HomeFragmentViewModel
-import viewLifecycle
+import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 
 
 class HomeFragment : Fragment(), ActivityResultCallback<Int>,

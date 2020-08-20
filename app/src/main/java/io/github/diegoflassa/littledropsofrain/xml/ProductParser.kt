@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 class ProductParser {
 
     companion object {
-        const val TAG = "ProductParser"
+        const val TAG = ProductParser::class.simpleName
         const val PRODUTOS = "produtos"
         const val PRODUTO = "produto"
         const val ID_PRODUTO = "id_produto"

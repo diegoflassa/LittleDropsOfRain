@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentIluriaBinding
 import io.github.diegoflassa.littledropsofrain.models.IluriaViewModel
-import viewLifecycle
+import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 
 class IluriaFragment : Fragment() {
 

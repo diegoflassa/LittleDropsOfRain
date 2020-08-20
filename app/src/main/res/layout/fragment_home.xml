@@ -65,7 +65,7 @@
                         android:id="@+id/text_current_sort_by"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/sorted_by_category"
+                        android:text="@string/sorted_by_categories"
                         android:textColor="@color/colorAccent" />
 
                 </LinearLayout>

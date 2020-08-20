@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentFacebookBinding
 import io.github.diegoflassa.littledropsofrain.models.FacebookViewModel
-import viewLifecycle
+import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 
 
 class FacebookFragment : Fragment() {

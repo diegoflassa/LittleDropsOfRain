@@ -29,7 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import viewLifecycle
+import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet

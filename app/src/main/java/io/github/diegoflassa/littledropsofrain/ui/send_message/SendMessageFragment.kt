@@ -28,7 +28,7 @@ import io.github.diegoflassa.littledropsofrain.models.SendMessageViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import viewLifecycle
+import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 
 class SendMessageFragment : Fragment(), DataChangeListener<List<User>> {
 

@@ -21,7 +21,7 @@ import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentFiltersBinding
 import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
-import viewLifecycle
+import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 
 /**
  * Dialog Fragment containing filter form.
@@ -170,7 +170,7 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
         }
 
     companion object {
-        const val TAG = "FilterDialog"
+        const val TAG = FilterDialog::class.simpleName
     }
 
     override fun onDataLoaded(item: List<Product>) {

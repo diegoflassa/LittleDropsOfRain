@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Little Drops Of Rain</string>
+    <string name="message_title">Título</string>
+    <string name="all">Todos</string>
+    <string name="send_global_message">Enviar mensagem globqal</string>
+    <string name="cancel">Cancelar</string>
+    <string name="apply">Aplicar</string>
+    <string name="icon_sort">Ícone de ordenação</string>
+    <string name="icon_price">Ícone de preço</string>
+    <string name="icon_category">Ícone de categoria</string>
+    <string name="button_filter">Botão filtrar</string>
+    <string name="button_clear_filter">Botão limpar filtro</string>
+    <string name="sort_by_price">Ordenar por preço</string>
+    <string name="sorted_by_price">ordenado por preço</string>
+    <string name="header_filters">Filtro</string>
+    <string name="all_products">Todos os produtos</string>
+    <string name="value_any_price">Qualquer preço</string>
+    <string name="sorted_by_categories">Ordenado por Categorias</string>
+    <string name="no_products_found">Nenhum produto encontrado</string>
+    <string name="no_messages_found">Nenhuma mensgaem encontrada</string>
+    <string name="title">Título</string>
+    <string name="send">Enviar</string>
+    <string name="reply">Responder</string>
+    <string name="delete">Deletar</string>
+</resources>

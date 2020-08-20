@@ -1,7 +1,8 @@
+package io.github.diegoflassa.littledropsofrain.helpers
+
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -16,7 +17,7 @@ fun <T> Fragment.viewLifecycle(): ReadWriteProperty<Fragment, T> =
             // The observer is automatically removed after the onDestroy event.
             this@viewLifecycle
                 .viewLifecycleOwnerLiveData
-                .observe(this@viewLifecycle, Observer { owner: LifecycleOwner? ->
+                .observe(this@viewLifecycle, { owner: LifecycleOwner? ->
                     owner?.lifecycle?.addObserver(this)
                 })
         }
