@@ -170,7 +170,7 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
         }
 
     companion object {
-        const val TAG = FilterDialog::class.simpleName
+        val TAG = FilterDialogFragment::class.simpleName
     }
 
     override fun onDataLoaded(item: List<Product>) {

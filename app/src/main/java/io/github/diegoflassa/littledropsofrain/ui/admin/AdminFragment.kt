@@ -48,7 +48,7 @@ class AdminFragment : Fragment(),
     private var mQuery: Query? = null
 
     companion object {
-        const val TAG = AdminFragment::class.simpleName
+        val TAG = AdminFragment::class.simpleName
         fun newInstance() = AdminFragment()
     }
 

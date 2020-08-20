@@ -94,7 +94,7 @@ class SendSubscriptionMessageFragment : Fragment() {
             val chip = binding.cpGrpTopics.findViewById<Chip>(chipId)
             ret.add(
                 SubscriptionMessage.Topic.valueOf(
-                    chip?.text.toString().toUpperCase(Locale.ROOT)
+                    chip.text.toString().toUpperCase(Locale.ROOT)
                 )
             )
         }

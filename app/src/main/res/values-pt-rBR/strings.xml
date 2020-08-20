@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Little Drops Of Rain</string>
+    <string name="signature_title">Título da Assinatura</string>
     <string name="message_title">Título</string>
     <string name="all">Todos</string>
     <string name="send_global_message">Enviar mensagem globqal</string>
@@ -23,4 +23,30 @@
     <string name="send">Enviar</string>
     <string name="reply">Responder</string>
     <string name="delete">Deletar</string>
+    <string name="message_to_send">Mensagem para enviar</string>
+    <string name="user_logged_as">Usuário logado como : %1$s</string>
+    <string name="msg_read">Lida</string>
+    <string name="msg_sender">Remetente: %1$s</string>
+    <string name="msg_creation_date">Data de Criação: %1$s</string>
+    <string name="msg_title">Título: %1$s</string>
+    <string name="log_in_successful">Login efetuado com sucesso</string>
+    <string name="unable_to_log_in">Impossível logar</string>
+    <string name="reload_products">Recarregar Produtos</string>
+    <string name="product_image">Imagem do produto</string>
+    <string name="reply_title">Ação de resposta padrão</string>
+    <string name="messages_header">Mensagens</string>
+    <string name="action_settings">Configurações</string>
+    <string name="navigation_drawer_close">Fechar gaveta de navegação</string>
+    <string name="msg_subscribed">Inscrito</string>
+    <string name="msg_subscribe_failed">Erro na Inscrição</string>
+    <string name="msg_subscribed_to_news">Inscreva-se para Notícias</string>
+    <string name="msg_subscribed_to_promos">Inscreva-se para Promoções</string>
+    <string name="msg_subscribe_promos_failed">Não foi possível inscrever-se para promoções</string>
+    <string name="msg_subscribe_news_failed">Não foi possível inscrever-se para notícias</string>
+    <string name="message_body">Corpo da Mensagem</string>
+    <string name="not_logged_in">Não logado</string>
+    <string name="label_subscription">Mensagens de Inscrições</string>
+    <string name="msg_unsubscribed">Não inscrito</string>
+    <string name="nav_header_desc">Cabeçalho de navegação</string>
+    <string name="navigation_drawer_open">Abrir gaveta de navegação</string>
 </resources>

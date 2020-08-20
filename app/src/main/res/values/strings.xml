@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Little Drops Of Rain</string>
-    <string name="">Open navigation drawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title" translatable="false">Android Studio</string>
     <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
@@ -21,18 +21,16 @@
     <string name="messages_header">Messages</string>
 
     <!-- Messages Preferences -->
-    <string name="">Your signature</string>
     <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
 
 
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
-    <string name="fcm_message">FCM Message</string>
+    <string name="fcm_message" translatable="false">FCM Message</string>
 
-    <string name="add_word">Add</string>
     <string name="product_image">Product image</string>
-    <string name="login">Login</string>
+    <string name="login" translatable="false">Login</string>
     <string name="reload_products">Reload Products</string>
     <string name="unable_to_log_in">Unable to log in</string>
     <string name="log_in_successful">Log in successful</string>
@@ -86,6 +84,7 @@
     <string name="not_logged_in">Not logged in</string>
     <string name="label_subscription">Subscription Messages</string>
     <string name="msg_unsubscribed">Unsubscribed</string>
+    <string name="signature_title">Signature Title</string>
 
     <!-- Price filters -->
     <string-array name="prices" translatable="false">

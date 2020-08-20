@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             this,
             drawerLayout,
             toolbar,
-            R.string,
+            R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
