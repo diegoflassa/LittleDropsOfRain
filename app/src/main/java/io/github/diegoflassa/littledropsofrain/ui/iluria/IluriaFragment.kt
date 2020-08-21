@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentIluriaBinding
 import io.github.diegoflassa.littledropsofrain.models.IluriaViewModel
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
@@ -15,7 +17,7 @@ class IluriaFragment : Fragment() {
     companion object{
         fun newInstance() = IluriaFragment()
     }
-    private val homeViewModel: IluriaViewModel by viewModels()
+    private val iluriaViewModel: IluriaViewModel by viewModels()
     private var binding: FragmentIluriaBinding by viewLifecycle()
 
     override fun onCreateView(
@@ -24,9 +26,12 @@ class IluriaFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         binding = FragmentIluriaBinding.inflate(inflater, container, false)
-        homeViewModel.text.observe(viewLifecycleOwner, {
-            binding.textIluria.text = it
+        iluriaViewModel.viewState.observe(viewLifecycleOwner, {
+            binding.textIluria.text = it.text
         })
+        binding.textIluria.text = iluriaViewModel.viewState.value?.text
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.GONE
         return binding.root
     }
 

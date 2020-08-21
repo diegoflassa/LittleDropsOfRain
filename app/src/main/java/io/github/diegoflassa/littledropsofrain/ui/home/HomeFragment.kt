@@ -1,6 +1,6 @@
 package io.github.diegoflassa.littledropsofrain.ui.home
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -33,7 +33,7 @@ import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentHomeBinding
 import io.github.diegoflassa.littledropsofrain.fragments.FilterDialogFragment
 import io.github.diegoflassa.littledropsofrain.fragments.Filters
-import io.github.diegoflassa.littledropsofrain.models.HomeFragmentViewModel
+import io.github.diegoflassa.littledropsofrain.models.HomeViewModel
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 
 
@@ -42,7 +42,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     FilterDialogFragment.FilterListener,
     ProductAdapter.OnProductSelectedListener {
 
-    private val homeFragmentViewModel: HomeFragmentViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
     var binding: FragmentHomeBinding by viewLifecycle()
     private lateinit var mAdapter: ProductAdapter
     private lateinit var mFirestore: FirebaseFirestore
@@ -61,6 +61,9 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        homeViewModel.viewState.observe(viewLifecycleOwner, {
+            // Update the UI
+        })
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
 
@@ -144,7 +147,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        homeFragmentViewModel.filters = filters
+        homeViewModel.filters = filters
     }
 
     override fun onClick(v: View) {
@@ -158,7 +161,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         super.onStart()
 
         // Apply filters
-        onFilter(homeFragmentViewModel.filters)
+        onFilter(homeViewModel.filters)
 
         // Start listening for Firestore updates
         mAdapter.startListening()
@@ -208,7 +211,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     }
 
     override fun onActivityResult(result : Int) {
-        if (result == Activity.RESULT_OK) {
+        if (result == AppCompatActivity.RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
             if(user!=null) {

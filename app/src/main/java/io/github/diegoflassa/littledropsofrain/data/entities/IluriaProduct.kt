@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName="Products")
 data class IluriaProduct(
     @NonNull @PrimaryKey
-    var idProduct : String,
+    var idProduct : String= "0",
     @field:ColumnInfo(name = "linkProduct")
     var linkProduct : String? = null,
     @field:ColumnInfo(name = "title")

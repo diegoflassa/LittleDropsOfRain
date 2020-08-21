@@ -2,6 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
     app:startDestination="@+id/nav_home">
 
     <fragment
@@ -13,22 +14,13 @@
             android:id="@+id/action_nav_home_to_sendMessageFragment"
             app:destination="@id/sendMessageFragment"
             app:popUpTo="@id/nav_home" />
-        <action
-            android:id="@+id/action_nav_home_to_settingsFragment"
-            app:destination="@id/settingsFragment"
-            app:popUpTo="@id/nav_home" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_facebook"
         android:name="io.github.diegoflassa.littledropsofrain.ui.facebook.FacebookFragment"
         android:label="@string/menu_facebook"
-        tools:layout="@layout/fragment_facebook" >
-        <action
-            android:id="@+id/action_nav_facebook_to_settingsFragment"
-            app:destination="@id/settingsFragment"
-            app:popUpTo="@id/nav_facebook" />
-    </fragment>
+        tools:layout="@layout/fragment_facebook" />
 
     <fragment
         android:id="@+id/nav_admin"
@@ -36,17 +28,13 @@
         android:label="@string/menu_admin"
         tools:layout="@layout/fragment_admin" >
         <action
-            android:id="@+id/action_nav_admin_to_sendSubscriptionMessageFragment"
-            app:destination="@id/sendSubscriptionMessageFragment"
+            android:id="@+id/action_nav_admin_to_sendTopicMessageFragment"
+            app:destination="@id/sendTopicMessageFragment"
             app:popUpTo="@id/nav_admin"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_nav_admin_to_sendMessageFragment"
             app:destination="@id/sendMessageFragment"
-            app:popUpTo="@id/nav_admin" />
-        <action
-            android:id="@+id/action_nav_admin_to_settingsFragment"
-            app:destination="@id/settingsFragment"
             app:popUpTo="@id/nav_admin" />
     </fragment>
 
@@ -54,25 +42,21 @@
         android:id="@+id/nav_iluria"
         android:name="io.github.diegoflassa.littledropsofrain.ui.iluria.IluriaFragment"
         android:label="@string/menu_iluria"
-        tools:layout="@layout/fragment_iluria" >
-        <action
-            android:id="@+id/action_nav_iluria_to_settingsFragment"
-            app:destination="@id/settingsFragment"
-            app:popUpTo="@id/nav_iluria" />
-    </fragment>
+        tools:layout="@layout/fragment_iluria" />
 
     <fragment
-        android:id="@+id/sendSubscriptionMessageFragment"
-        android:name="io.github.diegoflassa.littledropsofrain.ui.subscription.SendSubscriptionMessageFragment"
+        android:id="@+id/sendTopicMessageFragment"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.subscription.SendTopicMessageFragment"
         android:label="@string/label_subscription"
         tools:layout="@layout/fragment_send_subsctiption_message" >
         <action
             android:id="@+id/action_sendSubscriptionMessageFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
             app:launchSingleTop="false"
-            app:popUpTo="@id/sendSubscriptionMessageFragment"
+            app:popUpTo="@id/sendTopicMessageFragment"
             app:popUpToInclusive="false" />
     </fragment>
+
     <fragment
         android:id="@+id/sendMessageFragment"
         android:name="io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment"
@@ -83,8 +67,23 @@
             app:destination="@id/settingsFragment"
             app:popUpTo="@id/sendMessageFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/settingsFragment"
         android:name="io.github.diegoflassa.littledropsofrain.ui.SettingsFragment"
         android:label="Settings" />
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="io.github.diegoflassa.littledropsofrain.MainActivity"
+        android:label="app_bar_main"
+        tools:layout="@layout/app_bar_main" />
+
+    <action
+        android:id="@+id/action_global_settingsFragment"
+        app:destination="@id/settingsFragment" />
+
+    <action
+        android:id="@+id/action_global_sendMessageFragment"
+        app:destination="@id/sendMessageFragment" />
 </navigation>

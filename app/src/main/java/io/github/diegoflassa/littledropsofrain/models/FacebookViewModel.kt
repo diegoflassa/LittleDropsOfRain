@@ -3,11 +3,12 @@ package io.github.diegoflassa.littledropsofrain.models
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.github.diegoflassa.littledropsofrain.ui.facebook.FacebookFragment
 
 class FacebookViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is facebook Fragment"
+    private val mViewState = MutableLiveData<FacebookViewState>().apply {
+        value?.text = "This is ${FacebookFragment::class.simpleName} Fragment"
     }
-    val text: LiveData<String> = _text
+    val viewState: LiveData<FacebookViewState> = mViewState
 }

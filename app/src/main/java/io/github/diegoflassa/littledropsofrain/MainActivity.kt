@@ -1,6 +1,6 @@
 package io.github.diegoflassa.littledropsofrain
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -50,8 +49,11 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
 
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        viewModel.viewState.observe(this, {
+            // Update the UI
+        })
         setContentView(binding.root)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -181,7 +183,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 ret = true
             }
             R.id.action_settings -> {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.settingsFragment)
+                findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalSettingsFragment())
                 ret = true
             }
             R.id.action_authentication -> {
@@ -200,7 +202,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
     }
 
     override fun onActivityResult(result: Int) {
-        if (result == Activity.RESULT_OK) {
+        if (result == RESULT_OK) {
             fab.isEnabled= true
             // Successfully signed in
             val user = mAuth.currentUser

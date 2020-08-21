@@ -52,6 +52,9 @@ class SendMessageFragment : Fragment(), DataChangeListener<List<User>> {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSendMessageBinding.inflate(layoutInflater)
+        viewModel.viewState.observe(viewLifecycleOwner, {
+            // Update the UI
+        })
         binding.btnSend.setOnClickListener {
             val callback = Callback(this)
             // Coroutine has mutliple dispatchers suited for different type of workloads

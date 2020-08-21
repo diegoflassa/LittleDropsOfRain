@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentFacebookBinding
-import io.github.diegoflassa.littledropsofrain.models.FacebookViewModel
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
+import io.github.diegoflassa.littledropsofrain.models.FacebookViewModel
 
 
 class FacebookFragment : Fragment() {
@@ -19,18 +22,19 @@ class FacebookFragment : Fragment() {
     companion object{
         fun newInstance() = FacebookFragment()
     }
-    private lateinit var facebookViewModel: FacebookViewModel
+    private val facebookViewModel: FacebookViewModel by viewModels()
     private var binding :FragmentFacebookBinding by viewLifecycle()
     private var facebookUrl = "https://www.facebook.com/m.andrea.littledrops/"
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFacebookBinding.inflate(inflater, container, false)
-        facebookViewModel =
-            ViewModelProvider.NewInstanceFactory().create(FacebookViewModel::class.java)
+        facebookViewModel.viewState.observe(viewLifecycleOwner, {
+            // Update the UI
+        })
 
         // set up the webview
         binding.webviewFacebook.webViewClient = object: WebViewClient() {
@@ -45,8 +49,22 @@ class FacebookFragment : Fragment() {
                 super.onPageFinished(view, url)
             }
         }
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(binding.webviewFacebook.canGoBack()){
+                    binding.webviewFacebook.goBack()
+                } else {
+                    isEnabled = false
+                    requireActivity().onBackPressed()
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,callback)
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.GONE
         showProgressDialog()
-        binding.webviewFacebook.loadUrl( facebookUrl)
+        binding.webviewFacebook.loadUrl(facebookUrl)
         return binding.root
     }
 

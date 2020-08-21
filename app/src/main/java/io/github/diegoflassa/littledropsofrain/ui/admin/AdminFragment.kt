@@ -58,6 +58,9 @@ class AdminFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAdminBinding.inflate(inflater, container, false)
+        adminViewModel.viewState.observe(viewLifecycleOwner, {
+            // Update the UI
+        })
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(
             AppCompatResources.getDrawable(
@@ -70,7 +73,7 @@ class AdminFragment : Fragment(),
         }
 
         binding.sendGlobalMessage.setOnClickListener {
-            findNavController().navigate(AdminFragmentDirections.actionNavAdminToSendSubscriptionMessageFragment())
+            findNavController().navigate(AdminFragmentDirections.actionNavAdminToSendTopicMessageFragment())
         }
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE

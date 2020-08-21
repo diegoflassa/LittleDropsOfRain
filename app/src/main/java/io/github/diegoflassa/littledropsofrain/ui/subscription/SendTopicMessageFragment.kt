@@ -24,7 +24,7 @@ import com.google.auth.oauth2.GoogleCredentials
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.entities.SubscriptionMessage
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentSendSubsctiptionMessageBinding
-import io.github.diegoflassa.littledropsofrain.models.SendSubsctiptionMessageViewModel
+import io.github.diegoflassa.littledropsofrain.models.TopicMessageViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,16 +35,16 @@ import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
 
-class SendSubscriptionMessageFragment : Fragment() {
+class SendTopicMessageFragment : Fragment() {
 
     private val ioScope = CoroutineScope(Dispatchers.IO)
 
     companion object {
-        var TAG = SendSubscriptionMessageFragment::class.simpleName
-        fun newInstance() = SendSubscriptionMessageFragment()
+        var TAG = SendTopicMessageFragment::class.simpleName
+        fun newInstance() = SendTopicMessageFragment()
     }
 
-    private val viewModel: SendSubsctiptionMessageViewModel by viewModels()
+    private val viewModel: TopicMessageViewModel by viewModels()
     private var binding : FragmentSendSubsctiptionMessageBinding by viewLifecycle()
 
     override fun onCreateView(
@@ -52,6 +52,9 @@ class SendSubscriptionMessageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSendSubsctiptionMessageBinding.inflate(inflater, container, false)
+        viewModel.viewState.observe(viewLifecycleOwner, {
+            // Update the UI
+        })
         for(topic in SubscriptionMessage.Topic.values()) {
             if(topic != SubscriptionMessage.Topic.UNKNOWN) {
                 val chip = Chip(requireContext())

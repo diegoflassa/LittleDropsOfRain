@@ -62,7 +62,7 @@ class ProductParser {
                             Log.i(TAG, "Starting parsing products")
                         }else if (tagname == PRODUTO){
                             Log.i(TAG, "Created new product object")
-                            product= IluriaProduct("0")
+                            product= IluriaProduct()
                         }
                     XmlPullParser.END_TAG ->
                         when (tagname) {
