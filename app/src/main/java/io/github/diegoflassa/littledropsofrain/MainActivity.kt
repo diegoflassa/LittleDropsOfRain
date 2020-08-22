@@ -22,6 +22,8 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.joanzapata.iconify.IconDrawable
+import com.joanzapata.iconify.fonts.FontAwesomeIcons
 import com.squareup.picasso.Picasso
 import io.github.diegoflassa.littledropsofrain.auth.AuthActivityResultContract
 import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
@@ -210,6 +212,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 } else {
                     logout()
                     item.title = getString(R.string.login)
+                    authMenuItem.icon = IconDrawable(this, FontAwesomeIcons.fa_user_plus)
                 }
             }
         }
@@ -229,6 +232,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 UserDao.insert(userFb)
             }
             authMenuItem.title = getString(R.string.logout)
+            authMenuItem.icon = IconDrawable(this, FontAwesomeIcons.fa_user_times)
             Toast.makeText(this, getString(R.string.log_in_successful), Toast.LENGTH_SHORT).show()
         } else {
             // Sign in failed. If response is null the user canceled the
@@ -254,11 +258,16 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
 
     private fun setupDrawerMenuIntems(){
         val navView = findViewById<NavigationView>(R.id.nav_view)
-        //val navHome = navView.menu.findItem(R.id.nav_home)
+        val navHome = navView.menu.findItem(R.id.nav_home)
+        navHome.icon = IconDrawable(this, FontAwesomeIcons.fa_home)
         val navIluria = navView.menu.findItem(R.id.nav_iluria)
-        //val navFacebook = navView.menu.findItem(R.id.nav_facebook)
+        navIluria.icon = IconDrawable(this, FontAwesomeIcons.fa_shopping_cart)
+        val navFacebook = navView.menu.findItem(R.id.nav_facebook)
+        navFacebook.icon = IconDrawable(this, FontAwesomeIcons.fa_facebook_square)
         val navAdmin = navView.menu.findItem(R.id.nav_admin)
+        navAdmin.icon = IconDrawable(this, FontAwesomeIcons.fa_wrench)
         val navUsers = navView.menu.findItem(R.id.nav_users)
+        navUsers.icon = IconDrawable(this, FontAwesomeIcons.fa_users)
         if(!currentUser.isAdmin) {
             navIluria.isEnabled = false
             navIluria.isVisible = false
