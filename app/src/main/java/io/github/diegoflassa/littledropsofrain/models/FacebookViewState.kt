@@ -4,6 +4,6 @@ import androidx.lifecycle.LiveData
 
 class FacebookViewState : LiveData<FacebookViewState>(){
 
-    lateinit var text : String
+    var text : String = ""
 
 }

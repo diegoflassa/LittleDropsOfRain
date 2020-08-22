@@ -1,6 +1,5 @@
 package io.github.diegoflassa.littledropsofrain.data.entities
 
-import android.net.Uri
 import android.os.Parcelable
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp

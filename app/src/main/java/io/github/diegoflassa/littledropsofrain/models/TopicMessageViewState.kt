@@ -5,10 +5,10 @@ import io.github.diegoflassa.littledropsofrain.data.entities.SubscriptionMessage
 
 class TopicMessageViewState : LiveData<TopicMessageViewState>(){
 
-    lateinit var text : String
-    lateinit var title : String
-    lateinit var body : String
-    lateinit var topics : MutableSet<SubscriptionMessage.Topic>
+    var text : String = ""
+    var title : String = ""
+    var body : String = ""
+    var topics = HashSet<SubscriptionMessage.Topic>()
 
 }
 

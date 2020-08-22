@@ -4,6 +4,6 @@ import androidx.lifecycle.LiveData
 
 class AdminViewState : LiveData<AdminViewState>(){
 
-    lateinit var text : String
+    var text : String = ""
 
 }

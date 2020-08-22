@@ -6,6 +6,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
+import io.github.diegoflassa.littledropsofrain.data.DataFailureListener
 import io.github.diegoflassa.littledropsofrain.data.entities.Message
 import java.lang.ref.WeakReference
 import java.util.*
@@ -120,7 +121,7 @@ object MessageDao {
 
     fun insertAll(vararg messages: Message,
                   onSuccessListener: DataChangeListener<DocumentReference>? = null,
-                  onFailureListener: DataChangeListener<Exception>? = null) {
+                  onFailureListener: DataFailureListener<Exception>? = null) {
         for( message in messages) {
             insert(message, onSuccessListener, onFailureListener)
         }
@@ -129,26 +130,26 @@ object MessageDao {
     fun insert(
         message: Message,
         onSuccessListener: DataChangeListener<DocumentReference>? = null,
-        onFailureListener: DataChangeListener<Exception>? = null
+        onFailureListener: DataFailureListener<Exception>? = null
     ) {
         val data = message.toMap()
        db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener{
             onSuccessListener?.onDataLoaded(it)
         }?.addOnFailureListener{
-            onFailureListener?.onDataLoaded(it)
+            onFailureListener?.onDataFailure(it)
         }
     }
 
     fun update(
         message: Message,
         onSuccessListener: DataChangeListener<Void?>? = null,
-        onFailureListener: DataChangeListener<Exception>? = null
+        onFailureListener: DataFailureListener<Exception>? = null
     ) {
         val data = message.toMap()
        db.get()?.collection(COLLECTION_PATH)?.document(message.uid.toString())?.set(data)?.addOnSuccessListener{
             onSuccessListener?.onDataLoaded(it)
         }?.addOnFailureListener{
-            onFailureListener?.onDataLoaded(it)
+            onFailureListener?.onDataFailure(it)
         }
     }
 

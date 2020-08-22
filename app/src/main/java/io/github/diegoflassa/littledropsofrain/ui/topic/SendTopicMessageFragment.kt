@@ -67,15 +67,15 @@ class SendTopicMessageFragment : Fragment() {
                 chip.isCheckable = true
                 chip.setOnCheckedChangeListener { compoundButton: CompoundButton, state: Boolean ->
                     if (state) {
-                        viewModel.viewState.topics?.add(
+                        viewModel.viewState.topics.add(
                             SubscriptionMessage.Topic.valueOf(
-                                compoundButton.text.toString().toLowerCase(Locale.ROOT)
+                                compoundButton.text.toString().toUpperCase(Locale.ROOT)
                             )
                         )
                     } else {
-                        viewModel.viewState.topics?.remove(
+                        viewModel.viewState.topics.remove(
                             SubscriptionMessage.Topic.valueOf(
-                                compoundButton.text.toString().toLowerCase(Locale.ROOT)
+                                compoundButton.text.toString().toUpperCase(Locale.ROOT)
                             )
                         )
                     }
@@ -118,7 +118,7 @@ class SendTopicMessageFragment : Fragment() {
     private fun updateUI(viewState: TopicMessageViewState?){
         // Update the UI
         for(chip in binding.cpGrpTopics.children) {
-            if(viewState?.topics?.contains(SubscriptionMessage.Topic.valueOf((chip as Chip).text.toString().toLowerCase(Locale.ROOT)))!!) {
+            if(viewState?.topics?.contains(SubscriptionMessage.Topic.valueOf((chip as Chip).text.toString().toUpperCase(Locale.ROOT)))!!) {
                 chip.isSelected = true
             }
         }

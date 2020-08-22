@@ -19,6 +19,21 @@
         android:theme="@style/AppTheme"
         tools:targetApi="N">
 
+        <activity
+            android:name=".ui.SplashActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.Launcher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <!-- Fix Warning : activity#com.google.firebase.auth.internal.FederatedSignIn Activity ... -->
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
@@ -51,19 +66,6 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".ui.SplashActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.Launcher">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -18,7 +18,7 @@
     <string name="rv_price" translatable="false">R$%1$s</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
+    <string name="messages_header" translatable="false">Messages</string>
 
     <!-- Messages Preferences -->
     <string name="reply_title">Default reply action</string>
@@ -91,6 +91,8 @@
     <string name="rv_user_is_admin">Is Admin</string>
     <string name="menu_users">Users</string>
     <string name="no_users_found">No users found</string>
+    <string name="cant_change_user_admin">There must be at least one admin</string>
+    <string name="failure_changing_user">Error changing user</string>
 
     <!-- Price filters -->
     <string-array name="prices" translatable="false">

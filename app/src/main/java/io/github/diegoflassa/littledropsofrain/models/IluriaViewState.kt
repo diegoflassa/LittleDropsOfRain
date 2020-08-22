@@ -4,6 +4,6 @@ import androidx.lifecycle.LiveData
 
 class IluriaViewState : LiveData<IluriaViewState>(){
 
-    lateinit var text : String
+    var text : String = ""
 
 }

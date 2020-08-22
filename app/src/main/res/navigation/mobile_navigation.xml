@@ -90,6 +90,6 @@
     <fragment
         android:id="@+id/nav_users"
         android:name="io.github.diegoflassa.littledropsofrain.ui.users.UsersFragment"
-        android:label="fragment_users"
+        android:label="@string/menu_users"
         tools:layout="@layout/fragment_users" />
 </navigation>

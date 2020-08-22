@@ -4,6 +4,6 @@ import androidx.lifecycle.LiveData
 
 class MainActivityViewState : LiveData<MainActivityViewState>(){
 
-    lateinit var text : String
+    var text : String = ""
 
 }

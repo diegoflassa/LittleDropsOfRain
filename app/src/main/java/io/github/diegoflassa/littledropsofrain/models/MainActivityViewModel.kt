@@ -1,7 +1,5 @@
 package io.github.diegoflassa.littledropsofrain.models
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.auth.FirebaseAuthLiveData

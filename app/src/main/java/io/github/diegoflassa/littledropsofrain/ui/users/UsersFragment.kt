@@ -2,11 +2,12 @@ package io.github.diegoflassa.littledropsofrain.ui.users
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,15 +19,12 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.R
-import io.github.diegoflassa.littledropsofrain.adapters.MessageAdapter
-import io.github.diegoflassa.littledropsofrain.adapters.ProductAdapter
 import io.github.diegoflassa.littledropsofrain.adapters.UsersAdapter
-import io.github.diegoflassa.littledropsofrain.data.dao.MessageDao
+import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentUsersBinding
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 import io.github.diegoflassa.littledropsofrain.models.UsersViewModel
 import io.github.diegoflassa.littledropsofrain.models.UsersViewState
-import io.github.diegoflassa.littledropsofrain.ui.admin.AdminFragment
 import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
 
 class UsersFragment : Fragment(),
@@ -37,7 +35,7 @@ class UsersFragment : Fragment(),
         fun newInstance() = UsersFragment()
     }
     private val usersViewModel: UsersViewModel by viewModels()
-    private var binding: FragmentUsersBinding by viewLifecycle()
+    var binding: FragmentUsersBinding by viewLifecycle()
     private lateinit var mAdapter: UsersAdapter
     private lateinit var mFirestore: FirebaseFirestore
     private var mQuery: Query? = null
@@ -51,7 +49,6 @@ class UsersFragment : Fragment(),
         usersViewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
-
         showLoadingScreen()
         initFirestore()
         initRecyclerView()
@@ -85,7 +82,7 @@ class UsersFragment : Fragment(),
         viewState.text = ""
     }
 
-    private fun showLoadingScreen(){
+    fun showLoadingScreen(){
         binding.usersProgress.visibility = View.VISIBLE
     }
 
@@ -99,7 +96,7 @@ class UsersFragment : Fragment(),
 
     private fun onFilter() {
         // Construct query basic query
-        var query: Query = mFirestore.collection(MessageDao.COLLECTION_PATH)
+        var query: Query = mFirestore.collection(UserDao.COLLECTION_PATH)
         query.orderBy("creationDate", Query.Direction.ASCENDING)
         /*
         // Category (equality filter)
@@ -151,7 +148,7 @@ class UsersFragment : Fragment(),
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = object : UsersAdapter(mQuery, this@UsersFragment) {
+        mAdapter = object : UsersAdapter(this@UsersFragment, mQuery, this@UsersFragment) {
             override fun onDataChanged() {
                 hideLoadingScreen()
                 // Show/hide content if the query returns empty.
@@ -176,10 +173,17 @@ class UsersFragment : Fragment(),
         }
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
         binding.recyclerview.adapter = mAdapter
-        java.lang.IllegalArgumentException: Could not serialize object. Exceeded maximum depth of 500, which likely indicates there's an object cycle (found in field
     }
 
     override fun onUserSelected(user: DocumentSnapshot?) {
         Log.d(TAG, "User ${user?.id} selected")
+    }
+
+    fun showCantChangeUserToast() {
+        Toast.makeText(requireContext(), getString(R.string.cant_change_user_admin), Toast.LENGTH_LONG).show()
+    }
+
+    fun showToastUnableToChangeUser() {
+        Toast.makeText(requireContext(), getString(R.string.failure_changing_user), Toast.LENGTH_LONG).show()
     }
 }

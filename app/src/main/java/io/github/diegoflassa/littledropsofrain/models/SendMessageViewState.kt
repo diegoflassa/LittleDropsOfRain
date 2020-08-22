@@ -2,12 +2,13 @@ package io.github.diegoflassa.littledropsofrain.models
 
 import android.os.Parcelable
 import androidx.lifecycle.LiveData
+import io.github.diegoflassa.littledropsofrain.data.entities.User
 
 class SendMessageViewState : LiveData<SendMessageViewState>(){
 
-    lateinit var text : String
-    lateinit var title : String
-    lateinit var body : String
-    lateinit var dest : Parcelable
+    var text : String = ""
+    var title : String = ""
+    var body : String = ""
+    var dest : Parcelable = User()
 
 }

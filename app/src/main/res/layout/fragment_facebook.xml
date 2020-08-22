@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.facebook.FacebookFragment">
+    tools:context=".ui.facebook.FacebookFragment"
+    android:tag="FacebookFragment">
 
     <WebView
         android:id="@+id/webviewFacebook"

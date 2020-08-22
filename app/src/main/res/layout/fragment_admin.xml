@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.admin.AdminFragment">
+    tools:context=".ui.admin.AdminFragment"
+    android:tag="AdminFragment">
 
     <Button
         android:id="@+id/btnReloadProducts"

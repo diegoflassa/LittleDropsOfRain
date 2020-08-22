@@ -4,6 +4,6 @@ import androidx.lifecycle.LiveData
 
 class HomeViewState : LiveData<HomeViewState>(){
 
-    lateinit var text : String
+    var text : String = ""
 
 }

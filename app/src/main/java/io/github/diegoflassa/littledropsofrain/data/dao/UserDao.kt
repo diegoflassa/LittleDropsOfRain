@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
+import io.github.diegoflassa.littledropsofrain.data.DataFailureListener
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import java.lang.ref.WeakReference
 import java.util.*
@@ -11,7 +12,7 @@ import java.util.*
 object UserDao {
 
     private const val TAG: String = "UserDao"
-    private const val COLLECTION_PATH: String = "users"
+    const val COLLECTION_PATH: String = "users"
     private val db : WeakReference<FirebaseFirestore> = WeakReference(FirebaseFirestore.getInstance())
 
 
@@ -90,34 +91,34 @@ object UserDao {
     }
 
     fun insertAll(vararg users: User,
-                  onSuccessListener: DataChangeListener<Void>? = null,
-                  onFailureListener: DataChangeListener<Exception>? = null) {
+                  onSuccessListener: DataChangeListener<Void?>? = null,
+                  onFailureListener: DataFailureListener<Exception>? = null) {
         for( user in users) {
             insert(user, onSuccessListener, onFailureListener)
         }
     }
 
     fun insert(user: User,
-               onSuccessListener: DataChangeListener<Void>? = null,
-               onFailureListener: DataChangeListener<Exception>? = null
+               onSuccessListener: DataChangeListener<Void?>? = null,
+               onFailureListener: DataFailureListener<Exception>? = null
     ) {
         val data = user.toMap()
        db.get()?.collection(COLLECTION_PATH)?.document(user.uid.toString())?.set(data, SetOptions.merge())?.addOnSuccessListener{
             onSuccessListener?.onDataLoaded(it)
         }?.addOnFailureListener{
-            onFailureListener?.onDataLoaded(it)
+            onFailureListener?.onDataFailure(it)
         }
     }
 
     fun update(user: User,
-               onSuccessListener: DataChangeListener<Void>? = null,
-               onFailureListener: DataChangeListener<Exception>? = null
+               onSuccessListener: DataChangeListener<Void?>? = null,
+               onFailureListener: DataFailureListener<Exception>? = null
     ) {
         val data = user.toMap()
         db.get()?.collection(COLLECTION_PATH)?.document(user.uid.toString())?.set(data, SetOptions.merge())?.addOnSuccessListener{
             onSuccessListener?.onDataLoaded(it)
         }?.addOnFailureListener{
-            onFailureListener?.onDataLoaded(it)
+            onFailureListener?.onDataFailure(it)
         }
     }
 

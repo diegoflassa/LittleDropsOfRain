@@ -19,7 +19,7 @@ import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
 import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
-import io.github.diegoflassa.littledropsofrain.databinding.FragmentFiltersBinding
+import io.github.diegoflassa.littledropsofrain.databinding.FragmentProductsFiltersBinding
 import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 
@@ -29,6 +29,11 @@ import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
     View.OnClickListener, DataChangeListener<List<Product>>,
     CompoundButton.OnCheckedChangeListener {
+
+    companion object {
+        val TAG = ProductsFilterDialogFragment::class.simpleName
+    }
+
     interface FilterListener {
         fun onFilter(filters: ProductsFilters)
     }
@@ -39,7 +44,7 @@ open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragmen
     private var mSortSpinner: Spinner? = null
     private var mPriceSpinner: Spinner? = null
     var filterListener: FilterListener? = null
-    private var binding: FragmentFiltersBinding by viewLifecycle()
+    private var binding: FragmentProductsFiltersBinding by viewLifecycle()
     private var mRootView : View?= null
 
     override fun onCreateView(
@@ -47,7 +52,7 @@ open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragmen
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentFiltersBinding.inflate(inflater, container, false)
+        binding = FragmentProductsFiltersBinding.inflate(inflater, container, false)
         mCategoryChipGroup = binding.categoryChipGroup
         mSortSpinner = binding.spinnerSort
         mPriceSpinner = binding.spinnerPrice
@@ -168,10 +173,6 @@ open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragmen
             filters.sortDirection = sortDirection
             return filters
         }
-
-    companion object {
-        val TAG = ProductsFilterDialogFragment::class.simpleName
-    }
 
     override fun onDataLoaded(item: List<Product>) {
         if(isVisible) {

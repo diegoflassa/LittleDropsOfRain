@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -104,11 +105,13 @@ class SendMessageFragment : Fragment(), DataChangeListener<List<User>> {
         // Update the UI
         binding.edttxtTitle.setText(viewState.title)
         binding.mltxtMessage.setText(viewState.body)
-        val user = (viewState.dest as User)
-        val dataAdapter: ArrayAdapter<User> =
-            binding.spnrContacts.adapter as ArrayAdapter<User>
-        val spinnerPosition: Int = dataAdapter.getPosition(user)
-        binding.spnrContacts.setSelection(spinnerPosition)
+        if(binding.spnrContacts.adapter!=null) {
+            val user = (viewState.dest as User)
+            val dataAdapter: ArrayAdapter<User> =
+                binding.spnrContacts.adapter as ArrayAdapter<User>
+            val spinnerPosition: Int = dataAdapter.getPosition(user)
+            binding.spnrContacts.setSelection(spinnerPosition)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -157,8 +160,13 @@ class SendMessageFragment : Fragment(), DataChangeListener<List<User>> {
         )
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spnrContacts.adapter= dataAdapter
-        binding.spnrContacts.setOnItemClickListener { _: AdapterView<*>, _: View, pos: Int, _: Long ->
-            viewModel.viewState.dest = binding.spnrContacts.adapter.getItem(pos) as Parcelable
+        binding.spnrContacts.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+                viewModel.viewState.dest = binding.spnrContacts.adapter.getItem(pos) as Parcelable
+            }
+            override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
+                viewModel.viewState.dest = User()
+            }
         }
         setSelectedMessageSender()
     }

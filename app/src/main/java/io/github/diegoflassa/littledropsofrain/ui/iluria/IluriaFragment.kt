@@ -30,7 +30,7 @@ class IluriaFragment : Fragment() {
         iluriaViewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
-        binding.textIluria.text = iluriaViewModel.viewState.text
+        iluriaViewModel.viewState.text = binding.textIluria.text.toString()
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         return binding.root
