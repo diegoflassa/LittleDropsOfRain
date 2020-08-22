@@ -1,6 +1,8 @@
 package io.github.diegoflassa.littledropsofrain.models
 
-class FacebookViewState {
+import androidx.lifecycle.LiveData
+
+class FacebookViewState : LiveData<FacebookViewState>(){
 
     lateinit var text : String
 

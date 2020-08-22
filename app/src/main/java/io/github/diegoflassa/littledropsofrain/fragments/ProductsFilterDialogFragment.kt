@@ -26,11 +26,11 @@ import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 /**
  * Dialog Fragment containing filter form.
  */
-open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
+open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
     View.OnClickListener, DataChangeListener<List<Product>>,
     CompoundButton.OnCheckedChangeListener {
     interface FilterListener {
-        fun onFilter(filters: Filters)
+        fun onFilter(filters: ProductsFilters)
     }
 
     private var homeFragment : HomeFragment= fragment
@@ -158,10 +158,10 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
         }
     }
 
-    val filters: Filters
+    val filters: ProductsFilters
         get() {
             val filters =
-                Filters()
+                ProductsFilters()
             filters.categories.addAll(this.selectedCategories)
             filters.price = if(selectedPrice.isEmpty()){null}else{selectedPrice}
             filters.sortBy = selectedSortBy
@@ -170,7 +170,7 @@ open class FilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
         }
 
     companion object {
-        val TAG = FilterDialogFragment::class.simpleName
+        val TAG = ProductsFilterDialogFragment::class.simpleName
     }
 
     override fun onDataLoaded(item: List<Product>) {

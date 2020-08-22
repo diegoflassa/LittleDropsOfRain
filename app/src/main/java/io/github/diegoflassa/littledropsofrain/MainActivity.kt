@@ -28,6 +28,7 @@ import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
 import io.github.diegoflassa.littledropsofrain.helpers.Helper
 import io.github.diegoflassa.littledropsofrain.models.MainActivityViewModel
+import io.github.diegoflassa.littledropsofrain.models.MainActivityViewState
 import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         viewModel.viewState.observe(this, {
-            // Update the UI
+            updateUI(it)
         })
         setContentView(binding.root)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -122,7 +123,8 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 R.id.nav_home,
                 R.id.nav_iluria,
                 R.id.nav_facebook,
-                R.id.nav_admin
+                R.id.nav_admin,
+                R.id.nav_users
             ),
             drawerLayout
         )
@@ -152,6 +154,15 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                     setupDrawerMenuIntems()
                 }
             })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateUI(viewModel.viewState)
+    }
+    private fun updateUI(viewState: MainActivityViewState) {
+        // Update he UI
+        viewState.text = ""
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -243,16 +254,21 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         val navIluria = navView.menu.findItem(R.id.nav_iluria)
         //val navFacebook = navView.menu.findItem(R.id.nav_facebook)
         val navAdmin = navView.menu.findItem(R.id.nav_admin)
+        val navUsers = navView.menu.findItem(R.id.nav_users)
         if(!currentUser.isAdmin) {
             navIluria.isEnabled = false
             navIluria.isVisible = false
             navAdmin.isEnabled = false
             navAdmin.isVisible = false
+            navUsers.isEnabled = false
+            navUsers.isVisible = false
         }else{
             navIluria.isEnabled = true
             navIluria.isVisible = true
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
+            navUsers.isEnabled = true
+            navUsers.isVisible = true
         }
     }
 }

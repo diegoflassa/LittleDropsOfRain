@@ -1,6 +1,5 @@
 package io.github.diegoflassa.littledropsofrain.ui.home
 
-import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
@@ -31,22 +31,23 @@ import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentHomeBinding
-import io.github.diegoflassa.littledropsofrain.fragments.FilterDialogFragment
-import io.github.diegoflassa.littledropsofrain.fragments.Filters
-import io.github.diegoflassa.littledropsofrain.models.HomeViewModel
+import io.github.diegoflassa.littledropsofrain.fragments.ProductsFilterDialogFragment
+import io.github.diegoflassa.littledropsofrain.fragments.ProductsFilters
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
+import io.github.diegoflassa.littledropsofrain.models.HomeViewModel
+import io.github.diegoflassa.littledropsofrain.models.HomeViewState
 
 
 class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     View.OnClickListener,
-    FilterDialogFragment.FilterListener,
+    ProductsFilterDialogFragment.FilterListener,
     ProductAdapter.OnProductSelectedListener {
 
     private val homeViewModel: HomeViewModel by viewModels()
     var binding: FragmentHomeBinding by viewLifecycle()
     private lateinit var mAdapter: ProductAdapter
     private lateinit var mFirestore: FirebaseFirestore
-    lateinit var mFilterDialog: FilterDialogFragment
+    lateinit var mFilterDialog: ProductsFilterDialogFragment
     private var mQuery: Query? = null
 
     companion object{
@@ -62,14 +63,14 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         homeViewModel.viewState.observe(viewLifecycleOwner, {
-            // Update the UI
+            updateUI(it)
         })
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
 
         // Filter Dialog
         mFilterDialog =
-            FilterDialogFragment(
+            ProductsFilterDialogFragment(
                 this@HomeFragment
             )
         mFilterDialog.filterListener = this
@@ -87,15 +88,24 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateUI(homeViewModel.viewState)
+    }
+    private fun updateUI(viewState: HomeViewState) {
+        // Update the UI
+        viewState.text = ""
+    }
+
     private fun onFilterClicked() {
         binding.filterBar.isEnabled = false
         // Show the dialog containing filter options
-        mFilterDialog.show(parentFragmentManager, FilterDialogFragment.TAG)
+        mFilterDialog.show(parentFragmentManager, ProductsFilterDialogFragment.TAG)
     }
 
     private fun onClearFilterClicked() {
         mFilterDialog.resetFilters()
-        onFilter(Filters.default)
+        onFilter(ProductsFilters.default)
     }
 
     private fun showLoadingScreen(){
@@ -106,7 +116,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         binding.homeProgress.visibility = View.GONE
     }
 
-    override fun onFilter(filters : Filters) {
+    override fun onFilter(filters : ProductsFilters) {
 
         // Construct query basic query
         var query: Query = mFirestore.collection(ProductDao.COLLECTION_PATH)

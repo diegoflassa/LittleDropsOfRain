@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
 
 class SendMessageViewModel : ViewModel() {
-    private val mViewState = MutableLiveData<SendMessageViewState>().apply {
+    private val mViewState = SendMessageViewState().apply {
         value?.text = "This is ${SendMessageFragment::class.simpleName} Fragment"
     }
-    val viewState: LiveData<SendMessageViewState> = mViewState
+    val viewState = mViewState
 }

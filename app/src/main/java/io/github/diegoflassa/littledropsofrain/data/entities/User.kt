@@ -1,16 +1,25 @@
 package io.github.diegoflassa.littledropsofrain.data.entities
 
+import android.net.Uri
+import android.os.Parcelable
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.ServerTimestamp
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 import kotlin.collections.HashMap
 
-
-data class User(var email : String? = null, var name : String? = null, var uid: String? = null, @field:JvmField var isAdmin : Boolean = false ) {
+@Parcelize
+data class User(var imageUrl : String? = null, var email : String? = null, var name : String? = null, var uid: String? = null, @field:JvmField var isAdmin : Boolean = false, @ServerTimestamp
+var creationDate : Timestamp? = Timestamp.now() ) :
+    Parcelable {
 
     companion object{
         private const val UID= "uid"
+        private const val IMAGE_URL= "imageUrl"
         private const val EMAIL= "email"
         private const val NAME= "name"
         private const val IS_ADMIN= "isAdmin"
+        private const val CREATION_DATE= "creationDate"
     }
 
     constructor(map: Map<String, Any>) : this() {
@@ -43,17 +52,21 @@ data class User(var email : String? = null, var name : String? = null, var uid: 
     fun toMap(): Map<String, Any?> {
         val result: HashMap<String, Any?> = HashMap()
         result[UID] = uid
+        result[IMAGE_URL] = imageUrl
         result[EMAIL] = email
         result[NAME] = name
         result[IS_ADMIN] = isAdmin
+        result[CREATION_DATE] = creationDate
         return result
     }
 
     private fun fromMap(map: Map<String, Any>){
         uid = map[UID] as String?
+        imageUrl = map[IMAGE_URL] as String?
         email = map[EMAIL] as String?
         name = map[NAME] as String?
         isAdmin = map[IS_ADMIN] as Boolean
+        creationDate = map[CREATION_DATE] as Timestamp?
     }
 
     override fun toString():String{

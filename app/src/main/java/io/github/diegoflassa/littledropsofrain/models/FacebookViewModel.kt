@@ -7,8 +7,8 @@ import io.github.diegoflassa.littledropsofrain.ui.facebook.FacebookFragment
 
 class FacebookViewModel : ViewModel() {
 
-    private val mViewState = MutableLiveData<FacebookViewState>().apply {
+    private val mViewState = FacebookViewState().apply {
         value?.text = "This is ${FacebookFragment::class.simpleName} Fragment"
     }
-    val viewState: LiveData<FacebookViewState> = mViewState
+    val viewState = mViewState
 }

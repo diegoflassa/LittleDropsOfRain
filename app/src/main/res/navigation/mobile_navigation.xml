@@ -46,7 +46,7 @@
 
     <fragment
         android:id="@+id/sendTopicMessageFragment"
-        android:name="io.github.diegoflassa.littledropsofrain.ui.subscription.SendTopicMessageFragment"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.topic.SendTopicMessageFragment"
         android:label="@string/label_subscription"
         tools:layout="@layout/fragment_send_subsctiption_message" >
         <action
@@ -86,4 +86,10 @@
     <action
         android:id="@+id/action_global_sendMessageFragment"
         app:destination="@id/sendMessageFragment" />
+
+    <fragment
+        android:id="@+id/nav_users"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.users.UsersFragment"
+        android:label="fragment_users"
+        tools:layout="@layout/fragment_users" />
 </navigation>

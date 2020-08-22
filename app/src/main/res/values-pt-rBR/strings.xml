@@ -49,4 +49,9 @@
     <string name="msg_unsubscribed">Não inscrito</string>
     <string name="nav_header_desc">Cabeçalho de navegação</string>
     <string name="navigation_drawer_open">Abrir gaveta de navegação</string>
+    <string name="user_is_admin">Administrador</string>
+    <string name="rv_user_name">Nome : %1$s</string>
+    <string name="rv_user_is_admin">Administrador</string>
+    <string name="menu_users">Usuários</string>
+    <string name="no_users_found">Nehum usuário encontrado</string>
 </resources>

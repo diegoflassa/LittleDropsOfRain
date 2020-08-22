@@ -1,11 +1,13 @@
 package io.github.diegoflassa.littledropsofrain.ui.send_message
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -29,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
+import io.github.diegoflassa.littledropsofrain.models.SendMessageViewState
 
 class SendMessageFragment : Fragment(), DataChangeListener<List<User>> {
 
@@ -53,8 +56,10 @@ class SendMessageFragment : Fragment(), DataChangeListener<List<User>> {
     ): View? {
         binding = FragmentSendMessageBinding.inflate(layoutInflater)
         viewModel.viewState.observe(viewLifecycleOwner, {
-            // Update the UI
+            updateUI(viewModel.viewState)
         })
+        viewModel.viewState.title = binding.edttxtTitle.text.toString()
+        viewModel.viewState.body = binding.mltxtMessage.text.toString()
         binding.btnSend.setOnClickListener {
             val callback = Callback(this)
             // Coroutine has mutliple dispatchers suited for different type of workloads
@@ -87,6 +92,23 @@ class SendMessageFragment : Fragment(), DataChangeListener<List<User>> {
         }
         Log.d(TAG, "SendMessageFragment activity created!")
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateUI(viewModel.viewState)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun updateUI(viewState: SendMessageViewState) {
+        // Update the UI
+        binding.edttxtTitle.setText(viewState.title)
+        binding.mltxtMessage.setText(viewState.body)
+        val user = (viewState.dest as User)
+        val dataAdapter: ArrayAdapter<User> =
+            binding.spnrContacts.adapter as ArrayAdapter<User>
+        val spinnerPosition: Int = dataAdapter.getPosition(user)
+        binding.spnrContacts.setSelection(spinnerPosition)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -135,6 +157,9 @@ class SendMessageFragment : Fragment(), DataChangeListener<List<User>> {
         )
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spnrContacts.adapter= dataAdapter
+        binding.spnrContacts.setOnItemClickListener { _: AdapterView<*>, _: View, pos: Int, _: Long ->
+            viewModel.viewState.dest = binding.spnrContacts.adapter.getItem(pos) as Parcelable
+        }
         setSelectedMessageSender()
     }
 

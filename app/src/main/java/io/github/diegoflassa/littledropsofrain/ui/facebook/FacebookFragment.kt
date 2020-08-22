@@ -15,6 +15,7 @@ import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentFacebookBinding
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 import io.github.diegoflassa.littledropsofrain.models.FacebookViewModel
+import io.github.diegoflassa.littledropsofrain.models.FacebookViewState
 
 
 class FacebookFragment : Fragment() {
@@ -33,7 +34,7 @@ class FacebookFragment : Fragment() {
     ): View? {
         binding = FragmentFacebookBinding.inflate(inflater, container, false)
         facebookViewModel.viewState.observe(viewLifecycleOwner, {
-            // Update the UI
+            updateUI(it)
         })
 
         // set up the webview
@@ -66,6 +67,15 @@ class FacebookFragment : Fragment() {
         showProgressDialog()
         binding.webviewFacebook.loadUrl(facebookUrl)
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateUI(facebookViewModel.viewState)
+    }
+    private fun updateUI(viewState: FacebookViewState) {
+        // Update the UI
+        viewState.text = ""
     }
 
     private fun showProgressDialog() {

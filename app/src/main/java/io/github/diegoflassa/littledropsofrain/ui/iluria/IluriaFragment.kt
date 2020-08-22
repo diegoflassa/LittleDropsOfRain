@@ -9,8 +9,9 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentIluriaBinding
-import io.github.diegoflassa.littledropsofrain.models.IluriaViewModel
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
+import io.github.diegoflassa.littledropsofrain.models.IluriaViewModel
+import io.github.diegoflassa.littledropsofrain.models.IluriaViewState
 
 class IluriaFragment : Fragment() {
 
@@ -27,12 +28,21 @@ class IluriaFragment : Fragment() {
     ): View? {
         binding = FragmentIluriaBinding.inflate(inflater, container, false)
         iluriaViewModel.viewState.observe(viewLifecycleOwner, {
-            binding.textIluria.text = it.text
+            updateUI(it)
         })
-        binding.textIluria.text = iluriaViewModel.viewState.value?.text
+        binding.textIluria.text = iluriaViewModel.viewState.text
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateUI(iluriaViewModel.viewState)
+    }
+    private fun updateUI(viewState: IluriaViewState) {
+        // Update the UI
+        binding.textIluria.text = viewState.text
     }
 
 }

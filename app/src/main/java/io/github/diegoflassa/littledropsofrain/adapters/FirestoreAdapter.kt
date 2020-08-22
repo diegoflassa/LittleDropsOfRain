@@ -100,6 +100,10 @@ abstract class FirestoreAdapter<VH : RecyclerView.ViewHolder?>(private var mQuer
         return mSnapshots[index]
     }
 
+    protected fun getSnapshots(): List<DocumentSnapshot> {
+        return mSnapshots
+    }
+
     protected open fun onError(e: FirebaseFirestoreException?) {
         Log.d(TAG, "[onError]")
     }

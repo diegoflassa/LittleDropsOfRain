@@ -7,14 +7,14 @@ import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.auth.FirebaseAuthLiveData
 
 class MainActivityViewModel : ViewModel() {
-    private val firebaseAuthLiveData : FirebaseAuthLiveData= FirebaseAuthLiveData()
+    private val mFirebaseAuthLiveData : FirebaseAuthLiveData= FirebaseAuthLiveData()
 
     fun getFirebaseAuthLiveData() : FirebaseAuthLiveData {
-        return firebaseAuthLiveData
+        return mFirebaseAuthLiveData
     }
 
-    private val mViewState = MutableLiveData<MainActivityViewState>().apply {
+    private val mViewState = MainActivityViewState().apply {
         value?.text = "This is ${MainActivity::class.simpleName} Fragment"
     }
-    val viewState: LiveData<MainActivityViewState> = mViewState
+    val viewState = mViewState
 }

@@ -17,9 +17,6 @@ import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
 import java.text.DecimalFormatSymbols
 
-/**
- * RecyclerView adapter for a list of Restaurants.
- */
 open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?, private val mListener: OnProductSelectedListener)
     : FirestoreAdapter<ProductAdapter.ViewHolder?>(query) {
 

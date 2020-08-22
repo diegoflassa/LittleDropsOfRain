@@ -1,6 +1,8 @@
 package io.github.diegoflassa.littledropsofrain.models
 
-class IluriaViewState {
+import androidx.lifecycle.LiveData
+
+class IluriaViewState : LiveData<IluriaViewState>(){
 
     lateinit var text : String
 

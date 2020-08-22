@@ -7,8 +7,8 @@ import io.github.diegoflassa.littledropsofrain.ui.iluria.IluriaFragment
 
 class IluriaViewModel : ViewModel() {
 
-    private val mViewState = MutableLiveData<IluriaViewState>().apply {
+    private val mViewState = IluriaViewState().apply {
         value?.text = "This is ${IluriaFragment::class.simpleName} Fragment"
     }
-    val viewState: LiveData<IluriaViewState> = mViewState
+    val viewState = mViewState
 }

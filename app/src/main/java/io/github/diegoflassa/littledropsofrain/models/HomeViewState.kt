@@ -1,6 +1,8 @@
 package io.github.diegoflassa.littledropsofrain.models
 
-class HomeViewState {
+import androidx.lifecycle.LiveData
+
+class HomeViewState : LiveData<HomeViewState>(){
 
     lateinit var text : String
 

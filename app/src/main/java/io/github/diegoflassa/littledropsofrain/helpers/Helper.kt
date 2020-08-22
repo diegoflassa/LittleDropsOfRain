@@ -25,6 +25,7 @@ class Helper {
             userFb.uid = user.uid
             userFb.name = user.displayName
             userFb.email = user.email
+            userFb.imageUrl = user.photoUrl.toString()
             return userFb
         }
 

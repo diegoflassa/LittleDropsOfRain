@@ -11,7 +11,7 @@ import io.github.diegoflassa.littledropsofrain.helpers.Helper
 /**
  * Object for passing filters around.
  */
-class Filters {
+class ProductsFilters {
     var categories: MutableList<String> = ArrayList()
     var price: MutableList<Int>? = null
     var sortBy: String? = null
@@ -59,10 +59,10 @@ class Filters {
     }
 
     companion object {
-        val default: Filters
+        val default: ProductsFilters
             get() {
                 val filters =
-                    Filters()
+                    ProductsFilters()
                 filters.categories.clear()
                 filters.sortBy = Product.PRICE
                 filters.sortDirection = Query.Direction.DESCENDING

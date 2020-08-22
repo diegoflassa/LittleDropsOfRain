@@ -1,14 +1,16 @@
-package io.github.diegoflassa.littledropsofrain.ui.subscription
+package io.github.diegoflassa.littledropsofrain.ui.topic
 
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -30,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
+import io.github.diegoflassa.littledropsofrain.models.TopicMessageViewState
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
@@ -53,13 +56,30 @@ class SendTopicMessageFragment : Fragment() {
     ): View? {
         binding = FragmentSendSubsctiptionMessageBinding.inflate(inflater, container, false)
         viewModel.viewState.observe(viewLifecycleOwner, {
-            // Update the UI
+            updateUI(it)
         })
+        viewModel.viewState.title = binding.edtTxtTitle.text.toString()
+        viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
         for(topic in SubscriptionMessage.Topic.values()) {
             if(topic != SubscriptionMessage.Topic.UNKNOWN) {
                 val chip = Chip(requireContext())
                 chip.text = topic.toString()
                 chip.isCheckable = true
+                chip.setOnCheckedChangeListener { compoundButton: CompoundButton, state: Boolean ->
+                    if (state) {
+                        viewModel.viewState.topics?.add(
+                            SubscriptionMessage.Topic.valueOf(
+                                compoundButton.text.toString().toLowerCase(Locale.ROOT)
+                            )
+                        )
+                    } else {
+                        viewModel.viewState.topics?.remove(
+                            SubscriptionMessage.Topic.valueOf(
+                                compoundButton.text.toString().toLowerCase(Locale.ROOT)
+                            )
+                        )
+                    }
+                }
                 binding.cpGrpTopics.addView(chip)
             }
         }
@@ -88,6 +108,22 @@ class SendTopicMessageFragment : Fragment() {
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateUI(viewModel.viewState)
+    }
+
+    private fun updateUI(viewState: TopicMessageViewState?){
+        // Update the UI
+        for(chip in binding.cpGrpTopics.children) {
+            if(viewState?.topics?.contains(SubscriptionMessage.Topic.valueOf((chip as Chip).text.toString().toLowerCase(Locale.ROOT)))!!) {
+                chip.isSelected = true
+            }
+        }
+        binding.edtTxtTitle.setText(viewModel.viewState.title)
+        binding.edtTxtMlMessage.setText(viewModel.viewState.body)
     }
 
     private fun getSelectedTopics(): Set<SubscriptionMessage.Topic>{

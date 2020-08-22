@@ -109,6 +109,18 @@ object UserDao {
         }
     }
 
+    fun update(user: User,
+               onSuccessListener: DataChangeListener<Void>? = null,
+               onFailureListener: DataChangeListener<Exception>? = null
+    ) {
+        val data = user.toMap()
+        db.get()?.collection(COLLECTION_PATH)?.document(user.uid.toString())?.set(data, SetOptions.merge())?.addOnSuccessListener{
+            onSuccessListener?.onDataLoaded(it)
+        }?.addOnFailureListener{
+            onFailureListener?.onDataLoaded(it)
+        }
+    }
+
     fun delete(user: User?) {
        db.get()?.collection(COLLECTION_PATH)?.document(user?.uid.toString())?.delete()?.addOnSuccessListener {
             Log.i(TAG, "User ${user?.uid} deleted successfully")
