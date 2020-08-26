@@ -69,7 +69,10 @@
             app:layout_constraintStart_toEndOf="@+id/user_picture"
             app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            app:icon="@drawable/image_placeholder"
+            app:iconGravity="textStart"
             android:id="@+id/btn_delete_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

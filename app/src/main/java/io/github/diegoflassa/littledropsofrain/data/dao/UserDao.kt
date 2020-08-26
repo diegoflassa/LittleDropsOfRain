@@ -3,9 +3,11 @@ package io.github.diegoflassa.littledropsofrain.data.dao
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
-import io.github.diegoflassa.littledropsofrain.data.DataFailureListener
+import io.github.diegoflassa.littledropsofrain.interfaces.DataChangeListener
+import io.github.diegoflassa.littledropsofrain.interfaces.DataFailureListener
+import io.github.diegoflassa.littledropsofrain.interfaces.FindUserListener
 import io.github.diegoflassa.littledropsofrain.data.entities.User
+import io.github.diegoflassa.littledropsofrain.interfaces.UsersLoadedListener
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -16,7 +18,7 @@ object UserDao {
     private val db : WeakReference<FirebaseFirestore> = WeakReference(FirebaseFirestore.getInstance())
 
 
-    fun loadAll(listener: DataChangeListener<List<User>>){
+    fun loadAll(listener: UsersLoadedListener){
         val users: MutableList<User> = ArrayList()
        db.get()?.collection(COLLECTION_PATH)
            ?.get()
@@ -27,14 +29,14 @@ object UserDao {
                     Log.d(TAG, "${document.id} => ${document.data}")
                     users.add(user)
                 }
-                listener.onDataLoaded(users)
+                listener.onUsersLoaded(users)
             }
            ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting users: ", exception)
             }
     }
 
-    fun loadAllByIds(messageIds: List<String>, listener: DataChangeListener<List<User>>){
+    fun loadAllByIds(messageIds: List<String>, listener: UsersLoadedListener){
         val users: MutableList<User> = ArrayList()
         val itemsRef =db.get()?.collection(COLLECTION_PATH)
         itemsRef?.get()?.addOnCompleteListener { task ->
@@ -46,16 +48,16 @@ object UserDao {
                         users.add(user)
                     }
                 }
-                listener.onDataLoaded(users)
+                listener.onUsersLoaded(users)
             } else {
                 Log.d(TAG, "Error deleting documents: ", task.exception)
             }
         }
     }
 
-    fun findByName(name: String?, listener: DataChangeListener<List<User>>) {
+    fun findByName(name: String?, listener: UsersLoadedListener) {
         val users: MutableList<User> = ArrayList()
-       db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("name", name)
+        db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("name", name)
            ?.get()
            ?.addOnSuccessListener { result ->
                 var user : User
@@ -64,7 +66,7 @@ object UserDao {
                     Log.d(TAG, "${document.id} => ${document.data}")
                     users.add(user)
                 }
-                listener.onDataLoaded(users)
+                listener.onUsersLoaded(users)
             }
            ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting users: ", exception)
@@ -72,18 +74,16 @@ object UserDao {
     }
 
 
-    fun findByEMail(email: String?, listener: DataChangeListener<List<User>>) {
-        val users: MutableList<User> = ArrayList()
+    fun findByEMail(email: String?, listener: FindUserListener) {
+       var userFound: User? = null
        db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("email", email)
            ?.get()
            ?.addOnSuccessListener { result ->
-                var user : User
-                for (document in result) {
-                    user = document.toObject(User::class.java)
-                    Log.d(TAG, "${document.id} => ${document.data}")
-                    users.add(user)
+                if(result.size()==1) {
+                    userFound = result.documents[0].toObject(User::class.java)!!
+                    Log.d(TAG, "${result.documents[0].id} => ${result.documents[0].data}")
                 }
-                listener.onDataLoaded(users)
+                listener.onUserFound(userFound)
             }
            ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting users: ", exception)

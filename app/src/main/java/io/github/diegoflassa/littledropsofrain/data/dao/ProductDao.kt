@@ -9,7 +9,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
-import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
+import io.github.diegoflassa.littledropsofrain.interfaces.DataChangeListener
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

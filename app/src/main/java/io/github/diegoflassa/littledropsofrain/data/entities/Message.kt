@@ -25,13 +25,13 @@ data class Message (
 
     companion object{
         private const val UID= "uid"
-        private const val EMAIL_SENDER= "emailSender"
+        const val EMAIL_SENDER= "emailSender"
         private const val SENDER= "sender"
         private const val SENDER_ID= "senderId"
         private const val TITLE= "title"
         private const val MESSAGE= "message"
-        private const val CREATION_DATE= "creationDate"
-        private const val READ= "read"
+        const val CREATION_DATE= "creationDate"
+        const val READ= "read"
     }
 
     constructor(map: Map<String, Any>) : this() {

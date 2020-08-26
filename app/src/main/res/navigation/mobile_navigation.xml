@@ -23,18 +23,28 @@
         tools:layout="@layout/fragment_facebook" />
 
     <fragment
+        android:id="@+id/nav_instagram"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.instagram.InstagramFragment"
+        android:label="@string/menu_instagram"
+        tools:layout="@layout/fragment_instagram" />
+
+    <fragment
         android:id="@+id/nav_admin"
         android:name="io.github.diegoflassa.littledropsofrain.ui.admin.AdminFragment"
         android:label="@string/menu_admin"
         tools:layout="@layout/fragment_admin" >
         <action
-            android:id="@+id/action_nav_admin_to_sendTopicMessageFragment"
-            app:destination="@id/sendTopicMessageFragment"
+            android:id="@+id/nav_send_topic_message"
+            app:destination="@id/send_topic_message_fragment"
             app:popUpTo="@id/nav_admin"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_nav_admin_to_sendMessageFragment"
             app:destination="@id/sendMessageFragment"
+            app:popUpTo="@id/nav_admin" />
+        <action
+            android:id="@+id/nav_reload_products"
+            app:destination="@id/reload_products_fragment"
             app:popUpTo="@id/nav_admin" />
     </fragment>
 
@@ -45,15 +55,15 @@
         tools:layout="@layout/fragment_iluria" />
 
     <fragment
-        android:id="@+id/sendTopicMessageFragment"
+        android:id="@+id/send_topic_message_fragment"
         android:name="io.github.diegoflassa.littledropsofrain.ui.topic.SendTopicMessageFragment"
-        android:label="@string/label_subscription"
+        android:label="@string/label_topic"
         tools:layout="@layout/fragment_send_subsctiption_message" >
         <action
             android:id="@+id/action_sendSubscriptionMessageFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
             app:launchSingleTop="false"
-            app:popUpTo="@id/sendTopicMessageFragment"
+            app:popUpTo="@id/nav_send_topic_message"
             app:popUpToInclusive="false" />
     </fragment>
 
@@ -92,4 +102,11 @@
         android:name="io.github.diegoflassa.littledropsofrain.ui.users.UsersFragment"
         android:label="@string/menu_users"
         tools:layout="@layout/fragment_users" />
+
+    <fragment
+        android:id="@+id/reload_products_fragment"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.reload_products.ReloadProductsFragment"
+        android:label="@string/reload_products"
+        tools:layout="@layout/fragment_reload_products" />
+
 </navigation>

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,11 +22,17 @@ import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.adapters.UsersAdapter
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
+import io.github.diegoflassa.littledropsofrain.data.entities.Message
+import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentUsersBinding
+import io.github.diegoflassa.littledropsofrain.helpers.Helper
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 import io.github.diegoflassa.littledropsofrain.models.UsersViewModel
 import io.github.diegoflassa.littledropsofrain.models.UsersViewState
 import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
+import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
+import java.lang.ref.WeakReference
+
 
 class UsersFragment : Fragment(),
     UsersAdapter.OnUserSelectedListener {
@@ -36,7 +43,7 @@ class UsersFragment : Fragment(),
     }
     private val usersViewModel: UsersViewModel by viewModels()
     var binding: FragmentUsersBinding by viewLifecycle()
-    private lateinit var mAdapter: UsersAdapter
+    private lateinit var mAdapter: WeakReference<UsersAdapter>
     private lateinit var mFirestore: FirebaseFirestore
     private var mQuery: Query? = null
 
@@ -65,12 +72,12 @@ class UsersFragment : Fragment(),
         onFilter()
 
         // Start listening for Firestore updates
-        mAdapter.startListening()
+        mAdapter.get()?.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-        mAdapter.stopListening()
+        mAdapter.get()?.stopListening()
     }
 
     override fun onResume() {
@@ -124,7 +131,7 @@ class UsersFragment : Fragment(),
 
         // Update the query
         mQuery = query
-        mAdapter.setQuery(query)
+        mAdapter.get()?.setQuery(query)
 
         // Set header
         //mCurrentSearchView.setText(Html.fromHtml(filters.getSearchDescription(this)))
@@ -148,7 +155,7 @@ class UsersFragment : Fragment(),
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = object : UsersAdapter(this@UsersFragment, mQuery, this@UsersFragment) {
+        mAdapter = WeakReference( object : UsersAdapter(this@UsersFragment, mQuery, this@UsersFragment) {
             override fun onDataChanged() {
                 hideLoadingScreen()
                 // Show/hide content if the query returns empty.
@@ -170,20 +177,43 @@ class UsersFragment : Fragment(),
                     ).show()
                 }
             }
-        }
+        })
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
-        binding.recyclerview.adapter = mAdapter
+        binding.recyclerview.adapter = mAdapter.get()
     }
 
     override fun onUserSelected(user: DocumentSnapshot?) {
-        Log.d(TAG, "User ${user?.id} selected")
+        val parsedUser = user?.toObject(User::class.java)
+        showSendMessageTo(parsedUser!!)
+   }
+
+    private fun showSendMessageTo(user: User) {
+        val message = Message()
+        message.sender = user.email
+        message.title = ""
+        message.message = ""
+        val bundle = Bundle()
+        bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
+        bundle.putParcelable(SendMessageFragment.KEY_MESSAGE, message)
+        findNavController().navigate(R.id.sendMessageFragment, bundle)
     }
 
-    fun showCantChangeUserToast() {
-        Toast.makeText(requireContext(), getString(R.string.cant_change_user_admin), Toast.LENGTH_LONG).show()
+    private fun sendEmail(user : User){
+        val sendTo= ArrayList<String>()
+        sendTo.add(user.email!!)
+        Helper.sendEmail(
+            requireContext(),
+            sendTo,
+            getString(R.string.email_subject),
+            getString(R.string.email_body)
+        )
     }
 
     fun showToastUnableToChangeUser() {
-        Toast.makeText(requireContext(), getString(R.string.failure_changing_user), Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.failure_changing_user),
+            Toast.LENGTH_LONG
+        ).show()
     }
 }

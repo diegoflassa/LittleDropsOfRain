@@ -7,6 +7,7 @@
     tools:context=".ui.home.HomeFragment"
     android:tag="HomeFragment">
 
+    <!-- Filter Bar -->
     <FrameLayout
         android:id="@+id/filter_bar_container"
         android:layout_width="match_parent"

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,39 +18,40 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import com.joanzapata.iconify.IconDrawable
+import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.adapters.MessageAdapter
 import io.github.diegoflassa.littledropsofrain.data.dao.MessageDao
-import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
+import io.github.diegoflassa.littledropsofrain.data.entities.Message
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentAdminBinding
-import io.github.diegoflassa.littledropsofrain.helpers.Helper
+import io.github.diegoflassa.littledropsofrain.fragments.MessagesFilterDialogFragment
+import io.github.diegoflassa.littledropsofrain.fragments.MessagesFilters
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 import io.github.diegoflassa.littledropsofrain.models.AdminViewModel
 import io.github.diegoflassa.littledropsofrain.models.AdminViewState
-import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
-import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
-import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
+import java.lang.ref.WeakReference
 
 
 class AdminFragment : Fragment(),
-    MessageAdapter.OnMessageSelectedListener {
+    MessageAdapter.OnMessageSelectedListener,
+    MessagesFilterDialogFragment.FilterListener,
+    View.OnClickListener {
 
     private val adminViewModel: AdminViewModel by viewModels()
     private val ioScope = CoroutineScope(Dispatchers.IO)
-    private lateinit var mAdapter: MessageAdapter
-    private var binding : FragmentAdminBinding by viewLifecycle()
+    private lateinit var mAdapter: WeakReference<MessageAdapter>
+    var binding : FragmentAdminBinding by viewLifecycle()
+    private lateinit var mFilterDialog: MessagesFilterDialogFragment
     private lateinit var mFirestore: FirebaseFirestore
     private var mQuery: Query? = null
 
     companion object {
         val TAG = AdminFragment::class.simpleName
+        const val LIMIT = 50
         fun newInstance() = AdminFragment()
     }
 
@@ -69,20 +71,30 @@ class AdminFragment : Fragment(),
                 R.drawable.card_item_divider
             )!!
         )
-        binding.btnReloadProducts.setOnClickListener {
-            fetchProducts()
+
+        val menu = binding.navBottomAdmin.menu
+        menu.findItem(R.id.nav_reload_products).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_loop)
+        menu.findItem(R.id.nav_send_topic_message).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_envelope)
+        binding.navBottomAdmin.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.nav_reload_products -> { onReloadProductsClicked() }
+                R.id.nav_send_topic_message -> { onSendTopicMessageClicked() }
+                else -> {}// Do nothing
+            }
+            true
         }
 
-        binding.sendGlobalMessage.setOnClickListener {
-            findNavController().navigate(AdminFragmentDirections.actionNavAdminToSendTopicMessageFragment())
-        }
+        binding.filterBarMessages.setOnClickListener(this)
+        binding.buttonClearFilterMessages.setOnClickListener(this)
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
-        fab?.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
-            findNavController().navigate(R.id.action_nav_admin_to_sendMessageFragment, bundle)
-        }
+
+        // Filter Dialog
+        mFilterDialog =
+            MessagesFilterDialogFragment(
+                this@AdminFragment
+            )
+        mFilterDialog.filterListener = this
 
         showLoadingScreen()
         initFirestore()
@@ -95,21 +107,37 @@ class AdminFragment : Fragment(),
         super.onStart()
 
         // Apply filters
-        onFilter()
+        onFilter(adminViewModel.viewState.filters)
 
         // Start listening for Firestore updates
-        mAdapter.startListening()
+        mAdapter.get()?.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-        mAdapter.stopListening()
+        mAdapter.get()?.stopListening()
     }
 
     override fun onResume() {
         super.onResume()
         updateUI(adminViewModel.viewState)
     }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.filter_bar_messages -> onFilterClicked()
+            R.id.button_clear_filter_messages -> onClearFilterClicked()
+        }
+    }
+
+    private fun onSendTopicMessageClicked() {
+        findNavController().navigate(AdminFragmentDirections.navSendTopicMessage())
+    }
+
+    private fun onReloadProductsClicked() {
+        findNavController().navigate(AdminFragmentDirections.navReloadProducts())
+    }
+
     private fun updateUI(viewState: AdminViewState) {
         // Update the UI
         viewState.text = ""
@@ -123,44 +151,45 @@ class AdminFragment : Fragment(),
         binding.adminProgress.visibility = View.GONE
     }
 
-    private fun onFilter() {
+    override fun onFilter(filters : MessagesFilters) {
+
         // Construct query basic query
         var query: Query = mFirestore.collection(MessageDao.COLLECTION_PATH)
-        query.orderBy("creationDate", Query.Direction.DESCENDING)
-        /*
-        // Category (equality filter)
-        if (filters.hasCategory()) {
-            query = query.whereEqualTo("category", filters.getCategory())
-        }
+        query.orderBy(Message.CREATION_DATE, Query.Direction.DESCENDING)
 
+        // Category (equality filter)
+        if (filters.hasRead()) {
+            query = query.whereEqualTo(Message.READ, filters.read)
+        }
+        /*
         // City (equality filter)
         if (filters.hasCity()) {
             query = query.whereEqualTo("city", filters.getCity())
         }
-
+        */
         // Price (equality filter)
-        if (filters.hasPrice()) {
-            query = query.whereEqualTo("price", filters.getPrice())
+        if (filters.hasEMailSender()) {
+            query = query.whereEqualTo(Message.EMAIL_SENDER, filters.emailSender!!)
         }
 
         // Sort by (orderBy with direction)
         if (filters.hasSortBy()) {
-            query = query.orderBy(filters.getSortBy(), filters.getSortDirection())
+            query = query.orderBy(filters.sortBy!!, filters.sortDirection!!)
         }
-        */
         // Limit items
-        query = query.limit(HomeFragment.LIMIT.toLong())
+        query = query.limit(LIMIT.toLong())
 
         // Update the query
         mQuery = query
-        mAdapter.setQuery(query)
+        mAdapter.get()?.setQuery(query)
+        showLoadingScreen()
 
         // Set header
-        //mCurrentSearchView.setText(Html.fromHtml(filters.getSearchDescription(this)))
-        //mCurrentSortByView.setText(filters.getOrderDescription(this))
+        binding.textCurrentSearchMessages.text = HtmlCompat.fromHtml(filters.getSearchDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.textCurrentSortByMessages.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        //mViewModel.setFilters(filters)
+        adminViewModel.viewState.filters = filters
     }
 
     private fun initFirestore() {
@@ -181,7 +210,7 @@ class AdminFragment : Fragment(),
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = object : MessageAdapter(mQuery, this@AdminFragment) {
+        mAdapter = WeakReference( object : MessageAdapter(mQuery, this@AdminFragment) {
             override fun onDataChanged() {
                 hideLoadingScreen()
                 // Show/hide content if the query returns empty.
@@ -203,20 +232,21 @@ class AdminFragment : Fragment(),
                     ).show()
                 }
             }
-        }
+        })
         binding.recyclerviewAdmin.layoutManager = LinearLayoutManager(activity)
-        binding.recyclerviewAdmin.adapter = mAdapter
+        binding.recyclerviewAdmin.adapter = mAdapter.get()
     }
 
-    private fun fetchProducts(){
-        val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
-        scheduler.scheduleAtFixedRate({
-            ioScope.launch {
-                val productParser = ProductParser()
-                val products = productParser.parse()
-                ProductDao.insertAll(Helper.iluriaProductToProduct(products))
-            }
-        }, 0, 12, TimeUnit.HOURS)
+    private fun onFilterClicked() {
+        binding.filterBarMessages.isEnabled = false
+        // Show the dialog containing filter options
+        mFilterDialog.show(parentFragmentManager, MessagesFilterDialogFragment.TAG)
+    }
+
+    private fun onClearFilterClicked() {
+        mFilterDialog.resetFilters()
+        adminViewModel.viewState.filters= MessagesFilters.default
+        onFilter(adminViewModel.viewState.filters)
     }
 
     override fun onMessageSelected(message: DocumentSnapshot?) {

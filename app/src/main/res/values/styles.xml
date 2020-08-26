@@ -5,6 +5,23 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textSize">14sp</item>
+        <item name="actionMenuTextColor">@drawable/default_text_color_primary</item>
+        <item name="android:textColor">@drawable/default_text_color_primary</item>
+        <item name="android:editTextColor">@drawable/default_text_color_primary</item>
+        <item name="android:textColorPrimary">@drawable/default_text_color_primary</item>
+        <item name="android:textColorSecondary">@drawable/default_text_color_secondary</item>
+        <item name="android:textColorPrimaryInverse">@drawable/default_text_color_primary</item>
+        <item name="android:textColorSecondaryInverse">@drawable/default_text_color_secondary</item>
+    </style>
+
+    <!-- ToolBar -->
+    <style name="ToolBarStyle" parent="AppTheme">
+        <item name="android:textColorPrimary">@drawable/default_text_color_primary</item>
+        <item name="android:textColorSecondary">@drawable/default_text_color_secondary</item>
+        <item name="titleTextColor">@drawable/default_text_color_primary</item>
+        <item name="actionMenuTextColor">@drawable/default_text_color_primary</item>
+        <item name="colorControlNormal">@color/primaryTextColor</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,7 +34,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.Launcher">
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@android:color/black</item>
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 

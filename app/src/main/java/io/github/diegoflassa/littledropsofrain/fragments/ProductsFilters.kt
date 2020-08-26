@@ -36,15 +36,14 @@ class ProductsFilters {
             desc.append("</b>")
         }else{
             desc.append("<b>")
-            desc.append(
-                MyApplication.getContext()
+            desc.append(MyApplication.getContext()
                     .getString(R.string.all))
             desc.append("</b>")
         }
         if (price != null) {
-            desc.append(" for ")
+            desc.append(MyApplication.getContext().getString(R.string.for_filter))
             desc.append("<b>")
-            desc.append(Helper.getPriceString(price!!))
+            desc.append(Helper.getPriceString(price!![0]))
             desc.append("</b>")
         }
         return desc.toString()

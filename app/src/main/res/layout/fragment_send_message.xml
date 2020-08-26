@@ -15,27 +15,34 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:background="@color/colorAccent"
         android:spinnerMode="dropdown"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edttxtTitle"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/rd_grp_send_method"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="128dp"
-        android:layout_marginBottom="51dp"
-        android:background="@color/colorAccent"
-        android:ems="10"
-        android:autofillHints="@string/title"
-        android:hint="@string/title"
-        android:inputType="textPersonName"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/mltxtMessage"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edttxtTitle" />
+
+    <EditText
+        android:id="@+id/edttxtTitle"
+        android:layout_width="214dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="128dp"
+        android:autofillHints="@string/title"
+        android:ems="10"
+        android:hint="@string/title"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spnr_contacts"
         tools:text="@string/title" />
@@ -44,30 +51,33 @@
         android:id="@+id/mltxtMessage"
         android:layout_width="219dp"
         android:layout_height="384dp"
-        android:layout_marginStart="128dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="128dp"
-        android:layout_marginBottom="64dp"
-        android:background="@color/colorAccent"
         android:autofillHints="@string/message_to_send"
         android:ems="10"
-        android:hint="@string/message_to_send"
         android:gravity="start|top"
+        android:hint="@string/message_to_send"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/btnSend"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/edttxtTitle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/edttxtTitle"
         app:layout_constraintTop_toBottomOf="@+id/edttxtTitle" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        app:icon="@drawable/image_placeholder"
+        app:iconGravity="textStart"
         android:id="@+id/btnSend"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginBottom="64dp"
         android:background="@color/colorAccent"
         android:text="@string/send"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mltxtMessage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

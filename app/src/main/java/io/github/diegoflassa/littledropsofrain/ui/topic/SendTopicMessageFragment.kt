@@ -24,7 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.auth.oauth2.AccessToken
 import com.google.auth.oauth2.GoogleCredentials
 import io.github.diegoflassa.littledropsofrain.R
-import io.github.diegoflassa.littledropsofrain.data.entities.SubscriptionMessage
+import io.github.diegoflassa.littledropsofrain.data.entities.TopicMessage
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentSendSubsctiptionMessageBinding
 import io.github.diegoflassa.littledropsofrain.models.TopicMessageViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -60,21 +60,21 @@ class SendTopicMessageFragment : Fragment() {
         })
         viewModel.viewState.title = binding.edtTxtTitle.text.toString()
         viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
-        for(topic in SubscriptionMessage.Topic.values()) {
-            if(topic != SubscriptionMessage.Topic.UNKNOWN) {
+        for(topic in TopicMessage.Topic.values()) {
+            if(topic != TopicMessage.Topic.UNKNOWN) {
                 val chip = Chip(requireContext())
                 chip.text = topic.toString()
                 chip.isCheckable = true
                 chip.setOnCheckedChangeListener { compoundButton: CompoundButton, state: Boolean ->
                     if (state) {
                         viewModel.viewState.topics.add(
-                            SubscriptionMessage.Topic.valueOf(
+                            TopicMessage.Topic.valueOf(
                                 compoundButton.text.toString().toUpperCase(Locale.ROOT)
                             )
                         )
                     } else {
                         viewModel.viewState.topics.remove(
-                            SubscriptionMessage.Topic.valueOf(
+                            TopicMessage.Topic.valueOf(
                                 compoundButton.text.toString().toUpperCase(Locale.ROOT)
                             )
                         )
@@ -118,7 +118,7 @@ class SendTopicMessageFragment : Fragment() {
     private fun updateUI(viewState: TopicMessageViewState?){
         // Update the UI
         for(chip in binding.cpGrpTopics.children) {
-            if(viewState?.topics?.contains(SubscriptionMessage.Topic.valueOf((chip as Chip).text.toString().toUpperCase(Locale.ROOT)))!!) {
+            if(viewState?.topics?.contains(TopicMessage.Topic.valueOf((chip as Chip).text.toString().toUpperCase(Locale.ROOT)))!!) {
                 chip.isSelected = true
             }
         }
@@ -126,13 +126,13 @@ class SendTopicMessageFragment : Fragment() {
         binding.edtTxtMlMessage.setText(viewModel.viewState.body)
     }
 
-    private fun getSelectedTopics(): Set<SubscriptionMessage.Topic>{
-        val ret= HashSet<SubscriptionMessage.Topic>()
+    private fun getSelectedTopics(): Set<TopicMessage.Topic>{
+        val ret= HashSet<TopicMessage.Topic>()
         val chipIds = binding.cpGrpTopics.checkedChipIds
         for(chipId in chipIds){
             val chip = binding.cpGrpTopics.findViewById<Chip>(chipId)
             ret.add(
-                SubscriptionMessage.Topic.valueOf(
+                TopicMessage.Topic.valueOf(
                     chip.text.toString().toUpperCase(Locale.ROOT)
                 )
             )
@@ -141,7 +141,7 @@ class SendTopicMessageFragment : Fragment() {
     }
 
     private fun sendMessage(
-        topics: Set<SubscriptionMessage.Topic>,
+        topics: Set<TopicMessage.Topic>,
         title: String,
         messageContent: String
     ) {

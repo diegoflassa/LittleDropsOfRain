@@ -36,6 +36,7 @@ import io.github.diegoflassa.littledropsofrain.fragments.ProductsFilters
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 import io.github.diegoflassa.littledropsofrain.models.HomeViewModel
 import io.github.diegoflassa.littledropsofrain.models.HomeViewState
+import java.lang.ref.WeakReference
 
 
 class HomeFragment : Fragment(), ActivityResultCallback<Int>,
@@ -45,7 +46,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
     private val homeViewModel: HomeViewModel by viewModels()
     var binding: FragmentHomeBinding by viewLifecycle()
-    private lateinit var mAdapter: ProductAdapter
+    private lateinit var mAdapter: WeakReference<ProductAdapter>
     private lateinit var mFirestore: FirebaseFirestore
     lateinit var mFilterDialog: ProductsFilterDialogFragment
     private var mQuery: Query? = null
@@ -105,7 +106,8 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
     private fun onClearFilterClicked() {
         mFilterDialog.resetFilters()
-        onFilter(ProductsFilters.default)
+        homeViewModel.viewState.filters = ProductsFilters.default
+        onFilter(homeViewModel.viewState.filters)
     }
 
     private fun showLoadingScreen(){
@@ -149,7 +151,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
         // Update the query
         mQuery = query
-        mAdapter.setQuery(query)
+        mAdapter.get()?.setQuery(query)
         showLoadingScreen()
 
         // Set header
@@ -157,7 +159,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        homeViewModel.filters = filters
+        homeViewModel.viewState.filters = filters
     }
 
     override fun onClick(v: View) {
@@ -171,15 +173,15 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         super.onStart()
 
         // Apply filters
-        onFilter(homeViewModel.filters)
+        onFilter(homeViewModel.viewState.filters)
 
         // Start listening for Firestore updates
-        mAdapter.startListening()
+        mAdapter.get()?.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-        mAdapter.stopListening()
+        mAdapter.get()?.stopListening()
     }
 
     private fun initFirestore() {
@@ -195,7 +197,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = object : ProductAdapter(this@HomeFragment, mQuery, this@HomeFragment) {
+        mAdapter = WeakReference( object : ProductAdapter(this@HomeFragment, mQuery, this@HomeFragment) {
             override fun onDataChanged() {
                 binding.filterBar.isEnabled = true
                 hideLoadingScreen()
@@ -215,9 +217,9 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
                     Snackbar.make(it,"Error: check logs for info.", Snackbar.LENGTH_LONG).show()
                 }
             }
-        }
+        })
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
-        binding.recyclerview.adapter = mAdapter
+        binding.recyclerview.adapter = mAdapter.get()
     }
 
     override fun onActivityResult(result : Int) {

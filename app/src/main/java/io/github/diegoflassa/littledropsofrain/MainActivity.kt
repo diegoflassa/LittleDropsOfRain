@@ -1,6 +1,5 @@
 package io.github.diegoflassa.littledropsofrain
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -10,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,20 +17,25 @@ import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.*
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.FontAwesomeIcons
+import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
+import com.joanzapata.iconify.fonts.TypiconsIcons
 import com.squareup.picasso.Picasso
 import io.github.diegoflassa.littledropsofrain.auth.AuthActivityResultContract
-import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
 import io.github.diegoflassa.littledropsofrain.helpers.Helper
+import io.github.diegoflassa.littledropsofrain.interfaces.FindUserListener
 import io.github.diegoflassa.littledropsofrain.models.MainActivityViewModel
 import io.github.diegoflassa.littledropsofrain.models.MainActivityViewState
 import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
@@ -38,7 +43,7 @@ import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 
 class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
-    DataChangeListener<List<User>> {
+    FindUserListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     companion object{
@@ -129,6 +134,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 R.id.nav_home,
                 R.id.nav_iluria,
                 R.id.nav_facebook,
+                R.id.nav_instagram,
                 R.id.nav_admin,
                 R.id.nav_users
             ),
@@ -158,6 +164,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 } else {
                     currentUser = User()
                     setupDrawerMenuIntems()
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.nav_home)
                 }
             })
     }
@@ -232,7 +239,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 UserDao.insert(userFb)
             }
             authMenuItem.title = getString(R.string.logout)
-            authMenuItem.icon = IconDrawable(this, FontAwesomeIcons.fa_user_times)
             Toast.makeText(this, getString(R.string.log_in_successful), Toast.LENGTH_SHORT).show()
         } else {
             // Sign in failed. If response is null the user canceled the
@@ -249,25 +255,20 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         AuthUI.getInstance().signOut(this)
     }
 
-    override fun onDataLoaded(item: List<User>) {
-        if (item.isNotEmpty() && item.size == 1 && item[0] != currentUser) {
-            currentUser = item[0]
-            setupDrawerMenuIntems()
-        }
-    }
-
     private fun setupDrawerMenuIntems(){
         val navView = findViewById<NavigationView>(R.id.nav_view)
         val navHome = navView.menu.findItem(R.id.nav_home)
-        navHome.icon = IconDrawable(this, FontAwesomeIcons.fa_home)
+        navHome.icon = IconDrawable(this, SimpleLineIconsIcons.icon_home)
         val navIluria = navView.menu.findItem(R.id.nav_iluria)
-        navIluria.icon = IconDrawable(this, FontAwesomeIcons.fa_shopping_cart)
+        navIluria.icon = IconDrawable(this, SimpleLineIconsIcons.icon_bag)
         val navFacebook = navView.menu.findItem(R.id.nav_facebook)
-        navFacebook.icon = IconDrawable(this, FontAwesomeIcons.fa_facebook_square)
+        navFacebook.icon = IconDrawable(this, SimpleLineIconsIcons.icon_social_facebook)
+        val navInstagram = navView.menu.findItem(R.id.nav_instagram)
+        navInstagram.icon = IconDrawable(this, TypiconsIcons.typcn_social_instagram)
         val navAdmin = navView.menu.findItem(R.id.nav_admin)
-        navAdmin.icon = IconDrawable(this, FontAwesomeIcons.fa_wrench)
+        navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
         val navUsers = navView.menu.findItem(R.id.nav_users)
-        navUsers.icon = IconDrawable(this, FontAwesomeIcons.fa_users)
+        navUsers.icon = IconDrawable(this, SimpleLineIconsIcons.icon_users)
         if(!currentUser.isAdmin) {
             navIluria.isEnabled = false
             navIluria.isVisible = false
@@ -283,5 +284,12 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             navUsers.isEnabled = true
             navUsers.isVisible = true
         }
+    }
+
+    override fun onUserFound(user: User?) {
+        if (user != null) {
+            currentUser = user
+        }
+        setupDrawerMenuIntems()
     }
 }

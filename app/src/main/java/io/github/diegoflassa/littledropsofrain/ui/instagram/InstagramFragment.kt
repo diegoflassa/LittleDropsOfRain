@@ -1,4 +1,4 @@
-package io.github.diegoflassa.littledropsofrain.ui.facebook
+package io.github.diegoflassa.littledropsofrain.ui.instagram
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,33 +12,33 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.github.diegoflassa.littledropsofrain.R
-import io.github.diegoflassa.littledropsofrain.databinding.FragmentFacebookBinding
+import io.github.diegoflassa.littledropsofrain.databinding.FragmentInstagramBinding
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
-import io.github.diegoflassa.littledropsofrain.models.FacebookViewModel
-import io.github.diegoflassa.littledropsofrain.models.FacebookViewState
+import io.github.diegoflassa.littledropsofrain.models.InstagramViewModel
+import io.github.diegoflassa.littledropsofrain.models.InstagramViewState
 
 
-class FacebookFragment : Fragment() {
+class InstagramFragment : Fragment() {
 
     companion object{
-        fun newInstance() = FacebookFragment()
+        fun newInstance() = InstagramFragment()
     }
-    private val viewModel: FacebookViewModel by viewModels()
-    private var binding :FragmentFacebookBinding by viewLifecycle()
-    private var url = "https://www.facebook.com/m.andrea.littledrops/"
+    private val viewModel: InstagramViewModel by viewModels()
+    private var binding : FragmentInstagramBinding by viewLifecycle()
+    private var url = "https://www.instagram.com/little_drops_of_rain"
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentFacebookBinding.inflate(inflater, container, false)
+        binding = FragmentInstagramBinding.inflate(inflater, container, false)
         viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
 
         // set up the webview
-        binding.webviewFacebook.webViewClient = object: WebViewClient() {
+        binding.webviewInstagram.webViewClient = object: WebViewClient() {
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 view?.loadUrl(request?.url.toString())
@@ -53,8 +53,8 @@ class FacebookFragment : Fragment() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(binding.webviewFacebook.canGoBack()){
-                    binding.webviewFacebook.goBack()
+                if(binding.webviewInstagram.canGoBack()){
+                    binding.webviewInstagram.goBack()
                 } else {
                     isEnabled = false
                     requireActivity().onBackPressed()
@@ -65,7 +65,7 @@ class FacebookFragment : Fragment() {
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         showProgressDialog()
-        binding.webviewFacebook.loadUrl(url)
+        binding.webviewInstagram.loadUrl(url)
         return binding.root
     }
 
@@ -73,16 +73,16 @@ class FacebookFragment : Fragment() {
         super.onResume()
         updateUI(viewModel.viewState)
     }
-    private fun updateUI(viewState: FacebookViewState) {
+    private fun updateUI(viewState: InstagramViewState) {
         // Update the UI
         viewState.text = ""
     }
 
     private fun showProgressDialog() {
-        binding.facebookProgress.visibility = View.VISIBLE
+        binding.instagramProgress.visibility = View.VISIBLE
     }
 
     fun hideProgressDialog(){
-        binding.facebookProgress.visibility = View.GONE
+        binding.instagramProgress.visibility = View.GONE
     }
 }

@@ -2,7 +2,7 @@ package io.github.diegoflassa.littledropsofrain.data.entities
 
 import androidx.annotation.Keep
 
-data class SubscriptionMessage(
+data class TopicMessage(
     var message : String,
     var topic : Topic,
     val messageContent : HashMap<String, String>){

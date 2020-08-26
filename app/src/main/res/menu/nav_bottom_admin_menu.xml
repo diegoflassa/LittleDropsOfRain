@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_reload_products"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:orderInCategory="100"
+        android:title="@string/action_reload_products" />
+    <item
+        android:id="@+id/nav_send_topic_message"
+        android:icon="@drawable/fui_ic_mail_white_24dp"
+        android:orderInCategory="100"
+        android:title="@string/action_send_message" />
+</menu>

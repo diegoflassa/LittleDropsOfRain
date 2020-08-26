@@ -1,6 +1,12 @@
 package io.github.diegoflassa.littledropsofrain.helpers
 
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseUser
+import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.entities.IluriaProduct
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.data.entities.User
@@ -56,12 +62,29 @@ class Helper {
         /**
          * Get price represented as dollar signs.
          */
-        fun getPriceString(price: MutableList<Int>): String? {
-            return when (price[0]) {
+        fun getPriceString(price: Int): String? {
+            return when (price) {
                 in 0..5000 -> "$"
                 in 5100..10000 -> "$$"
                 in 10100..100000 -> "$$$"
                 else -> "$$$"
+            }
+        }
+
+        fun sendEmail(context : Context, sendTos : ArrayList<String>, subject : String = "", body : String = ""){
+            val inlinedSendTos = sendTos.joinToString { it }
+            val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:$inlinedSendTos?subject:$subject?body:$body"))
+            intent.putExtra(Intent.EXTRA_EMAIL, ArrayList(sendTos))
+            intent.putExtra(Intent.EXTRA_SUBJECT, subject)
+            intent.putExtra(Intent.EXTRA_TEXT, body)
+            try {
+                context.startActivity(Intent.createChooser(intent, context.getString(R.string.email_send)))
+            } catch (ex: ActivityNotFoundException) {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.email_no_clients_installed),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

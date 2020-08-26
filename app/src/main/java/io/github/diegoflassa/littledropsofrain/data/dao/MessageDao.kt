@@ -5,8 +5,8 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
-import io.github.diegoflassa.littledropsofrain.data.DataFailureListener
+import io.github.diegoflassa.littledropsofrain.interfaces.DataChangeListener
+import io.github.diegoflassa.littledropsofrain.interfaces.DataFailureListener
 import io.github.diegoflassa.littledropsofrain.data.entities.Message
 import java.lang.ref.WeakReference
 import java.util.*

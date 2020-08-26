@@ -12,16 +12,14 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.firebase.firestore.Query
-import com.joanzapata.iconify.IconDrawable
-import com.joanzapata.iconify.fonts.FontAwesomeIcons
 import io.github.diegoflassa.littledropsofrain.MyApplication
 import io.github.diegoflassa.littledropsofrain.R
-import io.github.diegoflassa.littledropsofrain.data.DataChangeListener
 import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentProductsFiltersBinding
-import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
+import io.github.diegoflassa.littledropsofrain.interfaces.DataChangeListener
+import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
 
 /**
  * Dialog Fragment containing filter form.
@@ -56,7 +54,6 @@ open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragmen
         mCategoryChipGroup = binding.categoryChipGroup
         mSortSpinner = binding.spinnerSort
         mPriceSpinner = binding.spinnerPrice
-        binding.iconCategory.setImageDrawable(IconDrawable(context, FontAwesomeIcons.fa_empire))
         binding.buttonSearch.setOnClickListener(this)
         binding.buttonCancel.setOnClickListener(this)
         ProductDao.loadAll(this)
