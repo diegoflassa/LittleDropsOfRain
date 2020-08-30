@@ -49,13 +49,13 @@ class ProductParser(listener: OnParseProgress? = null) {
         return parse(inputStream)
     }
 
-    private fun parse(`is`: InputStream?): List<IluriaProduct> {
+    private fun parse(istream: InputStream?): List<IluriaProduct> {
         try {
             val factory =
                 XmlPullParserFactory.newInstance()
             factory.isNamespaceAware = true
             val parser = factory.newPullParser()
-            parser.setInput(`is`, null)
+            parser.setInput(istream, null)
             var eventType = parser.eventType
             var product = IluriaProduct("0")
             while (eventType != XmlPullParser.END_DOCUMENT) {

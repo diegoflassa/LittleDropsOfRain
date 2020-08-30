@@ -18,14 +18,14 @@ import io.github.diegoflassa.littledropsofrain.data.dao.ProductDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Product
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentProductsFiltersBinding
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
-import io.github.diegoflassa.littledropsofrain.interfaces.DataChangeListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnDataChangeListener
 import io.github.diegoflassa.littledropsofrain.ui.home.HomeFragment
 
 /**
  * Dialog Fragment containing filter form.
  */
 open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
-    View.OnClickListener, DataChangeListener<List<Product>>,
+    View.OnClickListener, OnDataChangeListener<List<Product>>,
     CompoundButton.OnCheckedChangeListener {
 
     companion object {

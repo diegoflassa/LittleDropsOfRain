@@ -49,7 +49,7 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
     }
 
     class ViewHolder(itemView: View) :
-        RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        RecyclerView.ViewHolder(itemView) {
         private val ioScope = CoroutineScope(Dispatchers.IO)
         private val title: TextView = itemView.findViewById(R.id.msg_title)
         private val creationDate: TextView = itemView.findViewById(R.id.msg_creation_date)
@@ -65,13 +65,12 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
         ) {
             val message: Message? = snapshot.toObject(Message::class.java)
             message?.uid = snapshot.id
-            val resources = itemView.resources
 
-            title.text = resources.getString(R.string.msg_title, message?.title)
+            title.text = message?.title
             if(message?.creationDate !=null) {
                 creationDate.text = Helper.getDateTime(message.creationDate!!.toDate())
             }
-            sender.text = resources.getString(R.string.msg_sender, message?.sender)
+            sender.text = message?.sender
             edtMessage.setText(message?.message)
             if(message?.read !=null)
                 read.isChecked = message.read!!
@@ -81,29 +80,33 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
                     MessageDao.update(message!!)
                 }
             }
-            itemView.setOnClickListener(this)
+            itemView.setOnClickListener {
+                replyMessage(it, message!!)
+            }
 
             // Click listener
             itemView.setOnClickListener { listener?.onMessageSelected(snapshot) }
 
             reply.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_action_undo))
-            reply.setOnClickListener(this)
+            reply.setOnClickListener {
+                replyMessage(it, message!!)
+            }
             delete.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_trash))
             delete.setOnClickListener{
                 MessageDao.delete(message)
             }
-
         }
 
-        override fun onClick(v: View?) {
-            val message = Message()
-            message.sender = sender.text.toString()
-            message.title = title.text.toString()
-            message.message = edtMessage.text.toString()
+        private fun replyMessage(view : View, message : Message){
+            val messageToEdit = Message()
+            messageToEdit.senderId = message.senderId
+            messageToEdit.sender = sender.text.toString()
+            messageToEdit.title = title.text.toString()
+            messageToEdit.message = edtMessage.text.toString()
             val bundle = Bundle()
-            bundle.putString(SendMessageFragment.ACTION_EDIT_KEY, SendMessageFragment.ACTION_EDIT)
-            bundle.putParcelable(SendMessageFragment.KEY_MESSAGE, message)
-            v?.findNavController()?.navigate(R.id.sendMessageFragment, bundle)
+            bundle.putString(SendMessageFragment.ACTION_REPLY_KEY, SendMessageFragment.ACTION_REPLY)
+            bundle.putParcelable(SendMessageFragment.KEY_MESSAGE, messageToEdit)
+            view.findNavController().navigate(R.id.sendMessageFragment, bundle)
         }
     }
 }

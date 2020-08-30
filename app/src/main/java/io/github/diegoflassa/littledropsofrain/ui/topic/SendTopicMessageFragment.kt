@@ -25,7 +25,7 @@ import com.google.auth.oauth2.AccessToken
 import com.google.auth.oauth2.GoogleCredentials
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.entities.TopicMessage
-import io.github.diegoflassa.littledropsofrain.databinding.FragmentSendSubsctiptionMessageBinding
+import io.github.diegoflassa.littledropsofrain.databinding.FragmentSendTopicMessageBinding
 import io.github.diegoflassa.littledropsofrain.models.TopicMessageViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,13 +48,13 @@ class SendTopicMessageFragment : Fragment() {
     }
 
     private val viewModel: TopicMessageViewModel by viewModels()
-    private var binding : FragmentSendSubsctiptionMessageBinding by viewLifecycle()
+    private var binding : FragmentSendTopicMessageBinding by viewLifecycle()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSendSubsctiptionMessageBinding.inflate(inflater, container, false)
+        binding = FragmentSendTopicMessageBinding.inflate(inflater, container, false)
         viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })

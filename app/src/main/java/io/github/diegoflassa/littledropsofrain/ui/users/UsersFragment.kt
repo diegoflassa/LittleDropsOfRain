@@ -25,7 +25,6 @@ import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Message
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentUsersBinding
-import io.github.diegoflassa.littledropsofrain.helpers.Helper
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 import io.github.diegoflassa.littledropsofrain.models.UsersViewModel
 import io.github.diegoflassa.littledropsofrain.models.UsersViewState
@@ -41,7 +40,7 @@ class UsersFragment : Fragment(),
         val TAG = UsersFragment::class.simpleName
         fun newInstance() = UsersFragment()
     }
-    private val usersViewModel: UsersViewModel by viewModels()
+    private val viewModel: UsersViewModel by viewModels()
     var binding: FragmentUsersBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<UsersAdapter>
     private lateinit var mFirestore: FirebaseFirestore
@@ -53,7 +52,7 @@ class UsersFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentUsersBinding.inflate(inflater, container, false)
-        usersViewModel.viewState.observe(viewLifecycleOwner, {
+        viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
         showLoadingScreen()
@@ -82,7 +81,7 @@ class UsersFragment : Fragment(),
 
     override fun onResume() {
         super.onResume()
-        updateUI(usersViewModel.viewState)
+        updateUI(viewModel.viewState)
     }
     private fun updateUI(viewState: UsersViewState) {
         // Update the UI
@@ -196,17 +195,6 @@ class UsersFragment : Fragment(),
         bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
         bundle.putParcelable(SendMessageFragment.KEY_MESSAGE, message)
         findNavController().navigate(R.id.sendMessageFragment, bundle)
-    }
-
-    private fun sendEmail(user : User){
-        val sendTo= ArrayList<String>()
-        sendTo.add(user.email!!)
-        Helper.sendEmail(
-            requireContext(),
-            sendTo,
-            getString(R.string.email_subject),
-            getString(R.string.email_body)
-        )
     }
 
     fun showToastUnableToChangeUser() {

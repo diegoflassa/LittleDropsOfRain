@@ -1,5 +1,5 @@
 package io.github.diegoflassa.littledropsofrain.interfaces
 
-interface DataChangeListener<T> {
+interface OnDataChangeListener<T> {
     fun onDataLoaded(item: T)
 }

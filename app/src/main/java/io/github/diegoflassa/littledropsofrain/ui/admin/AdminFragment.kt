@@ -31,8 +31,6 @@ import io.github.diegoflassa.littledropsofrain.fragments.MessagesFilters
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 import io.github.diegoflassa.littledropsofrain.models.AdminViewModel
 import io.github.diegoflassa.littledropsofrain.models.AdminViewState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import java.lang.ref.WeakReference
 
 
@@ -41,8 +39,7 @@ class AdminFragment : Fragment(),
     MessagesFilterDialogFragment.FilterListener,
     View.OnClickListener {
 
-    private val adminViewModel: AdminViewModel by viewModels()
-    private val ioScope = CoroutineScope(Dispatchers.IO)
+    private val viewModel: AdminViewModel by viewModels()
     private lateinit var mAdapter: WeakReference<MessageAdapter>
     var binding : FragmentAdminBinding by viewLifecycle()
     private lateinit var mFilterDialog: MessagesFilterDialogFragment
@@ -61,7 +58,7 @@ class AdminFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAdminBinding.inflate(inflater, container, false)
-        adminViewModel.viewState.observe(viewLifecycleOwner, {
+        viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
@@ -107,7 +104,7 @@ class AdminFragment : Fragment(),
         super.onStart()
 
         // Apply filters
-        onFilter(adminViewModel.viewState.filters)
+        onFilter(viewModel.viewState.filters)
 
         // Start listening for Firestore updates
         mAdapter.get()?.startListening()
@@ -120,7 +117,7 @@ class AdminFragment : Fragment(),
 
     override fun onResume() {
         super.onResume()
-        updateUI(adminViewModel.viewState)
+        updateUI(viewModel.viewState)
     }
 
     override fun onClick(v: View) {
@@ -189,7 +186,7 @@ class AdminFragment : Fragment(),
         binding.textCurrentSortByMessages.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        adminViewModel.viewState.filters = filters
+        viewModel.viewState.filters = filters
     }
 
     private fun initFirestore() {
@@ -245,8 +242,8 @@ class AdminFragment : Fragment(),
 
     private fun onClearFilterClicked() {
         mFilterDialog.resetFilters()
-        adminViewModel.viewState.filters= MessagesFilters.default
-        onFilter(adminViewModel.viewState.filters)
+        viewModel.viewState.filters= MessagesFilters.default
+        onFilter(viewModel.viewState.filters)
     }
 
     override fun onMessageSelected(message: DocumentSnapshot?) {

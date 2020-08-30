@@ -3,11 +3,11 @@ package io.github.diegoflassa.littledropsofrain.data.dao
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import io.github.diegoflassa.littledropsofrain.interfaces.DataChangeListener
-import io.github.diegoflassa.littledropsofrain.interfaces.DataFailureListener
-import io.github.diegoflassa.littledropsofrain.interfaces.FindUserListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnDataChangeListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnDataFailureListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnUserFoundListener
 import io.github.diegoflassa.littledropsofrain.data.entities.User
-import io.github.diegoflassa.littledropsofrain.interfaces.UsersLoadedListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnUsersLoadedListener
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -18,7 +18,7 @@ object UserDao {
     private val db : WeakReference<FirebaseFirestore> = WeakReference(FirebaseFirestore.getInstance())
 
 
-    fun loadAll(listener: UsersLoadedListener){
+    fun loadAll(listener: OnUsersLoadedListener){
         val users: MutableList<User> = ArrayList()
        db.get()?.collection(COLLECTION_PATH)
            ?.get()
@@ -36,7 +36,7 @@ object UserDao {
             }
     }
 
-    fun loadAllByIds(messageIds: List<String>, listener: UsersLoadedListener){
+    fun loadAllByIds(messageIds: List<String>, listener: OnUsersLoadedListener){
         val users: MutableList<User> = ArrayList()
         val itemsRef =db.get()?.collection(COLLECTION_PATH)
         itemsRef?.get()?.addOnCompleteListener { task ->
@@ -55,7 +55,7 @@ object UserDao {
         }
     }
 
-    fun findByName(name: String?, listener: UsersLoadedListener) {
+    fun findByName(name: String?, listener: OnUsersLoadedListener) {
         val users: MutableList<User> = ArrayList()
         db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("name", name)
            ?.get()
@@ -74,7 +74,7 @@ object UserDao {
     }
 
 
-    fun findByEMail(email: String?, listener: FindUserListener) {
+    fun findByEMail(email: String?, foundListener: OnUserFoundListener) {
        var userFound: User? = null
        db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("email", email)
            ?.get()
@@ -83,7 +83,7 @@ object UserDao {
                     userFound = result.documents[0].toObject(User::class.java)!!
                     Log.d(TAG, "${result.documents[0].id} => ${result.documents[0].data}")
                 }
-                listener.onUserFound(userFound)
+                foundListener.onUserFound(userFound)
             }
            ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting users: ", exception)
@@ -91,16 +91,16 @@ object UserDao {
     }
 
     fun insertAll(vararg users: User,
-                  onSuccessListener: DataChangeListener<Void?>? = null,
-                  onFailureListener: DataFailureListener<Exception>? = null) {
+                  onSuccessListener: OnDataChangeListener<Void?>? = null,
+                  onFailureListener: OnDataFailureListener<Exception>? = null) {
         for( user in users) {
             insert(user, onSuccessListener, onFailureListener)
         }
     }
 
     fun insert(user: User,
-               onSuccessListener: DataChangeListener<Void?>? = null,
-               onFailureListener: DataFailureListener<Exception>? = null
+               onSuccessListener: OnDataChangeListener<Void?>? = null,
+               onFailureListener: OnDataFailureListener<Exception>? = null
     ) {
         val data = user.toMap()
        db.get()?.collection(COLLECTION_PATH)?.document(user.uid.toString())?.set(data, SetOptions.merge())?.addOnSuccessListener{
@@ -111,8 +111,8 @@ object UserDao {
     }
 
     fun update(user: User,
-               onSuccessListener: DataChangeListener<Void?>? = null,
-               onFailureListener: DataFailureListener<Exception>? = null
+               onSuccessListener: OnDataChangeListener<Void?>? = null,
+               onFailureListener: OnDataFailureListener<Exception>? = null
     ) {
         val data = user.toMap()
         db.get()?.collection(COLLECTION_PATH)?.document(user.uid.toString())?.set(data, SetOptions.merge())?.addOnSuccessListener{

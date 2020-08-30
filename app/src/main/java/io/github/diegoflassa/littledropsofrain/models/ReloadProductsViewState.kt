@@ -5,5 +5,6 @@ import androidx.lifecycle.LiveData
 class ReloadProductsViewState : LiveData<ReloadProductsViewState>(){
 
     var text = ""
-    var progress = ""
+    var progress = StringBuffer()
+    var removeNotFoundProducts = true
 }

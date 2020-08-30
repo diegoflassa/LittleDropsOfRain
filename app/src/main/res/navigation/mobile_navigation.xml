@@ -58,7 +58,7 @@
         android:id="@+id/send_topic_message_fragment"
         android:name="io.github.diegoflassa.littledropsofrain.ui.topic.SendTopicMessageFragment"
         android:label="@string/label_topic"
-        tools:layout="@layout/fragment_send_subsctiption_message" >
+        tools:layout="@layout/fragment_send_topic_message" >
         <action
             android:id="@+id/action_sendSubscriptionMessageFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"

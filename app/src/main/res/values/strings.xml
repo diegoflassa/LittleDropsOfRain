@@ -119,6 +119,13 @@
     <string name="button_delete">Button Delete</string>
     <string name="button_reply">Button Reply</string>
     <string name="icon_users">Icon Users</string>
+    <string name="hint_ml_txt_vw_progress">Multiline textview Progress</string>
+    <string name="remove_old_products">Remove old products</string>
+    <string name="remove_not_found_products">Remove not found products</string>
+    <string name="worker_running">Worker Running</string>
+    <string name="worker_scheduled">Products Update</string>
+    <string name="woker_notification">Worker Notification</string>
+    <string name="notification_worker_channel_description">Notifications from Update Products Worker</string>
 
     <!-- Price filters -->
     <string-array name="prices" translatable="false">

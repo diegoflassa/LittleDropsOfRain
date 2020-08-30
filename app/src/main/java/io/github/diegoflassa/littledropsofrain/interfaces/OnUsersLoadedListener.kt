@@ -2,6 +2,6 @@ package io.github.diegoflassa.littledropsofrain.interfaces
 
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 
-interface UsersLoadedListener {
+interface OnUsersLoadedListener {
     fun onUsersLoaded(users: List<User>)
 }

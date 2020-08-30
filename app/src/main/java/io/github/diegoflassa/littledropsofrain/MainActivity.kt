@@ -21,6 +21,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.*
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -35,31 +36,33 @@ import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
 import io.github.diegoflassa.littledropsofrain.helpers.Helper
-import io.github.diegoflassa.littledropsofrain.interfaces.FindUserListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnUserFoundListener
 import io.github.diegoflassa.littledropsofrain.models.MainActivityViewModel
 import io.github.diegoflassa.littledropsofrain.models.MainActivityViewState
+import io.github.diegoflassa.littledropsofrain.workers.UpdateProductsWork
 import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
-    FindUserListener {
+    OnUserFoundListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    companion object{
+
+    companion object {
         val TAG = MainActivity::class.simpleName
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
-    private var currentUser : User = User()
-    private lateinit var mAuth : FirebaseAuth
+    private var currentUser: User = User()
+    private lateinit var mAuth: FirebaseAuth
     private lateinit var fab: FloatingActionButton
-    private lateinit var binding : ActivityMainBinding
-    private lateinit var authMenuItem : MenuItem
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var authMenuItem: MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         viewModel.viewState.observe(this, {
             updateUI(it)
@@ -167,6 +170,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                     findNavController(R.id.nav_host_fragment).navigate(R.id.nav_home)
                 }
             })
+        scheduleProductsUpdates()
     }
 
     override fun onResume() {
@@ -248,14 +252,36 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             authMenuItem.title = getString(R.string.login)
             Toast.makeText(this, R.string.unable_to_log_in, Toast.LENGTH_SHORT).show()
         }
-        authMenuItem.isEnabled= true
+        authMenuItem.isEnabled = true
     }
 
-    private fun logout(){
+    private fun logout() {
         AuthUI.getInstance().signOut(this)
     }
 
-    private fun setupDrawerMenuIntems(){
+    private fun scheduleProductsUpdates() {
+        if (currentUser.isAdmin) {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+            val myWorkRequest = PeriodicWorkRequest.Builder(
+                UpdateProductsWork::class.java,
+                12,
+                TimeUnit.HOURS
+            )
+                .setConstraints(constraints)
+                .setInitialDelay(12, TimeUnit.HOURS)
+                .setBackoffCriteria(
+                    BackoffPolicy.LINEAR,
+                    OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                    TimeUnit.MILLISECONDS
+                )
+                .build()
+            WorkManager.getInstance(this).enqueue(myWorkRequest)
+        }
+    }
+
+    private fun setupDrawerMenuIntems() {
         val navView = findViewById<NavigationView>(R.id.nav_view)
         val navHome = navView.menu.findItem(R.id.nav_home)
         navHome.icon = IconDrawable(this, SimpleLineIconsIcons.icon_home)

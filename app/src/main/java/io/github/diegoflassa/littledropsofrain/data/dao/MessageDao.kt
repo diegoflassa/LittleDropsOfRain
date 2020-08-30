@@ -5,8 +5,8 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import io.github.diegoflassa.littledropsofrain.interfaces.DataChangeListener
-import io.github.diegoflassa.littledropsofrain.interfaces.DataFailureListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnDataChangeListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnDataFailureListener
 import io.github.diegoflassa.littledropsofrain.data.entities.Message
 import java.lang.ref.WeakReference
 import java.util.*
@@ -19,7 +19,7 @@ object MessageDao {
     const val COLLECTION_PATH: String = "messages"
     private val db : WeakReference<FirebaseFirestore> = WeakReference(FirebaseFirestore.getInstance())
 
-    fun loadAll(listener: DataChangeListener<List<Message>>){
+    fun loadAll(listener: OnDataChangeListener<List<Message>>){
         val messages: MutableList<Message> = ArrayList()
        db.get()?.collection(COLLECTION_PATH)?.orderBy("creationDate", Query.Direction.DESCENDING)
            ?.get()
@@ -39,7 +39,7 @@ object MessageDao {
             }
     }
 
-    fun loadAllByIds(messageIds: List<String>, listener: DataChangeListener<List<Message>>) {
+    fun loadAllByIds(messageIds: List<String>, listener: OnDataChangeListener<List<Message>>) {
         val messages: MutableList<Message> = ArrayList()
         val itemsRef =db.get()?.collection(COLLECTION_PATH)
         itemsRef?.get()?.addOnCompleteListener { task ->
@@ -59,7 +59,7 @@ object MessageDao {
         }
     }
 
-    fun findByTitle(title: String, listener: DataChangeListener<List<Message>>) {
+    fun findByTitle(title: String, listener: OnDataChangeListener<List<Message>>) {
         val messages: MutableList<Message> = ArrayList()
        db.get()?.collection(COLLECTION_PATH)
            ?.get()
@@ -80,7 +80,7 @@ object MessageDao {
             }
     }
 
-    fun findByCreationDate(date: Date, listener: DataChangeListener<List<Message>>) {
+    fun findByCreationDate(date: Date, listener: OnDataChangeListener<List<Message>>) {
         val creationDate= Timestamp(date)
         val messages: MutableList<Message> = ArrayList()
        db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("creationDate", creationDate)
@@ -100,7 +100,7 @@ object MessageDao {
             }
     }
 
-    fun findByRead(read: Boolean, listener: DataChangeListener<List<Message>>) {
+    fun findByRead(read: Boolean, listener: OnDataChangeListener<List<Message>>) {
         val messages: MutableList<Message> = ArrayList()
        db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("read", read.toString())
            ?.get()
@@ -120,8 +120,8 @@ object MessageDao {
     }
 
     fun insertAll(vararg messages: Message,
-                  onSuccessListener: DataChangeListener<DocumentReference>? = null,
-                  onFailureListener: DataFailureListener<Exception>? = null) {
+                  onSuccessListener: OnDataChangeListener<DocumentReference>? = null,
+                  onFailureListener: OnDataFailureListener<Exception>? = null) {
         for( message in messages) {
             insert(message, onSuccessListener, onFailureListener)
         }
@@ -129,8 +129,8 @@ object MessageDao {
 
     fun insert(
         message: Message,
-        onSuccessListener: DataChangeListener<DocumentReference>? = null,
-        onFailureListener: DataFailureListener<Exception>? = null
+        onSuccessListener: OnDataChangeListener<DocumentReference>? = null,
+        onFailureListener: OnDataFailureListener<Exception>? = null
     ) {
         val data = message.toMap()
        db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener{
@@ -142,8 +142,8 @@ object MessageDao {
 
     fun update(
         message: Message,
-        onSuccessListener: DataChangeListener<Void?>? = null,
-        onFailureListener: DataFailureListener<Exception>? = null
+        onSuccessListener: OnDataChangeListener<Void?>? = null,
+        onFailureListener: OnDataFailureListener<Exception>? = null
     ) {
         val data = message.toMap()
        db.get()?.collection(COLLECTION_PATH)?.document(message.uid.toString())?.set(data)?.addOnSuccessListener{

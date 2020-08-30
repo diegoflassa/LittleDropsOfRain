@@ -80,4 +80,5 @@
     <string name="button_delete">Schaltfläche Löschen</string>
     <string name="button_reply">Button Antwort</string>
     <string name="icon_users">Symbol Benutzer</string>
+    <string name="hint_ml_txt_vw_progress">Mehrzeilige Textansicht Fortschritt</string>
 </resources>

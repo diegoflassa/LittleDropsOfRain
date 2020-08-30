@@ -28,7 +28,6 @@
             android:cropToPadding="false"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/user_is_admin"
-            app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
@@ -37,9 +36,10 @@
             android:id="@+id/user_is_admin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="30dp"
             android:text="@string/user_is_admin"
-            app:layout_constraintEnd_toEndOf="@+id/user_email"
+            app:layout_constraintEnd_toStartOf="@+id/btn_delete_user"
             app:layout_constraintTop_toBottomOf="@+id/user_email" />
 
         <TextView
@@ -69,17 +69,20 @@
             app:layout_constraintStart_toEndOf="@+id/user_picture"
             app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
-        <com.google.android.material.button.MaterialButton
+        <ImageButton
+            android:id="@+id/btn_delete_user"
             style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="@dimen/image_button"
+            android:layout_height="@dimen/image_button"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/button_delete"
+            android:scaleType="fitXY"
             app:icon="@drawable/image_placeholder"
             app:iconGravity="textStart"
-            android:id="@+id/btn_delete_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/delete"
+            app:layout_constraintBottom_toBottomOf="@+id/user_is_admin"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintTop_toBottomOf="@+id/barrier_user_item" />
+            app:layout_constraintTop_toTopOf="@+id/user_is_admin"
+            tools:src="@drawable/image_placeholder" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier_user_item"

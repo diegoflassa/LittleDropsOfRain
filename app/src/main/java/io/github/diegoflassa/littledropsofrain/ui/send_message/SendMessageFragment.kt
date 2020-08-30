@@ -26,9 +26,9 @@ import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentSendMessageBinding
 import io.github.diegoflassa.littledropsofrain.helpers.Helper
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
-import io.github.diegoflassa.littledropsofrain.interfaces.DataChangeListener
-import io.github.diegoflassa.littledropsofrain.interfaces.FindUserListener
-import io.github.diegoflassa.littledropsofrain.interfaces.UsersLoadedListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnDataChangeListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnUserFoundListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnUsersLoadedListener
 import io.github.diegoflassa.littledropsofrain.models.SendMessageViewModel
 import io.github.diegoflassa.littledropsofrain.models.SendMessageViewState
 import kotlinx.coroutines.CoroutineScope
@@ -37,16 +37,16 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SendMessageFragment : Fragment(), FindUserListener,
-    UsersLoadedListener {
+class SendMessageFragment : Fragment(), OnUserFoundListener,
+    OnUsersLoadedListener {
 
     companion object {
         fun newInstance() = SendMessageFragment()
         val TAG = SendMessageFragment::class.simpleName
         const val ACTION_SEND_KEY = "ACTION_SEND"
         const val ACTION_SEND = "io.github.diegoflassa.littledropsofrain.action.ACTION_SEND"
-        const val ACTION_EDIT_KEY = "ACTION_EDIT"
-        const val ACTION_EDIT = "io.github.diegoflassa.littledropsofrain.action.ACTION_EDIT"
+        const val ACTION_REPLY_KEY = "ACTION_EDIT"
+        const val ACTION_REPLY = "io.github.diegoflassa.littledropsofrain.action.ACTION_EDIT"
         const val KEY_MESSAGE = "message"
         const val KEY_TAG = R.array.send_modes_values
         var mSavedInstanceState: Bundle? = null
@@ -143,6 +143,8 @@ class SendMessageFragment : Fragment(), FindUserListener,
         if (sendModes != null) {
             for ((index, sendMode) in sendModes.withIndex()) {
                 val rdMode = RadioButton(requireContext())
+                if(sendMode == SendMessageViewState.SendMethod.MESSAGE.toString())
+                    rdMode.isSelected = true
                 rdMode.text = sendMode
                 rdMode.setTag(KEY_TAG, sendModesValues!![index])
                 binding.rdGrpSendMethod.addView(rdMode)
@@ -199,7 +201,7 @@ class SendMessageFragment : Fragment(), FindUserListener,
 
     @Suppress("UNCHECKED_CAST")
     private fun setSelectedMessageSender(){
-        if(mSavedInstanceState!=null &&(mSavedInstanceState?.getString(ACTION_EDIT_KEY) == ACTION_EDIT||mSavedInstanceState?.getString(ACTION_SEND_KEY) == ACTION_SEND)) {
+        if(mSavedInstanceState!=null &&(mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY||mSavedInstanceState?.getString(ACTION_SEND_KEY) == ACTION_SEND)) {
             val message = mSavedInstanceState?.getParcelable<Message>(KEY_MESSAGE)
             if(message!=null) {
                 val user = User()
@@ -220,9 +222,9 @@ class SendMessageFragment : Fragment(), FindUserListener,
 
     private fun handleBundle() {
         if (mSavedInstanceState != null){
-            if (mSavedInstanceState?.getString(ACTION_EDIT_KEY) == ACTION_SEND) {
+            if (mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_SEND) {
                 setSelectedMessageSender()
-            } else if (mSavedInstanceState?.getString(ACTION_EDIT_KEY) == ACTION_EDIT) {
+            } else if (mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY) {
                 val message = mSavedInstanceState?.getParcelable<Message>(KEY_MESSAGE)
                 if (message != null) {
                     binding.edttxtTitle.setText(message.title)
@@ -242,7 +244,7 @@ class SendMessageFragment : Fragment(), FindUserListener,
     }
 
     private class Callback( var fragment : SendMessageFragment) :
-        DataChangeListener<DocumentReference> {
+        OnDataChangeListener<DocumentReference> {
         override fun onDataLoaded(item: DocumentReference) {
             Toast.makeText(fragment.requireContext(),  "Message sent successfully", Toast.LENGTH_SHORT).show()
         }

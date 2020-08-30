@@ -1,5 +1,5 @@
 package io.github.diegoflassa.littledropsofrain.interfaces
 
-interface DataFailureListener<Exception> {
+interface OnDataFailureListener<Exception> {
     fun onDataFailure(exception: Exception)
 }

@@ -18,7 +18,7 @@ class IluriaFragment : Fragment() {
     companion object{
         fun newInstance() = IluriaFragment()
     }
-    private val iluriaViewModel: IluriaViewModel by viewModels()
+    private val viewModel: IluriaViewModel by viewModels()
     private var binding: FragmentIluriaBinding by viewLifecycle()
 
     override fun onCreateView(
@@ -27,10 +27,10 @@ class IluriaFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         binding = FragmentIluriaBinding.inflate(inflater, container, false)
-        iluriaViewModel.viewState.observe(viewLifecycleOwner, {
+        viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
-        iluriaViewModel.viewState.text = binding.textIluria.text.toString()
+        viewModel.viewState.text = binding.textIluria.text.toString()
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         return binding.root
@@ -38,7 +38,7 @@ class IluriaFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        updateUI(iluriaViewModel.viewState)
+        updateUI(viewModel.viewState)
     }
     private fun updateUI(viewState: IluriaViewState) {
         // Update the UI

@@ -44,7 +44,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     ProductsFilterDialogFragment.FilterListener,
     ProductAdapter.OnProductSelectedListener {
 
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
     var binding: FragmentHomeBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<ProductAdapter>
     private lateinit var mFirestore: FirebaseFirestore
@@ -63,7 +63,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        homeViewModel.viewState.observe(viewLifecycleOwner, {
+        viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
         binding.filterBar.setOnClickListener(this)
@@ -91,7 +91,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
     override fun onResume() {
         super.onResume()
-        updateUI(homeViewModel.viewState)
+        updateUI(viewModel.viewState)
     }
     private fun updateUI(viewState: HomeViewState) {
         // Update the UI
@@ -106,8 +106,8 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
     private fun onClearFilterClicked() {
         mFilterDialog.resetFilters()
-        homeViewModel.viewState.filters = ProductsFilters.default
-        onFilter(homeViewModel.viewState.filters)
+        viewModel.viewState.filters = ProductsFilters.default
+        onFilter(viewModel.viewState.filters)
     }
 
     private fun showLoadingScreen(){
@@ -159,7 +159,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        homeViewModel.viewState.filters = filters
+        viewModel.viewState.filters = filters
     }
 
     override fun onClick(v: View) {
@@ -173,7 +173,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         super.onStart()
 
         // Apply filters
-        onFilter(homeViewModel.viewState.filters)
+        onFilter(viewModel.viewState.filters)
 
         // Start listening for Firestore updates
         mAdapter.get()?.startListening()

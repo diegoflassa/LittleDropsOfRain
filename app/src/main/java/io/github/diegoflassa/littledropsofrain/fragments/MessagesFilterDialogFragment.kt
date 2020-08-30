@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
 import com.google.firebase.firestore.Query
-import com.joanzapata.iconify.IconDrawable
-import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import io.github.diegoflassa.littledropsofrain.MyApplication
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
@@ -17,14 +15,14 @@ import io.github.diegoflassa.littledropsofrain.data.entities.Message
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentMessagesFiltersBinding
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
-import io.github.diegoflassa.littledropsofrain.interfaces.UsersLoadedListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnUsersLoadedListener
 import io.github.diegoflassa.littledropsofrain.ui.admin.AdminFragment
 
 /**
  * Dialog Fragment containing filter form.
  */
 open class MessagesFilterDialogFragment(fragment : AdminFragment) : DialogFragment(),
-    View.OnClickListener, UsersLoadedListener {
+    View.OnClickListener, OnUsersLoadedListener {
 
     companion object {
         val TAG = MessagesFilterDialogFragment::class.simpleName
@@ -49,7 +47,7 @@ open class MessagesFilterDialogFragment(fragment : AdminFragment) : DialogFragme
         binding = FragmentMessagesFiltersBinding.inflate(inflater, container, false)
         mSortSpinner = binding.spinnerSort
         mUsersSpinner = binding.spinnerUsers
-        binding.iconUsers.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users))
+        //binding.iconUsers.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users))
         binding.buttonSearchMessages.setOnClickListener(this)
         binding.buttonCancelMessages.setOnClickListener(this)
         binding.checkBoxMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
