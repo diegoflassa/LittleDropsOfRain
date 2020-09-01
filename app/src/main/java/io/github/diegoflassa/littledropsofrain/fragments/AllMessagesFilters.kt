@@ -10,7 +10,7 @@ import io.github.diegoflassa.littledropsofrain.data.entities.Message
 /**
  * Object for passing filters around.
  */
-class MessagesFilters {
+class AllMessagesFilters {
     var read: Boolean? = null
     var emailSender: String? = null
     var sortBy: String? = null
@@ -78,10 +78,10 @@ class MessagesFilters {
     }
 
     companion object {
-        val default: MessagesFilters
+        val default: AllMessagesFilters
             get() {
                 val filters =
-                    MessagesFilters()
+                    AllMessagesFilters()
                 filters.read = null
                 filters.emailSender = null
                 filters.sortBy = Message.CREATION_DATE

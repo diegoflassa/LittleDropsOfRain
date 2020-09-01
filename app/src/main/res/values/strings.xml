@@ -34,7 +34,6 @@
     <string name="reload_products">Reload Products</string>
     <string name="unable_to_log_in">Unable to log in</string>
     <string name="log_in_successful">Log in successful</string>
-    <string name="msg_title">Title: %1$s</string>
     <string name="msg_creation_date">Creation Date: %1$s</string>
     <string name="msg_sender">Sender: %1$s</string>
     <string name="msg_read">Read</string>
@@ -126,6 +125,9 @@
     <string name="worker_scheduled">Products Update</string>
     <string name="woker_notification">Worker Notification</string>
     <string name="notification_worker_channel_description">Notifications from Update Products Worker</string>
+    <string name="menu_messages">Messages</string>
+    <string name="messages">Messages</string>
+    <string name="licenses">Licenses</string>
 
     <!-- Price filters -->
     <string-array name="prices" translatable="false">

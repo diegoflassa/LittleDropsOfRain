@@ -13,7 +13,7 @@ import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Message
 import io.github.diegoflassa.littledropsofrain.data.entities.User
-import io.github.diegoflassa.littledropsofrain.databinding.FragmentMessagesFiltersBinding
+import io.github.diegoflassa.littledropsofrain.databinding.FragmentAllMessagesFiltersBinding
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 import io.github.diegoflassa.littledropsofrain.interfaces.OnUsersLoadedListener
 import io.github.diegoflassa.littledropsofrain.ui.admin.AdminFragment
@@ -21,22 +21,22 @@ import io.github.diegoflassa.littledropsofrain.ui.admin.AdminFragment
 /**
  * Dialog Fragment containing filter form.
  */
-open class MessagesFilterDialogFragment(fragment : AdminFragment) : DialogFragment(),
+open class AllMessagesFilterDialogFragment(fragment : AdminFragment) : DialogFragment(),
     View.OnClickListener, OnUsersLoadedListener {
 
     companion object {
-        val TAG = MessagesFilterDialogFragment::class.simpleName
+        val TAG = AllMessagesFilterDialogFragment::class.simpleName
     }
 
     interface FilterListener {
-        fun onFilter(filters: MessagesFilters)
+        fun onFilter(filters: AllMessagesFilters)
     }
 
     private var adminFragment : AdminFragment = fragment
     private var mSortSpinner: Spinner? = null
     private var mUsersSpinner: Spinner? = null
     var filterListener: FilterListener? = null
-    var binding: FragmentMessagesFiltersBinding by viewLifecycle()
+    var binding: FragmentAllMessagesFiltersBinding by viewLifecycle()
     private var mRootView : View?= null
 
     override fun onCreateView(
@@ -44,7 +44,7 @@ open class MessagesFilterDialogFragment(fragment : AdminFragment) : DialogFragme
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMessagesFiltersBinding.inflate(inflater, container, false)
+        binding = FragmentAllMessagesFiltersBinding.inflate(inflater, container, false)
         mSortSpinner = binding.spinnerSort
         mUsersSpinner = binding.spinnerUsers
         //binding.iconUsers.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users))
@@ -66,7 +66,7 @@ open class MessagesFilterDialogFragment(fragment : AdminFragment) : DialogFragme
 
     override fun onDismiss(dialog: DialogInterface){
         super.onDismiss(dialog)
-        adminFragment.binding.filterBarMessages.isEnabled = true
+        adminFragment.binding.filterBarAllMessages.isEnabled = true
     }
 
     override fun onResume() {
@@ -158,10 +158,10 @@ open class MessagesFilterDialogFragment(fragment : AdminFragment) : DialogFragme
         }
     }
 
-    val filters: MessagesFilters
+    val filters: AllMessagesFilters
         get() {
             val filters =
-                MessagesFilters()
+                AllMessagesFilters()
             filters.read = selectedRead
             filters.emailSender = selectedEmailSender
             filters.sortBy = selectedSortBy

@@ -47,6 +47,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
         android:autofillHints=""
+        android:background="@drawable/rounded_edittext_states"
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/message_body"
@@ -57,16 +58,16 @@
         app:layout_constraintTop_toBottomOf="@+id/edtTxtTitle" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/Widget.MaterialComponents.Button.Icon"
-        app:icon="@drawable/image_placeholder"
-        app:iconGravity="textStart"
         android:id="@+id/btnSend"
+        style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="392dp"
         android:layout_height="49dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:paddingHorizontal="16dp"
-        android:text="@string/send"
+        android:theme="@style/MyMaterialButtonTheme"
+        app:icon="@android:drawable/ic_menu_send"
+        app:iconGravity="textEnd"
         app:layout_constraintEnd_toEndOf="@+id/edtTxtMlMessage"
         app:layout_constraintStart_toStartOf="@+id/edtTxtMlMessage"
         app:layout_constraintTop_toBottomOf="@+id/edtTxtMlMessage" />

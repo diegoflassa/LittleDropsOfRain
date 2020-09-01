@@ -7,8 +7,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context="fragments.MessagesFilterDialogFragment"
-    android:tag="MessagesFilterDialogFragment">
+    tools:context="fragments.MyMessagesFilterDialogFragment"
+    android:tag="MyMessagesFilterDialogFragment">
 
     <TextView
         android:layout_width="wrap_content"
@@ -52,30 +52,6 @@
 
     </RelativeLayout>
 
-    <!-- Users -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/icon_users"
-            android:layout_centerVertical="true"
-            app:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_monetization_on_white_24px"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:contentDescription="@string/icon_users" />
-
-        <Spinner
-            android:id="@+id/spinner_users"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/icon_users"
-            android:entries="@array/prices"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content" />
-
-    </RelativeLayout>
-
     <!-- Sort by -->
     <RelativeLayout
         android:layout_width="match_parent"
@@ -111,8 +87,6 @@
             android:layout_weight="1" />
 
         <com.google.android.material.button.MaterialButton
-            app:icon="@drawable/image_placeholder"
-            app:iconGravity="textStart"
             android:id="@+id/button_cancel_messages"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
@@ -120,18 +94,24 @@
             android:layout_weight="1"
             android:text="@string/cancel"
             android:textColor="@color/colorAccent"
+            android:theme="@style/MyMaterialButtonTheme"
+            app:icon="@drawable/btn_clear"
+            app:iconTint="@color/colorAccent"
+            app:iconGravity="textStart"
             tools:ignore="ButtonOrder" />
 
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.Icon"
-            app:icon="@drawable/image_placeholder"
-            app:iconGravity="textStart"
             android:id="@+id/button_search_messages"
+            style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/apply" />
+            android:text="@string/apply"
+            android:theme="@style/MyMaterialButtonTheme"
+            app:icon="@drawable/fui_ic_check_circle_black_128dp"
+            app:iconGravity="textStart"
+            app:iconSize="30dp" />
 
     </LinearLayout>
 

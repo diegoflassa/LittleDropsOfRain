@@ -1,4 +1,4 @@
-package io.github.diegoflassa.littledropsofrain.ui.admin
+package io.github.diegoflassa.littledropsofrain.ui.messages
 
 import android.os.Bundle
 import android.util.Log
@@ -9,47 +9,45 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import com.joanzapata.iconify.IconDrawable
-import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import io.github.diegoflassa.littledropsofrain.MainActivity
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.adapters.MessageAdapter
 import io.github.diegoflassa.littledropsofrain.data.dao.MessageDao
 import io.github.diegoflassa.littledropsofrain.data.entities.Message
-import io.github.diegoflassa.littledropsofrain.databinding.FragmentAdminBinding
-import io.github.diegoflassa.littledropsofrain.fragments.AllMessagesFilterDialogFragment
-import io.github.diegoflassa.littledropsofrain.fragments.AllMessagesFilters
+import io.github.diegoflassa.littledropsofrain.databinding.FragmentMessagesBinding
+import io.github.diegoflassa.littledropsofrain.fragments.MyMessagesFilterDialogFragment
+import io.github.diegoflassa.littledropsofrain.fragments.MyMessagesFilters
 import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
-import io.github.diegoflassa.littledropsofrain.models.AdminViewModel
-import io.github.diegoflassa.littledropsofrain.models.AdminViewState
+import io.github.diegoflassa.littledropsofrain.models.MessagesViewModel
+import io.github.diegoflassa.littledropsofrain.models.MessagesViewState
 import java.lang.ref.WeakReference
 
 
-class AdminFragment : Fragment(),
+class MessagesFragment : Fragment(),
     MessageAdapter.OnMessageSelectedListener,
-    AllMessagesFilterDialogFragment.FilterListener,
+    MyMessagesFilterDialogFragment.FilterListener,
     View.OnClickListener {
 
-    private val viewModel: AdminViewModel by viewModels()
+    private val viewModel: MessagesViewModel by viewModels()
     private lateinit var mAdapter: WeakReference<MessageAdapter>
-    var binding : FragmentAdminBinding by viewLifecycle()
-    private lateinit var mFilterDialog: AllMessagesFilterDialogFragment
+    var binding : FragmentMessagesBinding by viewLifecycle()
+    private lateinit var mFilterDialog: MyMessagesFilterDialogFragment
     private lateinit var mFirestore: FirebaseFirestore
     private var mQuery: Query? = null
 
     companion object {
-        val TAG = AdminFragment::class.simpleName
+        val TAG = MessagesFragment::class.simpleName
         const val LIMIT = 50
-        fun newInstance() = AdminFragment()
+        fun newInstance() = MessagesFragment()
     }
 
     override fun onCreateView(
@@ -57,7 +55,7 @@ class AdminFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAdminBinding.inflate(inflater, container, false)
+        binding = FragmentMessagesBinding.inflate(inflater, container, false)
         viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
@@ -69,28 +67,13 @@ class AdminFragment : Fragment(),
             )!!
         )
 
-        val menu = binding.navBottomAdmin.menu
-        menu.findItem(R.id.nav_reload_products).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_loop)
-        menu.findItem(R.id.nav_send_topic_message).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_envelope)
-        binding.navBottomAdmin.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
-                R.id.nav_reload_products -> { onReloadProductsClicked() }
-                R.id.nav_send_topic_message -> { onSendTopicMessageClicked() }
-                else -> {}// Do nothing
-            }
-            true
-        }
-
-        binding.filterBarAllMessages.setOnClickListener(this)
-        binding.buttonClearFilterAllMessages.setOnClickListener(this)
+        binding.filterBarMyMessages.setOnClickListener(this)
+        binding.buttonClearFilterMyMessages.setOnClickListener(this)
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
 
         // Filter Dialog
-        mFilterDialog =
-            AllMessagesFilterDialogFragment(
-                this@AdminFragment
-            )
+        mFilterDialog = MyMessagesFilterDialogFragment(this@MessagesFragment)
         mFilterDialog.filterListener = this
 
         showLoadingScreen()
@@ -122,37 +105,32 @@ class AdminFragment : Fragment(),
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.filter_bar_all_messages -> onFilterClicked()
-            R.id.button_clear_filter_all_messages -> onClearFilterClicked()
+            R.id.filter_bar_my_messages -> onFilterClicked()
+            R.id.button_clear_filter_my_messages -> onClearFilterClicked()
         }
     }
 
-    private fun onSendTopicMessageClicked() {
-        findNavController().navigate(AdminFragmentDirections.navSendTopicMessage())
-    }
-
-    private fun onReloadProductsClicked() {
-        findNavController().navigate(AdminFragmentDirections.navReloadProducts())
-    }
-
-    private fun updateUI(viewState: AdminViewState) {
+    private fun updateUI(viewState: MessagesViewState) {
         // Update the UI
         viewState.text = ""
     }
 
      private fun showLoadingScreen(){
-        binding.adminProgress.visibility = View.VISIBLE
+        binding.messagesProgress.visibility = View.VISIBLE
     }
 
     fun hideLoadingScreen(){
-        binding.adminProgress.visibility = View.GONE
+        binding.messagesProgress.visibility = View.GONE
     }
 
-    override fun onFilter(filters : AllMessagesFilters) {
+    override fun onFilter(filters : MyMessagesFilters) {
 
         // Construct query basic query
         var query: Query = mFirestore.collection(MessageDao.COLLECTION_PATH)
         query.orderBy(Message.CREATION_DATE, Query.Direction.DESCENDING)
+        val users = ArrayList<String>(1)
+        users.add(FirebaseAuth.getInstance().currentUser?.email!!)
+        query = query.whereArrayContainsAny(Message.OWNERS, users)
 
         // Category (equality filter)
         if (filters.hasRead()) {
@@ -165,9 +143,6 @@ class AdminFragment : Fragment(),
         }
         */
         // Price (equality filter)
-        if (filters.hasEMailSender()) {
-            query = query.whereEqualTo(Message.EMAIL_SENDER, filters.emailSender!!)
-        }
 
         // Sort by (orderBy with direction)
         if (filters.hasSortBy()) {
@@ -182,8 +157,8 @@ class AdminFragment : Fragment(),
         showLoadingScreen()
 
         // Set header
-        binding.textCurrentSearchAllMessages.text = HtmlCompat.fromHtml(filters.getSearchDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY)
-        binding.textCurrentSortByAllMessages.text = filters.getOrderDescription(requireContext())
+        binding.textCurrentSearchMyMessages.text = HtmlCompat.fromHtml(filters.getSearchDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.textCurrentSortByMyMessages.text = filters.getOrderDescription(requireContext())
 
         // Save filters
         viewModel.viewState.filters = filters
@@ -201,22 +176,22 @@ class AdminFragment : Fragment(),
                 R.drawable.card_item_divider
             )!!
         )
-        binding.recyclerviewAdmin.addItemDecoration(itemDecoration)
+        binding.recyclerviewMessages.addItemDecoration(itemDecoration)
 
         if (mQuery == null) {
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = WeakReference( object : MessageAdapter(mQuery, this@AdminFragment) {
+        mAdapter = WeakReference( object : MessageAdapter(mQuery, this@MessagesFragment) {
             override fun onDataChanged() {
                 hideLoadingScreen()
                 // Show/hide content if the query returns empty.
                 if (itemCount == 0) {
-                    binding.recyclerviewAdmin.visibility = View.GONE
-                    binding.adminViewEmpty.visibility = View.VISIBLE
+                    binding.recyclerviewMessages.visibility = View.GONE
+                    binding.messagesViewEmpty.visibility = View.VISIBLE
                 } else {
-                    binding.recyclerviewAdmin.visibility = View.VISIBLE
-                    binding.adminViewEmpty.visibility = View.GONE
+                    binding.recyclerviewMessages.visibility = View.VISIBLE
+                    binding.messagesViewEmpty.visibility = View.GONE
                 }
             }
 
@@ -230,19 +205,19 @@ class AdminFragment : Fragment(),
                 }
             }
         })
-        binding.recyclerviewAdmin.layoutManager = LinearLayoutManager(activity)
-        binding.recyclerviewAdmin.adapter = mAdapter.get()
+        binding.recyclerviewMessages.layoutManager = LinearLayoutManager(activity)
+        binding.recyclerviewMessages.adapter = mAdapter.get()
     }
 
     private fun onFilterClicked() {
-        binding.filterBarAllMessages.isEnabled = false
+        binding.filterBarMyMessages.isEnabled = false
         // Show the dialog containing filter options
-        mFilterDialog.show(parentFragmentManager, AllMessagesFilterDialogFragment.TAG)
+        mFilterDialog.show(parentFragmentManager, MyMessagesFilterDialogFragment.TAG)
     }
 
     private fun onClearFilterClicked() {
         mFilterDialog.resetFilters()
-        viewModel.viewState.filters= AllMessagesFilters.default
+        viewModel.viewState.filters= MyMessagesFilters.default
         onFilter(viewModel.viewState.filters)
     }
 

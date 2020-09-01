@@ -19,6 +19,14 @@ var creationDate : Timestamp? = Timestamp.now() ) :
         private const val NAME= "name"
         private const val IS_ADMIN= "isAdmin"
         private const val CREATION_DATE= "creationDate"
+
+        fun fromString(text : String) : User{
+            val user = User()
+            val separated = text.split("-")
+            user.name = separated[0].trim()
+            user.email = separated[1].trim()
+            return user
+        }
     }
 
     constructor(map: Map<String, Any>) : this() {
@@ -72,10 +80,4 @@ var creationDate : Timestamp? = Timestamp.now() ) :
         return "$name - $email"
     }
 
-
-    fun fromString(text : String){
-        val separated = text.split("-")
-        name = separated[0].trim()
-        email = separated[1].trim()
-    }
 }

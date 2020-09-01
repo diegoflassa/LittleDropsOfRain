@@ -1,5 +1,6 @@
 package io.github.diegoflassa.littledropsofrain.ui.facebook
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,7 @@ class FacebookFragment : Fragment() {
     private var binding :FragmentFacebookBinding by viewLifecycle()
     private var url = "https://www.facebook.com/m.andrea.littledrops/"
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,6 +40,8 @@ class FacebookFragment : Fragment() {
         })
 
         // set up the webview
+        binding.webviewFacebook.settings.javaScriptEnabled = true
+        binding.webviewFacebook.settings.domStorageEnabled = true
         binding.webviewFacebook.webViewClient = object: WebViewClient() {
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {

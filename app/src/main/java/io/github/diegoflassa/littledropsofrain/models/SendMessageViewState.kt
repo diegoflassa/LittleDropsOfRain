@@ -17,11 +17,12 @@ class SendMessageViewState : LiveData<SendMessageViewState>(){
         }
     }
 
-    var text = ""
     var title = ""
+    var replyUid = ""
+    var text = ""
     var body = ""
     var dest = User()
     var sender = User()
     var isUserAdmin = false
-    var sendMethod = SendMethod.UNKNOWN
+    var sendMethod = SendMethod.MESSAGE
 }

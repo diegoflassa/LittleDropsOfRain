@@ -55,6 +55,17 @@
         tools:layout="@layout/fragment_iluria" />
 
     <fragment
+        android:id="@+id/nav_messages"
+        android:name="io.github.diegoflassa.littledropsofrain.ui.messages.MessagesFragment"
+        android:label="@string/messages"
+        tools:layout="@layout/fragment_messages" >
+        <action
+            android:id="@+id/action_nav_messages_to_sendMessageFragment"
+            app:destination="@id/sendMessageFragment"
+            app:popUpTo="@id/nav_messages" />
+    </fragment>
+
+    <fragment
         android:id="@+id/send_topic_message_fragment"
         android:name="io.github.diegoflassa.littledropsofrain.ui.topic.SendTopicMessageFragment"
         android:label="@string/label_topic"
@@ -108,5 +119,6 @@
         android:name="io.github.diegoflassa.littledropsofrain.ui.reload_products.ReloadProductsFragment"
         android:label="@string/reload_products"
         tools:layout="@layout/fragment_reload_products" />
+
 
 </navigation>

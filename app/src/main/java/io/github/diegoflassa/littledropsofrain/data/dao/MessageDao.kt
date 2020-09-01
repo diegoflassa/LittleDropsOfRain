@@ -59,14 +59,14 @@ object MessageDao {
         }
     }
 
-    fun findByTitle(title: String, listener: OnDataChangeListener<List<Message>>) {
+    fun findByContent(content: String, listener: OnDataChangeListener<List<Message>>) {
         val messages: MutableList<Message> = ArrayList()
        db.get()?.collection(COLLECTION_PATH)
            ?.get()
            ?.addOnSuccessListener { result ->
                 var message : Message
                 for (document in result) {
-                    if(document.get("title").toString().contains(title)) {
+                    if(document.get("message").toString().contains(content)) {
                         message = document.toObject(Message::class.java)
                         message.uid = document.id
                         Log.d(TAG, "${document.id} => ${document.data}")
@@ -74,10 +74,10 @@ object MessageDao {
                     }
                 }
                 listener.onDataLoaded(messages)
-            }
+           }
            ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting messages: ", exception)
-            }
+           }
     }
 
     fun findByCreationDate(date: Date, listener: OnDataChangeListener<List<Message>>) {

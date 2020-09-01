@@ -189,7 +189,6 @@ class UsersFragment : Fragment(),
     private fun showSendMessageTo(user: User) {
         val message = Message()
         message.sender = user.email
-        message.title = ""
         message.message = ""
         val bundle = Bundle()
         bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)

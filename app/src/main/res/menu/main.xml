@@ -11,4 +11,9 @@
         android:orderInCategory="100"
         android:title="@string/login"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_licenses"
+        android:orderInCategory="100"
+        android:title="@string/licenses"
+        app:showAsAction="never" />
 </menu>

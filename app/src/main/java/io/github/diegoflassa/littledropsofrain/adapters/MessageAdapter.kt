@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
@@ -51,7 +52,6 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
     class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         private val ioScope = CoroutineScope(Dispatchers.IO)
-        private val title: TextView = itemView.findViewById(R.id.msg_title)
         private val creationDate: TextView = itemView.findViewById(R.id.msg_creation_date)
         private val sender: TextView = itemView.findViewById(R.id.msg_sender)
         private val edtMessage: EditText = itemView.findViewById(R.id.msg_message)
@@ -66,7 +66,6 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
             val message: Message? = snapshot.toObject(Message::class.java)
             message?.uid = snapshot.id
 
-            title.text = message?.title
             if(message?.creationDate !=null) {
                 creationDate.text = Helper.getDateTime(message.creationDate!!.toDate())
             }
@@ -87,6 +86,7 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
             // Click listener
             itemView.setOnClickListener { listener?.onMessageSelected(snapshot) }
 
+            reply.isEnabled = (message?.emailSender != FirebaseAuth.getInstance().currentUser?.email)
             reply.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_action_undo))
             reply.setOnClickListener {
                 replyMessage(it, message!!)
@@ -99,9 +99,10 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
 
         private fun replyMessage(view : View, message : Message){
             val messageToEdit = Message()
+            messageToEdit.replyUid = message.uid
             messageToEdit.senderId = message.senderId
+            messageToEdit.emailSender = FirebaseAuth.getInstance().currentUser?.email
             messageToEdit.sender = sender.text.toString()
-            messageToEdit.title = title.text.toString()
             messageToEdit.message = edtMessage.text.toString()
             val bundle = Bundle()
             bundle.putString(SendMessageFragment.ACTION_REPLY_KEY, SendMessageFragment.ACTION_REPLY)

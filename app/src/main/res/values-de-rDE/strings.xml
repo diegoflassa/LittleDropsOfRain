@@ -9,7 +9,6 @@
     <string name="reload_products">Produkte neu laden</string>
     <string name="unable_to_log_in">Anmeldung nicht möglich</string>
     <string name="log_in_successful">Anmeldung erfolgreich</string>
-    <string name="msg_title">Titel: %1$s</string>
     <string name="msg_creation_date">Erstellungsdatum: %1$s</string>
     <string name="msg_sender">Absender: %1$s</string>
     <string name="msg_read">Lesen</string>
@@ -81,4 +80,13 @@
     <string name="button_reply">Button Antwort</string>
     <string name="icon_users">Symbol Benutzer</string>
     <string name="hint_ml_txt_vw_progress">Mehrzeilige Textansicht Fortschritt</string>
+    <string name="remove_old_products">Alte Produkte entfernen</string>
+    <string name="remove_not_found_products">Nicht gefundene Produkte entfernen</string>
+    <string name="worker_running">Arbeiter läuft</string>
+    <string name="worker_scheduled">Produktaktualisierung</string>
+    <string name="woker_notification">Benachrichtigung des Arbeitnehmers</string>
+    <string name="notification_worker_channel_description">Benachrichtigungen von Update Products Worker</string>
+    <string name="menu_messages">Mitteilungen</string>
+    <string name="messages">Mitteilungen</string>
+    <string name="licenses">Lizenzen</string>
 </resources>

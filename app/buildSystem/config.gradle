@@ -6,7 +6,7 @@ ext.config = [
     versionMinor      : 0,
     versionPatch      : 0,
     versionClassifier : "",
-    minimumSdkVersion : 23,
+    minimumSdkVersion : 26,
     compileSdkVersion : 30,
     targetSdkVersion  : 30,
     buildToolsVersion : "30.0.2"

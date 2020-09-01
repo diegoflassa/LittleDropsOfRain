@@ -5,6 +5,7 @@ apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics' // Apply the Crashlytics Gradle plugin
 apply plugin: 'androidx.navigation.safeargs.kotlin'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply from: "$projectDir/buildsystem/config.gradle"
 
 android {
@@ -89,17 +90,17 @@ dependencies {
     // Volley
     implementation 'com.android.volley:volley:1.1.1'
 
+    // Licenses
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-database:4.0.0'
     implementation 'com.firebaseui:firebase-ui-auth:6.3.0'
+    implementation 'com.firebaseui:firebase-ui-storage:6.2.1'
 
     //com.google.firebase
-    implementation 'com.google.firebase:firebase-auth:19.3.2'
     implementation 'com.google.firebase:firebase-database:19.4.0'
-    // Add the Firebase SDK for Google Analytics
-    // For an optimal experience using FCM, add the Firebase SDK
-    // for Google Analytics. This is recommended, but not required.
-    implementation 'com.google.firebase:firebase-analytics:17.5.0'
+
     // Firebase Authentication (Kotlin)
     implementation 'com.google.firebase:firebase-auth-ktx:19.3.2'
     implementation 'com.google.firebase:firebase-iid:20.2.4'
@@ -108,13 +109,16 @@ dependencies {
     implementation 'com.google.firebase:firebase-inappmessaging-display:19.1.1'
     implementation 'com.google.firebase:firebase-firestore-ktx:21.6.0'
     implementation "com.google.firebase:firebase-storage-ktx:19.2.0"
-    implementation 'com.firebaseui:firebase-ui-storage:6.2.1'
 
+    // Add the Firebase SDK for Google Analytics
+    // For an optimal experience using FCM, add the Firebase SDK
+    // for Google Analytics. This is recommended, but not required.
     // Recommended: Add the Firebase SDK for Google Analytics.
     implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
     // Add the Firebase Crashlytics SDK.
     implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
     implementation 'com.google.auth:google-auth-library-oauth2-http:0.21.1'
+
     // GSon
     implementation 'com.google.code.gson:gson:2.8.6'
 

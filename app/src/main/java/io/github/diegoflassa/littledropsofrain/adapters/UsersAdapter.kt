@@ -1,5 +1,6 @@
 package io.github.diegoflassa.littledropsofrain.adapters
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.CompoundButton
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
@@ -21,6 +23,7 @@ import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
 import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.interfaces.OnDataChangeListener
 import io.github.diegoflassa.littledropsofrain.interfaces.OnDataFailureListener
+import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
 import io.github.diegoflassa.littledropsofrain.ui.users.UsersFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,6 +73,7 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
         private val userImage: ImageView = itemView.findViewById(R.id.user_picture)
         private val userName: TextView = itemView.findViewById(R.id.user_name)
         private val userEmail: TextView = itemView.findViewById(R.id.user_email)
+        private val buttonReply: ImageButton = itemView.findViewById(R.id.btn_reply_user)
         private val buttonDelete: ImageButton = itemView.findViewById(R.id.btn_delete_user)
         val userIsAdmin: SwitchMaterial = itemView.findViewById(R.id.user_is_admin)
 
@@ -91,6 +95,14 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
                 ioScope.launch {
                     UserDao.delete(user)
                 }
+            }
+
+            buttonReply.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
+            buttonReply.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_envelope))
+            buttonReply.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
+                itemView.findNavController().navigate(R.id.sendMessageFragment, bundle)
             }
 
             buttonDelete.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_trash))

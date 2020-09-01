@@ -21,6 +21,11 @@ abstract class FirestoreAdapter<VH : RecyclerView.ViewHolder?>(private var mQuer
     private var mRegistration: ListenerRegistration? = null
     private val mSnapshots = ArrayList<DocumentSnapshot>()
 
+    companion object {
+        private val TAG = FirestoreAdapter::class.simpleName
+    }
+
+
     fun startListening() {
         if (mQuery != null && mRegistration == null) {
             mRegistration = mQuery!!.addSnapshotListener(this)
@@ -110,10 +115,6 @@ abstract class FirestoreAdapter<VH : RecyclerView.ViewHolder?>(private var mQuer
 
     protected open fun onDataChanged() {
         Log.d(TAG, "[onDataChanged]")
-    }
-
-    companion object {
-        private val TAG = FirestoreAdapter::class.simpleName
     }
 
 }

@@ -193,11 +193,18 @@ object ProductDao {
     }
 
     private fun removeBlob(product: Product) {
-        val reference = storage.reference.child("$COLLECTION_PATH/${product.uid}.jpg")
+        var reference = storage.reference.child("$COLLECTION_PATH/${product.uid}.jpg")
         reference.delete().addOnSuccessListener {
             Log.d(TAG, "[insertBlob]Image successfully removed for product ${product.uid} at ${product.imageUrl}")
         }.addOnFailureListener {
             Log.d(TAG,"Error deleting image ${product.uid}")
+        }.continueWith {
+            reference = storage.reference.child("$COLLECTION_PATH/${product.uid}_200x200.jpg")
+            reference.delete().addOnSuccessListener {
+                Log.d(TAG,"[insertBlob]Image successfully removed for product ${product.uid}_200x200 at ${product.imageUrl}")
+            }.addOnFailureListener {
+                Log.d(TAG, "Error deleting image ${product.uid}")
+            }
         }
     }
 

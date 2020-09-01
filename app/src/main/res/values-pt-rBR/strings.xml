@@ -29,7 +29,6 @@
     <string name="msg_read_filter">Lida: %1$s</string>
     <string name="msg_sender">Remetente: %1$s</string>
     <string name="msg_creation_date">Data de Criação: %1$s</string>
-    <string name="msg_title">Título: %1$s</string>
     <string name="log_in_successful">Login efetuado com sucesso</string>
     <string name="unable_to_log_in">Impossível logar</string>
     <string name="reload_products">Recarregar Produtos</string>
@@ -81,4 +80,13 @@
     <string name="button_reply">Botão Responder</string>
     <string name="icon_users">Ícone Usuários</string>
     <string name="hint_ml_txt_vw_progress">Multilinha textview Progresso</string>
+    <string name="remove_old_products">Remover produtos velhos</string>
+    <string name="remove_not_found_products">Remover produtos não encontrados</string>
+    <string name="worker_running">Worker Executando</string>
+    <string name="worker_scheduled">Atualização de Produtos</string>
+    <string name="woker_notification">Notificação do Worker</string>
+    <string name="notification_worker_channel_description">Notificação do Worker de Atualização de Produtos</string>
+    <string name="menu_messages">Mensagens</string>
+    <string name="messages">Mensagens</string>
+    <string name="licenses">Licensas</string>
 </resources>

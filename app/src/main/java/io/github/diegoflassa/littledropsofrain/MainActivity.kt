@@ -1,5 +1,6 @@
 package io.github.diegoflassa.littledropsofrain
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -12,6 +13,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.iterator
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.navigation.NavController
@@ -21,8 +23,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.work.*
 import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -37,16 +39,16 @@ import io.github.diegoflassa.littledropsofrain.data.entities.User
 import io.github.diegoflassa.littledropsofrain.databinding.ActivityMainBinding
 import io.github.diegoflassa.littledropsofrain.helpers.Helper
 import io.github.diegoflassa.littledropsofrain.interfaces.OnUserFoundListener
+import io.github.diegoflassa.littledropsofrain.interfaces.OnUsersLoadedListener
 import io.github.diegoflassa.littledropsofrain.models.MainActivityViewModel
 import io.github.diegoflassa.littledropsofrain.models.MainActivityViewState
-import io.github.diegoflassa.littledropsofrain.workers.UpdateProductsWork
+import io.github.diegoflassa.littledropsofrain.services.SetupProductsUpdateWorkerService
 import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
 import kotlinx.android.synthetic.main.nav_header_main.view.*
-import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
-    OnUserFoundListener {
+    OnUserFoundListener, OnUsersLoadedListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -138,6 +140,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 R.id.nav_iluria,
                 R.id.nav_facebook,
                 R.id.nav_instagram,
+                R.id.nav_messages,
                 R.id.nav_admin,
                 R.id.nav_users
             ),
@@ -170,7 +173,8 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                     findNavController(R.id.nav_host_fragment).navigate(R.id.nav_home)
                 }
             })
-        scheduleProductsUpdates()
+        SetupProductsUpdateWorkerService.setupWorker(applicationContext)
+        UserDao.loadAll(this)
     }
 
     override fun onResume() {
@@ -219,12 +223,16 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 if (mAuth.currentUser == null) {
                     // Create and launch sign-in intent
                     registerForActivityResult(AuthActivityResultContract(), this).launch(null)
-                    item.isEnabled= false
+                    item.isEnabled = false
                 } else {
                     logout()
                     item.title = getString(R.string.login)
                     authMenuItem.icon = IconDrawable(this, FontAwesomeIcons.fa_user_plus)
                 }
+            }
+            R.id.action_licenses -> {
+                OssLicensesMenuActivity.setActivityTitle(getString(R.string.licenses))
+                startActivity(Intent(this, OssLicensesMenuActivity::class.java))
             }
         }
         return ret
@@ -259,28 +267,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         AuthUI.getInstance().signOut(this)
     }
 
-    private fun scheduleProductsUpdates() {
-        if (currentUser.isAdmin) {
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-            val myWorkRequest = PeriodicWorkRequest.Builder(
-                UpdateProductsWork::class.java,
-                12,
-                TimeUnit.HOURS
-            )
-                .setConstraints(constraints)
-                .setInitialDelay(12, TimeUnit.HOURS)
-                .setBackoffCriteria(
-                    BackoffPolicy.LINEAR,
-                    OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
-                    TimeUnit.MILLISECONDS
-                )
-                .build()
-            WorkManager.getInstance(this).enqueue(myWorkRequest)
-        }
-    }
-
     private fun setupDrawerMenuIntems() {
         val navView = findViewById<NavigationView>(R.id.nav_view)
         val navHome = navView.menu.findItem(R.id.nav_home)
@@ -291,10 +277,19 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         navFacebook.icon = IconDrawable(this, SimpleLineIconsIcons.icon_social_facebook)
         val navInstagram = navView.menu.findItem(R.id.nav_instagram)
         navInstagram.icon = IconDrawable(this, TypiconsIcons.typcn_social_instagram)
+        val navMessages = navView.menu.findItem(R.id.nav_messages)
+        navMessages.icon = IconDrawable(this, SimpleLineIconsIcons.icon_envelope)
         val navAdmin = navView.menu.findItem(R.id.nav_admin)
         navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
         val navUsers = navView.menu.findItem(R.id.nav_users)
         navUsers.icon = IconDrawable(this, SimpleLineIconsIcons.icon_users)
+        if(mAuth.currentUser!=null){
+            navMessages.isEnabled = true
+            navMessages.isVisible = true
+        }else{
+            navMessages.isEnabled = false
+            navMessages.isVisible = false
+        }
         if(!currentUser.isAdmin) {
             navIluria.isEnabled = false
             navIluria.isVisible = false
@@ -317,5 +312,20 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             currentUser = user
         }
         setupDrawerMenuIntems()
+    }
+
+    override fun onUsersLoaded(users: List<User>) {
+        val navView = findViewById<NavigationView>(R.id.nav_view)
+        val navAdmin = navView.menu.findItem(R.id.nav_admin)
+        navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
+        if(navAdmin.hasSubMenu()){
+            for(user in users) {
+                //navAdmin.subMenu.addSubMenu(user.name)
+            }
+            for(item in navAdmin.subMenu.iterator()){
+                //item.isEnabled = true
+                //item.icon = IconDrawable(this, SimpleLineIconsIcons.icon_user)
+            }
+        }
     }
 }

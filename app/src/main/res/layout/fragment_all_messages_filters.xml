@@ -7,8 +7,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context="fragments.ProductsFilterDialogFragment"
-    android:tag="ProductsFilterDialogFragment">
+    tools:context="fragments.AllMessagesFilterDialogFragment"
+    android:tag="AllMessagesFilterDialogFragment">
 
     <TextView
         android:layout_width="wrap_content"
@@ -16,13 +16,13 @@
         android:layout_marginBottom="8dp"
         android:text="@string/header_filters" />
 
-    <!-- Categories Type -->
+    <!-- Read -->
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/icon_category"
+            android:id="@+id/icon_msg_read"
             android:layout_centerVertical="true"
             app:tint="@color/colorAccent"
             app:srcCompat="@drawable/ic_filter_list_white_24px"
@@ -30,37 +30,46 @@
             android:layout_width="wrap_content"
             android:contentDescription="@string/icon_category" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:paddingStart="64dp"
-            android:paddingEnd="64dp"
-            android:id="@+id/category_chip_group"
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/checkBoxMsgRead"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="-24dp"
-            android:layout_toEndOf="@+id/icon_category">
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="-1dp"
+            android:layout_toEndOf="@+id/icon_msg_read"
+            android:text="@string/enable" />
 
-        </com.google.android.material.chip.ChipGroup>
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switch_msg_read"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="52dp"
+            android:layout_toEndOf="@+id/checkBoxMsgRead">
+
+        </com.google.android.material.switchmaterial.SwitchMaterial>
 
     </RelativeLayout>
 
-    <!-- Price -->
+    <!-- Users -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/icon_price"
+            android:id="@+id/icon_users"
             android:layout_centerVertical="true"
             app:tint="@color/colorAccent"
             app:srcCompat="@drawable/ic_monetization_on_white_24px"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:contentDescription="@string/icon_price" />
+            android:contentDescription="@string/icon_users" />
 
         <Spinner
-            android:id="@+id/spinner_price"
+            android:id="@+id/spinner_users"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/icon_price"
+            android:layout_toEndOf="@+id/icon_users"
             android:entries="@array/prices"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content" />
@@ -74,20 +83,20 @@
 
         <ImageView
             android:id="@+id/icon_sort"
-            android:layout_centerVertical="true"
-            app:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_sort_white_24px"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:contentDescription="@string/icon_sort" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/icon_sort"
+            app:srcCompat="@drawable/ic_sort_white_24px"
+            app:tint="@color/colorAccent" />
 
         <Spinner
             android:id="@+id/spinner_sort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/icon_sort"
-            android:entries="@array/products_sort_by" />
+            android:entries="@array/messages_sort_by"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
     </RelativeLayout>
 
     <!-- Cancel and apply buttons -->
@@ -102,7 +111,7 @@
             android:layout_weight="1" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_cancel"
+            android:id="@+id/button_cancel_messages"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -117,7 +126,7 @@
 
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_search"
+            android:id="@+id/button_search_messages"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -126,7 +135,7 @@
             android:theme="@style/MyMaterialButtonTheme"
             app:icon="@drawable/fui_ic_check_circle_black_128dp"
             app:iconGravity="textStart"
-            app:iconSize="30dp"/>
+            app:iconSize="30dp" />
 
     </LinearLayout>
 

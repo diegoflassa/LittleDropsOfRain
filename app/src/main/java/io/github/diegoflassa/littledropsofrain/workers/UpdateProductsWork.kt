@@ -19,10 +19,12 @@ import io.github.diegoflassa.littledropsofrain.xml.ProductParser
 class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
 
-    private val appContext: Context = context
+    companion object {
+        // Notification channel ID.
+        private const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
+    }
 
-    // Notification channel ID.
-    private val PRIMARY_CHANNEL_ID = "primary_notification_channel"
+    private val appContext: Context = context
 
     // Notification manager.
     private var mNotifyManager: NotificationManager? = null
@@ -31,10 +33,7 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
 
         // Create the notification channel.
         createNotificationChannel()
-
-        // Set up the notification content intent to launch the app when
-        // clicked.
-
+        
         // Set up the notification content intent to launch the app when
         // clicked.
         val contentPendingIntent = PendingIntent.getActivity(

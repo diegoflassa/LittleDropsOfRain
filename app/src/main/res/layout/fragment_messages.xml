@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.admin.AdminFragment"
-    android:tag="AdminFragment">
+    tools:context=".ui.messages.MessagesFragment"
+    android:tag="MessagesFragment">
 
     <!-- Filter Bar -->
     <FrameLayout
-        android:id="@+id/filter_bar_container_all_messages"
+        android:id="@+id/filter_bar_container_my_messages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/filter_bar_all_messages"
+            android:id="@+id/filter_bar_my_messages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -34,7 +34,7 @@
                 android:gravity="center_vertical">
 
                 <ImageView
-                    android:id="@+id/button_filter_all_messages"
+                    android:id="@+id/button_filter_my_messages"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -44,20 +44,20 @@
                     android:contentDescription="@string/button_filter" />
 
                 <LinearLayout
-                    android:id="@+id/text_current_search_container_all_messages"
+                    android:id="@+id/text_current_search_container_my_messages"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_toStartOf="@+id/button_clear_filter_all_messages"
-                    android:layout_toEndOf="@+id/button_filter_all_messages"
+                    android:layout_toStartOf="@+id/button_clear_filter_my_messages"
+                    android:layout_toEndOf="@+id/button_filter_my_messages"
                     android:orientation="vertical"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp">
 
                     <TextView
-                        android:id="@+id/text_current_search_all_messages"
+                        android:id="@+id/text_current_search_my_messages"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/all_products"
@@ -65,7 +65,7 @@
                         tools:text="Filter" />
 
                     <TextView
-                        android:id="@+id/text_current_sort_by_all_messages"
+                        android:id="@+id/text_current_sort_by_my_messages"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/sorted_by_creation_date"
@@ -74,7 +74,7 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/button_clear_filter_all_messages"
+                    android:id="@+id/button_clear_filter_my_messages"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -96,13 +96,13 @@
 
         <!-- Empty list view -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerviewAdmin"
+            android:id="@+id/recyclerviewMessages"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/colorPrimary"
             android:backgroundTint="@color/colorPrimary"
             android:padding="@dimen/big_padding"
-            app:layout_constraintBottom_toTopOf="@id/nav_bottom_admin"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -111,7 +111,7 @@
             tools:listitem="@layout/recyclerview_item_message" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/admin_view_empty"
+            android:id="@+id/messages_view_empty"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:drawableTop="@drawable/splash"
@@ -126,7 +126,7 @@
 
         <!-- Progress bar -->
         <ProgressBar
-            android:id="@+id/admin_progress"
+            android:id="@+id/messages_progress"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="205dp"
@@ -139,16 +139,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/nav_bottom_admin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/nav_bottom_admin_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

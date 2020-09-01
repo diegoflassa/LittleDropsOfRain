@@ -1,5 +1,6 @@
 package io.github.diegoflassa.littledropsofrain.ui.instagram
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,7 @@ class InstagramFragment : Fragment() {
     private var binding : FragmentInstagramBinding by viewLifecycle()
     private var url = "https://www.instagram.com/little_drops_of_rain"
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,6 +40,8 @@ class InstagramFragment : Fragment() {
         })
 
         // set up the webview
+        binding.webviewInstagram.settings.javaScriptEnabled = true
+        binding.webviewInstagram.settings.domStorageEnabled = true
         binding.webviewInstagram.webViewClient = object: WebViewClient() {
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
