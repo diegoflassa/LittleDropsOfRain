@@ -50,9 +50,7 @@ open class AllMessagesFilterDialogFragment(fragment : AdminFragment) : DialogFra
         binding = FragmentAllMessagesFiltersBinding.inflate(inflater, container, false)
         mSortSpinner = binding.spinnerSort
         mUsersSpinner = binding.spinnerUsers
-        //binding.iconUsers.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users))
-        binding.iconUsers.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users).color(R.color.colorAccent))
-        binding.iconUsers.imageTintList = ColorStateList.valueOf(R.color.colorAccent)
+        binding.iconUsers.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users).colorRes(R.color.colorAccent))
         binding.buttonSearchMessages.setOnClickListener(this)
         binding.buttonCancelMessages.setOnClickListener(this)
         binding.checkBoxMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
