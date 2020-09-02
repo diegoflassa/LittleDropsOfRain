@@ -4,7 +4,6 @@
     <string name="navigation_drawer_close">Navigationsschublade schließen</string>
     <string name="nav_header_desc">Navigationsheader</string>
     <string name="action_settings">die Einstellungen</string>
-    <string name="reply_title">Standardantwortaktion</string>
     <string name="product_image">Produktbild</string>
     <string name="reload_products">Produkte neu laden</string>
     <string name="unable_to_log_in">Anmeldung nicht möglich</string>
@@ -15,9 +14,6 @@
     <string name="msg_read_filter">Lesen: %1$s</string>
     <string name="user_logged_as">Benutzer angemeldet als : %1$s</string>
     <string name="message_to_send">Nachricht zum Senden</string>
-    <string name="delete">Löschen</string>
-    <string name="reply">Antworten</string>
-    <string name="send">Senden</string>
     <string name="title">Titel</string>
     <string name="no_messages_found">Keine Nachrichten gefunden</string>
     <string name="no_products_found">Keine Produkte gefunden</string>
@@ -35,7 +31,6 @@
     <string name="button_filter">Tastenfilter</string>
     <string name="button_clear_filter">Filter zum Löschen von Tasten</string>
     <string name="all">Alles</string>
-    <string name="send_global_message">Globale Nachricht senden</string>
     <string name="msg_subscribed">Gezeichnet</string>
     <string name="msg_subscribe_failed">Abonnement fehlgeschlagen</string>
     <string name="msg_subscribed_to_news">News abonniert!</string>
@@ -47,15 +42,12 @@
     <string name="not_logged_in">Nicht eingeloggt</string>
     <string name="label_topic">Themenmeldungen</string>
     <string name="msg_unsubscribed">Abgemeldet</string>
-    <string name="signature_title">Unterschrift Titel</string>
     <string name="user_is_admin">Ist Admin</string>
     <string name="rv_user_name">Name : %1$s</string>
     <string name="rv_user_is_admin">Ist Admin</string>
     <string name="menu_users">Benutzer</string>
     <string name="no_users_found">Keine Benutzer gefunden</string>
     <string name="failure_changing_user">Fehler beim Benutzerwechse"l</string>
-    <string name="email_body">E-Mail-Text</string>
-    <string name="email_subject">Betreff der E-Mail</string>
     <string name="email_send">EMail senden…</string>
     <string name="email_no_clients_installed">Es sind keine E-Mail-Clients installiert.</string>
     <string name="message">Botschaft</string>
@@ -65,12 +57,9 @@
     <string name="sorted_by_read">" Sortiert nach Lesen"</string>
     <string name="sorted_by_creation_date">" Sortiert nach Erstellungsdatum"</string>
     <string name="sorted_by_email_sender">" Sortiert nach E-Mail-Absender"</string>
-    <string name="icon_creation_date">" Erstellungsdatum des Symbols"</string>
-    <string name="pick_date">" Datum auswählen"</string>
     <string name="enable">" Aktivieren"</string>
     <string name="sort_by_creation_date">" Erstellungsdatum"</string>
     <string name="sort_by_read">" Lesen"</string>
-    <string name="action_send_topic_message">Themenmeldung</string>
     <string name="action_reload_products">" Produkte neu laden"</string>
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
@@ -79,8 +68,6 @@
     <string name="button_delete">Schaltfläche Löschen</string>
     <string name="button_reply">Button Antwort</string>
     <string name="icon_users">Symbol Benutzer</string>
-    <string name="hint_ml_txt_vw_progress">Mehrzeilige Textansicht Fortschritt</string>
-    <string name="remove_old_products">Alte Produkte entfernen</string>
     <string name="remove_not_found_products">Nicht gefundene Produkte entfernen</string>
     <string name="worker_running">Arbeiter läuft</string>
     <string name="worker_scheduled">Produktaktualisierung</string>
@@ -89,4 +76,5 @@
     <string name="menu_messages">Mitteilungen</string>
     <string name="messages">Mitteilungen</string>
     <string name="licenses">Lizenzen</string>
+    <string name="new_notification">Neue Nachricht von Little Drops of Rain</string>
 </resources>

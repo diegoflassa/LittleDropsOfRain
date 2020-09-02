@@ -27,6 +27,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.abt.FirebaseABTesting
 import com.google.firebase.auth.FirebaseAuth
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.FontAwesomeIcons
@@ -43,12 +44,13 @@ import io.github.diegoflassa.littledropsofrain.interfaces.OnUsersLoadedListener
 import io.github.diegoflassa.littledropsofrain.models.MainActivityViewModel
 import io.github.diegoflassa.littledropsofrain.models.MainActivityViewState
 import io.github.diegoflassa.littledropsofrain.services.SetupProductsUpdateWorkerService
+import io.github.diegoflassa.littledropsofrain.ui.admin.AdminFragment
 import io.github.diegoflassa.littledropsofrain.ui.send_message.SendMessageFragment
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 
 class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
-    OnUserFoundListener, OnUsersLoadedListener {
+    OnUserFoundListener, OnUsersLoadedListener, MenuItem.OnMenuItemClickListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -244,11 +246,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             // Successfully signed in
             val user = mAuth.currentUser
             if(user!=null) {
-                val userFb = Helper.firebaseUserToUser(user)
-                if(currentUser == userFb){
-                    userFb.isAdmin= currentUser.isAdmin
-                }
-                UserDao.insert(userFb)
+                UserDao.findByEMail(user.email, this)
             }
             authMenuItem.title = getString(R.string.logout)
             Toast.makeText(this, getString(R.string.log_in_successful), Toast.LENGTH_SHORT).show()
@@ -305,27 +303,45 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             navUsers.isEnabled = true
             navUsers.isVisible = true
         }
+        navHome.isChecked = true
     }
 
     override fun onUserFound(user: User?) {
         if (user != null) {
             currentUser = user
+            UserDao.insert(currentUser)
+        }else if(FirebaseAuth.getInstance().currentUser!=null) {
+            val userFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
+            UserDao.insert(userFb)
         }
         setupDrawerMenuIntems()
     }
 
     override fun onUsersLoaded(users: List<User>) {
+        return
         val navView = findViewById<NavigationView>(R.id.nav_view)
         val navAdmin = navView.menu.findItem(R.id.nav_admin)
-        navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
+        //navAdmin.subMenu.setGroupVisible(R.id.nav_admin_group_users, false)
         if(navAdmin.hasSubMenu()){
+            //navAdmin.subMenu.add(R.id.nav_admin_group_users, Menu.NONE, 0, AdminFragment.KEY_ALL_MESSAGES)
             for(user in users) {
-                //navAdmin.subMenu.addSubMenu(user.name)
+                //navAdmin.subMenu.add(R.id.nav_admin_group_users, Menu.NONE, 0, user.toString())
             }
             for(item in navAdmin.subMenu.iterator()){
-                //item.isEnabled = true
-                //item.icon = IconDrawable(this, SimpleLineIconsIcons.icon_user)
+                item.setOnMenuItemClickListener(this)
+                item.isEnabled = true
+                if(item.title == AdminFragment.KEY_ALL_MESSAGES)
+                    item.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
+                else
+                    item.icon = IconDrawable(this, SimpleLineIconsIcons.icon_user)
             }
         }
+    }
+
+    override fun onMenuItemClick(it: MenuItem?): Boolean {
+        val user = User.fromString(it!!.title.toString())
+        val directions = MainActivityDirections.actionGlobalAdminFragment(user.email!!)
+        findNavController(R.id.nav_host_fragment).navigate(directions)
+        return false
     }
 }

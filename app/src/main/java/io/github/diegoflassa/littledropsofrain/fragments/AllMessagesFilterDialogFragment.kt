@@ -1,6 +1,7 @@
 package io.github.diegoflassa.littledropsofrain.fragments
 
 import android.content.DialogInterface
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
 import com.google.firebase.firestore.Query
+import com.joanzapata.iconify.IconDrawable
+import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import io.github.diegoflassa.littledropsofrain.MyApplication
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.dao.UserDao
@@ -48,6 +51,8 @@ open class AllMessagesFilterDialogFragment(fragment : AdminFragment) : DialogFra
         mSortSpinner = binding.spinnerSort
         mUsersSpinner = binding.spinnerUsers
         //binding.iconUsers.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users))
+        binding.iconUsers.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users).color(R.color.colorAccent))
+        binding.iconUsers.imageTintList = ColorStateList.valueOf(R.color.colorAccent)
         binding.buttonSearchMessages.setOnClickListener(this)
         binding.buttonCancelMessages.setOnClickListener(this)
         binding.checkBoxMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->

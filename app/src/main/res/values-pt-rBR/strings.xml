@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="signature_title">Título da Assinatura</string>
     <string name="message_title">Título</string>
     <string name="all">Todos</string>
-    <string name="send_global_message">Enviar mensagem globqal</string>
     <string name="cancel">Cancelar</string>
     <string name="apply">Aplicar</string>
     <string name="icon_sort">Ícone de ordenação</string>
@@ -20,9 +18,6 @@
     <string name="no_products_found">Nenhum produto encontrado</string>
     <string name="no_messages_found">Nenhuma mensgaem encontrada</string>
     <string name="title">Título</string>
-    <string name="send">Enviar</string>
-    <string name="reply">Responder</string>
-    <string name="delete">Deletar</string>
     <string name="message_to_send">Mensagem para enviar</string>
     <string name="user_logged_as">Usuário logado como : %1$s</string>
     <string name="msg_read">Lida</string>
@@ -33,7 +28,6 @@
     <string name="unable_to_log_in">Impossível logar</string>
     <string name="reload_products">Recarregar Produtos</string>
     <string name="product_image">Imagem do produto</string>
-    <string name="reply_title">Ação de resposta padrão</string>
     <string name="action_settings">Configurações</string>
     <string name="navigation_drawer_close">Fechar gaveta de navegação</string>
     <string name="msg_subscribed">Inscrito</string>
@@ -54,8 +48,6 @@
     <string name="menu_users">Usuários</string>
     <string name="no_users_found">Nehum usuário encontrado</string>
     <string name="failure_changing_user">Erro ao alterar usuário</string>
-    <string name="email_subject">Assunto do email</string>
-    <string name="email_body">Corpo do email</string>
     <string name="email_send">Enviar email…</string>
     <string name="email_no_clients_installed">Não há clientes de email instalados.</string>
     <string name="message">Mensagem</string>
@@ -65,13 +57,10 @@
     <string name="sorted_by_read">Ordenado por Lido</string>
     <string name="sorted_by_creation_date">Ordeando por Data de Criação</string>
     <string name="sorted_by_email_sender">Ordenado por Remetente</string>
-    <string name="icon_creation_date">Ícone Data de Criação</string>
-    <string name="pick_date">Escolha uma data</string>
     <string name="enable">Habilitar</string>
     <string name="sort_by_creation_date">Data de Criação</string>
     <string name="sort_by_read">Lido</string>
     <string name="action_reload_products">" Recarregar produtos"</string>
-    <string name="action_send_topic_message">Mensagem de Tópico</string>
     <string name="no">Não</string>
     <string name="yes">Sim</string>
     <string name="for_filter"> para </string>
@@ -79,8 +68,6 @@
     <string name="button_delete">Botão Deletar</string>
     <string name="button_reply">Botão Responder</string>
     <string name="icon_users">Ícone Usuários</string>
-    <string name="hint_ml_txt_vw_progress">Multilinha textview Progresso</string>
-    <string name="remove_old_products">Remover produtos velhos</string>
     <string name="remove_not_found_products">Remover produtos não encontrados</string>
     <string name="worker_running">Worker Executando</string>
     <string name="worker_scheduled">Atualização de Produtos</string>
@@ -89,4 +76,5 @@
     <string name="menu_messages">Mensagens</string>
     <string name="messages">Mensagens</string>
     <string name="licenses">Licensas</string>
+    <string name="new_notification">Nova mensagem de Little Drops of Rain</string>
 </resources>

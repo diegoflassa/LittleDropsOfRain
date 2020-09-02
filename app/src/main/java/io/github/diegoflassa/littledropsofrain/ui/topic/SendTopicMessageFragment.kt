@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
@@ -26,13 +25,13 @@ import com.google.auth.oauth2.GoogleCredentials
 import io.github.diegoflassa.littledropsofrain.R
 import io.github.diegoflassa.littledropsofrain.data.entities.TopicMessage
 import io.github.diegoflassa.littledropsofrain.databinding.FragmentSendTopicMessageBinding
+import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
 import io.github.diegoflassa.littledropsofrain.models.TopicMessageViewModel
+import io.github.diegoflassa.littledropsofrain.models.TopicMessageViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import io.github.diegoflassa.littledropsofrain.helpers.viewLifecycle
-import io.github.diegoflassa.littledropsofrain.models.TopicMessageViewState
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
@@ -83,7 +82,6 @@ class SendTopicMessageFragment : Fragment() {
                 binding.cpGrpTopics.addView(chip)
             }
         }
-        (activity as AppCompatActivity?)!!.supportActionBar?.title = "Subscription Message"
         binding.btnSend.setOnClickListener {
             sendMessage(
                 getSelectedTopics(),

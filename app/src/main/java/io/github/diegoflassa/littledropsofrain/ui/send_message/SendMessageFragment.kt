@@ -46,7 +46,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         val TAG = SendMessageFragment::class.simpleName
         const val ACTION_SEND_KEY = "ACTION_SEND"
         const val ACTION_SEND = "io.github.diegoflassa.littledropsofrain.action.ACTION_SEND"
-        const val ACTION_REPLY_KEY = "ACTION_EDIT"
+        const val ACTION_REPLY_KEY = "ACTION_REPLY"
         const val ACTION_REPLY = "io.github.diegoflassa.littledropsofrain.action.ACTION_REPLY"
         const val KEY_MESSAGE = "message"
         const val KEY_TAG = R.array.send_modes_values
@@ -104,6 +104,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
                 }
                 runOnUiThread {
                     binding.btnSend.isEnabled = false
+                    binding.mltxtMessage.text.clear()
                 }
             }
         }

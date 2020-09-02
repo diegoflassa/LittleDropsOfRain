@@ -47,6 +47,7 @@ class AdminFragment : Fragment(),
     private var mQuery: Query? = null
 
     companion object {
+        const val KEY_ALL_MESSAGES: String = "Admin - All Messages"
         val TAG = AdminFragment::class.simpleName
         const val LIMIT = 50
         fun newInstance() = AdminFragment()
@@ -96,8 +97,17 @@ class AdminFragment : Fragment(),
         showLoadingScreen()
         initFirestore()
         initRecyclerView()
-
+        handleBundle()
         return binding.root
+    }
+
+    private fun handleBundle(){
+        if(AdminFragmentArgs.fromBundle(requireArguments()).who != KEY_ALL_MESSAGES) {
+            val filter = AllMessagesFilters.default
+            filter.emailSender = AdminFragmentArgs.fromBundle(requireArguments()).who
+            viewModel.viewState.filters =filter
+            onFilter(viewModel.viewState.filters)
+        }
     }
 
     override fun onStart() {

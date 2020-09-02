@@ -46,7 +46,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val notification: RemoteMessage.Notification? = remoteMessage.notification
         if (notification != null) {
-            notification.body?.let { sendNotification(it) }
+            notification.body?.let { sendNotification(remoteMessage) }
         }
 
         // TODO(developer): Handle FCM messages here.
@@ -127,7 +127,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      *
      * @param messageBody FCM message body received.
      */
-    private fun sendNotification(messageBody: String) {
+    private fun sendNotification(remoteMessage: RemoteMessage) {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -137,9 +137,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_stat_ic_notification)
-            .setContentTitle(getString(R.string.fcm_message))
-            .setContentText(messageBody)
+            .setContentTitle(remoteMessage.notification!!.title)
+            .setContentText(getString(R.string.new_notification))
             .setAutoCancel(true)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(remoteMessage.notification!!.body))
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
 

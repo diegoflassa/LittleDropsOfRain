@@ -6,6 +6,7 @@
 
     <color name="primaryColor" tools:keep="@color/primaryColor">#212121</color>
     <color name="primaryLightColor" tools:keep="@color/primaryLightColor">#484848</color>
+    <color name="primaryDarkGreyTextColor">#424242</color>
     <color name="primaryDarkColor" tools:keep="@color/primaryDarkColor">#FFCCCCCC</color>
     <color name="secondaryColor" tools:keep="@color/secondaryColor">#00bcd4</color>
     <color name="secondaryLightColor" tools:keep="@color/secondaryLightColor">#62efff</color>

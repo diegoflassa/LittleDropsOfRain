@@ -17,17 +17,7 @@
     <string name="rv_disponibility" translatable="false">%1$s</string>
     <string name="rv_price" translatable="false">R$%1$s</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header" translatable="false">Messages</string>
-
-    <!-- Messages Preferences -->
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-
-
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
-    <string name="fcm_message" translatable="false">FCM Message</string>
 
     <string name="product_image">Product image</string>
     <string name="login" translatable="false">Login</string>
@@ -40,9 +30,6 @@
     <string name="msg_read_filter">Read: %1$s</string>
     <string name="user_logged_as">User logged as : %1$s</string>
     <string name="message_to_send">Message to send</string>
-    <string name="delete">Delete</string>
-    <string name="reply">Reply</string>
-    <string name="send">Send</string>
     <string name="title">Title</string>
     <string name="logout" translatable="false">Logout</string>
     <string name="no_messages_found">No messages found</string>
@@ -70,7 +57,6 @@
     <string name="button_filter">Button filter</string>
     <string name="button_clear_filter">Button clear filter</string>
     <string name="all">All</string>
-    <string name="send_global_message">Send global message</string>
     <string name="msg_subscribed">Subscribed</string>
     <string name="msg_subscribe_failed">Subscription failed</string>
     <string name="topic_news" translatable="false">news</string>
@@ -84,7 +70,6 @@
     <string name="not_logged_in">Not logged in</string>
     <string name="label_topic">Topic Messages</string>
     <string name="msg_unsubscribed">Unsubscribed</string>
-    <string name="signature_title">Signature Title</string>
     <string name="user_is_admin">Is Admin</string>
     <string name="rv_user_name">Name : %1$s</string>
     <string name="rv_user_email" translatable="false">EMail : %1$s</string>
@@ -92,8 +77,6 @@
     <string name="menu_users">Users</string>
     <string name="no_users_found">No users found</string>
     <string name="failure_changing_user">Error changing user</string>
-    <string name="email_subject">Subject of email</string>
-    <string name="email_body">Body of email</string>
     <string name="email_send">Send email…</string>
     <string name="email_no_clients_installed">There are no email clients installed.</string>
     <string name="message">Message</string>
@@ -103,12 +86,9 @@
     <string name="sorted_by_read">Sorted by Read</string>
     <string name="sorted_by_creation_date">Sorted by Creation Date</string>
     <string name="sorted_by_email_sender">Sorted by Email Sender</string>
-    <string name="icon_creation_date">Icon Creation Date</string>
-    <string name="pick_date">Pick date</string>
     <string name="enable">Enable</string>
     <string name="sort_by_creation_date">Creation Date</string>
     <string name="sort_by_read">Read</string>
-    <string name="action_send_topic_message">Topic Message</string>
     <string name="action_reload_products">Reload Products</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
@@ -118,8 +98,6 @@
     <string name="button_delete">Button Delete</string>
     <string name="button_reply">Button Reply</string>
     <string name="icon_users">Icon Users</string>
-    <string name="hint_ml_txt_vw_progress">Multiline textview Progress</string>
-    <string name="remove_old_products">Remove old products</string>
     <string name="remove_not_found_products">Remove not found products</string>
     <string name="worker_running">Worker Running</string>
     <string name="worker_scheduled">Products Update</string>
@@ -128,6 +106,7 @@
     <string name="menu_messages">Messages</string>
     <string name="messages">Messages</string>
     <string name="licenses">Licenses</string>
+    <string name="new_notification">New message from Little Drops of Rain</string>
 
     <!-- Price filters -->
     <string-array name="prices" translatable="false">

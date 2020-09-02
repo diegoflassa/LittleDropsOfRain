@@ -29,6 +29,28 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="littledropsofrain.com"
+                    android:pathPattern="/app" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="littledropsofrain.iluria.com"
+                    android:pathPattern="/app" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -68,7 +90,9 @@
             </intent-filter>
         </service>
 
-        <service android:name=".services.SetupProductsUpdateWorkerService" android:enabled="true"/>
+        <service
+            android:name=".services.SetupProductsUpdateWorkerService"
+            android:enabled="true" />
 
     </application>
 

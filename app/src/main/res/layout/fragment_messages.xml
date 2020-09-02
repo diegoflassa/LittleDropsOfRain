@@ -61,7 +61,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/all_products"
-                        android:textColor="@color/colorAccent"
+                        android:textColor="@color/primaryDarkGreyTextColor"
                         tools:text="Filter" />
 
                     <TextView
@@ -69,7 +69,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/sorted_by_creation_date"
-                        android:textColor="@color/colorAccent" />
+                        android:textColor="@color/primaryDarkGreyTextColor" />
 
                 </LinearLayout>
 
@@ -81,7 +81,7 @@
                     android:layout_centerVertical="true"
                     android:padding="8dp"
                     app:srcCompat="@drawable/ic_close_white_24px"
-                    app:tint="@color/colorAccent"
+                    app:tint="@color/primaryDarkGreyTextColor"
                     android:contentDescription="@string/button_clear_filter" />
 
             </RelativeLayout>

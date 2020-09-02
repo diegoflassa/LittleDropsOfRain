@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="@dimen/paddingSmall"
     tools:context="fragments.AllMessagesFilterDialogFragment"
     android:tag="AllMessagesFilterDialogFragment">
 
@@ -59,20 +59,20 @@
 
         <ImageView
             android:id="@+id/icon_users"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_centerVertical="true"
-            app:tint="@color/colorAccent"
+            android:contentDescription="@string/icon_users"
             app:srcCompat="@drawable/ic_monetization_on_white_24px"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:contentDescription="@string/icon_users" />
+            app:tint="@color/colorAccent" />
 
         <Spinner
             android:id="@+id/spinner_users"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/icon_users"
-            android:entries="@array/prices"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content" />
+            android:layout_marginStart="0dp"
+            android:layout_toEndOf="@+id/icon_users"
+            android:entries="@array/prices" />
 
     </RelativeLayout>
 

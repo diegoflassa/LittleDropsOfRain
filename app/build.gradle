@@ -20,7 +20,7 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments += ["room.incremental":"true"]
+                arguments += ["room.incremental": "true"]
             }
         }
     }
@@ -65,7 +65,7 @@ android {
 }
 
 ext.version = [
-    work_version : "2.4.0",
+        work_version: "2.4.0",
 ]
 def version = ext.version
 apply from: "$projectDir/buildSystem/library.gradle"
@@ -123,6 +123,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
 
     // Leak Canary
+    implementation 'com.google.firebase:firebase-appindexing:19.1.0'
+    implementation 'com.google.firebase:firebase-dynamic-links:19.1.0'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
     // Google Sign In SDK (only required for Google Sign In)

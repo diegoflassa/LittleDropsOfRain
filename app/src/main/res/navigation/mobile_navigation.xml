@@ -33,6 +33,10 @@
         android:name="io.github.diegoflassa.littledropsofrain.ui.admin.AdminFragment"
         android:label="@string/menu_admin"
         tools:layout="@layout/fragment_admin" >
+        <argument
+            android:name="who"
+            app:argType="string"
+            android:defaultValue="Admin - All Messages"/>
         <action
             android:id="@+id/nav_send_topic_message"
             app:destination="@id/send_topic_message_fragment"
@@ -103,6 +107,10 @@
     <action
         android:id="@+id/action_global_settingsFragment"
         app:destination="@id/settingsFragment" />
+
+    <action
+        android:id="@+id/action_global_adminFragment"
+        app:destination="@id/nav_admin" />
 
     <action
         android:id="@+id/action_global_sendMessageFragment"
