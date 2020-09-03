@@ -1,0 +1,203 @@
+package app.web.diegoflassa_site.littledropsofrain.fragments
+
+import android.content.DialogInterface
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.CompoundButton
+import android.widget.Spinner
+import androidx.core.view.children
+import androidx.fragment.app.DialogFragment
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.firebase.firestore.Query
+import app.web.diegoflassa_site.littledropsofrain.MyApplication
+import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
+import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
+import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentProductsFiltersBinding
+import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
+import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
+import app.web.diegoflassa_site.littledropsofrain.ui.home.HomeFragment
+
+/**
+ * Dialog Fragment containing filter form.
+ */
+open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
+    View.OnClickListener, OnDataChangeListener<List<Product>>,
+    CompoundButton.OnCheckedChangeListener {
+
+    companion object {
+        val TAG = ProductsFilterDialogFragment::class.simpleName
+    }
+
+    interface FilterListener {
+        fun onFilter(filters: ProductsFilters)
+    }
+
+    private var homeFragment : HomeFragment= fragment
+    var mCategories: LinkedHashSet<String> = LinkedHashSet()
+    private lateinit var mCategoryChipGroup: ChipGroup
+    private var mSortSpinner: Spinner? = null
+    private var mPriceSpinner: Spinner? = null
+    var filterListener: FilterListener? = null
+    private var binding: FragmentProductsFiltersBinding by viewLifecycle()
+    private var mRootView : View?= null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentProductsFiltersBinding.inflate(inflater, container, false)
+        mCategoryChipGroup = binding.categoryChipGroup
+        mSortSpinner = binding.spinnerSort
+        mPriceSpinner = binding.spinnerPrice
+        binding.buttonSearch.setOnClickListener(this)
+        binding.buttonCancel.setOnClickListener(this)
+        ProductDao.loadAll(this)
+        mRootView= binding.root
+        return binding.root
+    }
+
+    override fun onDismiss(dialog: DialogInterface){
+        super.onDismiss(dialog)
+        homeFragment.binding.filterBar.isEnabled = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        dialog!!.window!!.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.button_search -> onSearchClicked()
+            R.id.button_cancel -> onCancelClicked()
+        }
+    }
+
+    private fun onSearchClicked() {
+        if (filterListener != null) {
+            filterListener!!.onFilter(filters)
+        }
+        dismiss()
+    }
+
+    private fun onCancelClicked() {
+        dismiss()
+    }
+
+    private val selectedCategories: LinkedHashSet<String>
+        get() {
+            return mCategories
+        }
+
+    private val selectedPrice: MutableList<Int>
+        get() {
+            val priceRange = ArrayList<Int>()
+            if(mRootView!=null&&!isDetached) {
+                when (mPriceSpinner!!.selectedItem as String) {
+                    MyApplication.getContext()
+                        .getString(R.string.price_1) -> {
+                        priceRange.add(0)
+                        priceRange.add(5000)
+                    }
+                    MyApplication.getContext()
+                        .getString(R.string.price_2) -> {
+                        priceRange.add(5100)
+                        priceRange.add(10000)
+                    }
+                    MyApplication.getContext()
+                        .getString(R.string.price_3) -> {
+                        priceRange.add(10100)
+                        priceRange.add(100000)
+                    }
+                    else -> {
+                        //Do nothing
+                    }
+                }
+            }
+            return priceRange
+        }
+
+    private val selectedSortBy: String?
+        get() {
+            if(mRootView!=null&&!isDetached) {
+                val selected = mSortSpinner!!.selectedItem as String
+                return if (MyApplication.getContext()
+                        .getString(R.string.sort_by_price) == selected) {
+                    return Product.PRICE
+                } else null
+            }
+            return null
+        }
+
+    private val sortDirection: Query.Direction?
+        get() {
+            if(mRootView!=null&&!isDetached) {
+                val selected = mSortSpinner!!.selectedItem as String
+                return if (MyApplication.getContext()
+                        .getString(R.string.sort_by_price) == selected) {
+                    return Query.Direction.DESCENDING
+                } else null
+            }
+            return null
+        }
+
+    fun resetFilters() {
+        if(mRootView!=null&&!isDetached) {
+            for (chip in mCategoryChipGroup.children) {
+                chip.isSelected = false
+            }
+            mCategories.clear()
+            mPriceSpinner!!.setSelection(0)
+            mSortSpinner!!.setSelection(0)
+        }
+    }
+
+    val filters: ProductsFilters
+        get() {
+            val filters =
+                ProductsFilters()
+            filters.categories.addAll(this.selectedCategories)
+            filters.price = if(selectedPrice.isEmpty()){null}else{selectedPrice}
+            filters.sortBy = selectedSortBy
+            filters.sortDirection = sortDirection
+            return filters
+        }
+
+    override fun onDataLoaded(item: List<Product>) {
+        if(isVisible) {
+            val hashSet = LinkedHashSet<String>()
+            for (product in item) {
+                for (category in product.categories) {
+                    hashSet.add(category)
+                }
+            }
+            mCategoryChipGroup.removeAllViews()
+            for (category in hashSet) {
+                if (category.trim().isNotEmpty()) {
+                    val chipCategory = Chip(requireContext())
+                    chipCategory.isCheckable = true
+                    chipCategory.isChecked = mCategories.contains(category)
+                    chipCategory.text = category
+                    chipCategory.setOnCheckedChangeListener(this)
+                    mCategoryChipGroup.addView(chipCategory)
+                }
+            }
+        }
+    }
+
+    override fun onCheckedChanged(compoundButton : CompoundButton?, checked: Boolean) {
+        if(checked) {
+            mCategories.add(compoundButton?.text.toString())
+        }else{
+            mCategories.remove(compoundButton?.text)
+        }
+    }
+}

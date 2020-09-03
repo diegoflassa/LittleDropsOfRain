@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="io.github.diegoflassa.littledropsofrain">
+    package="app.web.diegoflassa_site.littledropsofrain">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Include following permission if you load images from Internet -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Include following permission if you want to cache images on SD card -->
