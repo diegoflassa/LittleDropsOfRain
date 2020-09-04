@@ -1,16 +1,12 @@
 package app.web.diegoflassa_site.littledropsofrain.fragments
 
 import android.content.DialogInterface
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
-import com.google.firebase.firestore.Query
-import com.joanzapata.iconify.IconDrawable
-import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
@@ -20,6 +16,9 @@ import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAllMessage
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUsersLoadedListener
 import app.web.diegoflassa_site.littledropsofrain.ui.admin.AdminFragment
+import com.google.firebase.firestore.Query
+import com.joanzapata.iconify.IconDrawable
+import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 
 /**
  * Dialog Fragment containing filter form.

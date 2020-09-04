@@ -53,12 +53,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_iluria"
-        android:name="app.web.diegoflassa_site.littledropsofrain.ui.iluria.IluriaFragment"
-        android:label="@string/menu_iluria"
-        tools:layout="@layout/fragment_iluria" />
-
-    <fragment
         android:id="@+id/nav_messages"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.messages.MessagesFragment"
         android:label="@string/messages"

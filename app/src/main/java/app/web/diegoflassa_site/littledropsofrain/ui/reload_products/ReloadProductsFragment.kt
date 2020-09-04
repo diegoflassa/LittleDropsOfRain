@@ -85,6 +85,10 @@ class ReloadProductsFragment : Fragment(), ProductParser.OnParseProgress,
             // Update the UI
             binding.mlTxtVwProgress.text  = viewModel.viewState.progress.toString()
             binding.chkbxRemoveNotFoundProducts.isChecked = viewState.removeNotFoundProducts
+            binding.mlTxtVwProgress.post {
+                val scrollAmount = binding.mlTxtVwProgress.layout.getLineTop(binding.mlTxtVwProgress.lineCount) - binding.mlTxtVwProgress.height
+                binding.mlTxtVwProgress.scrollTo(0, scrollAmount)
+            }
         }
     }
 
@@ -106,6 +110,7 @@ class ReloadProductsFragment : Fragment(), ProductParser.OnParseProgress,
             val productParser = ProductParser(this@ReloadProductsFragment)
             val products = productParser.parse()
             viewModel.viewState.progress.append("Uploading products to Firebase" + System.lineSeparator())
+            updateUI(viewModel.viewState)
             ProductDao.insertAll(Helper.iluriaProductToProduct(products), binding.chkbxRemoveNotFoundProducts.isChecked, this@ReloadProductsFragment)
         }
     }

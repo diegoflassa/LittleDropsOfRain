@@ -59,11 +59,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             Log.d(TAG, "Message data payload: $data")
 
             if (data.isNotEmpty()) {
+                // Handle message within 10 seconds
+                handleNow(remoteMessage)
+            } else {
                 // For long-running tasks (10 seconds or more) use WorkManager.
                 scheduleJob()
-            } else {
-                // Handle message within 10 seconds
-                handleNow()
             }
         }
 
@@ -106,8 +106,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     /**
      * Handle time allotted to BroadcastReceivers.
      */
-    private fun handleNow() {
+    private fun handleNow(remoteMessage: RemoteMessage) {
         Log.d(TAG, "Short lived task is done.")
+        sendNotification(remoteMessage)
     }
 
     /**
@@ -126,15 +127,21 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     /**
      * Create and show a simple notification containing the received FCM message.
      *
-     * @param messageBody FCM message body received.
+     * @param remoteMessage FCM message body received.
      */
     private fun sendNotification(remoteMessage: RemoteMessage) {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0 /* Request code */, intent,
-            PendingIntent.FLAG_ONE_SHOT
-        )
+        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT)
+        val notificationTitle : String
+        val notificationBody : String
+        if(remoteMessage.data.isNotEmpty()){
+            notificationTitle = remoteMessage.data["title"].toString()
+            notificationBody = remoteMessage.data["body"].toString()
+        }else{
+            notificationTitle = remoteMessage.notification!!.title.toString()
+            notificationBody = remoteMessage.notification!!.body.toString()
+        }
 
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -142,10 +149,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notification)
             .setLargeIcon(largeIcon)
-            .setContentTitle(remoteMessage.notification!!.title)
+            .setContentTitle(notificationTitle)
             .setContentText(getString(R.string.new_notification))
             .setAutoCancel(true)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(remoteMessage.notification!!.body))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationBody))
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
 
@@ -155,7 +162,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                "Channel human readable title",
+                getString(R.string.name_notification_channel),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             notificationManager.createNotificationChannel(channel)

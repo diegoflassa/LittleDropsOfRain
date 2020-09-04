@@ -29,7 +29,6 @@ class AuthActivityResultContract: ActivityResultContract<Any, Int>() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().enableEmailLinkSignIn()
                 .setActionCodeSettings(actionCodeSettings).build(),
-                AuthUI.IdpConfig.PhoneBuilder().build(),
                 AuthUI.IdpConfig.GoogleBuilder().build(),
                 AuthUI.IdpConfig.TwitterBuilder().build(),
                 AuthUI.IdpConfig.GitHubBuilder().build())
@@ -37,7 +36,7 @@ class AuthActivityResultContract: ActivityResultContract<Any, Int>() {
         return AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
-            .setLogo(R.drawable.little_drops_of_rain) // Set logo drawable
+            .setLogo(R.mipmap.little_drops_of_rain) // Set logo drawable
             .setTheme(R.style.AppTheme) // Set theme
             .build()
     }

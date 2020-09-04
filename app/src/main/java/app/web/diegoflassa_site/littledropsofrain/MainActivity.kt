@@ -13,7 +13,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.view.iterator
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.navigation.NavController
@@ -23,34 +22,31 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.firebase.ui.auth.AuthUI
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.navigation.NavigationView
-import com.google.firebase.abt.FirebaseABTesting
-import com.google.firebase.auth.FirebaseAuth
-import com.joanzapata.iconify.IconDrawable
-import com.joanzapata.iconify.fonts.FontAwesomeIcons
-import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
-import com.joanzapata.iconify.fonts.TypiconsIcons
-import com.squareup.picasso.Picasso
 import app.web.diegoflassa_site.littledropsofrain.auth.AuthActivityResultContract
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUserFoundListener
-import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUsersLoadedListener
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewState
 import app.web.diegoflassa_site.littledropsofrain.services.SetupProductsUpdateWorkerService
-import app.web.diegoflassa_site.littledropsofrain.ui.admin.AdminFragment
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
+import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.joanzapata.iconify.IconDrawable
+import com.joanzapata.iconify.fonts.FontAwesomeIcons
+import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
+import com.joanzapata.iconify.fonts.TypiconsIcons
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 
 class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
-    OnUserFoundListener, OnUsersLoadedListener, MenuItem.OnMenuItemClickListener {
+    OnUserFoundListener, MenuItem.OnMenuItemClickListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -139,7 +135,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home,
-                R.id.nav_iluria,
                 R.id.nav_facebook,
                 R.id.nav_instagram,
                 R.id.nav_messages,
@@ -176,7 +171,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 }
             })
         SetupProductsUpdateWorkerService.setupWorker(applicationContext)
-        UserDao.loadAll(this)
     }
 
     override fun onResume() {
@@ -269,8 +263,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         val navView = findViewById<NavigationView>(R.id.nav_view)
         val navHome = navView.menu.findItem(R.id.nav_home)
         navHome.icon = IconDrawable(this, SimpleLineIconsIcons.icon_home)
-        val navIluria = navView.menu.findItem(R.id.nav_iluria)
-        navIluria.icon = IconDrawable(this, SimpleLineIconsIcons.icon_bag)
         val navFacebook = navView.menu.findItem(R.id.nav_facebook)
         navFacebook.icon = IconDrawable(this, SimpleLineIconsIcons.icon_social_facebook)
         val navInstagram = navView.menu.findItem(R.id.nav_instagram)
@@ -289,15 +281,11 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             navMessages.isVisible = false
         }
         if(!currentUser.isAdmin) {
-            navIluria.isEnabled = false
-            navIluria.isVisible = false
             navAdmin.isEnabled = false
             navAdmin.isVisible = false
             navUsers.isEnabled = false
             navUsers.isVisible = false
         }else{
-            navIluria.isEnabled = true
-            navIluria.isVisible = true
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
             navUsers.isEnabled = true
@@ -315,27 +303,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             UserDao.insert(userFb)
         }
         setupDrawerMenuIntems()
-    }
-
-    override fun onUsersLoaded(users: List<User>) {
-        return
-        val navView = findViewById<NavigationView>(R.id.nav_view)
-        val navAdmin = navView.menu.findItem(R.id.nav_admin)
-        //navAdmin.subMenu.setGroupVisible(R.id.nav_admin_group_users, false)
-        if(navAdmin.hasSubMenu()){
-            //navAdmin.subMenu.add(R.id.nav_admin_group_users, Menu.NONE, 0, AdminFragment.KEY_ALL_MESSAGES)
-            for(user in users) {
-                //navAdmin.subMenu.add(R.id.nav_admin_group_users, Menu.NONE, 0, user.toString())
-            }
-            for(item in navAdmin.subMenu.iterator()){
-                item.setOnMenuItemClickListener(this)
-                item.isEnabled = true
-                if(item.title == AdminFragment.KEY_ALL_MESSAGES)
-                    item.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
-                else
-                    item.icon = IconDrawable(this, SimpleLineIconsIcons.icon_user)
-            }
-        }
     }
 
     override fun onMenuItemClick(it: MenuItem?): Boolean {

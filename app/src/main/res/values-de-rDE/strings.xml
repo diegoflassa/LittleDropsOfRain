@@ -47,20 +47,20 @@
     <string name="rv_user_is_admin">Ist Admin</string>
     <string name="menu_users">Benutzer</string>
     <string name="no_users_found">Keine Benutzer gefunden</string>
-    <string name="failure_changing_user">Fehler beim Benutzerwechse"l</string>
+    <string name="failure_changing_user">Fehler beim Benutzerwechsel</string>
     <string name="email_send">EMail senden…</string>
     <string name="email_no_clients_installed">Es sind keine E-Mail-Clients installiert.</string>
     <string name="message">Botschaft</string>
     <string name="email">EMail</string>
     <string name="no_send_method_selected">Keine Sendemethode ausgewählt</string>
     <string name="email_sender">E-Mail-Absender</string>
-    <string name="sorted_by_read">" Sortiert nach Lesen"</string>
-    <string name="sorted_by_creation_date">" Sortiert nach Erstellungsdatum"</string>
-    <string name="sorted_by_email_sender">" Sortiert nach E-Mail-Absender"</string>
-    <string name="enable">" Aktivieren"</string>
-    <string name="sort_by_creation_date">" Erstellungsdatum"</string>
-    <string name="sort_by_read">" Lesen"</string>
-    <string name="action_reload_products">" Produkte neu laden"</string>
+    <string name="sorted_by_read">Sortiert nach Lesen</string>
+    <string name="sorted_by_creation_date">Sortiert nach Erstellungsdatum</string>
+    <string name="sorted_by_email_sender">Sortiert nach E-Mail-Absender</string>
+    <string name="enable">Aktivieren</string>
+    <string name="sort_by_creation_date">Erstellungsdatum</string>
+    <string name="sort_by_read">Lesen</string>
+    <string name="action_reload_products">Produkte neu laden</string>
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
     <string name="for_filter"> zum </string>
@@ -77,4 +77,5 @@
     <string name="messages">Mitteilungen</string>
     <string name="licenses">Lizenzen</string>
     <string name="new_notification">Neue Nachricht von Little Drops of Rain</string>
+    <string name="name_notification_channel">Little Drops Of Rain Benachrichtigungskanal</string>
 </resources>

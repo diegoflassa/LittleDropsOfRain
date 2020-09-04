@@ -4,7 +4,6 @@ package app.web.diegoflassa_site.littledropsofrain.data.dao
 
 import android.util.Log
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -16,6 +15,10 @@ import com.squareup.okhttp.Request
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnProductInsertedListener
+import com.google.android.gms.tasks.Tasks
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -25,6 +28,7 @@ import java.util.concurrent.TimeUnit
 object ProductDao {
 
     private val TAG: String? = ProductDao::class.simpleName
+    private val ioScope = CoroutineScope(Dispatchers.IO)
     const val COLLECTION_PATH: String = "products"
     private var db : WeakReference<FirebaseFirestore> = WeakReference(FirebaseFirestore.getInstance())
     private var storage = Firebase.storage
@@ -92,9 +96,9 @@ object ProductDao {
 
     fun insertAll(products: List<Product>, removeNotFoundInFirebase : Boolean= false, listener : OnProductInsertedListener? = null) {
         val hashProducts : MutableMap<String, Product> = HashMap<String, Product>(products.size)
-        val hashTasksDocRef = HashMap<Product, Task<DocumentReference>> (products.size)
-        val hashTasksAdd = HashMap<Product, Task<QuerySnapshot>> (products.size)
-        val hashTasksSet = HashMap<Product, Task<Void>> (products.size)
+        val listTasksDocRef = ArrayList<Task<DocumentReference>> (products.size)
+        val listTasksAdd = ArrayList<Task<QuerySnapshot>> (products.size)
+        val listTasksSet = ArrayList<Task<Void>> (products.size)
         var taskInsertDocRef : Task<DocumentReference>?
         var taskInsertAdd : Task<QuerySnapshot>?
         var taskInsertSet : Task<Void>?
@@ -105,6 +109,7 @@ object ProductDao {
                     if(querySnapshot.isEmpty) {
                         taskInsertDocRef=  db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener {
                             product.uid= it.id
+                            hashProducts[product.uid!!] = product
                             if(!product.imageUrl?.startsWith("https://firebasestorage")!!)
                                 insertBlob(product)
                             listener?.onProductInserted(product)
@@ -113,14 +118,14 @@ object ProductDao {
                             Log.i(TAG, "Error inserting product")
                         }
 
-                        hashTasksDocRef[product] = taskInsertDocRef!!
+                        listTasksDocRef.add(taskInsertDocRef!!)
                     }else{
                         product.uid= querySnapshot.documents[0].id
+                        hashProducts[product.uid!!] = product
                         insert(product)
                     }
-                    hashProducts[product.uid!!] = product
                 }
-                hashTasksAdd[product] = taskInsertAdd!!
+                listTasksAdd.add(taskInsertAdd!!)
             }else{
                 if(!product.imageUrl?.startsWith("https://firebasestorage")!!)
                     insertBlob(product)
@@ -131,34 +136,33 @@ object ProductDao {
                 }?.addOnFailureListener{
                     Log.i(TAG, "Error updating product")
                 }
-                hashTasksSet[product] = taskInsertSet!!
+                listTasksSet.add(taskInsertSet!!)
             }
         }
 
-        val docRefTasksToWait: Array<Task<DocumentReference>> = hashTasksDocRef.values.toTypedArray()
-        val addTasksToWait: Array<Task<QuerySnapshot>> = hashTasksAdd.values.toTypedArray()
-        val getTasksToWait: Array<Task<Void>> = hashTasksSet.values.toTypedArray()
-
-        Tasks.whenAll(*docRefTasksToWait)
-        Tasks.whenAll(*addTasksToWait)
-        Tasks.whenAll(*getTasksToWait)
-
-        if(removeNotFoundInFirebase) {
-            db.get()?.collection(COLLECTION_PATH)
-                ?.get()
-                ?.addOnSuccessListener { result ->
-                    var product : Product
-                    for (document in result) {
-                        product = document.toObject(Product::class.java)
-                        if(!hashProducts.containsKey(document.id)) {
-                            delete(product)
-                            removeBlob(product)
-                        }
+        Tasks.whenAll(*listTasksDocRef.toTypedArray()).addOnCompleteListener {
+            Tasks.whenAll(*listTasksAdd.toTypedArray()).addOnCompleteListener {
+                Tasks.whenAll(*listTasksSet.toTypedArray()).addOnCompleteListener {
+                    if (removeNotFoundInFirebase) {
+                        db.get()?.collection(
+                            COLLECTION_PATH
+                        )?.get()
+                            ?.addOnSuccessListener { result ->
+                                var product: Product
+                                for (document in result) {
+                                    product = document.toObject(Product::class.java)
+                                    if (!hashProducts.containsKey(document.id)) {
+                                        delete(product)
+                                        removeBlob(product)
+                                    }
+                                }
+                            }
+                            ?.addOnFailureListener { exception ->
+                                Log.d(TAG, "Error getting documents: ", exception)
+                            }
                     }
                 }
-                ?.addOnFailureListener { exception ->
-                    Log.d(TAG, "Error getting documents: ", exception)
-                }
+            }
         }
     }
 
@@ -193,29 +197,23 @@ object ProductDao {
     }
 
     private fun removeBlob(product: Product) {
-        var reference = storage.reference.child("$COLLECTION_PATH/${product.uid}.jpg")
+        val reference = storage.reference.child("$COLLECTION_PATH/${product.uid}.jpg")
         reference.delete().addOnSuccessListener {
             Log.d(TAG, "[insertBlob]Image successfully removed for product ${product.uid} at ${product.imageUrl}")
         }.addOnFailureListener {
             Log.d(TAG,"Error deleting image ${product.uid}")
-        }.continueWith {
-            reference = storage.reference.child("$COLLECTION_PATH/${product.uid}_200x200.jpg")
-            reference.delete().addOnSuccessListener {
-                Log.d(TAG,"[insertBlob]Image successfully removed for product ${product.uid}_200x200 at ${product.imageUrl}")
-            }.addOnFailureListener {
-                Log.d(TAG, "Error deleting image ${product.uid}")
-            }
         }
     }
 
     private fun insertBlob(product: Product) {
-        val reference = storage.reference.child("$COLLECTION_PATH/${product.uid}.jpg")
-        val client = OkHttpClient()
-        client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
-        client.setReadTimeout(30, TimeUnit.SECONDS)    // socket timeout
-        val request = Request.Builder().url(product.imageUrl!!).build()
-        val response = client.newCall(request).execute()
-        reference.putStream(response.body().byteStream()).continueWithTask { task ->
+        ioScope.launch {
+            val reference = storage.reference.child("$COLLECTION_PATH/${product.uid}.jpg")
+            val client = OkHttpClient()
+            client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
+            client.setReadTimeout(30, TimeUnit.SECONDS)    // socket timeout
+            val request = Request.Builder().url(product.imageUrl!!).build()
+            val response = client.newCall(request).execute()
+            reference.putStream(response.body().byteStream()).continueWithTask { task ->
                 if (!task.isSuccessful) {
                     task.exception.let {
                         throw it!!
@@ -226,12 +224,16 @@ object ProductDao {
                 if (task.isSuccessful) {
                     product.imageUrl = task.result.toString()
                     update(product, false)
-                    Log.d(TAG, "[insertBlob]Image successfully saved for product ${product.uid} at ${product.imageUrl}")
+                    Log.d(
+                        TAG,
+                        "[insertBlob]Image successfully saved for product ${product.uid} at ${product.imageUrl}"
+                    )
                 } else {
-                    Log.d(TAG,"Unable to upload image ${product.uid}")
+                    Log.d(TAG, "Unable to upload image ${product.uid}")
                 }
                 response.body().close()
             }
+        }
     }
 
     private fun update(product: Product, checkForUrl: Boolean = true ) {

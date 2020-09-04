@@ -107,6 +107,8 @@
     <string name="messages">Messages</string>
     <string name="licenses">Licenses</string>
     <string name="new_notification">New message from Little Drops of Rain</string>
+    <string name="push_message_url" translatable="false">https://content-fcm.googleapis.com/v1/projects/littledropsofrain-site/messages:send</string>
+    <string name="name_notification_channel">Little Drops Of Rain Notification Channel</string>
 
     <!-- Price filters -->
     <string-array name="prices" translatable="false">

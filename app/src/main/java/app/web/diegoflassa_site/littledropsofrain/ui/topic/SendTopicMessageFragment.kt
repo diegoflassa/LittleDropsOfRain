@@ -14,6 +14,12 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage
+import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendTopicMessageBinding
+import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
+import app.web.diegoflassa_site.littledropsofrain.models.TopicMessageViewModel
+import app.web.diegoflassa_site.littledropsofrain.models.TopicMessageViewState
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -22,16 +28,12 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.auth.oauth2.AccessToken
 import com.google.auth.oauth2.GoogleCredentials
-import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage
-import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendTopicMessageBinding
-import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.models.TopicMessageViewModel
-import app.web.diegoflassa_site.littledropsofrain.models.TopicMessageViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.UnsupportedEncodingException
+import java.nio.charset.Charset
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
@@ -116,7 +118,13 @@ class SendTopicMessageFragment : Fragment() {
     private fun updateUI(viewState: TopicMessageViewState?){
         // Update the UI
         for(chip in binding.cpGrpTopics.children) {
-            if(viewState?.topics?.contains(TopicMessage.Topic.valueOf((chip as Chip).text.toString().toUpperCase(Locale.ROOT)))!!) {
+            if(viewState?.topics?.contains(
+                    TopicMessage.Topic.valueOf(
+                        (chip as Chip).text.toString().toUpperCase(
+                            Locale.ROOT
+                        )
+                    )
+                )!!) {
                 chip.isSelected = true
             }
         }
@@ -156,7 +164,7 @@ class SendTopicMessageFragment : Fragment() {
                         condition+= " || "
                     condition+= "'${topic.toString().toLowerCase(Locale.ROOT)}' in topics"
                 }
-                val url = "https://content-fcm.googleapis.com/v1/projects/littledropsofrain-72ae8/messages:send"
+                val url = getString(R.string.push_message_url)
                 val myReq: StringRequest = object : StringRequest(
                     Method.POST, url,
                     Response.Listener {
@@ -170,14 +178,24 @@ class SendTopicMessageFragment : Fragment() {
                         }
                     },
                     Response.ErrorListener {
+                        var body = ""
+
+                        //get status code here
+                        val statusCode = it.networkResponse.statusCode.toString()
+
+                        //get response body and parse with appropriate encoding
+                        if (it.networkResponse.data != null) {
+                            body = String(it.networkResponse.data, Charset.defaultCharset())
+                        }
                         Toast.makeText(
                             requireContext(),
-                            "Error sending message",
-                            Toast.LENGTH_SHORT
+                            "Error sending message: $statusCode - $body",
+                            Toast.LENGTH_LONG
                         ).show()
                         activity?.runOnUiThread {
                             binding.btnSend.isEnabled = true
                         }
+
                     }) {
 
                     @Throws(AuthFailureError::class)
@@ -188,7 +206,7 @@ class SendTopicMessageFragment : Fragment() {
                         message["title"] = title
                         message["body"] = messageContent
                         parameters["condition"] = condition
-                        parameters["notification"] = message
+                        parameters["data"] = message
                         rawParameters["message"] = parameters
                         return JSONObject(rawParameters).toString().toByteArray()
                     }

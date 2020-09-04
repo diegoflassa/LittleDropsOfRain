@@ -33,7 +33,6 @@
         android:hint="@string/message_title"
         android:inputType="textPersonName"
         android:paddingHorizontal="@dimen/paddingSmall"
-        android:text="@string/message_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cpGrpTopics" />
@@ -42,7 +41,6 @@
         android:id="@+id/edtTxtMlMessage"
         android:layout_width="0dp"
         android:layout_height="175dp"
-        android:layout_marginHorizontal="@dimen/paddingSmall"
         android:layout_marginTop="32dp"
         android:autofillHints=""
         android:background="@drawable/rounded_edittext_states"
