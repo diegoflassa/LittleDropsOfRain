@@ -123,7 +123,8 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
                 R.string.navigation_drawer_close
             )
             drawerLayout?.addDrawerListener(toggle)
-            toggle.syncState()
+            if(drawerLayout!=null)
+                toggle.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
         setupRadioGroupSendMethods()
@@ -131,6 +132,12 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         binding.btnSend.isEnabled = false
         Log.d(TAG, "SendMessageFragment activity created!")
         return binding.root
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.viewState.title = binding.edttxtTitle.text.toString()
+        viewModel.viewState.body = binding.mltxtMessage.text.toString()
     }
 
     override fun onResume() {

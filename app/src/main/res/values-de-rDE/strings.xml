@@ -80,4 +80,6 @@
     <string name="name_notification_channel">Little Drops Of Rain Benachrichtigungskanal</string>
     <string name="finished">Fertig</string>
     <string name="be_patient">Dies kann eine Weile dauern, bitte haben Sie etwas Geduld</string>
+    <string name="cannot_send_message_to_yourself">Kann keine Nachricht an sich selbst senden</string>
+    <string name="please_select_a_topic">Bitte wählen Sie ein Thema</string>
 </resources>

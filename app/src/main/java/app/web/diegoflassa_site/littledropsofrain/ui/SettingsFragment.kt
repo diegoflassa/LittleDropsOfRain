@@ -41,7 +41,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 R.string.navigation_drawer_close
             )
             drawerLayout?.addDrawerListener(toggle)
-            toggle.syncState()
+            if(drawerLayout!=null)
+                toggle.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
         fab?.visibility = View.GONE

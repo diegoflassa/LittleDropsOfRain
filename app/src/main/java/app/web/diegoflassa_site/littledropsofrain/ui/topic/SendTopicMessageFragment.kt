@@ -94,11 +94,19 @@ class SendTopicMessageFragment : Fragment() {
             }
         }
         binding.fabSendTopicMessage.setOnClickListener {
-            sendMessage(
-                getSelectedTopics(),
-                binding.edtTxtTitle.text.toString(),
-                binding.edtTxtMlMessage.text.toString()
-            )
+            if(getSelectedTopics().isNotEmpty()) {
+                sendMessage(
+                    getSelectedTopics(),
+                    binding.edtTxtTitle.text.toString(),
+                    binding.edtTxtMlMessage.text.toString()
+                )
+            }else{
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.please_select_a_topic),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
         binding.fabPreviewTopicMessage.setOnClickListener {
             previewNotification(binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
@@ -116,7 +124,8 @@ class SendTopicMessageFragment : Fragment() {
                 R.string.navigation_drawer_close
             )
             drawerLayout?.addDrawerListener(toggle)
-            toggle.syncState()
+            if(drawerLayout!=null)
+                toggle.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
         return binding.root
@@ -153,6 +162,12 @@ class SendTopicMessageFragment : Fragment() {
         }
 
         notificationManager?.notify(0 /* ID of notification */, notificationBuilder.build())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.viewState.title = binding.edtTxtTitle.text.toString()
+        viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
     }
 
     override fun onResume() {
@@ -205,7 +220,7 @@ class SendTopicMessageFragment : Fragment() {
                         condition+= " || "
                     condition+= "'${topic.toString().toLowerCase(Locale.ROOT)}' in topics"
                 }
-                val url = getString(R.string.push_message_url)
+                val url = getString(R.string.url_push_message)
                 val myReq: StringRequest = object : StringRequest(
                     Method.POST, url,
                     Response.Listener {

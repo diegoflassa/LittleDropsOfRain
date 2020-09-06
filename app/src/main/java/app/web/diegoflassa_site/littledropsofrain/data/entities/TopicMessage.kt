@@ -3,9 +3,9 @@ package app.web.diegoflassa_site.littledropsofrain.data.entities
 import androidx.annotation.Keep
 
 data class TopicMessage(
+    var title : String,
     var message : String,
-    var topic : Topic,
-    val messageContent : HashMap<String, String>){
+    var topic : Topic){
 
     @Keep
     @Suppress("UNUSED")
@@ -18,7 +18,4 @@ data class TopicMessage(
             return topic
         }
     }
-
-
-
 }

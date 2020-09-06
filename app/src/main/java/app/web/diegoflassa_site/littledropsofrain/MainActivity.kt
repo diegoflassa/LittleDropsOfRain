@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -126,8 +127,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             }
         })
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController: NavController = navHostFragment.navController
 
         // Passing each menu ID as a set of Ids because each
@@ -138,8 +138,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 R.id.nav_facebook,
                 R.id.nav_instagram,
                 R.id.nav_messages,
-                R.id.nav_admin,
-                R.id.nav_users
+                R.id.nav_admin
             ),
             drawerLayout
         )
@@ -167,7 +166,8 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 } else {
                     currentUser = User()
                     setupDrawerMenuIntems()
-                    findNavController(R.id.nav_host_fragment).navigate(R.id.nav_home)
+                    val navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_home, true).build()
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.nav_home, null, navOptions)
                 }
             })
         SetupProductsUpdateWorkerService.setupWorker(applicationContext)
@@ -271,8 +271,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         navMessages.icon = IconDrawable(this, SimpleLineIconsIcons.icon_envelope)
         val navAdmin = navView.menu.findItem(R.id.nav_admin)
         navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
-        val navUsers = navView.menu.findItem(R.id.nav_users)
-        navUsers.icon = IconDrawable(this, SimpleLineIconsIcons.icon_users)
         if(mAuth.currentUser!=null){
             navMessages.isEnabled = true
             navMessages.isVisible = true
@@ -283,13 +281,9 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         if(!currentUser.isAdmin) {
             navAdmin.isEnabled = false
             navAdmin.isVisible = false
-            navUsers.isEnabled = false
-            navUsers.isVisible = false
         }else{
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
-            navUsers.isEnabled = true
-            navUsers.isVisible = true
         }
         navHome.isChecked = true
     }

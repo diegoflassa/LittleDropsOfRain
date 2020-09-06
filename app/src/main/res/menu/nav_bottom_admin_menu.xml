@@ -10,4 +10,9 @@
         android:icon="@drawable/fui_ic_mail_white_24dp"
         android:orderInCategory="100"
         android:title="@string/action_send_message" />
+    <item
+        android:id="@+id/nav_users"
+        android:icon="@drawable/image_placeholder"
+        android:orderInCategory="100"
+        android:title="@string/menu_users" />
 </menu>

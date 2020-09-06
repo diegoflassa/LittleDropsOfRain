@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -106,22 +103,28 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
             }
 
             buttonDelete.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_trash))
+
             userIsAdmin.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
             buttonDelete.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
 
             // Click listener
-            itemView.setOnClickListener { listener?.onUserSelected(snapshot) }
+            if(user.email != FirebaseAuth.getInstance().currentUser?.email) {
+                itemView.setOnClickListener { listener?.onUserSelected(snapshot) }
+            }else{
+                itemView.setOnClickListener { Toast.makeText(MyApplication.getContext(), MyApplication.getContext().getString(
+                                    R.string.cannot_send_message_to_yourself), Toast.LENGTH_SHORT).show() }
+            }
         }
     }
 
     override fun onDataLoaded(item: Void?) {
         mUsersFragment.hideLoadingScreen()
         mUsersFragment.binding.recyclerview.isEnabled = true
-     }
+    }
 
     override fun onDataFailure(exception: Exception) {
         mUsersFragment.hideLoadingScreen()
         mUsersFragment.showToastUnableToChangeUser()
         mUsersFragment.binding.recyclerview.isEnabled = true
-     }
+    }
 }

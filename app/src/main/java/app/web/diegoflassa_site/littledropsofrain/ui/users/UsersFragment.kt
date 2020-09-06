@@ -6,9 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,6 +59,21 @@ class UsersFragment : Fragment(),
         viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
+        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
+        toolbar?.setNavigationOnClickListener {
+            val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
+            val toggle = ActionBarDrawerToggle(
+                activity,
+                drawerLayout,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+            )
+            drawerLayout?.addDrawerListener(toggle)
+            if(drawerLayout!=null)
+                toggle.syncState()
+            activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
+        }
         showLoadingScreen()
         initFirestore()
         initRecyclerView()

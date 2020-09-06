@@ -28,7 +28,7 @@ class FacebookFragment : Fragment() {
     private var isStopped: Boolean = false
     private val viewModel: FacebookViewModel by viewModels()
     private var binding :FragmentFacebookBinding by viewLifecycle()
-    private var url = "https://www.facebook.com/m.andrea.littledrops/"
+    private var url = ""
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
@@ -41,6 +41,7 @@ class FacebookFragment : Fragment() {
             updateUI(it)
         })
 
+        url = getString(R.string.url_facebook)
         // set up the webview
         binding.webviewFacebook.settings.javaScriptEnabled = true
         binding.webviewFacebook.settings.domStorageEnabled = true
@@ -67,7 +68,8 @@ class FacebookFragment : Fragment() {
                 }
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,callback)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         showProgressDialog()
@@ -85,6 +87,7 @@ class FacebookFragment : Fragment() {
         super.onResume()
         updateUI(viewModel.viewState)
     }
+
     private fun updateUI(viewState: FacebookViewState) {
         // Update the UI
         viewState.text = ""

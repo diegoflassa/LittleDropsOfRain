@@ -80,4 +80,6 @@
     <string name="name_notification_channel">Canal de Notificações do Little Drops Of Rain</string>
     <string name="finished">Terminado</string>
     <string name="be_patient">Isso pode levar algum tempo, por favor, tenha paciência</string>
+    <string name="cannot_send_message_to_yourself">Não é possível enviar mensagem para sí próprio</string>
+    <string name="please_select_a_topic">Por favor selecione um Tópico</string>
 </resources>

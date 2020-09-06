@@ -50,6 +50,10 @@
             android:id="@+id/nav_reload_products"
             app:destination="@id/reload_products_fragment"
             app:popUpTo="@id/nav_admin" />
+        <action
+            android:id="@+id/nav_users"
+            app:destination="@id/nav_users"
+            app:popUpTo="@id/nav_admin" />
     </fragment>
 
     <fragment

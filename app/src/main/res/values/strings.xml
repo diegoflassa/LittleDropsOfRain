@@ -106,10 +106,14 @@
     <string name="messages">Messages</string>
     <string name="licenses">Licenses</string>
     <string name="new_notification">New message from Little Drops of Rain</string>
-    <string name="push_message_url" translatable="false">https://content-fcm.googleapis.com/v1/projects/littledropsofrain-site/messages:send</string>
     <string name="name_notification_channel">Little Drops Of Rain Notification Channel</string>
     <string name="finished">Finished</string>
     <string name="be_patient">This may take a while, please be patient</string>
+    <string name="url_push_message" translatable="false">https://content-fcm.googleapis.com/v1/projects/littledropsofrain-site/messages:send</string>
+    <string name="url_instagram" translatable="false">https://www.instagram.com/little_drops_of_rain</string>
+    <string name="url_facebook" translatable="false">https://www.facebook.com/m.andrea.littledrops/</string>
+    <string name="cannot_send_message_to_yourself">Cannot send message to yourself</string>
+    <string name="please_select_a_topic">Please select a Topic</string>
 
     <!-- Price filters -->
     <string-array name="prices" translatable="false">

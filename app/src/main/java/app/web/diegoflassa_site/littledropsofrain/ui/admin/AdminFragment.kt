@@ -74,10 +74,12 @@ class AdminFragment : Fragment(),
         val menu = binding.navBottomAdmin.menu
         menu.findItem(R.id.nav_reload_products).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_loop)
         menu.findItem(R.id.nav_send_topic_message).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_envelope)
+        menu.findItem(R.id.nav_users).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users)
         binding.navBottomAdmin.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.nav_reload_products -> { onReloadProductsClicked() }
                 R.id.nav_send_topic_message -> { onSendTopicMessageClicked() }
+                R.id.nav_users -> { onUsersClicked() }
                 else -> {}// Do nothing
             }
             true
@@ -150,6 +152,10 @@ class AdminFragment : Fragment(),
 
     private fun onReloadProductsClicked() {
         findNavController().navigate(AdminFragmentDirections.navReloadProducts())
+    }
+
+    private fun onUsersClicked() {
+        findNavController().navigate(AdminFragmentDirections.navUsers())
     }
 
     private fun updateUI(viewState: AdminViewState) {

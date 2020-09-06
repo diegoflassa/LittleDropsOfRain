@@ -32,10 +32,5 @@
                 </group>
             </menu-->
         </item>
-        <item
-            android:id="@+id/nav_users"
-            android:icon="@drawable/image_placeholder"
-            android:visible="false"
-            android:title="@string/menu_users" />
     </group>
 </menu>

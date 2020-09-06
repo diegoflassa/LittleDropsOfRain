@@ -8,6 +8,7 @@ import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -86,6 +87,19 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
             // Click listener
             itemView.setOnClickListener { listener?.onMessageSelected(snapshot) }
 
+            // Set the color of the background of the message
+            when {
+                message?.emailSender == FirebaseAuth.getInstance().currentUser?.email -> {
+                    itemView.background = ContextCompat.getDrawable(MyApplication.getContext(), android.R.color.white)
+                }
+                message?.emailTo == FirebaseAuth.getInstance().currentUser?.email -> {
+                    itemView.background = ContextCompat.getDrawable(MyApplication.getContext(), android.R.color.holo_green_light)
+                }
+                else -> {
+                    itemView.background = ContextCompat.getDrawable(MyApplication.getContext(), android.R.color.holo_orange_light)
+                }
+            }
+
             reply.isEnabled = (message?.emailSender != FirebaseAuth.getInstance().currentUser?.email)
             reply.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_action_undo))
             reply.setOnClickListener {
@@ -97,7 +111,7 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
             }
         }
 
-        private fun replyMessage(view : View, message : Message){
+        private fun replyMessage(view : View, message : Message) {
             val messageToEdit = Message()
             messageToEdit.replyUid = message.uid
             messageToEdit.senderId = message.senderId

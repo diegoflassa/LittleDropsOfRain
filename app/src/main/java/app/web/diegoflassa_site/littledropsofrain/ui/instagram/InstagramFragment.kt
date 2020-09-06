@@ -28,7 +28,7 @@ class InstagramFragment : Fragment() {
     private var isStopped: Boolean = false
     private val viewModel: InstagramViewModel by viewModels()
     private var binding : FragmentInstagramBinding by viewLifecycle()
-    private var url = "https://www.instagram.com/little_drops_of_rain"
+    private var url = ""
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
@@ -41,6 +41,7 @@ class InstagramFragment : Fragment() {
             updateUI(it)
         })
 
+        url = getString(R.string.url_instagram)
         // set up the webview
         binding.webviewInstagram.settings.javaScriptEnabled = true
         binding.webviewInstagram.settings.domStorageEnabled = true
@@ -67,7 +68,8 @@ class InstagramFragment : Fragment() {
                 }
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,callback)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         showProgressDialog()
@@ -85,6 +87,7 @@ class InstagramFragment : Fragment() {
         super.onResume()
         updateUI(viewModel.viewState)
     }
+
     private fun updateUI(viewState: InstagramViewState) {
         // Update the UI
         viewState.text = ""
