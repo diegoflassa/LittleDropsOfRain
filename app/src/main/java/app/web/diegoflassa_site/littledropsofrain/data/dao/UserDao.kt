@@ -11,6 +11,7 @@ import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUsersLoadedListen
 import java.lang.ref.WeakReference
 import java.util.*
 
+@Suppress("UNUSED", "BlockingMethodInNonBlockingContext", "SameParameterValue")
 object UserDao {
 
     private const val TAG: String = "UserDao"

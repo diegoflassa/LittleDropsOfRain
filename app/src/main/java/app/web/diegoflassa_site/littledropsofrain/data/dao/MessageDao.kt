@@ -13,6 +13,7 @@ import java.util.*
 
 
 //DFL - Classe de Acesso a dados. Aqui vc coloca as FORMAS DE ACESSAR os dados
+@Suppress("UNUSED", "BlockingMethodInNonBlockingContext", "SameParameterValue")
 object MessageDao {
 
     private const val TAG: String = "MessageDao"

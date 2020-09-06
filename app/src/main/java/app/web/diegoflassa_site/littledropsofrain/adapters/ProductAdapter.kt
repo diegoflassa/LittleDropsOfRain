@@ -65,7 +65,7 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
                 if(category.isNotEmpty()) {
                     chipCategory = Chip(itemView.context)
                     chipCategory.isCheckable = true
-                    chipCategory.isChecked = homeFragment.mFilterDialog.mCategories.contains(category)
+                    chipCategory.isChecked = homeFragment.mFilterDialog!!.mCategories.contains(category)
                     chipCategory.text = category
                     chipCategory.setOnCheckedChangeListener(this)
                     productChipCategories.addView(chipCategory)
@@ -81,8 +81,8 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
         }
 
         override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
-            homeFragment.mFilterDialog.onCheckedChanged(p0, p1)
-            homeFragment.onFilter(homeFragment.mFilterDialog.filters)
+            homeFragment.mFilterDialog?.onCheckedChanged(p0, p1)
+            homeFragment.onFilter(homeFragment.mFilterDialog!!.filters)
         }
 
     }

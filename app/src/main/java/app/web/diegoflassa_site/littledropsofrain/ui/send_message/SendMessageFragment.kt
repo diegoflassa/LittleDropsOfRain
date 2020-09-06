@@ -15,9 +15,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
@@ -32,6 +29,9 @@ import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUserFoundListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUsersLoadedListener
 import app.web.diegoflassa_site.littledropsofrain.models.SendMessageViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.SendMessageViewState
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,7 +49,6 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         const val ACTION_REPLY_KEY = "ACTION_REPLY"
         const val ACTION_REPLY = "app.web.diegoflassa_site.littledropsofrain.action.ACTION_REPLY"
         const val KEY_MESSAGE = "message"
-        const val KEY_TAG = R.array.send_modes_values
         var mSavedInstanceState: Bundle? = null
     }
 
@@ -154,16 +153,16 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         if (sendModes != null) {
             for ((index, sendMode) in sendModes.withIndex()) {
                 val rdMode = RadioButton(requireContext())
-                if(sendMode == SendMessageViewState.SendMethod.MESSAGE.toString())
+                if(sendModesValues!![index] == SendMessageViewState.SendMethod.MESSAGE.toString())
                     rdMode.isSelected = true
                 rdMode.text = sendMode
-                rdMode.setTag(KEY_TAG, sendModesValues!![index])
+                rdMode.tag = sendModesValues[index]
                 binding.rdGrpSendMethod.addView(rdMode)
             }
         }
         binding.rdGrpSendMethod.setOnCheckedChangeListener { radioGroup: RadioGroup, checkedId: Int ->
             val radioButton = radioGroup.findViewById<RadioButton>(checkedId)
-            val sendMethod = radioButton.getTag(KEY_TAG) as String
+            val sendMethod = radioButton.tag as String
             when(SendMessageViewState.SendMethod.valueOf(sendMethod.toUpperCase(Locale.ROOT))) {
                 SendMessageViewState.SendMethod.EMAIL -> {
                     binding.edttxtTitle.visibility = View.VISIBLE
@@ -199,7 +198,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         if(viewState.isUserAdmin) {
             for (view in binding.rdGrpSendMethod.children) {
                 val radioButton = view as RadioButton
-                radioButton.isChecked = (radioButton.getTag(KEY_TAG) == viewState.sendMethod.toString())
+                radioButton.isChecked = (radioButton.tag == viewState.sendMethod.toString())
             }
         }else{
             for (view in binding.rdGrpSendMethod.children) {
@@ -214,7 +213,11 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
             binding.spnrContacts.visibility = View.GONE
             binding.rdGrpSendMethod.visibility = View.GONE
         }else{
-            binding.spnrContacts.visibility = View.VISIBLE
+            if(!binding.spnrContacts.adapter.isEmpty)
+                binding.spnrContacts.visibility = View.VISIBLE
+            else{
+                binding.spnrContacts.visibility = View.GONE
+            }
             binding.rdGrpSendMethod.visibility = View.VISIBLE
         }
     }
@@ -300,6 +303,18 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
                 viewModel.viewState.dest = User()
             }
         }
-        setSelectedMessageSender()
+        if(binding.spnrContacts.adapter.isEmpty){
+            binding.spnrContacts.visibility = View.GONE
+            for( radio in binding.rdGrpSendMethod.children ){
+                if(radio.tag == SendMessageViewState.SendMethod.EMAIL.toString()){
+                    radio.isEnabled = false
+                }else if(radio.tag == SendMessageViewState.SendMethod.MESSAGE.toString() ){
+                    viewModel.viewState.sendMethod =  SendMessageViewState.SendMethod.MESSAGE
+                    (radio as RadioButton).isChecked = true
+                }
+            }
+        }else {
+            setSelectedMessageSender()
+        }
     }
 }

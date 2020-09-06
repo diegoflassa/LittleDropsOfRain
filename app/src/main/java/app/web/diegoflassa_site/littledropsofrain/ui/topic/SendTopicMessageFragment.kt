@@ -1,5 +1,12 @@
 package app.web.diegoflassa_site.littledropsofrain.ui.topic
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.media.RingtoneManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,11 +16,14 @@ import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendTopicMessageBinding
@@ -32,7 +42,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
 import java.util.*
 import kotlin.collections.HashMap
@@ -84,12 +93,15 @@ class SendTopicMessageFragment : Fragment() {
                 binding.cpGrpTopics.addView(chip)
             }
         }
-        binding.btnSend.setOnClickListener {
+        binding.fabSendTopicMessage.setOnClickListener {
             sendMessage(
                 getSelectedTopics(),
                 binding.edtTxtTitle.text.toString(),
                 binding.edtTxtMlMessage.text.toString()
             )
+        }
+        binding.fabPreviewTopicMessage.setOnClickListener {
+            previewNotification(binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
         }
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
@@ -108,6 +120,39 @@ class SendTopicMessageFragment : Fragment() {
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
         return binding.root
+    }
+
+    private fun previewNotification(title : String, message : String) {
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val pendingIntent = PendingIntent.getActivity(requireContext(), 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT)
+
+        val channelId = getString(R.string.default_notification_channel_id)
+        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val largeIcon = BitmapFactory.decodeResource(resources, R.mipmap.ic_notification_large)
+        val notificationBuilder = NotificationCompat.Builder(requireContext(), channelId)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setLargeIcon(largeIcon)
+            .setContentTitle(title)
+            .setContentText(getString(R.string.new_notification))
+            .setAutoCancel(true)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+            .setSound(defaultSoundUri)
+            .setContentIntent(pendingIntent)
+
+        val notificationManager = getSystemService(requireContext(), NotificationManager::class.java)
+
+        // Since android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                getString(R.string.name_notification_channel),
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationManager?.createNotificationChannel(channel)
+        }
+
+        notificationManager?.notify(0 /* ID of notification */, notificationBuilder.build())
     }
 
     override fun onResume() {
@@ -146,15 +191,11 @@ class SendTopicMessageFragment : Fragment() {
         return ret
     }
 
-    private fun sendMessage(
-        topics: Set<TopicMessage.Topic>,
-        title: String,
-        messageContent: String
-    ) {
+    private fun sendMessage(topics: Set<TopicMessage.Topic>, title: String, messageContent: String) {
         ioScope.launch {
             if(topics.isNotEmpty()) {
                 activity?.runOnUiThread {
-                    binding.btnSend.isEnabled = false
+                    binding.fabSendTopicMessage.isEnabled = false
                 }
                 val tokenValue = getAccessToken()?.tokenValue
                 Log.d(TAG, "Got access token : $tokenValue")
@@ -174,7 +215,7 @@ class SendTopicMessageFragment : Fragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                         activity?.runOnUiThread {
-                            binding.btnSend.isEnabled = true
+                            binding.fabSendTopicMessage.isEnabled = true
                         }
                     },
                     Response.ErrorListener {
@@ -193,7 +234,7 @@ class SendTopicMessageFragment : Fragment() {
                             Toast.LENGTH_LONG
                         ).show()
                         activity?.runOnUiThread {
-                            binding.btnSend.isEnabled = true
+                            binding.fabSendTopicMessage.isEnabled = true
                         }
 
                     }) {

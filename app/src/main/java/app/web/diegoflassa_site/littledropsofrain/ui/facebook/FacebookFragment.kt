@@ -24,6 +24,8 @@ class FacebookFragment : Fragment() {
     companion object{
         fun newInstance() = FacebookFragment()
     }
+
+    private var isStopped: Boolean = false
     private val viewModel: FacebookViewModel by viewModels()
     private var binding :FragmentFacebookBinding by viewLifecycle()
     private var url = "https://www.facebook.com/m.andrea.littledrops/"
@@ -73,6 +75,12 @@ class FacebookFragment : Fragment() {
         return binding.root
     }
 
+    override fun onStop(){
+        super.onStop()
+        isStopped = true
+        binding.webviewFacebook.stopLoading()
+    }
+
     override fun onResume() {
         super.onResume()
         updateUI(viewModel.viewState)
@@ -87,6 +95,8 @@ class FacebookFragment : Fragment() {
     }
 
     fun hideProgressDialog(){
-        binding.facebookProgress.visibility = View.GONE
+        if(!isStopped) {
+            binding.facebookProgress.visibility = View.GONE
+        }
     }
 }

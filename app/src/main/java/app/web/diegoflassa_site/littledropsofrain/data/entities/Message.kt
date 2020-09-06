@@ -11,6 +11,7 @@ import java.util.*
 
 @Keep
 @Parcelize
+@Suppress("Unchecked_Cast")
 data class Message (
     var uid : String? = null,
     var replyUid : String? = null,

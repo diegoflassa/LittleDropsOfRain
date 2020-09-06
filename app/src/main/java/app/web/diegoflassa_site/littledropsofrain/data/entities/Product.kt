@@ -7,6 +7,7 @@ import java.util.*
 
 @Keep
 @Parcelize
+@Suppress("Unchecked_Cast")
 data class Product (
     var uid : String? = null,
     var idIluria : String? = null,

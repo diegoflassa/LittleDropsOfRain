@@ -7,7 +7,6 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_iluria" translatable="false">iluria</string>
     <string name="menu_home" translatable="false">Home</string>
     <string name="menu_facebook" translatable="false">Facebook</string>
     <string name="menu_admin" translatable="false">Admin</string>
@@ -109,6 +108,8 @@
     <string name="new_notification">New message from Little Drops of Rain</string>
     <string name="push_message_url" translatable="false">https://content-fcm.googleapis.com/v1/projects/littledropsofrain-site/messages:send</string>
     <string name="name_notification_channel">Little Drops Of Rain Notification Channel</string>
+    <string name="finished">Finished</string>
+    <string name="be_patient">This may take a while, please be patient</string>
 
     <!-- Price filters -->
     <string-array name="prices" translatable="false">

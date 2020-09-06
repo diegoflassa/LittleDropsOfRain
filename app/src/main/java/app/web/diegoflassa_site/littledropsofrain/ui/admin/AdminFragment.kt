@@ -12,14 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
-import com.joanzapata.iconify.IconDrawable
-import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.adapters.MessageAdapter
@@ -31,6 +23,14 @@ import app.web.diegoflassa_site.littledropsofrain.fragments.AllMessagesFilters
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.AdminViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.AdminViewState
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
+import com.joanzapata.iconify.IconDrawable
+import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import java.lang.ref.WeakReference
 
 
@@ -39,10 +39,11 @@ class AdminFragment : Fragment(),
     AllMessagesFilterDialogFragment.FilterListener,
     View.OnClickListener {
 
+    private var isStopped: Boolean = false
     private val viewModel: AdminViewModel by viewModels()
     private lateinit var mAdapter: WeakReference<MessageAdapter>
     var binding : FragmentAdminBinding by viewLifecycle()
-    private lateinit var mFilterDialog: AllMessagesFilterDialogFragment
+    private var mFilterDialog: AllMessagesFilterDialogFragment? = null
     private lateinit var mFirestore: FirebaseFirestore
     private var mQuery: Query? = null
 
@@ -92,13 +93,18 @@ class AdminFragment : Fragment(),
             AllMessagesFilterDialogFragment(
                 this@AdminFragment
             )
-        mFilterDialog.filterListener = this
+        mFilterDialog?.filterListener = this
 
         showLoadingScreen()
         initFirestore()
         initRecyclerView()
         handleBundle()
         return binding.root
+    }
+
+    override fun onDestroyView(){
+        super.onDestroyView()
+        mFilterDialog = null
     }
 
     private fun handleBundle(){
@@ -122,6 +128,7 @@ class AdminFragment : Fragment(),
 
     override fun onStop() {
         super.onStop()
+        isStopped = true
         mAdapter.get()?.stopListening()
     }
 
@@ -247,11 +254,11 @@ class AdminFragment : Fragment(),
     private fun onFilterClicked() {
         binding.filterBarAllMessages.isEnabled = false
         // Show the dialog containing filter options
-        mFilterDialog.show(parentFragmentManager, AllMessagesFilterDialogFragment.TAG)
+        mFilterDialog?.show(parentFragmentManager, AllMessagesFilterDialogFragment.TAG)
     }
 
     private fun onClearFilterClicked() {
-        mFilterDialog.resetFilters()
+        mFilterDialog?.resetFilters()
         viewModel.viewState.filters= AllMessagesFilters.default
         onFilter(viewModel.viewState.filters)
     }

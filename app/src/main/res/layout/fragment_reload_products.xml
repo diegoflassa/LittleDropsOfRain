@@ -45,9 +45,26 @@
         android:text="@string/reload_products"
         android:theme="@style/MyMaterialButtonTheme"
         app:icon="@drawable/ic_worker_running"
+        app:iconSize="24dp"
         app:iconGravity="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Progress bar -->
+    <ProgressBar
+        android:id="@+id/reload_progress"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="205dp"
+        android:layout_marginTop="366dp"
+        android:layout_marginEnd="206dp"
+        android:layout_marginBottom="365dp"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

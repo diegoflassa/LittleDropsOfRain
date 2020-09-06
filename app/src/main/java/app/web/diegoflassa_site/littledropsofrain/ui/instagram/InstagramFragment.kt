@@ -24,6 +24,8 @@ class InstagramFragment : Fragment() {
     companion object{
         fun newInstance() = InstagramFragment()
     }
+
+    private var isStopped: Boolean = false
     private val viewModel: InstagramViewModel by viewModels()
     private var binding : FragmentInstagramBinding by viewLifecycle()
     private var url = "https://www.instagram.com/little_drops_of_rain"
@@ -73,6 +75,12 @@ class InstagramFragment : Fragment() {
         return binding.root
     }
 
+    override fun onStop(){
+        super.onStop()
+        isStopped = true
+        binding.webviewInstagram.stopLoading()
+    }
+
     override fun onResume() {
         super.onResume()
         updateUI(viewModel.viewState)
@@ -87,6 +95,8 @@ class InstagramFragment : Fragment() {
     }
 
     fun hideProgressDialog(){
-        binding.instagramProgress.visibility = View.GONE
+        if(!isStopped) {
+            binding.instagramProgress.visibility = View.GONE
+        }
     }
 }

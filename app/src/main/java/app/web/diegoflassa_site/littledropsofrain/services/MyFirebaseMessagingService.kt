@@ -130,9 +130,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      * @param remoteMessage FCM message body received.
      */
     private fun sendNotification(remoteMessage: RemoteMessage) {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT)
         val notificationTitle : String
         val notificationBody : String
         if(remoteMessage.data.isNotEmpty()){
@@ -142,10 +139,24 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationTitle = remoteMessage.notification!!.title.toString()
             notificationBody = remoteMessage.notification!!.body.toString()
         }
+        sendNotification(notificationTitle, notificationBody)
+    }
 
+    /**
+     * Create and show a simple notification containing the received FCM message.
+     *
+     * @param title Title of the message to be sent
+     * @param body Body of the message to be sent
+     */
+    private fun sendNotification(title : String, body : String) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT)
+        val notificationTitle : String = title
+        val notificationBody : String = body
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val largeIcon = BitmapFactory.decodeResource(resources, R.drawable.ic_notification_large)
+        val largeIcon = BitmapFactory.decodeResource(resources, R.mipmap.ic_notification_large)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notification)
             .setLargeIcon(largeIcon)

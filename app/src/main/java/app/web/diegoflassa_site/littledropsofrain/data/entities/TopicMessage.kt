@@ -8,6 +8,7 @@ data class TopicMessage(
     val messageContent : HashMap<String, String>){
 
     @Keep
+    @Suppress("UNUSED")
     enum class Topic(private val topic: String){
         NEWS("News"),
         PROMOS("Promos"),

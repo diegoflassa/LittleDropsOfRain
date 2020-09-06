@@ -54,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@+id/edtTxtTitle" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnSend"
+        android:id="@+id/fabSendTopicMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -63,5 +63,16 @@
         android:src="@android:drawable/ic_menu_send"
         app:layout_constraintEnd_toEndOf="@+id/edtTxtMlMessage"
         app:layout_constraintTop_toBottomOf="@+id/edtTxtMlMessage"  />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabPreviewTopicMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/paddingSmall"
+        android:clickable="true"
+        android:src="@android:drawable/ic_menu_view"
+        app:layout_constraintBottom_toBottomOf="@+id/fabSendTopicMessage"
+        app:layout_constraintEnd_toStartOf="@+id/fabSendTopicMessage"
+        app:layout_constraintTop_toTopOf="@+id/fabSendTopicMessage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

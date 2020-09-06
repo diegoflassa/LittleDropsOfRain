@@ -18,7 +18,7 @@
     </style>
 
     <!-- ToolBar -->
-    <style name="ToolBarStyle" parent="AppTheme">
+    <style name="AppTheme.ActionBar" parent="AppTheme">
         <item name="android:textColorPrimary">@color/primaryDarkGreyTextColor</item>
         <item name="android:textColorSecondary">@color/primaryDarkGreyTextColor</item>
         <item name="titleTextColor">@color/primaryDarkGreyTextColor</item>

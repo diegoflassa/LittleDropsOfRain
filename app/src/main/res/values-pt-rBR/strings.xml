@@ -78,4 +78,6 @@
     <string name="licenses">Licensas</string>
     <string name="new_notification">Nova mensagem de Little Drops of Rain</string>
     <string name="name_notification_channel">Canal de Notificações do Little Drops Of Rain</string>
+    <string name="finished">Terminado</string>
+    <string name="be_patient">Isso pode levar algum tempo, por favor, tenha paciência</string>
 </resources>

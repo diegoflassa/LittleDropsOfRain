@@ -40,7 +40,7 @@ class MessagesFragment : Fragment(),
     private val viewModel: MessagesViewModel by viewModels()
     private lateinit var mAdapter: WeakReference<MessageAdapter>
     var binding : FragmentMessagesBinding by viewLifecycle()
-    private lateinit var mFilterDialog: MyMessagesFilterDialogFragment
+    private var mFilterDialog: MyMessagesFilterDialogFragment? = null
     private lateinit var mFirestore: FirebaseFirestore
     private var mQuery: Query? = null
 
@@ -74,13 +74,18 @@ class MessagesFragment : Fragment(),
 
         // Filter Dialog
         mFilterDialog = MyMessagesFilterDialogFragment(this@MessagesFragment)
-        mFilterDialog.filterListener = this
+        mFilterDialog?.filterListener = this
 
         showLoadingScreen()
         initFirestore()
         initRecyclerView()
 
         return binding.root
+    }
+
+    override fun onDestroyView(){
+        super.onDestroyView()
+        mFilterDialog = null
     }
 
     override fun onStart() {
@@ -212,11 +217,11 @@ class MessagesFragment : Fragment(),
     private fun onFilterClicked() {
         binding.filterBarMyMessages.isEnabled = false
         // Show the dialog containing filter options
-        mFilterDialog.show(parentFragmentManager, MyMessagesFilterDialogFragment.TAG)
+        mFilterDialog?.show(parentFragmentManager, MyMessagesFilterDialogFragment.TAG)
     }
 
     private fun onClearFilterClicked() {
-        mFilterDialog.resetFilters()
+        mFilterDialog?.resetFilters()
         viewModel.viewState.filters= MyMessagesFilters.default
         onFilter(viewModel.viewState.filters)
     }

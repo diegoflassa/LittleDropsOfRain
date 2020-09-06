@@ -48,7 +48,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     var binding: FragmentHomeBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<ProductAdapter>
     private lateinit var mFirestore: FirebaseFirestore
-    lateinit var mFilterDialog: ProductsFilterDialogFragment
+    var mFilterDialog: ProductsFilterDialogFragment? = null
     private var mQuery: Query? = null
 
     companion object{
@@ -74,7 +74,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             ProductsFilterDialogFragment(
                 this@HomeFragment
             )
-        mFilterDialog.filterListener = this
+        mFilterDialog?.filterListener = this
 
         showLoadingScreen()
         initFirestore()
@@ -89,6 +89,11 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         return binding.root
     }
 
+    override fun onDestroyView(){
+        super.onDestroyView()
+        mFilterDialog = null
+    }
+
     override fun onResume() {
         super.onResume()
         updateUI(viewModel.viewState)
@@ -101,11 +106,11 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     private fun onFilterClicked() {
         binding.filterBar.isEnabled = false
         // Show the dialog containing filter options
-        mFilterDialog.show(parentFragmentManager, ProductsFilterDialogFragment.TAG)
+        mFilterDialog?.show(parentFragmentManager, ProductsFilterDialogFragment.TAG)
     }
 
     private fun onClearFilterClicked() {
-        mFilterDialog.resetFilters()
+        mFilterDialog?.resetFilters()
         viewModel.viewState.filters = ProductsFilters.default
         onFilter(viewModel.viewState.filters)
     }
