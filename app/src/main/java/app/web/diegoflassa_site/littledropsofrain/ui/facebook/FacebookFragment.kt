@@ -1,6 +1,8 @@
 package app.web.diegoflassa_site.littledropsofrain.ui.facebook
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +25,7 @@ class FacebookFragment : Fragment() {
 
     companion object{
         fun newInstance() = FacebookFragment()
+        private const val KEY_PREF_LAST_URL = "KEY_PREF_LAST_URL_FACEBOOK"
     }
 
     private var isStopped: Boolean = false
@@ -77,15 +80,48 @@ class FacebookFragment : Fragment() {
         return binding.root
     }
 
+    override fun onSaveInstanceState(outState : Bundle){
+        super.onSaveInstanceState(outState)
+        binding.webviewFacebook.saveState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if(savedInstanceState!=null) {
+            binding.webviewFacebook.restoreState(savedInstanceState)
+        }
+    }
+
     override fun onStop(){
         super.onStop()
         isStopped = true
         binding.webviewFacebook.stopLoading()
     }
 
+    @SuppressLint("ApplySharedPref")
+    override fun onPause() {
+        super.onPause()
+        binding.webviewFacebook.pauseTimers()
+        val prefs = requireContext().applicationContext.getSharedPreferences(
+            requireContext().packageName,
+            Activity.MODE_PRIVATE
+        )
+        val edit: SharedPreferences.Editor = prefs.edit()
+        edit.putString(KEY_PREF_LAST_URL, binding.webviewFacebook.url)
+        edit.commit()
+    }
+
     override fun onResume() {
         super.onResume()
-        updateUI(viewModel.viewState)
+        binding.webviewFacebook.resumeTimers()
+        val prefs = requireContext().applicationContext.getSharedPreferences(
+            requireContext().packageName,
+            Activity.MODE_PRIVATE
+        )
+        val url = prefs.getString(KEY_PREF_LAST_URL, "")
+        if (!url.isNullOrEmpty()) {
+            binding.webviewFacebook.loadUrl(url)
+        }
     }
 
     private fun updateUI(viewState: FacebookViewState) {

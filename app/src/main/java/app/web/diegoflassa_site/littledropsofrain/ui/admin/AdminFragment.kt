@@ -72,11 +72,13 @@ class AdminFragment : Fragment(),
         )
 
         val menu = binding.navBottomAdmin.menu
+        menu.findItem(R.id.nav_all_messages).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_envelope_letter)
         menu.findItem(R.id.nav_reload_products).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_loop)
         menu.findItem(R.id.nav_send_topic_message).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_envelope)
         menu.findItem(R.id.nav_users).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users)
         binding.navBottomAdmin.setOnNavigationItemSelectedListener {
             when(it.itemId) {
+                R.id.nav_all_messages -> { onAllMessagesClicked() }
                 R.id.nav_reload_products -> { onReloadProductsClicked() }
                 R.id.nav_send_topic_message -> { onSendTopicMessageClicked() }
                 R.id.nav_users -> { onUsersClicked() }
@@ -144,6 +146,10 @@ class AdminFragment : Fragment(),
             R.id.filter_bar_all_messages -> onFilterClicked()
             R.id.button_clear_filter_all_messages -> onClearFilterClicked()
         }
+    }
+
+    private fun onAllMessagesClicked() {
+        findNavController().navigate(AdminFragmentDirections.actionGlobalAdminFragment())
     }
 
     private fun onSendTopicMessageClicked() {

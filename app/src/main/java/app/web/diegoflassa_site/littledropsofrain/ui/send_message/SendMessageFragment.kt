@@ -64,8 +64,6 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(viewModel.viewState)
         })
-        viewModel.viewState.title = binding.edttxtTitle.text.toString()
-        viewModel.viewState.body = binding.mltxtMessage.text.toString()
         binding.btnSend.setOnClickListener {
             val callback = Callback(this)
             // Coroutine has multiple dispatchers suited for different type of workloads
@@ -134,14 +132,14 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         return binding.root
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onSaveInstanceState(outState : Bundle){
+        super.onSaveInstanceState(outState)
         viewModel.viewState.title = binding.edttxtTitle.text.toString()
         viewModel.viewState.body = binding.mltxtMessage.text.toString()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
         updateUI(viewModel.viewState)
     }
 
@@ -220,7 +218,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
             binding.spnrContacts.visibility = View.GONE
             binding.rdGrpSendMethod.visibility = View.GONE
         }else{
-            if(!binding.spnrContacts.adapter.isEmpty)
+            if(binding.spnrContacts.adapter!=null && !binding.spnrContacts.adapter.isEmpty)
                 binding.spnrContacts.visibility = View.VISIBLE
             else{
                 binding.spnrContacts.visibility = View.GONE

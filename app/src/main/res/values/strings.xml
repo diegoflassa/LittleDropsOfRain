@@ -114,6 +114,7 @@
     <string name="url_facebook" translatable="false">https://www.facebook.com/m.andrea.littledrops/</string>
     <string name="cannot_send_message_to_yourself">Cannot send message to yourself</string>
     <string name="please_select_a_topic">Please select a Topic</string>
+    <string name="menu_all_messages">All Messages</string>
 
     <!-- Price filters -->
     <string-array name="prices" translatable="false">

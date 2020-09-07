@@ -1,6 +1,8 @@
 package app.web.diegoflassa_site.littledropsofrain.ui.instagram
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,18 +13,19 @@ import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentInstagramBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.InstagramViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.InstagramViewState
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class InstagramFragment : Fragment() {
 
     companion object{
         fun newInstance() = InstagramFragment()
+        private const val KEY_PREF_LAST_URL = "KEY_PREF_LAST_URL_INSTAGRAM"
     }
 
     private var isStopped: Boolean = false
@@ -77,15 +80,48 @@ class InstagramFragment : Fragment() {
         return binding.root
     }
 
+    override fun onSaveInstanceState(outState: Bundle){
+        super.onSaveInstanceState(outState)
+        binding.webviewInstagram.saveState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if(savedInstanceState!=null) {
+            binding.webviewInstagram.restoreState(savedInstanceState)
+        }
+    }
+
     override fun onStop(){
         super.onStop()
         isStopped = true
         binding.webviewInstagram.stopLoading()
     }
 
+    @SuppressLint("ApplySharedPref")
+    override fun onPause() {
+        super.onPause()
+        binding.webviewInstagram.pauseTimers()
+        val prefs = requireContext().applicationContext.getSharedPreferences(
+            requireContext().packageName,
+            Activity.MODE_PRIVATE
+        )
+        val edit: SharedPreferences.Editor = prefs.edit()
+        edit.putString(KEY_PREF_LAST_URL, binding.webviewInstagram.url)
+        edit.commit()
+    }
+
     override fun onResume() {
         super.onResume()
-        updateUI(viewModel.viewState)
+        binding.webviewInstagram.resumeTimers()
+        val prefs = requireContext().applicationContext.getSharedPreferences(
+            requireContext().packageName,
+            Activity.MODE_PRIVATE
+        )
+        val url = prefs.getString(KEY_PREF_LAST_URL, "")
+        if (!url.isNullOrEmpty()) {
+            binding.webviewInstagram.loadUrl(url)
+        }
     }
 
     private fun updateUI(viewState: InstagramViewState) {

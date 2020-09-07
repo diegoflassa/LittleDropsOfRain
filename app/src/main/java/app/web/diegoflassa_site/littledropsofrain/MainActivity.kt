@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
     private lateinit var fab: FloatingActionButton
     private lateinit var binding: ActivityMainBinding
     private lateinit var authMenuItem: MenuItem
+    private lateinit var toggle : ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             findNavController(R.id.nav_host_fragment).navigate(R.id.sendMessageFragment, bundle)
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val toggle = ActionBarDrawerToggle(
+        toggle = ActionBarDrawerToggle(
             this,
             drawerLayout,
             toolbar,
@@ -177,6 +178,15 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         super.onResume()
         updateUI(viewModel.viewState)
     }
+
+    override fun onStop() {
+        super.onStop()
+        if(this::toggle.isInitialized) {
+            val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+            drawerLayout.removeDrawerListener(toggle)
+        }
+    }
+
     private fun updateUI(viewState: MainActivityViewState) {
         // Update he UI
         viewState.text = ""

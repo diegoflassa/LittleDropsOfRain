@@ -17,6 +17,7 @@
         <item name="android:textColorSecondaryInverse">@drawable/default_text_color_primary</item>
     </style>
 
+
     <!-- ToolBar -->
     <style name="AppTheme.ActionBar" parent="AppTheme">
         <item name="android:textColorPrimary">@color/primaryDarkGreyTextColor</item>
@@ -27,6 +28,12 @@
         <item name="colorControlNormal">@color/primaryDarkGreyTextColor</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
     <style name="MyMaterialButtonTheme" parent="Widget.MaterialComponents.Button">
         <item name="materialThemeOverlay">@style/ButtonStyleTextColor</item>
     </style>
@@ -35,11 +42,6 @@
         <item name="colorOnPrimary">@color/primaryTextColor</item>
         <item name="colorOnSecondary">@color/primaryTextColor</item>
         <item name="android:buttonTint">@color/colorAccent</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

@@ -71,25 +71,13 @@
         android:id="@+id/send_topic_message_fragment"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.topic.SendTopicMessageFragment"
         android:label="@string/label_topic"
-        tools:layout="@layout/fragment_send_topic_message" >
-        <action
-            android:id="@+id/action_sendSubscriptionMessageFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment"
-            app:launchSingleTop="false"
-            app:popUpTo="@id/nav_send_topic_message"
-            app:popUpToInclusive="false" />
-    </fragment>
+        tools:layout="@layout/fragment_send_topic_message" />
 
     <fragment
         android:id="@+id/sendMessageFragment"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment"
         android:label="Send Message"
-        tools:layout="@layout/fragment_send_message">
-        <action
-            android:id="@+id/action_sendMessageFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment"
-            app:popUpTo="@id/sendMessageFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_send_message"/>
 
     <fragment
         android:id="@+id/settingsFragment"

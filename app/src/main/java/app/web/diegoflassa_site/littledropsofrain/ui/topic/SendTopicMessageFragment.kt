@@ -68,8 +68,6 @@ class SendTopicMessageFragment : Fragment() {
         viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
-        viewModel.viewState.title = binding.edtTxtTitle.text.toString()
-        viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
         for(topic in TopicMessage.Topic.values()) {
             if(topic != TopicMessage.Topic.UNKNOWN) {
                 val chip = Chip(requireContext())
@@ -131,6 +129,30 @@ class SendTopicMessageFragment : Fragment() {
         return binding.root
     }
 
+    override fun onSaveInstanceState(outState : Bundle){
+        super.onSaveInstanceState(outState)
+        viewModel.viewState.title = binding.edtTxtTitle.text.toString()
+        viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        updateUI(viewModel.viewState)
+    }
+
+    private fun updateUI(viewState: TopicMessageViewState?){
+        // Update the UI
+        for(chip in binding.cpGrpTopics.children) {
+            if(viewState?.topics?.contains(
+                    TopicMessage.Topic.valueOf((chip as Chip).text.toString().toUpperCase(Locale.ROOT))
+                )!!) {
+                (chip as Chip).isChecked = true
+            }
+        }
+        binding.edtTxtTitle.setText(viewModel.viewState.title)
+        binding.edtTxtMlMessage.setText(viewModel.viewState.body)
+    }
+
     private fun previewNotification(title : String, message : String) {
         val intent = Intent(requireContext(), MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -162,34 +184,6 @@ class SendTopicMessageFragment : Fragment() {
         }
 
         notificationManager?.notify(0 /* ID of notification */, notificationBuilder.build())
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.viewState.title = binding.edtTxtTitle.text.toString()
-        viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        updateUI(viewModel.viewState)
-    }
-
-    private fun updateUI(viewState: TopicMessageViewState?){
-        // Update the UI
-        for(chip in binding.cpGrpTopics.children) {
-            if(viewState?.topics?.contains(
-                    TopicMessage.Topic.valueOf(
-                        (chip as Chip).text.toString().toUpperCase(
-                            Locale.ROOT
-                        )
-                    )
-                )!!) {
-                chip.isSelected = true
-            }
-        }
-        binding.edtTxtTitle.setText(viewModel.viewState.title)
-        binding.edtTxtMlMessage.setText(viewModel.viewState.body)
     }
 
     private fun getSelectedTopics(): Set<TopicMessage.Topic>{

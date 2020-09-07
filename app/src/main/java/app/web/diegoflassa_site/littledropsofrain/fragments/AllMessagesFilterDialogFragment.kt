@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.view.size
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
@@ -16,6 +16,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAllMessagesFiltersBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUsersLoadedListener
+import app.web.diegoflassa_site.littledropsofrain.models.AllMessagesFilterDialogViewModel
 import app.web.diegoflassa_site.littledropsofrain.ui.admin.AdminFragment
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
@@ -29,7 +30,6 @@ open class AllMessagesFilterDialogFragment(fragment: AdminFragment) : DialogFrag
 
     companion object {
         val TAG = AllMessagesFilterDialogFragment::class.simpleName
-        private var POS_USER_SELECTED : Int = -1
     }
 
     interface FilterListener {
@@ -40,6 +40,7 @@ open class AllMessagesFilterDialogFragment(fragment: AdminFragment) : DialogFrag
     private var mSortSpinner: Spinner? = null
     private var mUsersSpinner: Spinner? = null
     var filterListener: FilterListener? = null
+    val viewModel: AllMessagesFilterDialogViewModel by viewModels()
     var binding: FragmentAllMessagesFiltersBinding by viewLifecycle()
     private var mSavedInstanceState: Bundle? = null
     private var mRootView : View?= null
@@ -199,17 +200,20 @@ open class AllMessagesFilterDialogFragment(fragment: AdminFragment) : DialogFrag
         binding.spinnerUsers.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
                 filters.emailSender = (binding.spinnerUsers.adapter.getItem(pos) as User).email
-                POS_USER_SELECTED = pos
+                viewModel.viewState.selectedUserEmail = filters.emailSender.toString()
             }
             override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
                 filters.emailSender = null
             }
         }
-        if(POS_USER_SELECTED >= 0 && POS_USER_SELECTED < binding.spinnerUsers.adapter.count) {
-            binding.spinnerUsers.setSelection(POS_USER_SELECTED)
-        }else{
-            POS_USER_SELECTED = -1
+        if(viewModel.viewState.selectedUserEmail.isNotEmpty()) {
+            for(index in 0 until binding.spinnerUsers.adapter.count) {
+                val userAdapter = binding.spinnerUsers.adapter.getItem(index) as User
+                if(userAdapter.email == viewModel.viewState.selectedUserEmail) {
+                    binding.spinnerUsers.setSelection(index)
+                    break
+                }
+            }
         }
-
     }
 }

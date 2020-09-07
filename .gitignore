@@ -103,6 +103,7 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 libs/
 lint.xml
+twitter-api-keys.txt
 src/main/res/raw/
 /Litttle Drops Of Rain.zip
 app/google-services.json

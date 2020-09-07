@@ -24,6 +24,7 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
     OnTaskFinishedListener<List<Product>> {
 
     companion object {
+        val TAG: String = UpdateProductsWork::class.java.simpleName
         private const val NOTIFICATION_ID = 424242
         // Notification channel ID.
         private const val PRIMARY_CHANNEL_ID = "primary_notification_channel"

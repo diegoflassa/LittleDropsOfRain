@@ -44,7 +44,7 @@ class SetupProductsUpdateWorkerService : JobIntentService() {
                 TimeUnit.MILLISECONDS
             )
             .build()
-        WorkManager.getInstance(this).enqueue(myWorkRequest)
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(UpdateProductsWork.TAG, ExistingPeriodicWorkPolicy.REPLACE, myWorkRequest)
     }
 
     companion object {

@@ -37,7 +37,7 @@
 
                 <data
                     android:scheme="https"
-                    android:host="littledropsofrain.com"
+                    android:host="littledropsofrain.iluria.com"
                     android:pathPattern="/app" />
             </intent-filter>
             <intent-filter>
@@ -48,7 +48,7 @@
 
                 <data
                     android:scheme="https"
-                    android:host="littledropsofrain.iluria.com"
+                    android:host="littledropsofrain-site.web.app"
                     android:pathPattern="/app" />
             </intent-filter>
         </activity>

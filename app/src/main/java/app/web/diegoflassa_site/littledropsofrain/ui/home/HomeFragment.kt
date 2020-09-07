@@ -9,9 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.appcompat.widget.Toolbar
 import androidx.core.text.HtmlCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -49,6 +52,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     private lateinit var mAdapter: WeakReference<ProductAdapter>
     private lateinit var mFirestore: FirebaseFirestore
     var mFilterDialog: ProductsFilterDialogFragment? = null
+    private lateinit var toggle : ActionBarDrawerToggle
     private var mQuery: Query? = null
 
     companion object{
@@ -76,6 +80,19 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             )
         mFilterDialog?.filterListener = this
 
+        val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
+        val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
+        toggle = ActionBarDrawerToggle(
+            requireActivity(),
+            drawerLayout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+
+        toggle.syncState()
+
         showLoadingScreen()
         initFirestore()
         initRecyclerView()
@@ -92,6 +109,10 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     override fun onDestroyView(){
         super.onDestroyView()
         mFilterDialog = null
+        if(this::toggle.isInitialized) {
+            val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
+            drawerLayout.removeDrawerListener(toggle)
+        }
     }
 
     override fun onResume() {
