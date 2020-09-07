@@ -68,11 +68,11 @@
 
         <Spinner
             android:id="@+id/spinner_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/icon_sort"
-            android:entries="@array/messages_sort_by"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content" />
+            android:entries="@array/messages_sort_by" />
     </RelativeLayout>
 
     <!-- Cancel and apply buttons -->

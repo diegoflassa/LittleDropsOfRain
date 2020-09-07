@@ -49,7 +49,10 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
             binding.switchMsgRead.isEnabled = checked
             if(!checked) {
                 filters.read = null
+            }else{
+                binding.spinnerSort.setSelection(0)
             }
+            binding.spinnerSort.isEnabled = !checked
         }
         binding.switchMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             filters.read = checked

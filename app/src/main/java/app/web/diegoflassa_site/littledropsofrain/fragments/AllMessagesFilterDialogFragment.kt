@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.size
 import androidx.fragment.app.DialogFragment
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -23,11 +24,12 @@ import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 /**
  * Dialog Fragment containing filter form.
  */
-open class AllMessagesFilterDialogFragment(fragment : AdminFragment) : DialogFragment(),
+open class AllMessagesFilterDialogFragment(fragment: AdminFragment) : DialogFragment(),
     View.OnClickListener, OnUsersLoadedListener {
 
     companion object {
         val TAG = AllMessagesFilterDialogFragment::class.simpleName
+        private var POS_USER_SELECTED : Int = -1
     }
 
     interface FilterListener {
@@ -39,6 +41,7 @@ open class AllMessagesFilterDialogFragment(fragment : AdminFragment) : DialogFra
     private var mUsersSpinner: Spinner? = null
     var filterListener: FilterListener? = null
     var binding: FragmentAllMessagesFiltersBinding by viewLifecycle()
+    private var mSavedInstanceState: Bundle? = null
     private var mRootView : View?= null
 
     override fun onCreateView(
@@ -46,17 +49,26 @@ open class AllMessagesFilterDialogFragment(fragment : AdminFragment) : DialogFra
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mSavedInstanceState = savedInstanceState
         binding = FragmentAllMessagesFiltersBinding.inflate(inflater, container, false)
         mSortSpinner = binding.spinnerSort
         mUsersSpinner = binding.spinnerUsers
-        binding.iconUsers.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users).colorRes(R.color.colorAccent))
+        binding.iconUsers.setImageDrawable(
+            IconDrawable(
+                requireContext(),
+                SimpleLineIconsIcons.icon_users
+            ).colorRes(R.color.colorAccent)
+        )
         binding.buttonSearchMessages.setOnClickListener(this)
         binding.buttonCancelMessages.setOnClickListener(this)
         binding.checkBoxMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             binding.switchMsgRead.isEnabled = checked
             if(!checked) {
                 filters.read = null
+            }else{
+                binding.spinnerSort.setSelection(0)
             }
+            binding.spinnerSort.isEnabled = !checked
         }
         binding.switchMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             filters.read = checked
@@ -172,7 +184,7 @@ open class AllMessagesFilterDialogFragment(fragment : AdminFragment) : DialogFra
         }
 
     override fun onUsersLoaded(users: List<User>) {
-        val usersWithDefault = ArrayList<User>(users.size+1)
+        val usersWithDefault = ArrayList<User>(users.size + 1)
         val user = User()
         user.name = "No Selection"
         user.email = "None"
@@ -187,10 +199,17 @@ open class AllMessagesFilterDialogFragment(fragment : AdminFragment) : DialogFra
         binding.spinnerUsers.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
                 filters.emailSender = (binding.spinnerUsers.adapter.getItem(pos) as User).email
+                POS_USER_SELECTED = pos
             }
             override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
                 filters.emailSender = null
             }
         }
+        if(POS_USER_SELECTED >= 0 && POS_USER_SELECTED < binding.spinnerUsers.adapter.count) {
+            binding.spinnerUsers.setSelection(POS_USER_SELECTED)
+        }else{
+            POS_USER_SELECTED = -1
+        }
+
     }
 }
