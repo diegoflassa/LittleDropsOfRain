@@ -1,28 +1,32 @@
 package app.web.diegoflassa_site.littledropsofrain.ui
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.firebase.ui.auth.data.model.User
-import app.web.diegoflassa_site.littledropsofrain.MainActivity
+import app.web.diegoflassa_site.littledropsofrain.BuildConfig
 import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.helpers.IntentHelper
+import app.web.diegoflassa_site.littledropsofrain.helpers.UriToIntentMapper
 
 class SplashActivity: AppCompatActivity() {
+
+    private val mMapper: UriToIntentMapper = UriToIntentMapper(this, IntentHelper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Make sure this is before calling super.onCreate
         setTheme(R.style.AppTheme_Launcher)
         super.onCreate(savedInstanceState)
 
-        val user : User?= null// = UserDb.getCurrentUser()
-        routeToAppropriatePage(user)
-        finish()
-    }
-
-    private fun routeToAppropriatePage(user: User?) {
-        // Example routing
-        when (user) {
-            null -> startActivity(Intent(this, MainActivity::class.java))
+        try {
+            mMapper.dispatchIntent(intent)
+        } catch (iae: IllegalArgumentException) {
+            // Malformed URL
+            if (BuildConfig.DEBUG) {
+                Log.e("Deep links", "Invalid URI", iae)
+            }
+        } finally {
+            // Always finish the activity so that it doesn't stay in our history
+            finish()
         }
     }
 }

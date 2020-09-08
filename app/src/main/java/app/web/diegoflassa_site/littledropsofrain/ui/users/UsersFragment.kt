@@ -48,6 +48,7 @@ class UsersFragment : Fragment(),
     var binding: FragmentUsersBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<UsersAdapter>
     private lateinit var mFirestore: FirebaseFirestore
+    private lateinit var toggle : ActionBarDrawerToggle
     private var mQuery: Query? = null
 
     override fun onCreateView(
@@ -62,7 +63,7 @@ class UsersFragment : Fragment(),
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
-            val toggle = ActionBarDrawerToggle(
+            toggle = ActionBarDrawerToggle(
                 activity,
                 drawerLayout,
                 toolbar,
@@ -81,6 +82,14 @@ class UsersFragment : Fragment(),
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         return binding.root
+    }
+
+    override fun onDestroyView(){
+        super.onDestroyView()
+        if(this::toggle.isInitialized) {
+            val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
+            drawerLayout.removeDrawerListener(toggle)
+        }
     }
 
     override fun onStart() {
@@ -212,7 +221,7 @@ class UsersFragment : Fragment(),
         val bundle = Bundle()
         bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
         bundle.putParcelable(SendMessageFragment.KEY_MESSAGE, message)
-        findNavController().navigate(R.id.sendMessageFragment, bundle)
+        findNavController().navigate(R.id.send_message_fragment, bundle)
     }
 
     fun showToastUnableToChangeUser() {

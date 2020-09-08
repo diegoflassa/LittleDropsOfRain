@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_nav_home_to_sendMessageFragment"
-            app:destination="@id/sendMessageFragment"
+            app:destination="@id/send_message_fragment"
             app:popUpTo="@id/nav_home" />
     </fragment>
 
@@ -44,7 +44,7 @@
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_nav_admin_to_sendMessageFragment"
-            app:destination="@id/sendMessageFragment"
+            app:destination="@id/send_message_fragment"
             app:popUpTo="@id/nav_admin" />
         <action
             android:id="@+id/nav_reload_products"
@@ -63,7 +63,7 @@
         tools:layout="@layout/fragment_messages" >
         <action
             android:id="@+id/action_nav_messages_to_sendMessageFragment"
-            app:destination="@id/sendMessageFragment"
+            app:destination="@id/send_message_fragment"
             app:popUpTo="@id/nav_messages" />
     </fragment>
 
@@ -74,7 +74,7 @@
         tools:layout="@layout/fragment_send_topic_message" />
 
     <fragment
-        android:id="@+id/sendMessageFragment"
+        android:id="@+id/send_message_fragment"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment"
         android:label="Send Message"
         tools:layout="@layout/fragment_send_message"/>
@@ -100,7 +100,11 @@
 
     <action
         android:id="@+id/action_global_sendMessageFragment"
-        app:destination="@id/sendMessageFragment" />
+        app:destination="@id/send_message_fragment" />
+
+    <action
+        android:id="@+id/action_global_privacy_fragment"
+        app:destination="@id/nav_privacy" />
 
     <fragment
         android:id="@+id/nav_users"
@@ -113,6 +117,12 @@
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.reload_products.ReloadProductsFragment"
         android:label="@string/reload_products"
         tools:layout="@layout/fragment_reload_products" />
+
+    <fragment
+        android:id="@+id/nav_privacy"
+        android:name="app.web.diegoflassa_site.littledropsofrain.ui.privacy.PrivacyFragment"
+        android:label="fragment_privacy"
+        tools:layout="@layout/fragment_privacy" />
 
 
 </navigation>

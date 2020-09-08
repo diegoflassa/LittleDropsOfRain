@@ -55,6 +55,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
     private val viewModel: SendMessageViewModel by viewModels()
     private var binding : FragmentSendMessageBinding by viewLifecycle()
     private val ioScope = CoroutineScope(Dispatchers.IO)
+    private lateinit var toggle : ActionBarDrawerToggle
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -113,7 +114,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
-            val toggle = ActionBarDrawerToggle(
+            toggle = ActionBarDrawerToggle(
                 activity,
                 drawerLayout,
                 toolbar,
@@ -130,6 +131,14 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         binding.btnSend.isEnabled = false
         Log.d(TAG, "SendMessageFragment activity created!")
         return binding.root
+    }
+
+    override fun onDestroyView(){
+        super.onDestroyView()
+        if(this::toggle.isInitialized) {
+            val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
+            drawerLayout.removeDrawerListener(toggle)
+        }
     }
 
     override fun onSaveInstanceState(outState : Bundle){

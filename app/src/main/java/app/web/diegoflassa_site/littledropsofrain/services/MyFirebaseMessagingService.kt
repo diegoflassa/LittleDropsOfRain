@@ -23,6 +23,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     companion object {
         private val TAG = MyFirebaseMessagingService::class.simpleName
+        private const val NOTIFICATION_ID = 0
     }
 
      /**
@@ -152,18 +153,16 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT)
-        val notificationTitle : String = title
-        val notificationBody : String = body
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val largeIcon = BitmapFactory.decodeResource(resources, R.mipmap.ic_notification_large)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notification)
             .setLargeIcon(largeIcon)
-            .setContentTitle(notificationTitle)
+            .setContentTitle(title)
             .setContentText(getString(R.string.new_notification))
             .setAutoCancel(true)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationBody))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(body))
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
 
@@ -179,6 +178,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+        notificationManager.notify(NOTIFICATION_ID /* ID of notification */, notificationBuilder.build())
     }
 }

@@ -18,6 +18,7 @@ import app.web.diegoflassa_site.littledropsofrain.preferences.MyOnSharedPreferen
 class SettingsFragment : PreferenceFragmentCompat() {
 
     private lateinit var mpcl : SharedPreferences.OnSharedPreferenceChangeListener
+    private lateinit var toggle : ActionBarDrawerToggle
     companion object{
         val TAG = SettingsFragment::class.simpleName
         fun newInstance(): Fragment {
@@ -28,12 +29,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         registerPreferencesListener()
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
 
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
-            val toggle = ActionBarDrawerToggle(
+            toggle = ActionBarDrawerToggle(
                 activity,
                 drawerLayout,
                 toolbar,
@@ -45,7 +45,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 toggle.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
+
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
+    }
+
+    override fun onDestroyView(){
+        super.onDestroyView()
+        if(this::toggle.isInitialized) {
+            val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
+            drawerLayout.removeDrawerListener(toggle)
+        }
     }
 
     override fun onDestroy() {

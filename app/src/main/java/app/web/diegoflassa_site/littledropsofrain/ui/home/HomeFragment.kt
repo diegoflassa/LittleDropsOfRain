@@ -119,6 +119,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         super.onResume()
         updateUI(viewModel.viewState)
     }
+
     private fun updateUI(viewState: HomeViewState) {
         // Update the UI
         viewState.text = ""

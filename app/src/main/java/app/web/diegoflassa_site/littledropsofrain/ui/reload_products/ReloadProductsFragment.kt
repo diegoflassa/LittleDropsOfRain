@@ -34,6 +34,7 @@ class ReloadProductsFragment : Fragment() {
     private var isStopped: Boolean = false
     private val viewModel: ReloadProductsViewModel by viewModels()
     var binding : FragmentReloadProductsBinding by viewLifecycle()
+    private lateinit var toggle : ActionBarDrawerToggle
 
     companion object {
         fun newInstance() = ReloadProductsFragment()
@@ -63,7 +64,7 @@ class ReloadProductsFragment : Fragment() {
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
-            val toggle = ActionBarDrawerToggle(
+            toggle = ActionBarDrawerToggle(
                 activity,
                 drawerLayout,
                 toolbar,
@@ -115,6 +116,14 @@ class ReloadProductsFragment : Fragment() {
             hideLoadingScreen()
         }
         return binding.root
+    }
+
+    override fun onDestroyView(){
+        super.onDestroyView()
+        if(this::toggle.isInitialized) {
+            val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
+            drawerLayout.removeDrawerListener(toggle)
+        }
     }
 
     private fun reloadProducts(executeFetch : Boolean = true){

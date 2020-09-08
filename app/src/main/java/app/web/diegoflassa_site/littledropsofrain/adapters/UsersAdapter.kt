@@ -99,7 +99,7 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
             buttonReply.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
-                itemView.findNavController().navigate(R.id.sendMessageFragment, bundle)
+                itemView.findNavController().navigate(R.id.send_message_fragment, bundle)
             }
 
             buttonDelete.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_trash))

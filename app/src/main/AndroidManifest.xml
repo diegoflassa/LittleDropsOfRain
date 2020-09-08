@@ -37,6 +37,17 @@
 
                 <data
                     android:scheme="https"
+                    android:host="littledropsofrain-site.web.app"
+                    android:pathPattern="/app" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
                     android:host="littledropsofrain.iluria.com"
                     android:pathPattern="/app" />
             </intent-filter>
@@ -49,7 +60,7 @@
                 <data
                     android:scheme="https"
                     android:host="littledropsofrain-site.web.app"
-                    android:pathPattern="/app" />
+                    android:pathPattern="/privacy" />
             </intent-filter>
         </activity>
 

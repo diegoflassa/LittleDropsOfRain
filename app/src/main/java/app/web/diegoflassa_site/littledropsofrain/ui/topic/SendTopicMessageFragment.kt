@@ -51,6 +51,7 @@ import kotlin.collections.HashSet
 class SendTopicMessageFragment : Fragment() {
 
     private val ioScope = CoroutineScope(Dispatchers.IO)
+    private lateinit var toggle : ActionBarDrawerToggle
 
     companion object {
         var TAG = SendTopicMessageFragment::class.simpleName
@@ -114,7 +115,7 @@ class SendTopicMessageFragment : Fragment() {
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
-            val toggle = ActionBarDrawerToggle(
+            toggle = ActionBarDrawerToggle(
                 activity,
                 drawerLayout,
                 toolbar,
@@ -127,6 +128,14 @@ class SendTopicMessageFragment : Fragment() {
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
         return binding.root
+    }
+
+    override fun onDestroyView(){
+        super.onDestroyView()
+        if(this::toggle.isInitialized) {
+            val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
+            drawerLayout.removeDrawerListener(toggle)
+        }
     }
 
     override fun onSaveInstanceState(outState : Bundle){

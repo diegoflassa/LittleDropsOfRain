@@ -83,5 +83,10 @@
     <string name="cannot_send_message_to_yourself">Kann keine Nachricht an sich selbst senden</string>
     <string name="please_select_a_topic">Bitte wählen Sie ein Thema</string>
     <string name="menu_all_messages">Alle Nachrichten</string>
-
+    <string name="privacy">Privatsphäre</string>
+    <string name="hello_blank_fragment">Hallo leeres Fragment</string>
+    <string name="label_send_message">Nachricht senden</string>
+    <string name="label_settings">die Einstellungen</string>
+    <string name="label_privacy">Datenschutz-Bestimmungen</string>
+    <string name="label_all_messages">Alle Nachrichten</string>
 </resources>

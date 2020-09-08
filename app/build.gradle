@@ -158,8 +158,6 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
 
 
-
-
     // Icons
     implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
     implementation 'com.joanzapata.iconify:android-iconify-entypo:2.2.2' // (v3,2015)

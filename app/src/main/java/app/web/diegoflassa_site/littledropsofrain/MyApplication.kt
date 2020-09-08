@@ -71,7 +71,7 @@ class MyApplication : Application() {
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                 }
         }else{
-            Log.d(TAG, "Not registered to receive news")
+            Log.d(TAG, "Not registered to receive promos")
         }
     }
 

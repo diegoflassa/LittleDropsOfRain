@@ -28,6 +28,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.helpers.IntentHelper
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUserFoundListener
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewState
@@ -47,7 +48,7 @@ import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 
 class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
-    OnUserFoundListener, MenuItem.OnMenuItemClickListener {
+    OnUserFoundListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         fab.setOnClickListener {
             val bundle = Bundle()
             bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
-            findNavController(R.id.nav_host_fragment).navigate(R.id.sendMessageFragment, bundle)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.send_message_fragment, bundle)
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         toggle = ActionBarDrawerToggle(
@@ -177,6 +178,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
     override fun onResume() {
         super.onResume()
         updateUI(viewModel.viewState)
+        handleIntent()
     }
 
     override fun onStop() {
@@ -184,6 +186,17 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         if(this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
+        }
+    }
+
+    private fun handleIntent(){
+        if(intent.extras!=null && intent.extras!!.containsKey(IntentHelper.EXTRA_START_WHAT)){
+            when(intent.extras!!.get(IntentHelper.EXTRA_START_WHAT)){
+                "privacy" -> {
+                    findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
+                    intent.removeExtra(IntentHelper.EXTRA_START_WHAT)
+                }
+            }
         }
     }
 
@@ -239,6 +252,11 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             R.id.action_licenses -> {
                 OssLicensesMenuActivity.setActivityTitle(getString(R.string.licenses))
                 startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+                ret = true
+            }
+            R.id.action_privacy -> {
+                findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
+                ret = true
             }
         }
         return ret
@@ -307,12 +325,5 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             UserDao.insert(userFb)
         }
         setupDrawerMenuIntems()
-    }
-
-    override fun onMenuItemClick(it: MenuItem?): Boolean {
-        val user = User.fromString(it!!.title.toString())
-        val directions = MainActivityDirections.actionGlobalAdminFragment(user.email!!)
-        findNavController(R.id.nav_host_fragment).navigate(directions)
-        return false
     }
 }

@@ -83,4 +83,10 @@
     <string name="cannot_send_message_to_yourself">Não é possível enviar mensagem para sí próprio</string>
     <string name="please_select_a_topic">Por favor selecione um Tópico</string>
     <string name="menu_all_messages">Todas as mensagens</string>
+    <string name="privacy">Privacidade</string>
+    <string name="hello_blank_fragment">Olá fragmento em branco</string>
+    <string name="label_send_message">Envia Mensagem</string>
+    <string name="label_settings">Configurações</string>
+    <string name="label_privacy">Política de Privacidade</string>
+    <string name="label_all_messages">Todas as mensagens</string>
 </resources>

@@ -55,6 +55,7 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
         private val ioScope = CoroutineScope(Dispatchers.IO)
         private val creationDate: TextView = itemView.findViewById(R.id.msg_creation_date)
         private val sender: TextView = itemView.findViewById(R.id.msg_sender)
+        private val destiny: TextView = itemView.findViewById(R.id.msg_to)
         private val edtMessage: EditText = itemView.findViewById(R.id.msg_message)
         private val read: SwitchMaterial = itemView.findViewById(R.id.msg_read)
         private val reply: ImageButton = itemView.findViewById(R.id.btn_reply)
@@ -70,7 +71,8 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
             if(message?.creationDate !=null) {
                 creationDate.text = Helper.getDateTime(message.creationDate!!.toDate())
             }
-            sender.text = message?.sender
+            sender.text = message?.emailSender
+            destiny.text = message?.emailTo
             edtMessage.setText(message?.message)
             if(message?.read !=null)
                 read.isChecked = message.read!!
@@ -121,7 +123,7 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
             val bundle = Bundle()
             bundle.putString(SendMessageFragment.ACTION_REPLY_KEY, SendMessageFragment.ACTION_REPLY)
             bundle.putParcelable(SendMessageFragment.KEY_MESSAGE, messageToEdit)
-            view.findNavController().navigate(R.id.sendMessageFragment, bundle)
+            view.findNavController().navigate(R.id.send_message_fragment, bundle)
         }
     }
 }
