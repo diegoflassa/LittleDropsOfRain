@@ -21,7 +21,7 @@
             android:icon="@drawable/image_placeholder"
             android:title="@string/menu_messages" />
         <item
-            android:id="@+id/nav_admin"
+            android:id="@+id/nav_all_messages"
             android:icon="@drawable/image_placeholder"
             android:visible="false"
             android:title="@string/menu_admin" >

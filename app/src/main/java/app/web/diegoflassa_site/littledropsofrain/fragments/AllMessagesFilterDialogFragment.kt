@@ -17,7 +17,7 @@ import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAllMessage
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUsersLoadedListener
 import app.web.diegoflassa_site.littledropsofrain.models.AllMessagesFilterDialogViewModel
-import app.web.diegoflassa_site.littledropsofrain.ui.admin.AdminFragment
+import app.web.diegoflassa_site.littledropsofrain.ui.all_messages.AllMessagesFragment
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
@@ -25,7 +25,7 @@ import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 /**
  * Dialog Fragment containing filter form.
  */
-open class AllMessagesFilterDialogFragment(fragment: AdminFragment) : DialogFragment(),
+open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : DialogFragment(),
     View.OnClickListener, OnUsersLoadedListener {
 
     companion object {
@@ -36,7 +36,7 @@ open class AllMessagesFilterDialogFragment(fragment: AdminFragment) : DialogFrag
         fun onFilter(filters: AllMessagesFilters)
     }
 
-    private var adminFragment : AdminFragment = fragment
+    private var adminFragment : AllMessagesFragment = fragment
     private var mSortSpinner: Spinner? = null
     private var mUsersSpinner: Spinner? = null
     var filterListener: FilterListener? = null

@@ -34,6 +34,7 @@ import app.web.diegoflassa_site.littledropsofrain.models.UsersViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.UsersViewState
 import app.web.diegoflassa_site.littledropsofrain.ui.home.HomeFragment
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.lang.ref.WeakReference
 
 
@@ -79,8 +80,6 @@ class UsersFragment : Fragment(),
         initFirestore()
         initRecyclerView()
 
-        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
-        fab?.visibility = View.GONE
         return binding.root
     }
 
@@ -114,6 +113,10 @@ class UsersFragment : Fragment(),
     private fun updateUI(viewState: UsersViewState) {
         // Update the UI
         viewState.text = ""
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.VISIBLE
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.GONE
     }
 
     fun showLoadingScreen(){

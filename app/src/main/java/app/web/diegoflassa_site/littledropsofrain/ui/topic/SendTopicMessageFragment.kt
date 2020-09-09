@@ -1,12 +1,5 @@
 package app.web.diegoflassa_site.littledropsofrain.ui.topic
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Intent
-import android.graphics.BitmapFactory
-import android.media.RingtoneManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,17 +9,15 @@ import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendTopicMessageBinding
+import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.TopicMessageViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.TopicMessageViewState
@@ -34,6 +25,7 @@ import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.auth.oauth2.AccessToken
@@ -108,10 +100,8 @@ class SendTopicMessageFragment : Fragment() {
             }
         }
         binding.fabPreviewTopicMessage.setOnClickListener {
-            previewNotification(binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
+            Helper.sendNotification(requireContext(), binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
         }
-        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
-        fab?.visibility = View.GONE
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -160,39 +150,10 @@ class SendTopicMessageFragment : Fragment() {
         }
         binding.edtTxtTitle.setText(viewModel.viewState.title)
         binding.edtTxtMlMessage.setText(viewModel.viewState.body)
-    }
-
-    private fun previewNotification(title : String, message : String) {
-        val intent = Intent(requireContext(), MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(requireContext(), 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT)
-
-        val channelId = getString(R.string.default_notification_channel_id)
-        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val largeIcon = BitmapFactory.decodeResource(resources, R.mipmap.ic_notification_large)
-        val notificationBuilder = NotificationCompat.Builder(requireContext(), channelId)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setLargeIcon(largeIcon)
-            .setContentTitle(title)
-            .setContentText(getString(R.string.new_notification))
-            .setAutoCancel(true)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
-            .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent)
-
-        val notificationManager = getSystemService(requireContext(), NotificationManager::class.java)
-
-        // Since android Oreo notification channel is needed.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                getString(R.string.name_notification_channel),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationManager?.createNotificationChannel(channel)
-        }
-
-        notificationManager?.notify(0 /* ID of notification */, notificationBuilder.build())
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.VISIBLE
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.GONE
     }
 
     private fun getSelectedTopics(): Set<TopicMessage.Topic>{

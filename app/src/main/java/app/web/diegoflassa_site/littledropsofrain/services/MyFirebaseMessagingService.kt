@@ -3,19 +3,20 @@ package app.web.diegoflassa_site.littledropsofrain.services
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.workers.MyWorker
 
 
@@ -140,44 +141,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationTitle = remoteMessage.notification!!.title.toString()
             notificationBody = remoteMessage.notification!!.body.toString()
         }
-        sendNotification(notificationTitle, notificationBody)
-    }
-
-    /**
-     * Create and show a simple notification containing the received FCM message.
-     *
-     * @param title Title of the message to be sent
-     * @param body Body of the message to be sent
-     */
-    private fun sendNotification(title : String, body : String) {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT)
-        val channelId = getString(R.string.default_notification_channel_id)
-        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val largeIcon = BitmapFactory.decodeResource(resources, R.mipmap.ic_notification_large)
-        val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setLargeIcon(largeIcon)
-            .setContentTitle(title)
-            .setContentText(getString(R.string.new_notification))
-            .setAutoCancel(true)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(body))
-            .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent)
-
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        // Since android Oreo notification channel is needed.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                getString(R.string.name_notification_channel),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        notificationManager.notify(NOTIFICATION_ID /* ID of notification */, notificationBuilder.build())
+        Helper.sendNotification(this, notificationTitle, notificationBody)
     }
 }

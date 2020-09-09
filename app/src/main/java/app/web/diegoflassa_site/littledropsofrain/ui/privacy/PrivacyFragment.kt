@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentPrivacyBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /**
@@ -31,7 +32,6 @@ class PrivacyFragment : Fragment() {
     ): View? {
         binding = FragmentPrivacyBinding.inflate(inflater, container, false)
 
-        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -47,10 +47,13 @@ class PrivacyFragment : Fragment() {
                 toggle.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
 
         binding.txtVwPrivacy.movementMethod = ScrollingMovementMethod()
-        binding.txtVwPrivacy.text = HtmlCompat.fromHtml(getString(R.string.privacy_policy), HtmlCompat.FROM_HTML_MODE_COMPACT)
+        binding.txtVwPrivacy.text = HtmlCompat.fromHtml(getString(R.string.privacy_policy), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.GONE
         return binding.root
     }
 

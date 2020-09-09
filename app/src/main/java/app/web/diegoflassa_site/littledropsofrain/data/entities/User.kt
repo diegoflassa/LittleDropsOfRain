@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package app.web.diegoflassa_site.littledropsofrain.data.entities
 
 import android.os.Parcelable

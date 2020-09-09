@@ -29,6 +29,7 @@ import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUserFoundListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUsersLoadedListener
 import app.web.diegoflassa_site.littledropsofrain.models.SendMessageViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.SendMessageViewState
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -234,6 +235,8 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
             }
             binding.rdGrpSendMethod.visibility = View.VISIBLE
         }
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.GONE
     }
 
     @Suppress("UNCHECKED_CAST")

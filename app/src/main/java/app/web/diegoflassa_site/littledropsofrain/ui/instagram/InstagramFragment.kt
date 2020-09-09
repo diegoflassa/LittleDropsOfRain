@@ -18,6 +18,7 @@ import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentInstagramB
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.InstagramViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.InstagramViewState
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -122,11 +123,14 @@ class InstagramFragment : Fragment() {
         if (!url.isNullOrEmpty()) {
             binding.webviewInstagram.loadUrl(url)
         }
+        updateUI(viewModel.viewState)
     }
 
     private fun updateUI(viewState: InstagramViewState) {
         // Update the UI
         viewState.text = ""
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.GONE
     }
 
     private fun showProgressDialog() {

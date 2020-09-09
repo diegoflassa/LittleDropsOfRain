@@ -29,31 +29,31 @@
         tools:layout="@layout/fragment_instagram" />
 
     <fragment
-        android:id="@+id/nav_admin"
-        android:name="app.web.diegoflassa_site.littledropsofrain.ui.admin.AdminFragment"
-        android:label="@string/menu_admin"
-        tools:layout="@layout/fragment_admin" >
+        android:id="@+id/nav_all_messages"
+        android:name="app.web.diegoflassa_site.littledropsofrain.ui.all_messages.AllMessagesFragment"
+        android:label="@string/menu_all_messages"
+        tools:layout="@layout/fragment_all_messages" >
         <argument
             android:name="who"
             app:argType="string"
             android:defaultValue="Admin - All Messages"/>
         <action
             android:id="@+id/nav_send_topic_message"
-            app:destination="@id/send_topic_message_fragment"
-            app:popUpTo="@id/nav_admin"
+            app:destination="@id/nav_send_topic_message"
+            app:popUpTo="@id/nav_all_messages"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_nav_admin_to_sendMessageFragment"
             app:destination="@id/send_message_fragment"
-            app:popUpTo="@id/nav_admin" />
+            app:popUpTo="@id/nav_all_messages" />
         <action
             android:id="@+id/nav_reload_products"
-            app:destination="@id/reload_products_fragment"
-            app:popUpTo="@id/nav_admin" />
+            app:destination="@id/nav_reload_products"
+            app:popUpTo="@id/nav_all_messages" />
         <action
             android:id="@+id/nav_users"
             app:destination="@id/nav_users"
-            app:popUpTo="@id/nav_admin" />
+            app:popUpTo="@id/nav_all_messages" />
     </fragment>
 
     <fragment
@@ -68,7 +68,7 @@
     </fragment>
 
     <fragment
-        android:id="@+id/send_topic_message_fragment"
+        android:id="@+id/nav_send_topic_message"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.topic.SendTopicMessageFragment"
         android:label="@string/label_topic"
         tools:layout="@layout/fragment_send_topic_message" />
@@ -80,26 +80,26 @@
         tools:layout="@layout/fragment_send_message"/>
 
     <fragment
-        android:id="@+id/settingsFragment"
+        android:id="@+id/settings_fragment"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.SettingsFragment"
         android:label="Settings" />
 
     <activity
-        android:id="@+id/mainActivity"
+        android:id="@+id/main_activity"
         android:name="app.web.diegoflassa_site.littledropsofrain.MainActivity"
         android:label="app_bar_main"
         tools:layout="@layout/app_bar_main" />
 
     <action
-        android:id="@+id/action_global_settingsFragment"
-        app:destination="@id/settingsFragment" />
+        android:id="@+id/action_global_settings_fragment"
+        app:destination="@id/settings_fragment" />
 
     <action
-        android:id="@+id/action_global_adminFragment"
-        app:destination="@id/nav_admin" />
+        android:id="@+id/action_global_all_messages_fragment"
+        app:destination="@id/nav_all_messages" />
 
     <action
-        android:id="@+id/action_global_sendMessageFragment"
+        android:id="@+id/action_global_send_message_fragment"
         app:destination="@id/send_message_fragment" />
 
     <action
@@ -113,7 +113,7 @@
         tools:layout="@layout/fragment_users" />
 
     <fragment
-        android:id="@+id/reload_products_fragment"
+        android:id="@+id/nav_reload_products"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.reload_products.ReloadProductsFragment"
         android:label="@string/reload_products"
         tools:layout="@layout/fragment_reload_products" />
@@ -121,7 +121,7 @@
     <fragment
         android:id="@+id/nav_privacy"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.privacy.PrivacyFragment"
-        android:label="fragment_privacy"
+        android:label="@string/privacy"
         tools:layout="@layout/fragment_privacy" />
 
 

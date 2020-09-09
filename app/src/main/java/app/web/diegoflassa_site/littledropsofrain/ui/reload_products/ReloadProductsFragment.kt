@@ -22,6 +22,8 @@ import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.ReloadProductsViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.ReloadProductsViewState
 import app.web.diegoflassa_site.littledropsofrain.workers.UpdateProductsWork
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import java.util.concurrent.TimeUnit
@@ -54,7 +56,7 @@ class ReloadProductsFragment : Fragment() {
         binding.chkbxRemoveNotFoundProducts.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             viewModel.viewState.removeNotFoundProducts = checked
         }
-        binding.btnReloadProducts.setOnClickListener {
+        binding.fabReloadProducts.setOnClickListener {
             if(worker==null) {
                 reloadProducts()
             }else{
@@ -115,6 +117,7 @@ class ReloadProductsFragment : Fragment() {
         }else {
             hideLoadingScreen()
         }
+        binding.fabReloadProducts.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_refresh))
         return binding.root
     }
 
@@ -133,8 +136,7 @@ class ReloadProductsFragment : Fragment() {
         }
         if(executeFetch)
             fetchProducts()
-        binding.btnReloadProducts.text = getString(R.string.cancel)
-        binding.btnReloadProducts.icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_close)
+        binding.fabReloadProducts.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_close))
     }
 
     private fun cancel(){
@@ -143,8 +145,7 @@ class ReloadProductsFragment : Fragment() {
             worker = null
         }
         viewModel.viewState.progress.clear()
-        binding.btnReloadProducts.text = getString(R.string.reload_products)
-        binding.btnReloadProducts.icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_refresh)
+        binding.fabReloadProducts.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_refresh))
         hideLoadingScreen()
         updateUI(viewModel.viewState)
     }
@@ -184,6 +185,10 @@ class ReloadProductsFragment : Fragment() {
                 }
             }
         }
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.VISIBLE
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.GONE
     }
 
     private fun fetchProducts() {

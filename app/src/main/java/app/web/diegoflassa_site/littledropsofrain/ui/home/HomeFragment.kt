@@ -39,6 +39,7 @@ import app.web.diegoflassa_site.littledropsofrain.fragments.ProductsFilters
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.HomeViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.HomeViewState
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.lang.ref.WeakReference
 
 
@@ -99,9 +100,6 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
         binding.filterBar.isEnabled = false
 
-        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
-        fab?.visibility = View.VISIBLE
-
         Log.i(TAG,"$TAG activity successfully created>")
         return binding.root
     }
@@ -123,6 +121,10 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     private fun updateUI(viewState: HomeViewState) {
         // Update the UI
         viewState.text = ""
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.GONE
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.VISIBLE
     }
 
     private fun onFilterClicked() {

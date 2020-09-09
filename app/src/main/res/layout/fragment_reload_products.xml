@@ -27,29 +27,22 @@
         android:id="@+id/chkbx_remove_not_found_products"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/paddingSmall"
+        android:layout_marginBottom="@dimen/paddingSmall"
         android:text="@string/remove_not_found_products"
-        app:layout_constraintBottom_toTopOf="@+id/btn_reload_products"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_reload_products"
-        style="@style/Widget.MaterialComponents.Button.Icon"
-        android:layout_width="392dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="@dimen/paddingSmall"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_reload_products"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/paddingSmall"
-        android:layout_marginBottom="@dimen/paddingSmall"
-        android:paddingHorizontal="@dimen/paddingSmall"
-        android:text="@string/reload_products"
-        android:theme="@style/MyMaterialButtonTheme"
-        app:icon="@drawable/ic_worker_running"
-        app:iconSize="24dp"
-        app:iconGravity="textStart"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:clickable="true"
+        android:src="@android:drawable/ic_menu_rotate"
+        app:layout_constraintBottom_toBottomOf="@+id/chkbx_remove_not_found_products"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/chkbx_remove_not_found_products" />
 
     <!-- Progress bar -->
     <ProgressBar

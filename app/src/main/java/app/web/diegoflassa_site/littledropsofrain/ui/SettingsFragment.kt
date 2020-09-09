@@ -13,6 +13,7 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.preferences.MyOnSharedPreferenceChangeListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -45,9 +46,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 toggle.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
+        updateUI()
+    }
 
+    private fun updateUI(){
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.GONE
     }
 
     override fun onDestroyView(){

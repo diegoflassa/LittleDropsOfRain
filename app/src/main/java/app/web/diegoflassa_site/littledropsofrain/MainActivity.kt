@@ -36,6 +36,7 @@ import app.web.diegoflassa_site.littledropsofrain.services.SetupProductsUpdateWo
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -140,12 +141,21 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
                 R.id.nav_facebook,
                 R.id.nav_instagram,
                 R.id.nav_messages,
-                R.id.nav_admin
+                R.id.nav_all_messages
             ),
             drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
+        val bnv = findViewById<BottomNavigationView>(R.id.nav_bottom)
+        val menu = bnv.menu
+        menu.findItem(R.id.nav_all_messages).icon = IconDrawable(this, SimpleLineIconsIcons.icon_envelope_letter)
+        menu.findItem(R.id.nav_reload_products).icon = IconDrawable(this, SimpleLineIconsIcons.icon_loop)
+        menu.findItem(R.id.nav_send_topic_message).icon = IconDrawable(this, SimpleLineIconsIcons.icon_envelope)
+        menu.findItem(R.id.nav_users).icon = IconDrawable(this, SimpleLineIconsIcons.icon_users)
+
+        bnv.setupWithNavController(navController)
+        bnv.visibility = View.GONE
 
         mAuth = FirebaseAuth.getInstance()
         if(mAuth.currentUser==null){
@@ -297,7 +307,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         navInstagram.icon = IconDrawable(this, TypiconsIcons.typcn_social_instagram)
         val navMessages = navView.menu.findItem(R.id.nav_messages)
         navMessages.icon = IconDrawable(this, SimpleLineIconsIcons.icon_envelope)
-        val navAdmin = navView.menu.findItem(R.id.nav_admin)
+        val navAdmin = navView.menu.findItem(R.id.nav_all_messages)
         navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
         if(mAuth.currentUser!=null){
             navMessages.isEnabled = true

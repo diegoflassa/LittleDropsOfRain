@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -37,7 +38,7 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
     private val appContext: Context = context
 
     // Notification manager.
-    private var mNotifyManager: NotificationManager? = null
+    private var mNotifyManager: NotificationManagerCompat? = null
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
 
@@ -58,6 +59,7 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
             .setContentTitle(appContext.getString(R.string.worker_scheduled))
             .setContentText(appContext.getString(R.string.worker_running))
             .setContentIntent(contentPendingIntent)
+            .setColor(appContext.getColor(R.color.colorAccent))
             .setSmallIcon(R.drawable.ic_worker_running)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
@@ -86,7 +88,7 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
     private fun createNotificationChannel() {
 
         // Create a notification manager object.
-        mNotifyManager = appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        mNotifyManager = NotificationManagerCompat.from(applicationContext)
 
         // Notification channels are only available in OREO and higher.
         // So, add a check on SDK version.

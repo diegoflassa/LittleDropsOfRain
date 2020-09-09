@@ -29,6 +29,7 @@ import app.web.diegoflassa_site.littledropsofrain.fragments.MyMessagesFilters
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.MessagesViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.MessagesViewState
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.lang.ref.WeakReference
 
 
@@ -69,8 +70,6 @@ class MessagesFragment : Fragment(),
 
         binding.filterBarMyMessages.setOnClickListener(this)
         binding.buttonClearFilterMyMessages.setOnClickListener(this)
-        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
-        fab?.visibility = View.GONE
 
         // Filter Dialog
         mFilterDialog = MyMessagesFilterDialogFragment(this@MessagesFragment)
@@ -118,6 +117,10 @@ class MessagesFragment : Fragment(),
     private fun updateUI(viewState: MessagesViewState) {
         // Update the UI
         viewState.text = ""
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.GONE
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.GONE
     }
 
      private fun showLoadingScreen(){

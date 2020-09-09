@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.admin.AdminFragment"
+    tools:context=".ui.all_messages.AllMessagesFragment"
     android:tag="AdminFragment">
 
     <!-- Filter Bar -->
@@ -94,21 +94,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Empty list view -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerviewAdmin"
+            android:id="@+id/recyclerviewAllMessages"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/colorPrimary"
             android:backgroundTint="@color/colorPrimary"
-            app:layout_constraintBottom_toTopOf="@id/nav_bottom_admin"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/recyclerview_item_message" />
 
+        <!-- Empty list view -->
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/admin_view_empty"
+            android:id="@+id/all_messages_view_empty"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:drawableTop="@drawable/splash"
@@ -123,7 +123,7 @@
 
         <!-- Progress bar -->
         <ProgressBar
-            android:id="@+id/admin_progress"
+            android:id="@+id/all_messages_progress"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="205dp"
@@ -136,16 +136,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/nav_bottom_admin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/nav_bottom_admin_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

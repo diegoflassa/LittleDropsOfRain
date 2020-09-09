@@ -19,6 +19,7 @@ import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentFacebookBi
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.FacebookViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.FacebookViewState
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class FacebookFragment : Fragment() {
@@ -73,8 +74,6 @@ class FacebookFragment : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
-        fab?.visibility = View.GONE
         showProgressDialog()
         binding.webviewFacebook.loadUrl(url)
         return binding.root
@@ -122,11 +121,16 @@ class FacebookFragment : Fragment() {
         if (!url.isNullOrEmpty()) {
             binding.webviewFacebook.loadUrl(url)
         }
+        updateUI(viewModel.viewState)
     }
 
     private fun updateUI(viewState: FacebookViewState) {
         // Update the UI
         viewState.text = ""
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.GONE
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.GONE
     }
 
     private fun showProgressDialog() {

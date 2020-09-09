@@ -1,15 +1,18 @@
-package app.web.diegoflassa_site.littledropsofrain.ui.admin
+package app.web.diegoflassa_site.littledropsofrain.ui.all_messages
 
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.Toolbar
 import androidx.core.text.HtmlCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
@@ -17,41 +20,41 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.adapters.MessageAdapter
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
-import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAdminBinding
+import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAllMessagesBinding
 import app.web.diegoflassa_site.littledropsofrain.fragments.AllMessagesFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.fragments.AllMessagesFilters
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.models.AdminViewModel
-import app.web.diegoflassa_site.littledropsofrain.models.AdminViewState
+import app.web.diegoflassa_site.littledropsofrain.models.AllMessagesViewModel
+import app.web.diegoflassa_site.littledropsofrain.models.AllMessagesViewState
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import com.joanzapata.iconify.IconDrawable
-import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import java.lang.ref.WeakReference
 
 
-class AdminFragment : Fragment(),
+class AllMessagesFragment : Fragment(),
     MessageAdapter.OnMessageSelectedListener,
     AllMessagesFilterDialogFragment.FilterListener,
     View.OnClickListener {
 
     private var isStopped: Boolean = false
-    private val viewModel: AdminViewModel by viewModels()
+    private val viewModel: AllMessagesViewModel by viewModels()
     private lateinit var mAdapter: WeakReference<MessageAdapter>
-    var binding : FragmentAdminBinding by viewLifecycle()
+    var binding : FragmentAllMessagesBinding by viewLifecycle()
     private var mFilterDialog: AllMessagesFilterDialogFragment? = null
+    private lateinit var toggle : ActionBarDrawerToggle
     private lateinit var mFirestore: FirebaseFirestore
     private var mQuery: Query? = null
 
     companion object {
         const val KEY_ALL_MESSAGES: String = "Admin - All Messages"
-        val TAG = AdminFragment::class.simpleName
+        val TAG = AllMessagesFragment::class.simpleName
         const val LIMIT = 50
-        fun newInstance() = AdminFragment()
+        fun newInstance() = AllMessagesFragment()
     }
 
     override fun onCreateView(
@@ -59,7 +62,7 @@ class AdminFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAdminBinding.inflate(inflater, container, false)
+        binding = FragmentAllMessagesBinding.inflate(inflater, container, false)
         viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
@@ -71,31 +74,30 @@ class AdminFragment : Fragment(),
             )!!
         )
 
-        val menu = binding.navBottomAdmin.menu
-        menu.findItem(R.id.nav_all_messages).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_envelope_letter)
-        menu.findItem(R.id.nav_reload_products).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_loop)
-        menu.findItem(R.id.nav_send_topic_message).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_envelope)
-        menu.findItem(R.id.nav_users).icon = IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users)
-        binding.navBottomAdmin.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
-                R.id.nav_all_messages -> { onAllMessagesClicked() }
-                R.id.nav_reload_products -> { onReloadProductsClicked() }
-                R.id.nav_send_topic_message -> { onSendTopicMessageClicked() }
-                R.id.nav_users -> { onUsersClicked() }
-                else -> {}// Do nothing
+        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
+        toolbar?.setNavigationOnClickListener {
+            val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
+            toggle = ActionBarDrawerToggle(
+                activity,
+                drawerLayout,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+            )
+            drawerLayout?.addDrawerListener(toggle)
+            if(drawerLayout!=null) {
+                toggle.syncState()
+                drawerLayout.openDrawer(GravityCompat.START)
             }
-            true
         }
 
         binding.filterBarAllMessages.setOnClickListener(this)
         binding.buttonClearFilterAllMessages.setOnClickListener(this)
-        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
-        fab?.visibility = View.GONE
 
         // Filter Dialog
         mFilterDialog =
             AllMessagesFilterDialogFragment(
-                this@AdminFragment
+                this@AllMessagesFragment
             )
         mFilterDialog?.filterListener = this
 
@@ -103,18 +105,23 @@ class AdminFragment : Fragment(),
         initFirestore()
         initRecyclerView()
         handleBundle()
+
         return binding.root
     }
 
     override fun onDestroyView(){
         super.onDestroyView()
         mFilterDialog = null
+        if(this::toggle.isInitialized) {
+            val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
+            drawerLayout.removeDrawerListener(toggle)
+        }
     }
 
     private fun handleBundle(){
-        if(AdminFragmentArgs.fromBundle(requireArguments()).who != KEY_ALL_MESSAGES) {
+        if(AllMessagesFragmentArgs.fromBundle(requireArguments()).who != KEY_ALL_MESSAGES) {
             val filter = AllMessagesFilters.default
-            filter.emailSender = AdminFragmentArgs.fromBundle(requireArguments()).who
+            filter.emailSender = AllMessagesFragmentArgs.fromBundle(requireArguments()).who
             viewModel.viewState.filters =filter
             onFilter(viewModel.viewState.filters)
         }
@@ -148,33 +155,21 @@ class AdminFragment : Fragment(),
         }
     }
 
-    private fun onAllMessagesClicked() {
-        findNavController().navigate(AdminFragmentDirections.actionGlobalAdminFragment())
-    }
-
-    private fun onSendTopicMessageClicked() {
-        findNavController().navigate(AdminFragmentDirections.navSendTopicMessage())
-    }
-
-    private fun onReloadProductsClicked() {
-        findNavController().navigate(AdminFragmentDirections.navReloadProducts())
-    }
-
-    private fun onUsersClicked() {
-        findNavController().navigate(AdminFragmentDirections.navUsers())
-    }
-
-    private fun updateUI(viewState: AdminViewState) {
+    private fun updateUI(viewState: AllMessagesViewState) {
         // Update the UI
         viewState.text = ""
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.VISIBLE
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.GONE
     }
 
      private fun showLoadingScreen(){
-        binding.adminProgress.visibility = View.VISIBLE
+        binding.allMessagesProgress.visibility = View.VISIBLE
     }
 
     fun hideLoadingScreen(){
-        binding.adminProgress.visibility = View.GONE
+        binding.allMessagesProgress.visibility = View.GONE
     }
 
     override fun onFilter(filters : AllMessagesFilters) {
@@ -183,7 +178,7 @@ class AdminFragment : Fragment(),
         var query: Query = mFirestore.collection(MessageDao.COLLECTION_PATH)
         query.orderBy(Message.CREATION_DATE, Query.Direction.DESCENDING)
 
-        // Category (equality filter)
+        // Read (equality filter)
         if (filters.hasRead()) {
             query = query.whereEqualTo(Message.READ, filters.read)
         }
@@ -193,7 +188,7 @@ class AdminFragment : Fragment(),
             query = query.whereEqualTo("city", filters.getCity())
         }
         */
-        // Price (equality filter)
+        // EMail sender (equality filter)
         if (filters.hasEMailSender()) {
             query = query.whereEqualTo(Message.EMAIL_SENDER, filters.emailSender!!)
         }
@@ -230,22 +225,22 @@ class AdminFragment : Fragment(),
                 R.drawable.card_item_divider
             )!!
         )
-        binding.recyclerviewAdmin.addItemDecoration(itemDecoration)
+        binding.recyclerviewAllMessages.addItemDecoration(itemDecoration)
 
         if (mQuery == null) {
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = WeakReference( object : MessageAdapter(mQuery, this@AdminFragment) {
+        mAdapter = WeakReference( object : MessageAdapter(mQuery, this@AllMessagesFragment) {
             override fun onDataChanged() {
                 hideLoadingScreen()
                 // Show/hide content if the query returns empty.
                 if (itemCount == 0) {
-                    binding.recyclerviewAdmin.visibility = View.GONE
-                    binding.adminViewEmpty.visibility = View.VISIBLE
+                    binding.recyclerviewAllMessages.visibility = View.GONE
+                    binding.allMessagesViewEmpty.visibility = View.VISIBLE
                 } else {
-                    binding.recyclerviewAdmin.visibility = View.VISIBLE
-                    binding.adminViewEmpty.visibility = View.GONE
+                    binding.recyclerviewAllMessages.visibility = View.VISIBLE
+                    binding.allMessagesViewEmpty.visibility = View.GONE
                 }
             }
 
@@ -259,8 +254,8 @@ class AdminFragment : Fragment(),
                 }
             }
         })
-        binding.recyclerviewAdmin.layoutManager = LinearLayoutManager(activity)
-        binding.recyclerviewAdmin.adapter = mAdapter.get()
+        binding.recyclerviewAllMessages.layoutManager = LinearLayoutManager(activity)
+        binding.recyclerviewAllMessages.adapter = mAdapter.get()
     }
 
     private fun onFilterClicked() {
