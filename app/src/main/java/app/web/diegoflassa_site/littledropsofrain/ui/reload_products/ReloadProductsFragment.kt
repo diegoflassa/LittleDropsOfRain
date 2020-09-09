@@ -1,6 +1,8 @@
 package app.web.diegoflassa_site.littledropsofrain.ui.reload_products
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +43,7 @@ class ReloadProductsFragment : Fragment() {
     companion object {
         fun newInstance() = ReloadProductsFragment()
         private var worker : OneTimeWorkRequest? = null
+        private var DELAY_JOB_COMPLETED : Long = 30000
     }
 
     override fun onCreateView(
@@ -82,8 +85,12 @@ class ReloadProductsFragment : Fragment() {
             if (it != null) {
                 when (it.state) {
                     WorkInfo.State.SUCCEEDED -> {
-                        Toast.makeText(requireContext(), getString(R.string.finished), Toast.LENGTH_LONG).show()
-                        cancel()
+                        viewModel.viewState.progress.append("Writing values to Firestore. Please wait" + System.lineSeparator())
+                        updateUI(viewModel.viewState)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            Toast.makeText(requireContext(), getString(R.string.finished), Toast.LENGTH_LONG).show()
+                            cancel()
+                        }, DELAY_JOB_COMPLETED)
                     }
 
                     WorkInfo.State.RUNNING -> {

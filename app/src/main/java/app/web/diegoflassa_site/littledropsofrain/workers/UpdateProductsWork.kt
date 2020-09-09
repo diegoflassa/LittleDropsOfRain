@@ -20,6 +20,7 @@ import app.web.diegoflassa_site.littledropsofrain.interfaces.OnTaskFinishedListe
 import app.web.diegoflassa_site.littledropsofrain.xml.ProductParser
 import kotlinx.coroutines.*
 
+@Suppress("DeferredResultUnused")
 class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams), ProductParser.OnParseProgress, OnProductInsertedListener,
     OnTaskFinishedListener<List<Product>> {
@@ -60,7 +61,7 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
             .setContentText(appContext.getString(R.string.worker_running))
             .setContentIntent(contentPendingIntent)
             .setColor(appContext.getColor(R.color.colorAccent))
-            .setSmallIcon(R.drawable.ic_worker_running)
+            .setSmallIcon(R.mipmap.ic_worker_running)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setAutoCancel(true)
@@ -112,19 +113,16 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
 
     override fun onParseProgressChange(progress: String) {
         val update = workDataOf(KEY_PROGRESS to progress)
-        val async = GlobalScope.async(Dispatchers.Default) { setProgress(update) }
-        async.isActive
+        GlobalScope.async(Dispatchers.Default) { setProgress(update) }
     }
 
     override fun onProductInserted(product: Product) {
         val update = workDataOf(KEY_PRODUCT to product.uid)
-        val async = GlobalScope.async(Dispatchers.Default) { setProgress(update) }
-        async.isActive
+        GlobalScope.async(Dispatchers.Default) { setProgress(update) }
     }
 
     override fun onTaskFinished(param: List<Product>) {
         val update = workDataOf(KEY_PRODUCTS to param.size)
-        val async = GlobalScope.async(Dispatchers.Default) { setProgress(update) }
-        async.isActive
+        GlobalScope.async(Dispatchers.Default) { setProgress(update) }
     }
 }
