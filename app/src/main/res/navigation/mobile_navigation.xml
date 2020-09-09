@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/nav_all_messages"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.all_messages.AllMessagesFragment"
-        android:label="@string/menu_all_messages"
+        android:label="@string/label_all_messages"
         tools:layout="@layout/fragment_all_messages" >
         <argument
             android:name="who"
@@ -76,13 +76,13 @@
     <fragment
         android:id="@+id/send_message_fragment"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment"
-        android:label="Send Message"
+        android:label="@string/label_send_message"
         tools:layout="@layout/fragment_send_message"/>
 
     <fragment
         android:id="@+id/settings_fragment"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.SettingsFragment"
-        android:label="Settings" />
+        android:label="@string/label_settings" />
 
     <activity
         android:id="@+id/main_activity"
@@ -121,7 +121,7 @@
     <fragment
         android:id="@+id/nav_privacy"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.privacy.PrivacyFragment"
-        android:label="@string/privacy"
+        android:label="@string/label_privacy"
         tools:layout="@layout/fragment_privacy" />
 
 

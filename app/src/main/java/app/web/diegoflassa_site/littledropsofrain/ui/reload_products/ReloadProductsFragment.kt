@@ -43,7 +43,7 @@ class ReloadProductsFragment : Fragment() {
     companion object {
         fun newInstance() = ReloadProductsFragment()
         private var worker : OneTimeWorkRequest? = null
-        private var DELAY_JOB_COMPLETED : Long = 30000
+        private var DELAY_JOB_COMPLETED : Long = 120000
     }
 
     override fun onCreateView(

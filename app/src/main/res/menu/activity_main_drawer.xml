@@ -25,12 +25,6 @@
             android:icon="@drawable/image_placeholder"
             android:visible="false"
             android:title="@string/menu_admin" >
-            <!--menu>
-                <group
-                    android:checkableBehavior="none"
-                    android:id="@+id/nav_admin_group_users">
-                </group>
-            </menu-->
         </item>
     </group>
 </menu>

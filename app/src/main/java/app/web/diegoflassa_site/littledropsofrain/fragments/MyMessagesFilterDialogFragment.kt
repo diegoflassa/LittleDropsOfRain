@@ -54,6 +54,7 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
             }
             binding.spinnerSort.isEnabled = !checked
         }
+        binding.switchMsgRead.isEnabled = false
         binding.switchMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             filters.read = checked
         }

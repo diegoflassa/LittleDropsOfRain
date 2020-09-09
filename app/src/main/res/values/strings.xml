@@ -135,8 +135,7 @@
         <item>@string/sort_by_creation_date</item>
         <item>@string/sort_by_read</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="label_send_message">Send Message</string>
     <string name="label_settings">Settings</string>
     <string name="label_privacy">Privacy Policy</string>

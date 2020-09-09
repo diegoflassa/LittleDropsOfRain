@@ -71,6 +71,7 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
             }
             binding.spinnerSort.isEnabled = !checked
         }
+        binding.switchMsgRead.isEnabled = false
         binding.switchMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             filters.read = checked
         }
