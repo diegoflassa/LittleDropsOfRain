@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             updateUI(it)
         })
         setContentView(binding.root)
+
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

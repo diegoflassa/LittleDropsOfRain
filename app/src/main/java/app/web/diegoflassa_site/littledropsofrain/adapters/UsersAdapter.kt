@@ -4,24 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.CompoundButton
+import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.switchmaterial.SwitchMaterial
+import app.web.diegoflassa_site.littledropsofrain.MyApplication
+import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
+import app.web.diegoflassa_site.littledropsofrain.data.entities.User
+import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemUserBinding
+import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
+import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataFailureListener
+import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
+import app.web.diegoflassa_site.littledropsofrain.ui.users.UsersFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.squareup.picasso.Picasso
-import app.web.diegoflassa_site.littledropsofrain.MyApplication
-import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
-import app.web.diegoflassa_site.littledropsofrain.data.entities.User
-import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
-import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataFailureListener
-import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
-import app.web.diegoflassa_site.littledropsofrain.ui.users.UsersFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,8 +43,8 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(inflater.inflate(R.layout.recyclerview_item_user, parent,false))
+        val binding = RecyclerviewItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(
@@ -61,18 +62,13 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
             }
          }
         mOnCheckChangeListener = listener
-        holder.userIsAdmin.setOnCheckedChangeListener(mOnCheckChangeListener)
+        holder.binding.userIsAdmin.setOnCheckedChangeListener(mOnCheckChangeListener)
     }
 
     class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
+        val binding = RecyclerviewItemUserBinding.bind(itemView)
         private val ioScope = CoroutineScope(Dispatchers.IO)
-        private val userImage: ImageView = itemView.findViewById(R.id.user_picture)
-        private val userName: TextView = itemView.findViewById(R.id.user_name)
-        private val userEmail: TextView = itemView.findViewById(R.id.user_email)
-        private val buttonReply: ImageButton = itemView.findViewById(R.id.btn_reply_user)
-        private val buttonDelete: ImageButton = itemView.findViewById(R.id.btn_delete_user)
-        val userIsAdmin: SwitchMaterial = itemView.findViewById(R.id.user_is_admin)
 
         fun bind(
             snapshot: DocumentSnapshot,
@@ -83,29 +79,29 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
             val resources = itemView.resources
 
             // Load image
-            Picasso.get().load(user?.imageUrl).placeholder(R.drawable.image_placeholder).into(userImage)
-            userName.text = resources.getString(R.string.rv_user_name, user?.name)
-            userEmail.text = resources.getString(R.string.rv_user_email, user?.email)
-            userIsAdmin.text = resources.getString(R.string.rv_user_is_admin)
-            userIsAdmin.isChecked = user?.isAdmin!!
-            buttonDelete.setOnClickListener {
+            Picasso.get().load(user?.imageUrl).placeholder(R.drawable.image_placeholder).into(binding.userPicture)
+            binding.userName.text = resources.getString(R.string.rv_user_name, user?.name)
+            binding.userEmail.text = resources.getString(R.string.rv_user_email, user?.email)
+            binding.userIsAdmin.text = resources.getString(R.string.rv_user_is_admin)
+            binding.userIsAdmin.isChecked = user?.isAdmin!!
+            binding.btnDeleteUser.setOnClickListener {
                 ioScope.launch {
                     UserDao.delete(user)
                 }
             }
 
-            buttonReply.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
-            buttonReply.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_envelope))
-            buttonReply.setOnClickListener {
+            binding.btnReplyUser.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
+            binding.btnReplyUser.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_envelope))
+            binding.btnReplyUser.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
                 itemView.findNavController().navigate(R.id.send_message_fragment, bundle)
             }
 
-            buttonDelete.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_trash))
+            binding.btnDeleteUser.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_trash))
 
-            userIsAdmin.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
-            buttonDelete.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
+            binding.userIsAdmin.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
+            binding.btnDeleteUser.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
 
             // Click listener
             if(user.email != FirebaseAuth.getInstance().currentUser?.email) {

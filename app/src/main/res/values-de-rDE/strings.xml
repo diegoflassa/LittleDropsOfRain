@@ -88,4 +88,9 @@
     <string name="label_settings">die Einstellungen</string>
     <string name="label_privacy">Datenschutz-Bestimmungen</string>
     <string name="label_all_messages">Alle Nachrichten</string>
+    <string name="message_type_message">Botschaft</string>
+    <string name="message_type_notification">Benachrichtigung</string>
+    <string name="message_type_any">Irgendein</string>
+    <string name="and_filter">" und "</string>
+    <string name="message_type">Nachrichtentyp</string>
 </resources>

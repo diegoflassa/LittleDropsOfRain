@@ -116,30 +116,14 @@
     <string name="please_select_a_topic">Please select a Topic</string>
     <string name="menu_all_messages">All Messages</string>
     <string name="privacy">Privacy</string>
-
-    <!-- Price filters -->
-    <string-array name="prices" translatable="false">
-        <item>@string/value_any_price</item>
-
-        <item>@string/price_1</item>
-        <item>@string/price_2</item>
-        <item>@string/price_3</item>
-    </string-array>
-
-    <!-- Ways you can sort restaurants -->
-    <string-array name="products_sort_by">
-        <item>@string/sort_by_price</item>
-    </string-array>
-
-    <string-array name="messages_sort_by">
-        <item>@string/sort_by_creation_date</item>
-        <item>@string/sort_by_read</item>
-    </string-array>
-
     <string name="label_send_message">Send Message</string>
     <string name="label_settings">Settings</string>
     <string name="label_privacy">Privacy Policy</string>
     <string name="label_all_messages">All Messages</string>
+    <string name="message_type_message">Message</string>
+    <string name="message_type_notification">Notification</string>
+    <string name="message_type_any">Any</string>
+    <string name="and_filter">" and "</string>
+    <string name="message_type">Message Type</string>
 
-    <!-- Sync Preferences -->
 </resources>

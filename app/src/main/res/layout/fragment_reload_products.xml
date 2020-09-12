@@ -42,7 +42,8 @@
         android:src="@android:drawable/ic_menu_rotate"
         app:layout_constraintBottom_toBottomOf="@+id/chkbx_remove_not_found_products"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/chkbx_remove_not_found_products" />
+        app:layout_constraintTop_toTopOf="@+id/chkbx_remove_not_found_products"
+        android:focusable="true" />
 
     <!-- Progress bar -->
     <ProgressBar

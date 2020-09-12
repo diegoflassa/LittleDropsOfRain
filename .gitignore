@@ -110,3 +110,5 @@ app/google-services.json
 Little Drops Of Rain3.zip
 Little Drops Of Rain 4.7z
 app/src/main/res/raw/littledropsofrain_site_firebase_adminsdk_9dvd0_c718bc2981.json
+app/release/
+gradle.properties

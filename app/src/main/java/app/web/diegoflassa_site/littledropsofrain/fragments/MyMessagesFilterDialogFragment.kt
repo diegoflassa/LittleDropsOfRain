@@ -11,9 +11,12 @@ import com.google.firebase.firestore.Query
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
+import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMyMessagesFiltersBinding
+import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.ui.messages.MessagesFragment
+import java.util.*
 
 /**
  * Dialog Fragment containing filter form.
@@ -30,7 +33,6 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
     }
 
     private var messagesFragment : MessagesFragment = fragment
-    private var mSortSpinner: Spinner? = null
     var filterListener: FilterListener? = null
     var binding: FragmentMyMessagesFiltersBinding by viewLifecycle()
     private var mRootView : View?= null
@@ -41,8 +43,6 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMyMessagesFiltersBinding.inflate(inflater, container, false)
-        mSortSpinner = binding.spinnerSort
-        //binding.iconUsers.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_users))
         binding.buttonSearchMessages.setOnClickListener(this)
         binding.buttonCancelMessages.setOnClickListener(this)
         binding.checkBoxMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
@@ -96,7 +96,7 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
     private val selectedSortBy: String?
         get() {
             if(mRootView!=null&&!isDetached) {
-                return when (mSortSpinner!!.selectedItem as String) {
+                return when (binding.spinnerSort.selectedItem as String) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
                         return Message.CREATION_DATE
@@ -121,10 +121,25 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
             return null
         }
 
+    private val selectedType: MessageType?
+        get() {
+            if(mRootView!=null&&!isDetached) {
+                return if(binding.spinnerType.selectedItemPosition>0) {
+                    MessageType.valueOf(
+                        binding.spinnerType.selectedItem.toString()
+                            .toUpperCase(Locale.ROOT)
+                    )
+                }else{
+                    null
+                }
+            }
+            return null
+        }
+
     private val sortDirection: Query.Direction?
         get() {
             if(mRootView!=null&&!isDetached) {
-                return when (mSortSpinner!!.selectedItem as String) {
+                return when (binding.spinnerSort.selectedItem as String) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
                         return Query.Direction.DESCENDING
@@ -140,8 +155,9 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
         }
 
     fun resetFilters() {
-        if(mRootView!=null&&!isDetached) {
-            mSortSpinner!!.setSelection(0)
+        if(isSafeToAccessViewModel()) {
+            binding.spinnerSort.setSelection(0)
+            binding.spinnerType.setSelection(0)
         }
     }
 
@@ -150,6 +166,7 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
             val filters =
                 MyMessagesFilters()
             filters.read = selectedRead
+            filters.type = selectedType
             filters.sortBy = selectedSortBy
             filters.sortDirection = sortDirection
             return filters

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentInstagramBinding
+import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.InstagramViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.InstagramViewState
@@ -83,7 +84,9 @@ class InstagramFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle){
         super.onSaveInstanceState(outState)
-        binding.webviewInstagram.saveState(outState)
+        if (isSafeToAccessViewModel() && !isStopped) {
+            binding.webviewInstagram.saveState(outState)
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -138,7 +141,7 @@ class InstagramFragment : Fragment() {
     }
 
     fun hideProgressDialog(){
-        if(!isStopped) {
+        if (isSafeToAccessViewModel() && !isStopped) {
             binding.instagramProgress.visibility = View.GONE
         }
     }

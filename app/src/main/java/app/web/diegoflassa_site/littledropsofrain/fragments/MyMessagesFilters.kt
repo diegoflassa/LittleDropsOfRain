@@ -6,12 +6,14 @@ import com.google.firebase.firestore.Query
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
+import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 
 /**
  * Object for passing filters around.
  */
 class MyMessagesFilters {
     var read: Boolean? = null
+    var type: MessageType? = null
     var sortBy: String? = null
     var sortDirection: Query.Direction? = null
 
@@ -20,19 +22,28 @@ class MyMessagesFilters {
         return (read!=null)
     }
 
+    fun hasMessageType(): Boolean {
+        return ((type!=null)&&(type!=MessageType.UNKNOWN))
+    }
+
     fun hasSortBy(): Boolean {
         return !TextUtils.isEmpty(sortBy)
     }
 
     fun getSearchDescription(): String {
         val desc = StringBuilder()
-        desc.append("<b>")
-        desc.append(
-            MyApplication.getContext()
+        if (hasMessageType()) {
+            desc.append("<b>")
+            desc.append(type.toString())
+            desc.append("</b>")
+        }else{
+            desc.append("<b>")
+            desc.append(MyApplication.getContext()
                 .getString(R.string.all))
-        desc.append("</b>")
+            desc.append("</b>")
+        }
 
-        if (read != null) {
+        if (hasRead()) {
             desc.append(MyApplication.getContext().getString(R.string.for_filter))
             desc.append("<b>")
             var yesNoRead=MyApplication.getContext().getString(R.string.no)
@@ -67,6 +78,7 @@ class MyMessagesFilters {
                 val filters =
                     MyMessagesFilters()
                 filters.read = null
+                filters.type = MessageType.UNKNOWN
                 filters.sortBy = Message.CREATION_DATE
                 filters.sortDirection = Query.Direction.DESCENDING
                 return filters

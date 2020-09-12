@@ -8,6 +8,8 @@ import com.google.firebase.firestore.Query
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataFailureListener
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.QuerySnapshot
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -20,9 +22,9 @@ object MessageDao {
     const val COLLECTION_PATH: String = "messages"
     private val db : WeakReference<FirebaseFirestore> = WeakReference(FirebaseFirestore.getInstance())
 
-    fun loadAll(listener: OnDataChangeListener<List<Message>>){
+    fun loadAll(listener: OnDataChangeListener<List<Message>>): Task<QuerySnapshot>? {
         val messages: MutableList<Message> = ArrayList()
-       db.get()?.collection(COLLECTION_PATH)?.orderBy("creationDate", Query.Direction.DESCENDING)
+        return db.get()?.collection(COLLECTION_PATH)?.orderBy("creationDate", Query.Direction.DESCENDING)
            ?.get()
            ?.addOnSuccessListener { result ->
                 var message : Message
@@ -40,10 +42,10 @@ object MessageDao {
             }
     }
 
-    fun loadAllByIds(messageIds: List<String>, listener: OnDataChangeListener<List<Message>>) {
+    fun loadAllByIds(messageIds: List<String>, listener: OnDataChangeListener<List<Message>>): Task<QuerySnapshot>? {
         val messages: MutableList<Message> = ArrayList()
         val itemsRef =db.get()?.collection(COLLECTION_PATH)
-        itemsRef?.get()?.addOnCompleteListener { task ->
+        return itemsRef?.get()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 var message: Message
                 for (document in task.result) {
@@ -60,9 +62,9 @@ object MessageDao {
         }
     }
 
-    fun findByContent(content: String, listener: OnDataChangeListener<List<Message>>) {
+    fun findByContent(content: String, listener: OnDataChangeListener<List<Message>>): Task<QuerySnapshot>? {
         val messages: MutableList<Message> = ArrayList()
-       db.get()?.collection(COLLECTION_PATH)
+        return db.get()?.collection(COLLECTION_PATH)
            ?.get()
            ?.addOnSuccessListener { result ->
                 var message : Message
@@ -81,10 +83,10 @@ object MessageDao {
            }
     }
 
-    fun findByCreationDate(date: Date, listener: OnDataChangeListener<List<Message>>) {
+    fun findByCreationDate(date: Date, listener: OnDataChangeListener<List<Message>>): Task<QuerySnapshot>? {
         val creationDate= Timestamp(date)
         val messages: MutableList<Message> = ArrayList()
-       db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("creationDate", creationDate)
+        return db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("creationDate", creationDate)
            ?.get()
            ?.addOnSuccessListener { result ->
                 var message : Message
@@ -101,9 +103,9 @@ object MessageDao {
             }
     }
 
-    fun findByRead(read: Boolean, listener: OnDataChangeListener<List<Message>>) {
+    fun findByRead(read: Boolean, listener: OnDataChangeListener<List<Message>>): Task<QuerySnapshot>? {
         val messages: MutableList<Message> = ArrayList()
-       db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("read", read.toString())
+        return db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("read", read.toString())
            ?.get()
            ?.addOnSuccessListener { result ->
                 var message : Message
@@ -122,19 +124,21 @@ object MessageDao {
 
     fun insertAll(vararg messages: Message,
                   onSuccessListener: OnDataChangeListener<DocumentReference>? = null,
-                  onFailureListener: OnDataFailureListener<Exception>? = null) {
+                  onFailureListener: OnDataFailureListener<Exception>? = null) : ArrayList<Task<DocumentReference>?> {
+        val tasks = ArrayList<Task<DocumentReference>?>()
         for( message in messages) {
-            insert(message, onSuccessListener, onFailureListener)
+            tasks.add(insert(message, onSuccessListener, onFailureListener))
         }
+        return tasks
     }
 
     fun insert(
         message: Message,
         onSuccessListener: OnDataChangeListener<DocumentReference>? = null,
         onFailureListener: OnDataFailureListener<Exception>? = null
-    ) {
+    ): Task<DocumentReference>? {
         val data = message.toMap()
-       db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener{
+        return db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener{
             onSuccessListener?.onDataLoaded(it)
         }?.addOnFailureListener{
             onFailureListener?.onDataFailure(it)
@@ -145,19 +149,19 @@ object MessageDao {
         message: Message,
         onSuccessListener: OnDataChangeListener<Void?>? = null,
         onFailureListener: OnDataFailureListener<Exception>? = null
-    ) {
+    ): Task<Void>? {
         val data = message.toMap()
-       db.get()?.collection(COLLECTION_PATH)?.document(message.uid.toString())?.set(data)?.addOnSuccessListener{
+        return db.get()?.collection(COLLECTION_PATH)?.document(message.uid.toString())?.set(data)?.addOnSuccessListener{
             onSuccessListener?.onDataLoaded(it)
         }?.addOnFailureListener{
             onFailureListener?.onDataFailure(it)
         }
     }
 
-    fun delete(message: Message?) {
-       db.get()?.collection(COLLECTION_PATH)?.document(message?.uid.toString())?.delete()?.addOnSuccessListener {
+    fun delete(message: Message?): Task<Void>? {
+       return db.get()?.collection(COLLECTION_PATH)?.document(message?.uid.toString())?.delete()?.addOnSuccessListener {
             Log.i(TAG, "Message ${message?.uid} deleted successfully")
-        }
+       }
     }
 
     fun deleteAll() {

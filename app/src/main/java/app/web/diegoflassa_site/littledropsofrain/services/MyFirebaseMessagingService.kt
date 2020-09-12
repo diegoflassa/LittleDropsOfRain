@@ -3,8 +3,12 @@ package app.web.diegoflassa_site.littledropsofrain.services
 import android.util.Log
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
+import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
+import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
+import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.workers.MyWorker
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -37,7 +41,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val notification: RemoteMessage.Notification? = remoteMessage.notification
         if (notification != null) {
-            notification.body?.let { sendNotification(remoteMessage) }
+            notification.body?.let { handleNotification(remoteMessage) }
         }
 
         // TODO(developer): Handle FCM messages here.
@@ -98,7 +102,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      */
     private fun handleNow(remoteMessage: RemoteMessage) {
         Log.d(TAG, "Short lived task is done.")
-        sendNotification(remoteMessage)
+        handleNotification(remoteMessage)
     }
 
     /**
@@ -119,7 +123,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      *
      * @param remoteMessage FCM message body received.
      */
-    private fun sendNotification(remoteMessage: RemoteMessage) {
+    private fun handleNotification(remoteMessage: RemoteMessage) {
         val notificationTitle : String
         val notificationBody : String
         if(remoteMessage.data.isNotEmpty()){
@@ -129,6 +133,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationTitle = remoteMessage.notification!!.title.toString()
             notificationBody = remoteMessage.notification!!.body.toString()
         }
-        Helper.sendNotification(this, notificationTitle, notificationBody)
+        val messageToSave = Message()
+        messageToSave.type = MessageType.NOTIFICATION.toString()
+        messageToSave.owners.add(FirebaseAuth.getInstance().currentUser?.email!!)
+        messageToSave.message = notificationTitle + System.lineSeparator() + notificationBody
+        MessageDao.insert(messageToSave)
+        Helper.showNotification(this, notificationTitle, notificationBody)
     }
 }

@@ -4,17 +4,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
+import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemProductBinding
+import app.web.diegoflassa_site.littledropsofrain.ui.home.HomeFragment
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.squareup.picasso.Picasso
-import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
-import app.web.diegoflassa_site.littledropsofrain.ui.home.HomeFragment
 import java.text.DecimalFormatSymbols
 
 open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?, private val mListener: OnProductSelectedListener)
@@ -28,9 +26,8 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(homeFragment, inflater.inflate(R.layout.recyclerview_item_product, parent,false)
-        )
+        val binding = RecyclerviewItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(homeFragment, binding.root)
     }
 
     override fun onBindViewHolder(
@@ -42,11 +39,7 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
 
     class ViewHolder(private var homeFragment : HomeFragment, itemView: View) :
         RecyclerView.ViewHolder(itemView), CompoundButton.OnCheckedChangeListener {
-        private val productImage: ImageView = itemView.findViewById(R.id.picture)
-        private val productTitle: TextView = itemView.findViewById(R.id.title)
-        private val productChipCategories: ChipGroup = itemView.findViewById(R.id.chipCategories)
-        private val productDisponibility: TextView = itemView.findViewById(R.id.disponibility)
-        private val productPrice: TextView = itemView.findViewById(R.id.price)
+        val binding = RecyclerviewItemProductBinding.bind(itemView)
 
         fun bind(
             snapshot: DocumentSnapshot,
@@ -57,10 +50,10 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
             val resources = itemView.resources
 
             // Load image
-            Picasso.get().load(product?.imageUrl).placeholder(R.drawable.image_placeholder).into(productImage)
-            productTitle.text = resources.getString(R.string.rv_title, product?.title)
+            Picasso.get().load(product?.imageUrl).placeholder(R.drawable.image_placeholder).into(binding.picture)
+            binding.title.text = resources.getString(R.string.rv_title, product?.title)
             var chipCategory : Chip
-            productChipCategories.removeAllViews()
+            binding.chipCategories.removeAllViews()
             for(category in product?.categories!!) {
                 if(category.isNotEmpty()) {
                     chipCategory = Chip(itemView.context)
@@ -68,13 +61,13 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
                     chipCategory.isChecked = homeFragment.mFilterDialog!!.mCategories.contains(category)
                     chipCategory.text = category
                     chipCategory.setOnCheckedChangeListener(this)
-                    productChipCategories.addView(chipCategory)
+                    binding.chipCategories.addView(chipCategory)
                 }
             }
-            productDisponibility.text = resources.getString(R.string.rv_disponibility,  product.disponibility)
+            binding.disponibility.text = resources.getString(R.string.rv_disponibility,  product.disponibility)
             var priceStr= (product.price?.div(100)).toString()
             priceStr+= DecimalFormatSymbols.getInstance().decimalSeparator +"00"
-            productPrice.text = resources.getString(R.string.rv_price, priceStr)
+            binding.price.text = resources.getString(R.string.rv_price, priceStr)
 
             // Click listener
             itemView.setOnClickListener { listener?.onProductSelected(snapshot) }

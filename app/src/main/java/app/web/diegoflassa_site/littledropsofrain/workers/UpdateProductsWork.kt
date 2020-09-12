@@ -9,7 +9,9 @@ import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.work.*
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
@@ -18,7 +20,10 @@ import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnProductInsertedListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnTaskFinishedListener
 import app.web.diegoflassa_site.littledropsofrain.xml.ProductParser
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 
 @Suppress("DeferredResultUnused")
 class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
@@ -55,7 +60,6 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
             ),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-
         val builder = NotificationCompat.Builder(appContext, PRIMARY_CHANNEL_ID)
             .setContentTitle(appContext.getString(R.string.worker_scheduled))
             .setContentText(appContext.getString(R.string.worker_running))

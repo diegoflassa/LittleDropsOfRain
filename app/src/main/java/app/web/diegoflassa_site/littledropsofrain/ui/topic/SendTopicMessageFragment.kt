@@ -100,7 +100,7 @@ class SendTopicMessageFragment : Fragment() {
             }
         }
         binding.fabPreviewTopicMessage.setOnClickListener {
-            Helper.sendNotification(requireContext(), binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
+            Helper.showNotification(requireContext(), binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
         }
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {

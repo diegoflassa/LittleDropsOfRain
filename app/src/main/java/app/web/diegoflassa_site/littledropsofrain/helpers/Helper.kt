@@ -118,7 +118,7 @@ class Helper {
          * @param title Title of the message to be sent
          * @param body Body of the message to be sent
          */
-        fun sendNotification(context: Context, title: String, body: String) {
+        fun showNotification(context: Context, title: String, body: String) {
             val intent = Intent(context, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             val pendingIntent = PendingIntent.getActivity(

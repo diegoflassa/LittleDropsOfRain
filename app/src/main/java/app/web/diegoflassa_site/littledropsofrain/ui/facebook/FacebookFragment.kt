@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentFacebookBinding
+import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.FacebookViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.FacebookViewState
@@ -81,7 +82,9 @@ class FacebookFragment : Fragment() {
 
     override fun onSaveInstanceState(outState : Bundle){
         super.onSaveInstanceState(outState)
-        binding.webviewFacebook.saveState(outState)
+        if (isSafeToAccessViewModel() && !isStopped) {
+            binding.webviewFacebook.saveState(outState)
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -138,8 +141,9 @@ class FacebookFragment : Fragment() {
     }
 
     fun hideProgressDialog(){
-        if(!isStopped) {
+        if (isSafeToAccessViewModel() && !isStopped) {
             binding.facebookProgress.visibility = View.GONE
         }
     }
 }
+

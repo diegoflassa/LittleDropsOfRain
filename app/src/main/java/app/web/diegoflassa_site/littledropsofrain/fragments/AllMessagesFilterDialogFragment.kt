@@ -12,6 +12,7 @@ import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
+import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAllMessagesFiltersBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
@@ -21,6 +22,8 @@ import app.web.diegoflassa_site.littledropsofrain.ui.all_messages.AllMessagesFra
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Dialog Fragment containing filter form.
@@ -37,8 +40,6 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
     }
 
     private var adminFragment : AllMessagesFragment = fragment
-    private var mSortSpinner: Spinner? = null
-    private var mUsersSpinner: Spinner? = null
     var filterListener: FilterListener? = null
     val viewModel: AllMessagesFilterDialogViewModel by viewModels()
     var binding: FragmentAllMessagesFiltersBinding by viewLifecycle()
@@ -52,8 +53,6 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
     ): View? {
         mSavedInstanceState = savedInstanceState
         binding = FragmentAllMessagesFiltersBinding.inflate(inflater, container, false)
-        mSortSpinner = binding.spinnerSort
-        mUsersSpinner = binding.spinnerUsers
         binding.iconUsers.setImageDrawable(
             IconDrawable(
                 requireContext(),
@@ -114,7 +113,7 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
     private val selectedSortBy: String?
         get() {
             if(mRootView!=null&&!isDetached) {
-                return when (mSortSpinner!!.selectedItem as String) {
+                return when (binding.spinnerSort.selectedItem as String) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
                         return Message.CREATION_DATE
@@ -124,6 +123,21 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
                         return Message.READ
                     }
                     else -> null
+                }
+            }
+            return null
+        }
+
+    private val selectedType: MessageType?
+        get() {
+            if(mRootView!=null&&!isDetached) {
+                return if(binding.spinnerType.selectedItemPosition>0) {
+                    MessageType.valueOf(
+                        binding.spinnerType.selectedItem.toString()
+                            .toUpperCase(Locale.ROOT)
+                    )
+                }else{
+                    null
                 }
             }
             return null
@@ -142,8 +156,8 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
     private val selectedEmailSender: String?
         get() {
             if(mRootView!=null&&!isDetached) {
-                return if (mUsersSpinner!!.selectedItemPosition > 0) {
-                    return (mUsersSpinner!!.selectedItem as User).email
+                return if (binding.spinnerUsers.selectedItemPosition > 0) {
+                    return (binding.spinnerUsers.selectedItem as User).email
                 } else null
             }
             return null
@@ -152,7 +166,7 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
     private val sortDirection: Query.Direction?
         get() {
             if(mRootView!=null&&!isDetached) {
-                return when (mSortSpinner!!.selectedItem as String) {
+                return when (binding.spinnerSort.selectedItem as String) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
                         return Query.Direction.DESCENDING
@@ -169,8 +183,9 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
 
     fun resetFilters() {
         if(mRootView!=null&&!isDetached) {
-            mUsersSpinner!!.setSelection(0)
-            mSortSpinner!!.setSelection(0)
+            binding.spinnerUsers.setSelection(0)
+            binding.spinnerSort.setSelection(0)
+            binding.spinnerType.setSelection(0)
         }
     }
 
@@ -180,6 +195,7 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
                 AllMessagesFilters()
             filters.read = selectedRead
             filters.emailSender = selectedEmailSender
+            filters.type = selectedType
             filters.sortBy = selectedSortBy
             filters.sortDirection = sortDirection
             return filters

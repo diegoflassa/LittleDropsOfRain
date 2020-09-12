@@ -7,3 +7,8 @@ fun Fragment?.runOnUiThread(action: () -> Unit) {
     if (!isAdded) return // Fragment not attached to an Activity
     activity?.runOnUiThread(action)
 }
+
+fun Fragment?.isSafeToAccessViewModel(): Boolean {
+    this ?: return false
+    return  (!isRemoving && !isDetached && isAdded)
+}

@@ -10,7 +10,7 @@ class SendMessageViewState : LiveData<SendMessageViewState>(){
     enum class SendMethod(private val method : String){
         MESSAGE("message"),
         EMAIL("email"),
-        UNKNOWN("Unknown");
+        UNKNOWN("unknown");
 
         override fun toString(): String {
             return method

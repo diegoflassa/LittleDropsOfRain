@@ -140,10 +140,16 @@ class MessagesFragment : Fragment(),
         users.add(FirebaseAuth.getInstance().currentUser?.email!!)
         query = query.whereArrayContainsAny(Message.OWNERS, users)
 
-        // Category (equality filter)
+        // Message Type (equality filter)
+        if (filters.hasMessageType()) {
+            query = query.whereEqualTo(Message.TYPE, filters.type.toString())
+        }
+
+        // Read (equality filter)
         if (filters.hasRead()) {
             query = query.whereEqualTo(Message.READ, filters.read)
         }
+
         /*
         // City (equality filter)
         if (filters.hasCity()) {

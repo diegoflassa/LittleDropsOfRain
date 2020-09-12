@@ -6,12 +6,14 @@ import com.google.firebase.firestore.Query
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
+import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 
 /**
  * Object for passing filters around.
  */
 class AllMessagesFilters {
     var read: Boolean? = null
+    var type: MessageType? = null
     var emailSender: String? = null
     var sortBy: String? = null
     var sortDirection: Query.Direction? = null
@@ -24,20 +26,33 @@ class AllMessagesFilters {
         return (read!=null)
     }
 
+    fun hasMessageType(): Boolean {
+        return ((type!=null)&&(type!=MessageType.UNKNOWN))
+    }
+
     fun hasSortBy(): Boolean {
         return !TextUtils.isEmpty(sortBy)
     }
 
     fun getSearchDescription(): String {
         val desc = StringBuilder()
-        if (emailSender != null) {
+        if(hasMessageType()){
+            desc.append("<b>")
+            desc.append(type.toString())
+            desc.append("</b>")
+        }
+        if (hasEMailSender()) {
+            if(desc.count()>0) {
+                desc.append(MyApplication.getContext().getString(R.string.and_filter))
+            }
             desc.append("<b>")
             desc.append(
                 MyApplication.getContext()
                     .getString(R.string.email_sender)
             )
             desc.append("</b>")
-        }else{
+        }
+        if(desc.count()==0){
             desc.append("<b>")
             desc.append(
                 MyApplication.getContext()
@@ -45,7 +60,7 @@ class AllMessagesFilters {
             desc.append("</b>")
         }
 
-        if (read != null) {
+        if (hasRead()) {
             desc.append(MyApplication.getContext().getString(R.string.for_filter))
             desc.append("<b>")
             var yesNoRead=MyApplication.getContext().getString(R.string.no)
@@ -83,6 +98,7 @@ class AllMessagesFilters {
                 val filters =
                     AllMessagesFilters()
                 filters.read = null
+                filters.type = MessageType.UNKNOWN
                 filters.emailSender = null
                 filters.sortBy = Message.CREATION_DATE
                 filters.sortDirection = Query.Direction.DESCENDING

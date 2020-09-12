@@ -178,6 +178,11 @@ class AllMessagesFragment : Fragment(),
         var query: Query = mFirestore.collection(MessageDao.COLLECTION_PATH)
         query.orderBy(Message.CREATION_DATE, Query.Direction.DESCENDING)
 
+        // Message Type (equality filter)
+        if (filters.hasMessageType()) {
+            query = query.whereEqualTo( Message.TYPE, filters.type.toString())
+        }
+
         // Read (equality filter)
         if (filters.hasRead()) {
             query = query.whereEqualTo(Message.READ, filters.read)

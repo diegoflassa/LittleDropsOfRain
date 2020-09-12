@@ -19,6 +19,7 @@ import androidx.navigation.findNavController
 import androidx.work.*
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentReloadProductsBinding
+import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
 import app.web.diegoflassa_site.littledropsofrain.helpers.runOnUiThread
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.ReloadProductsViewModel
@@ -43,7 +44,7 @@ class ReloadProductsFragment : Fragment() {
     companion object {
         fun newInstance() = ReloadProductsFragment()
         private var worker : OneTimeWorkRequest? = null
-        private var DELAY_JOB_COMPLETED : Long = 120000
+        private var DELAY_JOB_COMPLETED : Long = 90000
     }
 
     override fun onCreateView(
@@ -160,6 +161,7 @@ class ReloadProductsFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         if(worker!=null) {
+            WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(worker!!.id).removeObserver(observer)
             WorkManager.getInstance(requireContext()).cancelWorkById(worker!!.id)
         }
         isStopped = true
@@ -179,7 +181,7 @@ class ReloadProductsFragment : Fragment() {
     }
 
     private fun updateUI(viewState: ReloadProductsViewState) {
-        if (!isRemoving && !isDetached && isAdded && !isStopped) {
+        if (isSafeToAccessViewModel() && !isStopped) {
             runOnUiThread {
                 // Update the UI
                 binding.mlTxtVwProgress.text = viewModel.viewState.progress.toString()

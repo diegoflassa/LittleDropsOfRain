@@ -19,6 +19,7 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
+import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendMessageBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
@@ -81,6 +82,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
                         message.replyUid = viewModel.viewState.replyUid
                         message.emailTo = viewModel.viewState.dest.email
                         message.message = binding.mltxtMessage.text.toString()
+                        message.type = MessageType.MESSAGE.toString()
                         message.senderId = viewModel.viewState.sender.uid
                         message.sender = viewModel.viewState.sender.email
                         message.read = false

@@ -10,6 +10,17 @@ import java.util.*
 
 
 @Keep
+enum class MessageType(private val method : String){
+    MESSAGE("message"),
+    NOTIFICATION("notification"),
+    UNKNOWN("Unknown");
+
+    override fun toString(): String {
+        return method
+    }
+}
+
+@Keep
 @Parcelize
 @Suppress("Unchecked_Cast")
 data class Message (
@@ -21,6 +32,7 @@ data class Message (
     var sender : String? = FirebaseAuth.getInstance().currentUser!!.displayName,
     var senderId : String? = FirebaseAuth.getInstance().currentUser!!.uid,
     var message : String? = null,
+    var type : String? = null,
     @ServerTimestamp
     var creationDate : Timestamp? = Timestamp.now(),
     var read : Boolean? = false
@@ -35,6 +47,7 @@ data class Message (
         private const val SENDER= "sender"
         private const val SENDER_ID= "senderId"
         private const val MESSAGE= "message"
+        const val TYPE= "type"
         const val CREATION_DATE= "creationDate"
         const val READ= "read"
     }
@@ -53,6 +66,7 @@ data class Message (
         result[SENDER] = sender
         result[SENDER_ID] = senderId
         result[MESSAGE] = message
+        result[TYPE] = type
         result[CREATION_DATE] = creationDate
         result[READ] = read
         return result
@@ -67,6 +81,7 @@ data class Message (
         sender = map[SENDER] as String?
         senderId = map[SENDER_ID] as String?
         message = map[MESSAGE] as String?
+        type = map[TYPE] as String?
         creationDate = map[CREATION_DATE] as Timestamp?
         read = map[READ] as Boolean?
     }
