@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package app.web.diegoflassa_site.littledropsofrain.data
 
 import android.content.Context
@@ -13,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 //DFL - Represents your APPs database.
+@Suppress("unused")
 @Database(entities = [IluriaProduct::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 

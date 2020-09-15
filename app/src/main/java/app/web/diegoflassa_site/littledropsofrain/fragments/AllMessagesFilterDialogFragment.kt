@@ -40,6 +40,9 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
     }
 
     private var adminFragment : AllMessagesFragment = fragment
+    private lateinit var mSpinnerUsers : Spinner
+    private lateinit var  mSpinnerSort : Spinner
+    private lateinit var  mSpinnerType : Spinner
     var filterListener: FilterListener? = null
     val viewModel: AllMessagesFilterDialogViewModel by viewModels()
     var binding: FragmentAllMessagesFiltersBinding by viewLifecycle()
@@ -59,6 +62,9 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
                 SimpleLineIconsIcons.icon_users
             ).colorRes(R.color.colorAccent)
         )
+        mSpinnerUsers = binding.spinnerUsers
+        mSpinnerSort = binding.spinnerSort
+        mSpinnerType = binding.spinnerType
         binding.buttonSearchMessages.setOnClickListener(this)
         binding.buttonCancelMessages.setOnClickListener(this)
         binding.checkBoxMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
@@ -183,9 +189,9 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
 
     fun resetFilters() {
         if(mRootView!=null&&!isDetached) {
-            binding.spinnerUsers.setSelection(0)
-            binding.spinnerSort.setSelection(0)
-            binding.spinnerType.setSelection(0)
+            mSpinnerUsers.setSelection(0)
+            mSpinnerSort.setSelection(0)
+            mSpinnerType.setSelection(0)
         }
     }
 

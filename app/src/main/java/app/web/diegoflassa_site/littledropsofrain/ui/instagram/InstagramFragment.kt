@@ -117,6 +117,7 @@ class InstagramFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        isStopped = false
         binding.webviewInstagram.resumeTimers()
         val prefs = requireContext().applicationContext.getSharedPreferences(
             requireContext().packageName,

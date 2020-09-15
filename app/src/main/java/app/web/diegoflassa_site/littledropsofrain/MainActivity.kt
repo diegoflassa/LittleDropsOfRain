@@ -23,7 +23,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import app.web.diegoflassa_site.littledropsofrain.auth.AuthActivityResultContract
+import app.web.diegoflassa_site.littledropsofrain.contracts.AuthActivityResultContract
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
@@ -330,6 +330,10 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
     override fun onUserFound(user: User?) {
         if (user != null) {
             currentUser = user
+            if(user.isAdmin){
+                Helper.requestReadInternalStoragePermission(this)
+                Helper.requestReadExternalStoragePermission(this)
+            }
             UserDao.insert(currentUser)
         }else if(FirebaseAuth.getInstance().currentUser!=null) {
             val userFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)

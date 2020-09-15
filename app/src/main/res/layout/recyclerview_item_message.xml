@@ -17,16 +17,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/msg_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/msg_creation_date"
+            app:layout_constraintDimensionRatio="2:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/image_placeholder"
+            android:contentDescription="@string/message_image" />
+
         <TextView
             android:id="@+id/msg_creation_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/msg_creation_date"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            tools:text="@tools:sample/date/ddmmyy"
+            android:text="@string/msg_creation_date"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/msg_image"
+            tools:text="@tools:sample/date/ddmmyy" />
 
         <TextView
             android:id="@+id/msg_sender"
@@ -91,10 +104,27 @@
             android:text="@string/msg_read"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
+            app:theme="@style/ColorSwitchStyle"
             app:layout_constraintBottom_toTopOf="@+id/btn_reply"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/msg_message" />
+
+        <ImageButton
+            android:id="@+id/btn_view_as_notification"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="@dimen/image_button"
+            android:layout_height="@dimen/image_button"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/button_delete"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:scaleType="fitXY"
+            app:icon="@drawable/image_placeholder"
+            app:iconGravity="textStart"
+            app:layout_constraintEnd_toStartOf="@+id/btn_delete"
+            app:layout_constraintTop_toBottomOf="@+id/msg_read"
+            tools:src="@drawable/image_placeholder" />
 
         <ImageButton
             android:id="@+id/btn_reply"

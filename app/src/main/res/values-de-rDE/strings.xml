@@ -93,4 +93,11 @@
     <string name="message_type_any">Irgendein</string>
     <string name="and_filter">" und "</string>
     <string name="message_type">Nachrichtentyp</string>
+    <string name="save">SPAREN</string>
+    <string name="saved">GERETTET</string>
+    <string name="notification_image">Benachrichtigungsbild</string>
+    <string name="file_upload_success">Datei erfolgreich hochgeladen</string>
+    <string name="file_upload_failure">Fehler beim Hochladen der Datei</string>
+    <string name="message_image">Nachrichtenbild</string>
+    <string name="logo_toolbar">Logo-Symbolleiste</string>
 </resources>

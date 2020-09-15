@@ -168,6 +168,7 @@ class ReloadProductsFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
+        isStopped = false
         updateUI(viewModel.viewState)
     }
 

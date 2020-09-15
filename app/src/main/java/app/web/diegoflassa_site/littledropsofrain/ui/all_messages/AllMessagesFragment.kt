@@ -145,6 +145,7 @@ class AllMessagesFragment : Fragment(),
 
     override fun onResume() {
         super.onResume()
+        isStopped = false
         updateUI(viewModel.viewState)
     }
 
@@ -236,7 +237,7 @@ class AllMessagesFragment : Fragment(),
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = WeakReference( object : MessageAdapter(mQuery, this@AllMessagesFragment) {
+        mAdapter = WeakReference( object : MessageAdapter(requireContext(), mQuery, this@AllMessagesFragment) {
             override fun onDataChanged() {
                 hideLoadingScreen()
                 // Show/hide content if the query returns empty.

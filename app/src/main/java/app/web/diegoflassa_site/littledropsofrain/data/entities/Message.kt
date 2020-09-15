@@ -1,5 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.data.entities
 
+import android.net.Uri
 import android.os.Parcelable
 import androidx.annotation.Keep
 import com.google.firebase.Timestamp
@@ -26,6 +27,7 @@ enum class MessageType(private val method : String){
 data class Message (
     var uid : String? = null,
     var replyUid : String? = null,
+    var imageUrl : String? = null,
     var owners : MutableList<String> = ArrayList(),
     var emailSender : String? = FirebaseAuth.getInstance().currentUser!!.email,
     var emailTo : String? = null,
@@ -41,6 +43,7 @@ data class Message (
     companion object {
         private const val UID= "uid"
         private const val REPLY_UID= "replyUid"
+        private const val IMAGE_URL= "imageUrl"
         const val EMAIL_SENDER= "emailSender"
         const val EMAIL_TO= "emailTo"
         const val OWNERS= "owners"
@@ -60,6 +63,7 @@ data class Message (
         val result: HashMap<String, Any?> = HashMap()
         result[UID] = uid
         result[REPLY_UID] = replyUid
+        result[IMAGE_URL] = imageUrl
         result[OWNERS] = owners
         result[EMAIL_SENDER] = emailSender
         result[EMAIL_TO] = emailTo
@@ -75,6 +79,7 @@ data class Message (
     private fun fromMap(map: Map<String, Any>){
         uid = map[UID] as String?
         replyUid = map[REPLY_UID] as String?
+        imageUrl = map[IMAGE_URL] as String?
         owners = map[OWNERS] as MutableList<String>
         emailSender = map[EMAIL_SENDER] as String?
         emailTo = map[EMAIL_TO] as String?
@@ -84,5 +89,9 @@ data class Message (
         type = map[TYPE] as String?
         creationDate = map[CREATION_DATE] as Timestamp?
         read = map[READ] as Boolean?
+    }
+
+    fun getImageUrlAsUri() : Uri {
+        return Uri.parse(imageUrl)
     }
 }

@@ -17,6 +17,11 @@
         <item name="android:textColorSecondaryInverse">@drawable/default_text_color_primary</item>
     </style>
 
+    <!-- SwitchButton -->
+    <style name="ColorSwitchStyle" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@android:color/darker_gray</item>
+    </style>
 
     <!-- ToolBar -->
     <style name="AppTheme.ActionBar" parent="AppTheme">

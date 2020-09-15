@@ -17,7 +17,26 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorAccent"
             app:theme="@style/AppTheme.ActionBar"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/toolbarimage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="13dp"
+                    android:contentDescription="@string/logo_toolbar"
+                    android:src="@mipmap/ic_notification_ud"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -1,79 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.topic.SendTopicMessageFragment"
-    android:tag="SendTopicMessageFragment">
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="0dp">
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/cpGrpTopics"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/paddingSmall"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="@dimen/paddingSmall"
-        android:layout_marginHorizontal="@dimen/paddingSmall"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:singleSelection="true">
+        tools:context=".ui.topic.SendTopicMessageFragment"
+        android:tag="SendTopicMessageFragment">
 
-    </com.google.android.material.chip.ChipGroup>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cpGrpTopics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/paddingSmall"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="@dimen/paddingSmall"
+            android:layout_marginHorizontal="@dimen/paddingSmall"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:singleSelection="true">
 
-    <EditText
-        android:id="@+id/edtTxtTitle"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginHorizontal="@dimen/paddingSmall"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/message_title"
-        android:inputType="textPersonName"
-        android:paddingHorizontal="@dimen/paddingSmall"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cpGrpTopics" />
+        </com.google.android.material.chip.ChipGroup>
 
-    <EditText
-        android:id="@+id/edtTxtMlMessage"
-        android:layout_width="0dp"
-        android:layout_height="175dp"
-        android:layout_marginTop="32dp"
-        android:autofillHints="@string/message_body"
-        android:background="@drawable/rounded_edittext_states"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="@string/message_body"
-        android:inputType="textMultiLine"
-        android:paddingHorizontal="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/edtTxtTitle"
-        app:layout_constraintStart_toStartOf="@+id/edtTxtTitle"
-        app:layout_constraintTop_toBottomOf="@+id/edtTxtTitle" />
+        <EditText
+            android:id="@+id/edtTxtTitle"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="@dimen/paddingSmall"
+            android:layout_marginTop="50dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/message_title"
+            android:inputType="textPersonName"
+            android:paddingHorizontal="@dimen/paddingSmall"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cpGrpTopics" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabSendTopicMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:layout_marginTop="@dimen/paddingSmall"
-        android:src="@android:drawable/ic_menu_send"
-        app:layout_constraintEnd_toEndOf="@+id/edtTxtMlMessage"
-        app:layout_constraintTop_toBottomOf="@+id/edtTxtMlMessage"
-        android:focusable="true" />
+        <ImageView
+            android:id="@+id/img_vw_Notification_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="@string/notification_image"
+            app:layout_constraintBottom_toTopOf="@+id/edtTxtMlMessage"
+            app:layout_constraintDimensionRatio="2:1"
+            app:layout_constraintEnd_toEndOf="@+id/edtTxtMlMessage"
+            app:layout_constraintStart_toStartOf="@+id/edtTxtMlMessage"
+            app:layout_constraintTop_toBottomOf="@+id/edtTxtTitle" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabPreviewTopicMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/paddingSmall"
-        android:clickable="true"
-        android:src="@android:drawable/ic_menu_view"
-        app:layout_constraintBottom_toBottomOf="@+id/fabSendTopicMessage"
-        app:layout_constraintEnd_toStartOf="@+id/fabSendTopicMessage"
-        app:layout_constraintTop_toTopOf="@+id/fabSendTopicMessage"
-        android:focusable="true" />
+        <EditText
+            android:id="@+id/edtTxtMlMessage"
+            android:layout_width="0dp"
+            android:layout_height="175dp"
+            android:layout_marginTop="16dp"
+            android:autofillHints="@string/message_body"
+            android:background="@drawable/rounded_edittext_states"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="@string/message_body"
+            android:inputType="textMultiLine"
+            android:paddingHorizontal="20dp"
+            app:layout_constraintEnd_toEndOf="@+id/edtTxtTitle"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/edtTxtTitle"
+            app:layout_constraintTop_toBottomOf="@+id/img_vw_Notification_image" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabSelectImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@android:drawable/ic_menu_gallery"
+            app:layout_constraintBottom_toBottomOf="@+id/fabPreviewTopicMessage"
+            app:layout_constraintEnd_toStartOf="@+id/fabPreviewTopicMessage"
+            app:layout_constraintTop_toTopOf="@+id/fabPreviewTopicMessage" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabSendTopicMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_marginTop="@dimen/paddingSmall"
+            android:src="@android:drawable/ic_menu_send"
+            app:layout_constraintEnd_toEndOf="@+id/edtTxtMlMessage"
+            app:layout_constraintTop_toBottomOf="@+id/edtTxtMlMessage"
+            android:focusable="true" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabPreviewTopicMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/paddingSmall"
+            android:clickable="true"
+            android:src="@android:drawable/ic_menu_view"
+            app:layout_constraintBottom_toBottomOf="@+id/fabSendTopicMessage"
+            app:layout_constraintEnd_toStartOf="@+id/fabSendTopicMessage"
+            app:layout_constraintTop_toTopOf="@+id/fabSendTopicMessage"
+            android:focusable="true" />
+
+        <!-- Progress bar -->
+        <ProgressBar
+            android:id="@+id/topic_message_progress"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="205dp"
+            android:layout_marginTop="366dp"
+            android:layout_marginEnd="206dp"
+            android:layout_marginBottom="365dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

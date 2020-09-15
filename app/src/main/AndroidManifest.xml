@@ -5,7 +5,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Include following permission if you load images from Internet -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Include following permission if you want to cache images on SD card -->
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- needed for pre-oreo devices -->
 
@@ -21,12 +23,18 @@
         android:theme="@style/AppTheme"
         tools:targetApi="N">
 
+        <receiver
+            android:name=".receivers.NotificationReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".ui.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -36,9 +44,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="littledropsofrain-site.web.app"
-                    android:pathPattern="/app" />
+                    android:pathPattern="/app"
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -47,9 +55,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="littledropsofrain.iluria.com"
-                    android:pathPattern="/app" />
+                    android:pathPattern="/app"
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -58,9 +66,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="littledropsofrain-site.web.app"
-                    android:pathPattern="/privacy" />
+                    android:pathPattern="/privacy"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -71,14 +79,16 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
-            android:theme="@style/AppTheme.ActionBar" />
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
             android:theme="@style/AppTheme.ActionBar" />
-
-        <!-- Fix Warning : activity#com.google.firebase.auth.internal.FederatedSignIn Activity ... -->
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/AppTheme.ActionBar" /> <!-- Fix Warning : activity#com.google.firebase.auth.internal.FederatedSignIn Activity ... -->
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
             android:launchMode="standard"
@@ -109,11 +119,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name=".services.SetupProductsUpdateWorkerService"
             android:enabled="true" />
-
     </application>
 
 </manifest>

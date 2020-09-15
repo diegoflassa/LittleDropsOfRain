@@ -1,5 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.services
 
+import android.net.Uri
 import android.util.Log
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
@@ -126,18 +127,19 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private fun handleNotification(remoteMessage: RemoteMessage) {
         val notificationTitle : String
         val notificationBody : String
+        var imageUri : Uri?
         if(remoteMessage.data.isNotEmpty()){
             notificationTitle = remoteMessage.data["title"].toString()
             notificationBody = remoteMessage.data["body"].toString()
+            imageUri = Uri.parse(remoteMessage.data["imageUri"].toString())
+            if(imageUri.toString().contains("null")){
+                imageUri = null
+            }
         }else{
             notificationTitle = remoteMessage.notification!!.title.toString()
             notificationBody = remoteMessage.notification!!.body.toString()
+            imageUri = remoteMessage.notification!!.imageUrl!!
         }
-        val messageToSave = Message()
-        messageToSave.type = MessageType.NOTIFICATION.toString()
-        messageToSave.owners.add(FirebaseAuth.getInstance().currentUser?.email!!)
-        messageToSave.message = notificationTitle + System.lineSeparator() + notificationBody
-        MessageDao.insert(messageToSave)
-        Helper.showNotification(this, notificationTitle, notificationBody)
+        Helper.showNotification(applicationContext, imageUri, remoteMessage.from!!, notificationTitle, notificationBody)
     }
 }

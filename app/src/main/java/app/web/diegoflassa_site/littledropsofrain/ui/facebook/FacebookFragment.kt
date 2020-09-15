@@ -115,6 +115,7 @@ class FacebookFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        isStopped = false
         binding.webviewFacebook.resumeTimers()
         val prefs = requireContext().applicationContext.getSharedPreferences(
             requireContext().packageName,

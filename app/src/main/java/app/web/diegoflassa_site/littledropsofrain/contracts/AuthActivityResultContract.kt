@@ -1,4 +1,4 @@
-package app.web.diegoflassa_site.littledropsofrain.auth
+package app.web.diegoflassa_site.littledropsofrain.contracts
 
 import android.content.Context
 import android.content.Intent

@@ -93,4 +93,11 @@
     <string name="message_type_any">Qualquer</string>
     <string name="and_filter">" e "</string>
     <string name="message_type">Tipo de Mensagem</string>
+    <string name="save">SALVAR</string>
+    <string name="saved">SALVA</string>
+    <string name="notification_image">Imagem da Notificação</string>
+    <string name="file_upload_success">Success uploading file</string>
+    <string name="file_upload_failure">Failure uploading file</string>
+    <string name="message_image">Imagem da Mensagem</string>
+    <string name="logo_toolbar">Logo da Barra de Ferramentas</string>
 </resources>

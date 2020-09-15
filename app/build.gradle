@@ -93,6 +93,9 @@ dependencies {
     // Licenses
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 
+    // UCrop
+    implementation 'com.github.yalantis:ucrop:2.2.6'
+
     // com.google.firebase
     implementation 'com.google.firebase:firebase-iid:20.2.4'
     // Add the Firebase SDK for Google Analytics
@@ -103,7 +106,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
     implementation 'com.google.firebase:firebase-appindexing:19.1.0'
     // Firebase Authentication (Kotlin)
-    implementation 'com.google.firebase:firebase-auth-ktx:19.3.2'
+    implementation 'com.google.firebase:firebase-auth-ktx:19.4.0'
     implementation 'com.google.firebase:firebase-crashlytics-ktx:17.2.1'
     implementation 'com.google.firebase:firebase-database-ktx:19.4.0'
     // Add the SDK for Firebase Cloud Messaging

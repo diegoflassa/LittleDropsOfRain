@@ -82,7 +82,8 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
                         message.replyUid = viewModel.viewState.replyUid
                         message.emailTo = viewModel.viewState.dest.email
                         message.message = binding.mltxtMessage.text.toString()
-                        message.type = MessageType.MESSAGE.toString()
+
+
                         message.senderId = viewModel.viewState.sender.uid
                         message.sender = viewModel.viewState.sender.email
                         message.read = false

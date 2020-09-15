@@ -13,7 +13,6 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMyMessagesFiltersBinding
-import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.ui.messages.MessagesFragment
 import java.util.*
@@ -33,6 +32,8 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
     }
 
     private var messagesFragment : MessagesFragment = fragment
+    private lateinit var  mSpinnerSort : Spinner
+    private lateinit var  mSpinnerType : Spinner
     var filterListener: FilterListener? = null
     var binding: FragmentMyMessagesFiltersBinding by viewLifecycle()
     private var mRootView : View?= null
@@ -54,6 +55,8 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
             }
             binding.spinnerSort.isEnabled = !checked
         }
+        mSpinnerSort = binding.spinnerSort
+        mSpinnerType = binding.spinnerType
         binding.switchMsgRead.isEnabled = false
         binding.switchMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             filters.read = checked
@@ -155,9 +158,9 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
         }
 
     fun resetFilters() {
-        if(isSafeToAccessViewModel()) {
-            binding.spinnerSort.setSelection(0)
-            binding.spinnerType.setSelection(0)
+        if(mRootView!=null&&!isDetached) {
+            mSpinnerSort.setSelection(0)
+            mSpinnerType.setSelection(0)
         }
     }
 

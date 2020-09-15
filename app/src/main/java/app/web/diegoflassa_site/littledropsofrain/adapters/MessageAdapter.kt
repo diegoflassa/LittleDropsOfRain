@@ -1,5 +1,7 @@
 package app.web.diegoflassa_site.littledropsofrain.adapters
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,9 +29,10 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-open class MessageAdapter(query: Query?, private val mListener: OnMessageSelectedListener)
+open class MessageAdapter(context : Context, query: Query?, private val mListener: OnMessageSelectedListener)
     : FirestoreAdapter<MessageAdapter.ViewHolder?>(query) {
 
+    private val mContext = context
     interface OnMessageSelectedListener {
         fun onMessageSelected(message: DocumentSnapshot?)
     }
@@ -39,7 +42,7 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
         viewType: Int
     ): ViewHolder {
         val binding = RecyclerviewItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding.root)
+        return ViewHolder(mContext, binding.root)
     }
 
     override fun onBindViewHolder(
@@ -49,8 +52,9 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
         holder.bind(getSnapshot(position), mListener)
     }
 
-    class ViewHolder(itemView: View) :
+    class ViewHolder(context : Context, itemView: View) :
         RecyclerView.ViewHolder(itemView) {
+        private val mContext = context
         val binding = RecyclerviewItemMessageBinding.bind(itemView)
         private val ioScope = CoroutineScope(Dispatchers.IO)
 
@@ -83,6 +87,8 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
             itemView.setOnClickListener { listener?.onMessageSelected(snapshot) }
             when(MessageType.valueOf(message?.type?.toUpperCase(Locale.ROOT)!!)){
                 MessageType.MESSAGE -> {
+                    binding.msgImage.visibility = View.GONE
+                    binding.btnViewAsNotification.visibility = View.GONE
                     when {
                         message.emailSender == FirebaseAuth.getInstance().currentUser?.email -> {
                             itemView.background = ContextCompat.getDrawable(
@@ -99,6 +105,13 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
                     }
                 }
                 MessageType.NOTIFICATION -> {
+                    if(message.imageUrl!=null) {
+                        binding.msgImage.visibility = View.VISIBLE
+                    }else{
+                        binding.msgImage.visibility = View.GONE
+                    }
+                    binding.btnViewAsNotification.visibility = View.VISIBLE
+                    binding.msgImage.setImageURI(Uri.parse(message.imageUrl))
                     itemView.background = ContextCompat.getDrawable(MyApplication.getContext(), R.color.colorMessageNotification)
                 }
                 MessageType.UNKNOWN -> {
@@ -106,11 +119,17 @@ open class MessageAdapter(query: Query?, private val mListener: OnMessageSelecte
                 }
             }
 
+            binding.btnViewAsNotification.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_envelope_letter))
+            binding.btnViewAsNotification.setOnClickListener {
+                Helper.showNotification(mContext, message.getImageUrlAsUri(), "", message.message!!, false)
+            }
+
             binding.btnReply.isEnabled = (message.emailSender != FirebaseAuth.getInstance().currentUser?.email)
             binding.btnReply.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_action_undo))
             binding.btnReply.setOnClickListener {
                 replyMessage(it, message)
             }
+
             binding.btnDelete.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_trash))
             binding.btnDelete.setOnClickListener{
                 MessageDao.delete(message)
