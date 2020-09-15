@@ -108,11 +108,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
             if(it==null){
                 binding.imgVwNotificationImage.visibility = View.GONE
                 binding.fabSelectImage.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        android.R.drawable.ic_menu_gallery,
-                        activity?.theme
-                    )
+                    ResourcesCompat.getDrawable(resources, android.R.drawable.ic_menu_gallery, activity?.theme)
                 )
             }else{
                 cropImage.launch(it)
@@ -123,19 +119,11 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
             if(binding.imgVwNotificationImage.drawable==null) {
                 getContent.launch("image/*")
                 binding.fabSelectImage.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        android.R.drawable.ic_menu_close_clear_cancel,
-                        activity?.theme
-                    )
+                    ResourcesCompat.getDrawable(resources, android.R.drawable.ic_menu_close_clear_cancel, activity?.theme)
                 )
             }else{
                 binding.fabSelectImage.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        android.R.drawable.ic_menu_gallery,
-                        activity?.theme
-                    )
+                    ResourcesCompat.getDrawable(resources, android.R.drawable.ic_menu_gallery, activity?.theme)
                 )
                 binding.imgVwNotificationImage.visibility = View.GONE
                 binding.imgVwNotificationImage.setImageURI(null)
@@ -144,12 +132,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         }
         binding.fabSendTopicMessage.setOnClickListener {
             if(getSelectedTopics().isNotEmpty()) {
-                sendMessage(
-                    getSelectedTopics(),
-                    imageUri,
-                    binding.edtTxtTitle.text.toString(),
-                    binding.edtTxtMlMessage.text.toString()
-                )
+                sendMessage(getSelectedTopics(), imageUri, binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
                 messageSent = true
             }else{
                 Toast.makeText(
@@ -160,12 +143,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
             }
         }
         binding.fabPreviewTopicMessage.setOnClickListener {
-            Helper.showNotification(
-                requireContext(),
-                imageUri,
-                binding.edtTxtTitle.text.toString(),
-                binding.edtTxtMlMessage.text.toString()
-            )
+            Helper.showNotification(requireContext(), imageUri, binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
         }
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {

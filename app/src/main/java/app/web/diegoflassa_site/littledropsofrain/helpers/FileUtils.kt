@@ -60,17 +60,17 @@ object FIleUtils {
                 )
                 return getDataColumn(context, contentUri, selection, selectionArgs)
             }
-        } else if ("content".equals(uri.getScheme(), ignoreCase = true)) {
+        } else if ("content".equals(uri.scheme, ignoreCase = true)) {
 
             // Return the remote address
-            return if (isGooglePhotosUri(uri)) uri.getLastPathSegment() else getDataColumn(
+            return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(
                 context,
                 uri,
                 null,
                 null
             )
-        } else if ("file".equals(uri.getScheme(), ignoreCase = true)) {
-            return uri.getPath()
+        } else if ("file".equals(uri.scheme, ignoreCase = true)) {
+            return uri.path
         }
         return null
     }

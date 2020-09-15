@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+@Suppress("Unused", "ControlFlowWithEmptyBody")
 class Helper {
 
     companion object {
@@ -206,7 +207,7 @@ class Helper {
                 notificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(body))
             } else {
                 notificationBuilder.setContentText(body)
-
+                var imageNotif: Bitmap?
                 runBlocking {
                     val job: Job = launch(context = Dispatchers.IO) {
                         val client = OkHttpClient()
@@ -214,14 +215,11 @@ class Helper {
                         client.setReadTimeout(30, TimeUnit.SECONDS)    // socket timeout
                         val request = Request.Builder().url(imageUri.toString()).build()
                         val response = client.newCall(request).execute()
-                        var imageNotif: Bitmap =
-                            BitmapFactory.decodeStream(response.body().byteStream())
+                        imageNotif = BitmapFactory.decodeStream(response.body().byteStream())
 
-                        notificationBuilder.setStyle(
-                            NotificationCompat.BigPictureStyle().bigPicture(imageNotif)
-                                .bigLargeIcon(
-                                    null
-                                )
+                        notificationBuilder
+                            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(imageNotif)
+                            .bigLargeIcon(null)
                         )
                         notificationBuilder.setLargeIcon(imageNotif)
                     }
@@ -285,11 +283,28 @@ class Helper {
                 notificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(message))
             } else {
                 notificationBuilder.setContentText(message)
-                val imageNotif: Bitmap = BitmapFactory.decodeFile(imageUri.toString())
+                var imageNotif: Bitmap? = null
+                runBlocking {
+                    val job: Job = launch(context = Dispatchers.IO) {
+                        val client = OkHttpClient()
+                        client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
+                        client.setReadTimeout(30, TimeUnit.SECONDS)    // socket timeout
+                        val request = Request.Builder().url(imageUri.toString()).build()
+                        val response = client.newCall(request).execute()
+                        imageNotif = BitmapFactory.decodeStream(response.body().byteStream())
+
+                        notificationBuilder.setStyle(
+                            NotificationCompat
+                                .BigPictureStyle().bigPicture(imageNotif)
+                                .bigLargeIcon(null)
+                        )
+                        notificationBuilder.setLargeIcon(imageNotif)
+                    }
+                    job.join()
+
+                }
                 notificationBuilder.setStyle(
-                    NotificationCompat.BigPictureStyle().bigPicture(
-                        imageNotif
-                    )
+                    NotificationCompat.BigPictureStyle().bigPicture(imageNotif)
                 )
             }
 
