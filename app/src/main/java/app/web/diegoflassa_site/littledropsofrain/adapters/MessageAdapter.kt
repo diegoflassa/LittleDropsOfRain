@@ -107,11 +107,11 @@ open class MessageAdapter(context : Context, query: Query?, private val mListene
                 MessageType.NOTIFICATION -> {
                     if(message.imageUrl!=null) {
                         binding.msgImage.visibility = View.VISIBLE
+                        binding.msgImage.setImageURI(Uri.parse(message.imageUrl))
                     }else{
                         binding.msgImage.visibility = View.GONE
                     }
                     binding.btnViewAsNotification.visibility = View.VISIBLE
-                    binding.msgImage.setImageURI(Uri.parse(message.imageUrl))
                     itemView.background = ContextCompat.getDrawable(MyApplication.getContext(), R.color.colorMessageNotification)
                 }
                 MessageType.UNKNOWN -> {
