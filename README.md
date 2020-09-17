@@ -1,5 +1,5 @@
 [Leia em Português-Brasileiro](README.ptBR.md)
-# MimeTypeMap
+# LittleDropsOfRain
 
 LittleDropsOfRain is a simple store intented to facilitate the discovery of new products made by its owner
 
@@ -33,7 +33,9 @@ The following files will be generated in the "app\build\outputs\apk" folder
 ```
 * app\build\outputs\apk\debug\app-debug.apk
 * or
-* app\build\outputs\apk\release\app-release.apk
+* app\build\outputs\apk\release\app-release-signed.apk
+* or
+* app\build\outputs\apk\release\app-release-unsigned.apk
 ```
 
 To install, use the command

@@ -28,15 +28,6 @@ android {
     sourceSets {
         //DFL - Não use por enquanto
     }
-    buildTypes {
-        debug {
-
-        }
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
     signingConfigs {
         // DFL - Configuração para assinar o APK. Nao se preocupe agora
         release {
@@ -44,6 +35,17 @@ android {
             storePassword KEYSTORE_PASSWORD
             keyAlias KEYSTORE_ALIAS
             keyPassword KEY_PASSWORD
+            v2SigningEnabled true
+        }
+    }
+    buildTypes {
+        debug {
+
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
