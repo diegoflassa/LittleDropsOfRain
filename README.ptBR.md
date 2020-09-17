@@ -9,6 +9,7 @@ LittleDropsOfRain é uma simples loja cujo objetivo é facilitar a descoberta de
 Obtenha a versão mais recente do código no Github utilizando o Git, ou baixe o repositório em um arquivo ZIP.
 ([Download](https://github.com/diegoflassa/LittleDropsOfRain/archive/master.zip))
 
+Ou, clone, utilizando:
 
     git clone https://github.com/diegoflassa/LittleDropsOfRain.git
 

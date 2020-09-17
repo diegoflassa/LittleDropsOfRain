@@ -9,6 +9,7 @@ LittleDropsOfRain is a simple store intented to facilitate the discovery of new 
 Get the latest code from GitHub using Git or download the repository as a ZIP file.
 ([Download](https://github.com/diegoflassa/LittleDropsOfRain/archive/master.zip))
 
+Or, clone it, using:
 
     git clone https://github.com/diegoflassa/LittleDropsOfRain.git
 
