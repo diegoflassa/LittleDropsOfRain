@@ -21,13 +21,17 @@
             android:id="@+id/msg_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="@string/message_image"
             app:layout_constraintBottom_toTopOf="@+id/msg_creation_date"
             app:layout_constraintDimensionRatio="2:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/image_placeholder"
-            android:contentDescription="@string/message_image" />
+            app:srcCompat="@drawable/image_placeholder" />
 
         <TextView
             android:id="@+id/msg_creation_date"
@@ -123,8 +127,7 @@
             app:icon="@drawable/image_placeholder"
             app:iconGravity="textStart"
             app:layout_constraintEnd_toStartOf="@+id/btn_delete"
-            app:layout_constraintTop_toBottomOf="@+id/msg_read"
-            tools:src="@drawable/image_placeholder" />
+            app:layout_constraintTop_toBottomOf="@+id/msg_read" />
 
         <ImageButton
             android:id="@+id/btn_reply"
@@ -139,8 +142,7 @@
             app:iconGravity="textStart"
             app:layout_constraintBottom_toTopOf="@+id/btn_delete"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/msg_read"
-            tools:src="@drawable/image_placeholder" />
+            app:layout_constraintTop_toBottomOf="@+id/msg_read" />
 
         <ImageButton
             android:id="@+id/btn_delete"
@@ -155,8 +157,7 @@
             app:icon="@drawable/image_placeholder"
             app:iconGravity="textStart"
             app:layout_constraintEnd_toStartOf="@+id/btn_reply"
-            app:layout_constraintTop_toBottomOf="@+id/msg_read"
-            tools:src="@drawable/image_placeholder" />
+            app:layout_constraintTop_toBottomOf="@+id/msg_read" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

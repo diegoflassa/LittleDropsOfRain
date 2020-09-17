@@ -1,7 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.adapters
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +22,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -107,7 +107,7 @@ open class MessageAdapter(context : Context, query: Query?, private val mListene
                 MessageType.NOTIFICATION -> {
                     if(message.imageUrl!=null) {
                         binding.msgImage.visibility = View.VISIBLE
-                        binding.msgImage.setImageURI(Uri.parse(message.imageUrl))
+                        Picasso.get().load(message.imageUrl).placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(binding.msgImage)
                     }else{
                         binding.msgImage.visibility = View.GONE
                     }

@@ -4,12 +4,8 @@ import android.net.Uri
 import android.util.Log
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
-import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.workers.MyWorker
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -140,6 +136,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationBody = remoteMessage.notification!!.body.toString()
             imageUri = remoteMessage.notification!!.imageUrl!!
         }
-        Helper.showNotification(applicationContext, imageUri, remoteMessage.from!!, notificationTitle, notificationBody)
+        Helper.showNotification(applicationContext, null, imageUri, remoteMessage.from!!, notificationTitle, notificationBody)
     }
 }

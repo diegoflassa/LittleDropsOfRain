@@ -6,6 +6,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics' // Apply the Crashlytics Gradle plugin
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
+apply plugin: 'com.google.firebase.firebase-perf'
 apply from: "$projectDir/buildsystem/config.gradle"
 
 android {

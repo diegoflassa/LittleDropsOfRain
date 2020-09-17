@@ -4,10 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Environment
-import android.os.FileUtils
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.core.net.toFile
 import app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
 import app.web.diegoflassa_site.littledropsofrain.helpers.FIleUtils
 import com.yalantis.ucrop.UCrop

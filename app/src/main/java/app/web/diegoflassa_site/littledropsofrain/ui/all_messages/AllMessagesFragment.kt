@@ -1,5 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.ui.all_messages
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -39,7 +40,7 @@ import java.lang.ref.WeakReference
 class AllMessagesFragment : Fragment(),
     MessageAdapter.OnMessageSelectedListener,
     AllMessagesFilterDialogFragment.FilterListener,
-    View.OnClickListener {
+    View.OnClickListener, DialogInterface.OnDismissListener {
 
     private var isStopped: Boolean = false
     private val viewModel: AllMessagesViewModel by viewModels()
@@ -96,9 +97,7 @@ class AllMessagesFragment : Fragment(),
 
         // Filter Dialog
         mFilterDialog =
-            AllMessagesFilterDialogFragment(
-                this@AllMessagesFragment
-            )
+            AllMessagesFilterDialogFragment()
         mFilterDialog?.filterListener = this
 
         showLoadingScreen()
@@ -110,12 +109,12 @@ class AllMessagesFragment : Fragment(),
     }
 
     override fun onDestroyView(){
-        super.onDestroyView()
         mFilterDialog = null
         if(this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
+        super.onDestroyView()
     }
 
     private fun handleBundle(){
@@ -138,9 +137,9 @@ class AllMessagesFragment : Fragment(),
     }
 
     override fun onStop() {
-        super.onStop()
         isStopped = true
         mAdapter.get()?.stopListening()
+        super.onStop()
     }
 
     override fun onResume() {
@@ -280,4 +279,7 @@ class AllMessagesFragment : Fragment(),
         Log.d(TAG, "Message ${message?.id} selected")
     }
 
+    override fun onDismiss(dialog: DialogInterface?) {
+        binding.filterBarAllMessages.isEnabled = true
+    }
 }

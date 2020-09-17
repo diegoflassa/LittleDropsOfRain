@@ -2,6 +2,7 @@ package app.web.diegoflassa_site.littledropsofrain.fragments
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +10,8 @@ import android.widget.CompoundButton
 import android.widget.Spinner
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
-import com.google.firebase.firestore.Query
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
@@ -19,12 +19,16 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentProductsFiltersBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
-import app.web.diegoflassa_site.littledropsofrain.ui.home.HomeFragment
+import app.web.diegoflassa_site.littledropsofrain.models.ProductsFilterDialogViewModel
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.firebase.firestore.Query
+
 
 /**
  * Dialog Fragment containing filter form.
  */
-open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragment(),
+open class ProductsFilterDialogFragment : DialogFragment(),
     View.OnClickListener, OnDataChangeListener<List<Product>>,
     CompoundButton.OnCheckedChangeListener {
 
@@ -36,8 +40,8 @@ open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragmen
         fun onFilter(filters: ProductsFilters)
     }
 
-    private var homeFragment : HomeFragment= fragment
-    var mCategories: LinkedHashSet<String> = LinkedHashSet()
+    val viewModel : ProductsFilterDialogViewModel by viewModels()
+    var categories: LinkedHashSet<String> = LinkedHashSet()
     private lateinit var mCategoryChipGroup: ChipGroup
     private var mSortSpinner: Spinner? = null
     private var mPriceSpinner: Spinner? = null
@@ -62,8 +66,17 @@ open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragmen
     }
 
     override fun onDismiss(dialog: DialogInterface){
+        val fragment: Fragment? = parentFragmentManager.fragments[0]
+        if (fragment is DialogInterface.OnDismissListener) {
+            (fragment as DialogInterface.OnDismissListener).onDismiss(dialog)
+        }
         super.onDismiss(dialog)
-        homeFragment.binding.filterBar.isEnabled = true
+        Log.d(TAG, "Dialog dismissed")
+    }
+
+    override fun onStop() {
+        viewModel.viewState.categories = categories
+        super.onStop()
     }
 
     override fun onResume() {
@@ -72,6 +85,7 @@ open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragmen
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+        categories = viewModel.viewState.categories
     }
 
     override fun onClick(v: View) {
@@ -94,7 +108,7 @@ open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragmen
 
     private val selectedCategories: LinkedHashSet<String>
         get() {
-            return mCategories
+            return categories
         }
 
     private val selectedPrice: MutableList<Int>
@@ -154,7 +168,8 @@ open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragmen
             for (chip in mCategoryChipGroup.children) {
                 chip.isSelected = false
             }
-            mCategories.clear()
+            viewModel.viewState.categories.clear()
+            categories.clear()
             mPriceSpinner!!.setSelection(0)
             mSortSpinner!!.setSelection(0)
         }
@@ -171,7 +186,14 @@ open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragmen
             return filters
         }
 
-    override fun onDataLoaded(item: List<Product>) {
+    private fun setSelectedChips(){
+        for (child in mCategoryChipGroup.children) {
+            val chip : Chip = child as Chip
+            chip.isChecked = categories.contains(chip.text)
+        }
+    }
+
+    override fun onDataChanged(item: List<Product>) {
         if(isVisible) {
             val hashSet = LinkedHashSet<String>()
             for (product in item) {
@@ -184,20 +206,21 @@ open class ProductsFilterDialogFragment(fragment : HomeFragment) : DialogFragmen
                 if (category.trim().isNotEmpty()) {
                     val chipCategory = Chip(requireContext())
                     chipCategory.isCheckable = true
-                    chipCategory.isChecked = mCategories.contains(category)
+                    chipCategory.isChecked = categories.contains(category)
                     chipCategory.text = category
                     chipCategory.setOnCheckedChangeListener(this)
                     mCategoryChipGroup.addView(chipCategory)
                 }
             }
+            setSelectedChips()
         }
     }
 
-    override fun onCheckedChanged(compoundButton : CompoundButton?, checked: Boolean) {
+    override fun onCheckedChanged(compoundButton: CompoundButton?, checked: Boolean) {
         if(checked) {
-            mCategories.add(compoundButton?.text.toString())
+            categories.add(compoundButton?.text.toString())
         }else{
-            mCategories.remove(compoundButton?.text)
+            categories.remove(compoundButton?.text)
         }
     }
 }

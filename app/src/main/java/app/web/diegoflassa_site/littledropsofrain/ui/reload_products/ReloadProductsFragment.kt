@@ -130,11 +130,11 @@ class ReloadProductsFragment : Fragment() {
     }
 
     override fun onDestroyView(){
-        super.onDestroyView()
         if(this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
+        super.onDestroyView()
     }
 
     private fun reloadProducts(executeFetch : Boolean = true){
@@ -159,12 +159,12 @@ class ReloadProductsFragment : Fragment() {
     }
 
     override fun onStop() {
-        super.onStop()
         if(worker!=null) {
             WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(worker!!.id).removeObserver(observer)
             WorkManager.getInstance(requireContext()).cancelWorkById(worker!!.id)
         }
         isStopped = true
+        super.onStop()
     }
     override fun onResume() {
         super.onResume()

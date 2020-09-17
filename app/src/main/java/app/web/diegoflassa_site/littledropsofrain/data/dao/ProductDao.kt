@@ -45,7 +45,7 @@ object ProductDao {
                     Log.d(TAG, "${document.id} => ${document.data}")
                     products.add(product)
                 }
-                listener.onDataLoaded(products)
+                listener.onDataChanged(products)
             }
            ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting documents: ", exception)
@@ -65,7 +65,7 @@ object ProductDao {
                         products.add(product)
                     }
                 }
-                listener.onDataLoaded(products)
+                listener.onDataChanged(products)
             } else {
                 Log.d(TAG, "Error deleting documents: ", task.exception)
             }
@@ -86,7 +86,7 @@ object ProductDao {
                         products.add(product)
                     }
                 }
-                listener.onDataLoaded(products)
+                listener.onDataChanged(products)
             }
             ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting messages: ", exception)

@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.net.toFile
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -24,10 +25,7 @@ import app.web.diegoflassa_site.littledropsofrain.contracts.CropImageResultContr
 import app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendTopicMessageBinding
-import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
-import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
-import app.web.diegoflassa_site.littledropsofrain.helpers.runOnUiThread
-import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
+import app.web.diegoflassa_site.littledropsofrain.helpers.*
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedFailureListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedListener
 import app.web.diegoflassa_site.littledropsofrain.models.TopicMessageViewModel
@@ -41,6 +39,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.auth.oauth2.AccessToken
 import com.google.auth.oauth2.GoogleCredentials
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,9 +56,8 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
 
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private lateinit var toggle : ActionBarDrawerToggle
-    private lateinit var getContent : ActivityResultLauncher<String>
-    private lateinit var cropImage : ActivityResultLauncher<Uri?>
-    private var imageUri : Uri? = null
+    private lateinit var getContentLauncher : ActivityResultLauncher<String>
+    private lateinit var cropImageLauncher : ActivityResultLauncher<Uri?>
     private var isStopped = false
     private var messageSent = false
 
@@ -103,36 +101,40 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
             }
         }
         binding.imgVwNotificationImage.visibility = View.GONE
-        cropImage = registerForActivityResult(CropImageResultContract(), this)
-        getContent = registerForActivityResult(ActivityResultContracts.GetContent()) {
+        cropImageLauncher = registerForActivityResult(CropImageResultContract(), this)
+        getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){
             if(it==null){
+                binding.imgVwNotificationImage.setImageDrawable(null)
                 binding.imgVwNotificationImage.visibility = View.GONE
                 binding.fabSelectImage.setImageDrawable(
                     ResourcesCompat.getDrawable(resources, android.R.drawable.ic_menu_gallery, activity?.theme)
                 )
             }else{
-                cropImage.launch(it)
+                cropImageLauncher.launch(it)
             }
-            binding.imgVwNotificationImage.setImageURI(it)
         }
         binding.fabSelectImage.setOnClickListener {
             if(binding.imgVwNotificationImage.drawable==null) {
-                getContent.launch("image/*")
                 binding.fabSelectImage.setImageDrawable(
                     ResourcesCompat.getDrawable(resources, android.R.drawable.ic_menu_close_clear_cancel, activity?.theme)
                 )
+                getContentLauncher.launch("image/*")
             }else{
                 binding.fabSelectImage.setImageDrawable(
                     ResourcesCompat.getDrawable(resources, android.R.drawable.ic_menu_gallery, activity?.theme)
                 )
                 binding.imgVwNotificationImage.visibility = View.GONE
-                binding.imgVwNotificationImage.setImageURI(null)
-                imageUri = null
+                binding.imgVwNotificationImage.setImageDrawable(null)
+                viewModel.viewState.imageUriFirestore = null
+                if(viewModel.viewState.imageUriLocal!=null){
+                    viewModel.viewState.imageUriLocal!!.toFile().delete()
+                    viewModel.viewState.imageUriLocal = null
+                }
             }
         }
         binding.fabSendTopicMessage.setOnClickListener {
             if(getSelectedTopics().isNotEmpty()) {
-                sendMessage(getSelectedTopics(), imageUri, binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
+                sendMessage(getSelectedTopics(), viewModel.viewState.imageUriFirestore, binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
                 messageSent = true
             }else{
                 Toast.makeText(
@@ -143,7 +145,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
             }
         }
         binding.fabPreviewTopicMessage.setOnClickListener {
-            Helper.showNotification(requireContext(), imageUri, binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
+            Helper.showNotification(requireContext(), viewModel.viewState.imageUriFirestore, binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
         }
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
@@ -161,29 +163,30 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
         Helper.requestReadExternalStoragePermission(requireActivity())
-        Helper.requestReadInternalStoragePermission(requireActivity())
+
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
         isStopped = false
+        updateUI(viewModel.viewState)
     }
 
     override fun onStop(){
-        super.onStop()
-        if(!messageSent&&imageUri!=null){
-            FilesDao.remove(imageUri)
+        if(!messageSent&&viewModel.viewState.imageUriFirestore!=null){
+            FilesDao.remove(viewModel.viewState.imageUriFirestore)
         }
         isStopped = true
+        super.onStop()
     }
 
     override fun onDestroyView(){
-        super.onDestroyView()
         if(this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
+        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle){
@@ -207,6 +210,12 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
                 )!!) {
                 (chip as Chip).isChecked = true
             }
+        }
+        Picasso.get().load(viewModel.viewState.imageUriLocal).into(binding.imgVwNotificationImage)
+        if(viewModel.viewState.imageUriLocal!=null){
+            binding.imgVwNotificationImage.visibility = View.VISIBLE
+        }else{
+            binding.imgVwNotificationImage.visibility = View.GONE
         }
         binding.edtTxtTitle.setText(viewModel.viewState.title)
         binding.edtTxtMlMessage.setText(viewModel.viewState.body)
@@ -338,14 +347,15 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
 
     private fun getAccessToken() : AccessToken? {
         val resource = resources.openRawResource(R.raw.littledropsofrain_site_firebase_adminsdk_9dvd0_c718bc2981)
-        val scopes : MutableList<String> = ArrayList<String>()
+        val scopes : MutableList<String> = ArrayList()
         scopes.add("https://www.googleapis.com/auth/firebase.messaging")
         val credential = GoogleCredentials.fromStream(resource).createScoped(scopes)
         return credential.refreshAccessToken()
     }
 
     override fun onFileUploaded(local: Uri, remote: Uri) {
-        imageUri = remote
+        FilesDao.remove(viewModel.viewState.imageUriFirestore)
+        viewModel.viewState.imageUriFirestore = remote
         hideLoadingScreen()
         Toast.makeText(context, getString(R.string.file_upload_success), Toast.LENGTH_LONG).show()
     }
@@ -355,13 +365,11 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         Toast.makeText(context, getString(R.string.file_upload_failure), Toast.LENGTH_LONG).show()
     }
 
-    override fun onActivityResult(result: Uri?) {
-        val uri = result as Uri
+    override fun onActivityResult(uri : Uri?) {
         binding.imgVwNotificationImage.visibility = View.VISIBLE
         showLoadingScreen()
-        FilesDao.remove(imageUri)
-        FilesDao.insert(uri, this, this)
-        binding.imgVwNotificationImage.setImageURI(uri)
+        FilesDao.insert(uri!!, this, this)
+        viewModel.viewState.imageUriLocal = uri
         binding.fabSelectImage.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,

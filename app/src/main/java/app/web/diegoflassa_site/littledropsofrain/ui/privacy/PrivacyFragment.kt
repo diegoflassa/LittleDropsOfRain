@@ -58,11 +58,11 @@ class PrivacyFragment : Fragment() {
     }
 
     override fun onDestroyView(){
-        super.onDestroyView()
         if(this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
+        super.onDestroyView()
     }
 
     companion object {

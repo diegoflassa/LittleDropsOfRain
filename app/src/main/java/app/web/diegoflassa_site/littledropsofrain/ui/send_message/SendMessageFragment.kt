@@ -19,7 +19,6 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
-import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendMessageBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
@@ -138,11 +137,11 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
     }
 
     override fun onDestroyView(){
-        super.onDestroyView()
         if(this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
+        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState : Bundle){
@@ -289,7 +288,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
 
     private class Callback( var fragment : SendMessageFragment) :
         OnDataChangeListener<DocumentReference> {
-        override fun onDataLoaded(item: DocumentReference) {
+        override fun onDataChanged(item: DocumentReference) {
             fragment.binding.btnSend.isEnabled = true
             Toast.makeText(fragment.requireContext(),  "Message sent successfully", Toast.LENGTH_SHORT).show()
         }

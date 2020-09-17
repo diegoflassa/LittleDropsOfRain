@@ -1,5 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.ui.home
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -46,7 +47,7 @@ import java.lang.ref.WeakReference
 class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     View.OnClickListener,
     ProductsFilterDialogFragment.FilterListener,
-    ProductAdapter.OnProductSelectedListener {
+    ProductAdapter.OnProductSelectedListener, DialogInterface.OnDismissListener {
 
     private val viewModel: HomeViewModel by viewModels()
     var binding: FragmentHomeBinding by viewLifecycle()
@@ -76,9 +77,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
         // Filter Dialog
         mFilterDialog =
-            ProductsFilterDialogFragment(
-                this@HomeFragment
-            )
+            ProductsFilterDialogFragment()
         mFilterDialog?.filterListener = this
 
         val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
@@ -105,12 +104,12 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     }
 
     override fun onDestroyView(){
-        super.onDestroyView()
         mFilterDialog = null
         if(this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
+        super.onDestroyView()
     }
 
     override fun onResume() {
@@ -209,8 +208,8 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     }
 
     override fun onStop() {
-        super.onStop()
         mAdapter.get()?.stopListening()
+        super.onStop()
     }
 
     private fun initFirestore() {
@@ -277,6 +276,10 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         val productParsed: Product? = product?.toObject(Product::class.java)
         i.data = Uri.parse(productParsed?.linkProduct)
         startActivity(i)
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        binding.filterBar.isEnabled = true
     }
 
 }

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     tools:context=".ui.all_messages.AllMessagesFragment"
-    android:tag="AdminFragment">
+    android:tag="AllMessagesFragment">
 
     <!-- Filter Bar -->
     <FrameLayout

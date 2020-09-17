@@ -97,14 +97,13 @@ class InstagramFragment : Fragment() {
     }
 
     override fun onStop(){
-        super.onStop()
         isStopped = true
         binding.webviewInstagram.stopLoading()
+        super.onStop()
     }
 
     @SuppressLint("ApplySharedPref")
     override fun onPause() {
-        super.onPause()
         binding.webviewInstagram.pauseTimers()
         val prefs = requireContext().applicationContext.getSharedPreferences(
             requireContext().packageName,
@@ -113,6 +112,7 @@ class InstagramFragment : Fragment() {
         val edit: SharedPreferences.Editor = prefs.edit()
         edit.putString(KEY_PREF_LAST_URL, binding.webviewInstagram.url)
         edit.commit()
+        super.onPause()
     }
 
     override fun onResume() {

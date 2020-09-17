@@ -1,5 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.ui.messages
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -36,7 +37,7 @@ import java.lang.ref.WeakReference
 class MessagesFragment : Fragment(),
     MessageAdapter.OnMessageSelectedListener,
     MyMessagesFilterDialogFragment.FilterListener,
-    View.OnClickListener {
+    View.OnClickListener, DialogInterface.OnDismissListener {
 
     private val viewModel: MessagesViewModel by viewModels()
     private lateinit var mAdapter: WeakReference<MessageAdapter>
@@ -72,7 +73,7 @@ class MessagesFragment : Fragment(),
         binding.buttonClearFilterMyMessages.setOnClickListener(this)
 
         // Filter Dialog
-        mFilterDialog = MyMessagesFilterDialogFragment(this@MessagesFragment)
+        mFilterDialog = MyMessagesFilterDialogFragment()
         mFilterDialog?.filterListener = this
 
         showLoadingScreen()
@@ -83,8 +84,8 @@ class MessagesFragment : Fragment(),
     }
 
     override fun onDestroyView(){
-        super.onDestroyView()
         mFilterDialog = null
+        super.onDestroyView()
     }
 
     override fun onStart() {
@@ -237,6 +238,10 @@ class MessagesFragment : Fragment(),
 
     override fun onMessageSelected(message: DocumentSnapshot?) {
         Log.d(TAG, "Message ${message?.id} selected")
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        binding.filterBarMyMessages.isEnabled = true
     }
 
 }

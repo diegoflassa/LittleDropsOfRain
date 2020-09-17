@@ -145,11 +145,12 @@ class Helper {
             body: String,
             canSave: Boolean = true
         ) {
-            showNotification(context, imageUri, "", title, body, canSave)
+            showNotification(context, null, imageUri, "", title, body, canSave)
         }
 
         fun showNotification(
             context: Context,
+            notificationId: Int? = null,
             imageUri: Uri?,
             topic: String,
             title: String,
@@ -164,21 +165,27 @@ class Helper {
                 intent,
                 PendingIntent.FLAG_ONE_SHOT
             )
-            val saveNotificationIntent = Intent(context, NotificationReceiver::class.java).apply {
-                action = NotificationReceiver.ACTION_SAVE
-                putExtra(NotificationReceiver.EXTRA_NID, NOTIFICATION_ID)
-                putExtra(NotificationReceiver.EXTRA_IMAGE_URI, imageUri)
-                putExtra(NotificationReceiver.EXTRA_TOPIC, topic)
-                putExtra(NotificationReceiver.EXTRA_TITLE, title)
-                putExtra(NotificationReceiver.EXTRA_MESSAGE, body)
+            val saveNotificationIntent : Intent?
+            var saveNotificationPendingIntent : PendingIntent? = null
+            if(notificationId==null) {
+                saveNotificationIntent =
+                    Intent(context, NotificationReceiver::class.java).apply {
+                        action = NotificationReceiver.ACTION_SAVE
+                        putExtra(NotificationReceiver.EXTRA_NID, NOTIFICATION_ID)
+                        putExtra(NotificationReceiver.EXTRA_IMAGE_URI, imageUri)
+                        putExtra(NotificationReceiver.EXTRA_TOPIC, topic)
+                        putExtra(NotificationReceiver.EXTRA_TITLE, title)
+                        putExtra(NotificationReceiver.EXTRA_MESSAGE, body)
+                    }
+
+                saveNotificationPendingIntent =
+                    PendingIntent.getBroadcast(
+                        context,
+                        NOTIFICATION_ID,
+                        saveNotificationIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                    )
             }
-            val saveNotificationPendingIntent: PendingIntent =
-                PendingIntent.getBroadcast(
-                    context,
-                    NOTIFICATION_ID,
-                    saveNotificationIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                )
             val channelId = context.getString(R.string.default_notification_channel_id)
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val largeIcon = BitmapFactory.decodeResource(
@@ -192,14 +199,25 @@ class Helper {
                 .setContentText(context.getString(R.string.new_notification))
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent)
+
+            if(notificationId==null) {
+                notificationBuilder.setContentIntent(pendingIntent)
+            }
 
             if (canSave) {
-                notificationBuilder.addAction(
-                    android.R.drawable.ic_menu_save,
-                    context.getString(R.string.save),
-                    saveNotificationPendingIntent
-                )
+                if(notificationId==null) {
+                    notificationBuilder.addAction(
+                        android.R.drawable.ic_menu_save,
+                        context.getString(R.string.save),
+                        saveNotificationPendingIntent
+                    )
+                }else{
+                    notificationBuilder.addAction(
+                        android.R.drawable.ic_menu_save,
+                        context.getString(R.string.saved),
+                        null
+                    )
+                }
             }
 
             if (imageUri == null) {
@@ -229,7 +247,6 @@ class Helper {
             }
 
             val notificationManagerCompat = NotificationManagerCompat.from(context)
-
             // Since android Oreo notification channel is needed.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channel = NotificationChannel(
@@ -241,7 +258,7 @@ class Helper {
             }
 
             notificationManagerCompat.notify(
-                NOTIFICATION_ID++ /* ID of notification */,
+                notificationId?:NOTIFICATION_ID++,
                 notificationBuilder.build()
             )
         }
@@ -249,84 +266,11 @@ class Helper {
         fun updateNotificationMessageSaved(
             context: Context,
             imageUri: Uri?,
-            notificationId: Int,
+            notificationId: Int?,
             title: String,
-            message: String
+            body: String
         ) {
-            val intent = Intent(context, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            val pendingIntent = PendingIntent.getActivity(
-                context,
-                0 /* Request code */,
-                intent,
-                PendingIntent.FLAG_ONE_SHOT
-            )
-            val channelId = context.getString(R.string.default_notification_channel_id)
-            val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            val largeIcon = BitmapFactory.decodeResource(
-                context.resources,
-                R.mipmap.ic_notification_black
-            )
-            val notificationBuilder = NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.mipmap.ic_notification)
-                .setColor(context.getColor(R.color.colorAccent))
-                .setLargeIcon(largeIcon)
-                .setContentTitle(title)
-                .setContentText(context.getString(R.string.new_notification))
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent)
-                .addAction(android.R.drawable.ic_menu_save, context.getString(R.string.saved), null)
-
-            if (imageUri == null) {
-                notificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(message))
-            } else {
-                notificationBuilder.setContentText(message)
-                var imageNotif: Bitmap? = null
-                runBlocking {
-                    val job: Job = launch(context = Dispatchers.IO) {
-                        val client = OkHttpClient()
-                        client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
-                        client.setReadTimeout(30, TimeUnit.SECONDS)    // socket timeout
-                        val request = Request.Builder().url(imageUri.toString()).build()
-                        val response = client.newCall(request).execute()
-                        imageNotif = BitmapFactory.decodeStream(response.body().byteStream())
-
-                        notificationBuilder.setStyle(
-                            NotificationCompat
-                                .BigPictureStyle().bigPicture(imageNotif)
-                                .bigLargeIcon(null)
-                        )
-                        notificationBuilder.setLargeIcon(imageNotif)
-                    }
-                    job.join()
-
-                }
-                notificationBuilder.setStyle(
-                    NotificationCompat.BigPictureStyle().bigPicture(imageNotif)
-                )
-            }
-
-            val notificationManagerCompat = NotificationManagerCompat.from(context)
-
-            // Since android Oreo notification channel is needed.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(
-                    channelId,
-                    context.getString(R.string.name_notification_channel),
-                    NotificationManager.IMPORTANCE_DEFAULT
-                )
-                notificationManagerCompat.createNotificationChannel(channel)
-            }
-            notificationManagerCompat.notify(
-                notificationId,
-                notificationBuilder.build()
-            )
-        }
-
-        fun requestReadInternalStoragePermission(activity: Activity){
-            requestPermission(activity, "android.permission.WRITE_INTERNAL_STORAGE")
+            showNotification(context, notificationId, imageUri, "", title, body)
         }
 
         fun requestReadExternalStoragePermission(activity: Activity){

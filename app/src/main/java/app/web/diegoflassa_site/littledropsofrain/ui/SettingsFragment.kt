@@ -19,7 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class SettingsFragment : PreferenceFragmentCompat() {
 
     private lateinit var mpcl : SharedPreferences.OnSharedPreferenceChangeListener
-    private lateinit var toggle : ActionBarDrawerToggle
+    private var toggle : ActionBarDrawerToggle? = null
     companion object{
         val TAG = SettingsFragment::class.simpleName
         fun newInstance(): Fragment {
@@ -30,22 +30,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         registerPreferencesListener()
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
-        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
-        toolbar?.setNavigationOnClickListener {
-            val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
-            toggle = ActionBarDrawerToggle(
-                activity,
-                drawerLayout,
-                toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
-            )
-            drawerLayout?.addDrawerListener(toggle)
-            if(drawerLayout!=null)
-                toggle.syncState()
-            activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
-        }
         updateUI()
     }
 
@@ -56,17 +40,42 @@ class SettingsFragment : PreferenceFragmentCompat() {
         bnv?.visibility = View.GONE
     }
 
-    override fun onDestroyView(){
-        super.onDestroyView()
-        if(this::toggle.isInitialized) {
-            val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
-            drawerLayout.removeDrawerListener(toggle)
+    override fun onResume(){
+        super.onResume()
+        removeToogleListener()
+        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
+        toolbar?.setNavigationOnClickListener {
+            val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
+            toggle = ActionBarDrawerToggle(
+                activity,
+                drawerLayout,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+            )
+            drawerLayout?.addDrawerListener(toggle!!)
+            if(drawerLayout!=null)
+                toggle?.syncState()
+            activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
     }
 
+    override fun onDestroyView(){
+        removeToogleListener()
+        super.onDestroyView()
+    }
+
     override fun onDestroy() {
-        super.onDestroy()
         unregisterPreferencesListener()
+        super.onDestroy()
+    }
+
+    private fun removeToogleListener(){
+        if(toggle!=null) {
+            val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
+            drawerLayout.removeDrawerListener(toggle!!)
+            toggle = null
+        }
     }
 
     private fun registerPreferencesListener() {

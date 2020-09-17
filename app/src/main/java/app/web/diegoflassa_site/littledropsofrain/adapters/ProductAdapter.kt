@@ -40,7 +40,6 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
     class ViewHolder(private var homeFragment : HomeFragment, itemView: View) :
         RecyclerView.ViewHolder(itemView), CompoundButton.OnCheckedChangeListener {
         val binding = RecyclerviewItemProductBinding.bind(itemView)
-
         fun bind(
             snapshot: DocumentSnapshot,
             listener: OnProductSelectedListener?
@@ -58,7 +57,7 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
                 if(category.isNotEmpty()) {
                     chipCategory = Chip(itemView.context)
                     chipCategory.isCheckable = true
-                    chipCategory.isChecked = homeFragment.mFilterDialog!!.mCategories.contains(category)
+                    chipCategory.isChecked = homeFragment.mFilterDialog?.categories!!.contains(category)
                     chipCategory.text = category
                     chipCategory.setOnCheckedChangeListener(this)
                     binding.chipCategories.addView(chipCategory)

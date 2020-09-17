@@ -109,7 +109,7 @@ object UserDao {
     ): Task<Void>? {
         val data = user.toMap()
        return db.get()?.collection(COLLECTION_PATH)?.document(user.uid.toString())?.set(data, SetOptions.merge())?.addOnSuccessListener{
-            onSuccessListener?.onDataLoaded(it)
+            onSuccessListener?.onDataChanged(it)
         }?.addOnFailureListener{
             onFailureListener?.onDataFailure(it)
         }
@@ -121,7 +121,7 @@ object UserDao {
     ): Task<Void>? {
         val data = user.toMap()
         return db.get()?.collection(COLLECTION_PATH)?.document(user.uid.toString())?.set(data, SetOptions.merge())?.addOnSuccessListener{
-            onSuccessListener?.onDataLoaded(it)
+            onSuccessListener?.onDataChanged(it)
         }?.addOnFailureListener{
             onFailureListener?.onDataFailure(it)
         }

@@ -124,7 +124,6 @@
     <string name="message_type_notification">Notification</string>
     <string name="message_type_any">Any</string>
     <string name="and_filter">" and "</string>
-    <string name="message_type">Message Type</string>
     <string name="save">SAVE</string>
     <string name="saved">SAVED</string>
     <string name="notification_image">Notification Image</string>
@@ -132,5 +131,4 @@
     <string name="file_upload_failure">Falha uploading arquivo</string>
     <string name="message_image">Message Image</string>
     <string name="logo_toolbar">Logo Toolbar</string>
-
 </resources>

@@ -2,11 +2,13 @@ package app.web.diegoflassa_site.littledropsofrain.fragments
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -18,17 +20,17 @@ import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAllMessage
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUsersLoadedListener
 import app.web.diegoflassa_site.littledropsofrain.models.AllMessagesFilterDialogViewModel
-import app.web.diegoflassa_site.littledropsofrain.ui.all_messages.AllMessagesFragment
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 /**
  * Dialog Fragment containing filter form.
  */
-open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : DialogFragment(),
+open class AllMessagesFilterDialogFragment : DialogFragment(),
     View.OnClickListener, OnUsersLoadedListener {
 
     companion object {
@@ -39,7 +41,6 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
         fun onFilter(filters: AllMessagesFilters)
     }
 
-    private var adminFragment : AllMessagesFragment = fragment
     private lateinit var mSpinnerUsers : Spinner
     private lateinit var  mSpinnerSort : Spinner
     private lateinit var  mSpinnerType : Spinner
@@ -86,8 +87,12 @@ open class AllMessagesFilterDialogFragment(fragment: AllMessagesFragment) : Dial
     }
 
     override fun onDismiss(dialog: DialogInterface){
+        val fragment: Fragment? = parentFragmentManager.fragments[0]
+        if (fragment is DialogInterface.OnDismissListener) {
+            (fragment as DialogInterface.OnDismissListener).onDismiss(dialog)
+        }
         super.onDismiss(dialog)
-        adminFragment.binding.filterBarAllMessages.isEnabled = true
+        Log.d(TAG, "Dialog dismissed")
     }
 
     override fun onResume() {

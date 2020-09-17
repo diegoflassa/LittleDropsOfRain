@@ -113,7 +113,7 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
         }
     }
 
-    override fun onDataLoaded(item: Void?) {
+    override fun onDataChanged(item: Void?) {
         mUsersFragment.hideLoadingScreen()
         mUsersFragment.binding.recyclerview.isEnabled = true
     }

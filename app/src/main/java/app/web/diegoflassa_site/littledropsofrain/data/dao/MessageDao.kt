@@ -35,7 +35,7 @@ object MessageDao {
                     Log.d(TAG, "${document.id} => ${document.data}")
                     messages.add(message)
                 }
-                listener.onDataLoaded(messages)
+                listener.onDataChanged(messages)
             }
            ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting documents: ", exception)
@@ -55,7 +55,7 @@ object MessageDao {
                         messages.add(message)
                     }
                 }
-                listener.onDataLoaded(messages)
+                listener.onDataChanged(messages)
             } else {
                 Log.d(TAG, "Error deleting documents: ", task.exception)
             }
@@ -76,7 +76,7 @@ object MessageDao {
                         messages.add(message)
                     }
                 }
-                listener.onDataLoaded(messages)
+                listener.onDataChanged(messages)
            }
            ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting messages: ", exception)
@@ -96,7 +96,7 @@ object MessageDao {
                     Log.d(TAG, "${document.id} => ${document.data}")
                     messages.add(message)
                 }
-                listener.onDataLoaded(messages)
+                listener.onDataChanged(messages)
             }
            ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting messages: ", exception)
@@ -115,7 +115,7 @@ object MessageDao {
                     Log.d(TAG, "${document.id} => ${document.data}")
                     messages.add(message)
                 }
-                listener.onDataLoaded(messages)
+                listener.onDataChanged(messages)
             }
            ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting messages: ", exception)
@@ -139,7 +139,9 @@ object MessageDao {
     ): Task<DocumentReference>? {
         val data = message.toMap()
         return db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener{
-            onSuccessListener?.onDataLoaded(it)
+            message.uid = it.id
+            update(message)
+            onSuccessListener?.onDataChanged(it)
         }?.addOnFailureListener{
             onFailureListener?.onDataFailure(it)
         }
@@ -152,7 +154,7 @@ object MessageDao {
     ): Task<Void>? {
         val data = message.toMap()
         return db.get()?.collection(COLLECTION_PATH)?.document(message.uid.toString())?.set(data)?.addOnSuccessListener{
-            onSuccessListener?.onDataLoaded(it)
+            onSuccessListener?.onDataChanged(it)
         }?.addOnFailureListener{
             onFailureListener?.onDataFailure(it)
         }

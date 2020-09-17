@@ -2,25 +2,27 @@ package app.web.diegoflassa_site.littledropsofrain.fragments
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.CompoundButton
+import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
-import com.google.firebase.firestore.Query
+import androidx.fragment.app.Fragment
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMyMessagesFiltersBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.ui.messages.MessagesFragment
+import com.google.firebase.firestore.Query
 import java.util.*
 
 /**
  * Dialog Fragment containing filter form.
  */
-open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogFragment(),
+open class MyMessagesFilterDialogFragment : DialogFragment(),
     View.OnClickListener {
 
     companion object {
@@ -31,7 +33,6 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
         fun onFilter(filters: MyMessagesFilters)
     }
 
-    private var messagesFragment : MessagesFragment = fragment
     private lateinit var  mSpinnerSort : Spinner
     private lateinit var  mSpinnerType : Spinner
     var filterListener: FilterListener? = null
@@ -66,8 +67,12 @@ open class MyMessagesFilterDialogFragment(fragment : MessagesFragment) : DialogF
     }
 
     override fun onDismiss(dialog: DialogInterface){
+        val fragment: Fragment? = parentFragmentManager.fragments[0]
+        if (fragment is DialogInterface.OnDismissListener) {
+            (fragment as DialogInterface.OnDismissListener).onDismiss(dialog)
+        }
         super.onDismiss(dialog)
-        messagesFragment.binding.filterBarMyMessages.isEnabled = true
+        Log.d(TAG, "Dialog dismissed")
     }
 
     override fun onResume() {

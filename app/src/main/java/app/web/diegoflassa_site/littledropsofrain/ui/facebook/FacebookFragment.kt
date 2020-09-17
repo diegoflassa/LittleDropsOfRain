@@ -102,7 +102,6 @@ class FacebookFragment : Fragment() {
 
     @SuppressLint("ApplySharedPref")
     override fun onPause() {
-        super.onPause()
         binding.webviewFacebook.pauseTimers()
         val prefs = requireContext().applicationContext.getSharedPreferences(
             requireContext().packageName,
@@ -111,6 +110,7 @@ class FacebookFragment : Fragment() {
         val edit: SharedPreferences.Editor = prefs.edit()
         edit.putString(KEY_PREF_LAST_URL, binding.webviewFacebook.url)
         edit.commit()
+        super.onPause()
     }
 
     override fun onResume() {

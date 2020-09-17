@@ -92,7 +92,6 @@
     <string name="message_type_notification">Notificação</string>
     <string name="message_type_any">Qualquer</string>
     <string name="and_filter">" e "</string>
-    <string name="message_type">Tipo de Mensagem</string>
     <string name="save">SALVAR</string>
     <string name="saved">SALVA</string>
     <string name="notification_image">Imagem da Notificação</string>

@@ -4,12 +4,11 @@ import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 
-
+@Suppress("Unused", "MemberVisibilityCanBePrivate")
 object FIleUtils {
 
     /**
@@ -22,10 +21,9 @@ object FIleUtils {
      * @author paulburke
      */
     fun getPath(context: Context, uri: Uri): String? {
-        val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
 
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
@@ -47,12 +45,16 @@ object FIleUtils {
                 val split = docId.split(":").toTypedArray()
                 val type = split[0]
                 var contentUri: Uri? = null
-                if ("image" == type) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                } else if ("video" == type) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                } else if ("audio" == type) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                when (type) {
+                    "image" -> {
+                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    }
+                    "video" -> {
+                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                    }
+                    "audio" -> {
+                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    }
                 }
                 val selection = "_id=?"
                 val selectionArgs = arrayOf(
@@ -85,7 +87,7 @@ object FIleUtils {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    fun getDataColumn(
+    private fun getDataColumn(
         context: Context, uri: Uri?, selection: String?,
         selectionArgs: Array<String>?
     ): String? {
@@ -105,7 +107,7 @@ object FIleUtils {
                 return cursor.getString(index)
             }
         } finally {
-            if (cursor != null) cursor.close()
+            cursor?.close()
         }
         return null
     }

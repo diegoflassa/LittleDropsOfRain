@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package app.web.diegoflassa_site.littledropsofrain.data.dao
 
 import android.net.Uri
@@ -12,7 +14,7 @@ import com.google.firebase.storage.ktx.storage
 object  FilesDao {
     private val TAG: String? = FilesDao::class.simpleName
     const val CACHE_DIR: String = "ldor-cache"
-    const val COLLECTION_PATH: String = "notificationImages"
+    private const val COLLECTION_PATH: String = "notificationImages"
     private var storage = Firebase.storage
 
     fun remove(image: Uri?): Task<Void>? {
