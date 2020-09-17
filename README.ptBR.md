@@ -23,7 +23,7 @@ Note que uma Keystore deve ser configurada para [assinar](https://developer.andr
 Suas propriedades podem ser encontradas no arquivo [gradle.properties](https://github.com/diegoflassa/LittleDropsOfRain/blob/master/gradle.properties)
 
 Não esqueça de adicionar seu arquivo [google-services.json](https://support.google.com/firebase/answer/7015592?hl=en) no projeto!
-E, opcionalmente, seu arquivo [*-firebase-adminsdk-*.json](https://firebase.google.com/docs/admin/setup). Adicione-o na pasta raw
+E, opcionalmente, seu arquivo [\*-firebase-adminsdk-\*.json](https://firebase.google.com/docs/admin/setup). Adicione-o na pasta raw
 
 ```gradle
 gradlew build

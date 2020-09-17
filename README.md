@@ -23,7 +23,7 @@ Note that an Keystore must be configured to [sign](https://developer.android.com
 Its properties may be found at [gradle.properties](https://github.com/diegoflassa/LittleDropsOfRain/blob/master/gradle.properties)
 
 Dont forget to add your [google-services.json](https://support.google.com/firebase/answer/7015592?hl=en) file to the projetc!
-And, optionally, you [*-firebase-adminsdk-*.json](https://firebase.google.com/docs/admin/setup) file. Add it in to the raw folder
+And, optionally, you [\*-firebase-adminsdk-\*.json](https://firebase.google.com/docs/admin/setup) file. Add it in to the raw folder
 
 ```gradle
 gradlew build
