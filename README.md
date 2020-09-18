@@ -9,7 +9,7 @@ LittleDropsOfRain is a simple store intented to facilitate the discovery of new 
 Get the latest code from GitHub using Git or download the repository as a ZIP file.
 ([Download](https://github.com/diegoflassa/LittleDropsOfRain/archive/master.zip))
 
-Or, clone it, using:
+Or clone it, using:
 
     git clone https://github.com/diegoflassa/LittleDropsOfRain.git
 
@@ -23,7 +23,9 @@ Note that an Keystore must be configured to [sign](https://developer.android.com
 Its properties may be found at [gradle.properties](https://github.com/diegoflassa/LittleDropsOfRain/blob/master/gradle.properties)
 
 Dont forget to add your [google-services.json](https://support.google.com/firebase/answer/7015592?hl=en) file to the projetc!
-And, optionally, you [\*-firebase-adminsdk-\*.json](https://firebase.google.com/docs/admin/setup) file. Add it in to the raw folder
+And, optionally, you [\*-firebase-adminsdk-\*.json](https://firebase.google.com/docs/admin/setup) file. Add it in to the raw folder,
+and change its usage in [this file](https://github.com/diegoflassa/LittleDropsOfRain/blob/master/app/src/main/java/app/web/diegoflassa_site/littledropsofrain/ui/topic/SendTopicMessageFragment.kt)
+[in this line](https://github.com/diegoflassa/LittleDropsOfRain/blob/9f5775af7e0b896f4d22142bc94fb0c7b6ea169d/app/src/main/java/app/web/diegoflassa_site/littledropsofrain/ui/topic/SendTopicMessageFragment.kt#L349)
 
 ```gradle
 gradlew build
@@ -32,11 +34,9 @@ gradlew build
 The following files will be generated in the "app\build\outputs\apk" folder
 
 ```
-* app\build\outputs\apk\debug\app-debug.apk
+* app\build\outputs\apk\debug\littledropsofrain-debug-\*.apk
 * or
-* app\build\outputs\apk\release\app-release-signed.apk
-* or
-* app\build\outputs\apk\release\app-release-unsigned.apk
+* app\build\outputs\apk\release\littledropsofrain-release-\*.apk
 ```
 
 To install, use the command

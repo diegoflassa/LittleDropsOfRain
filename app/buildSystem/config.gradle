@@ -18,8 +18,12 @@ ext.buildVersionCode = {
     return config.minimumSdkVersion * 10000000 + config.versionMajor * 10000 + config.versionMinor * 100 + config.versionPatch
 }
 
+ext.buildVersionNameWithoutClassifier = {
+    return "littledropsofrain"
+}
+
 ext.buildVersionName = {
-    String versionName = ""//ext.buildVersionNameWithoutClassifier();
+    String versionName = ext.buildVersionNameWithoutClassifier()
     if (config.versionClassifier != null && !config.versionClassifier.isEmpty()) {
         versionName = versionName + "-" + config.versionClassifier
     }

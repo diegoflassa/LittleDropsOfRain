@@ -47,6 +47,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                def appName = "littledropsofrain"
+                outputFileName = "${appName}-${outputFileName}"
+            }
+        }
     }
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
@@ -130,6 +136,7 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-dynamic-links:19.1.0'
     implementation 'com.google.firebase:firebase-firestore:21.6.0'
+    implementation 'com.google.firebase:firebase-perf:19.0.8'
 
     // Leak Canary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'

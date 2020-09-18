@@ -1,6 +1,7 @@
 package app.web.diegoflassa_site.littledropsofrain.ui
 
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -8,12 +9,13 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.preferences.MyOnSharedPreferenceChangeListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -27,9 +29,30 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         registerPreferencesListener()
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
+
+        val manager = requireActivity().packageManager
+        val info = manager.getPackageInfo(requireContext().packageName, 0)
+
+        val versionCode = PreferenceCategory(requireContext())
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.P) {
+            versionCode.title = "Version Code: ${info.longVersionCode}"
+        }else{
+            versionCode.title = "Version Code: ${info.versionCode}"
+        }
+        preferenceScreen.addPreference(versionCode)
+
+        val versionName = PreferenceCategory(requireContext())
+        versionName.title = "Version Name: ${info.versionName}"
+        preferenceScreen.addPreference(versionName)
+
+        val permissions = PreferenceCategory(requireContext())
+        permissions.title = "Permissions: ${info.permissions?:"None"}"
+        preferenceScreen.addPreference(permissions)
+
         updateUI()
     }
 
@@ -80,10 +103,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun registerPreferencesListener() {
         mpcl = MyOnSharedPreferenceChangeListener(requireContext())
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mpcl)
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(
+            mpcl
+        )
     }
 
     private fun unregisterPreferencesListener() {
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(mpcl)
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(
+            mpcl
+        )
     }
 }
