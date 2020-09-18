@@ -34,9 +34,9 @@ gradlew build
 Os seguintes arquivos serão gerados na pasta "app\build\outputs\apk"
 
 ```
-* app\build\outputs\apk\debug\littledropsofrain-debug-\*.apk
+* app\build\outputs\apk\debug\littledropsofrain-debug*.apk
 * ou
-* app\build\outputs\apk\release\littledropsofrain-release-\*.apk
+* app\build\outputs\apk\release\littledropsofrain-release*.apk
 ```
 
 Para instalar, utilize o comando
