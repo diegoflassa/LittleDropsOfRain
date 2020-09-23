@@ -7,11 +7,6 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_authentication"
-        android:orderInCategory="100"
-        android:title="@string/login"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_licenses"
         android:orderInCategory="100"
         android:title="@string/licenses"

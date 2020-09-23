@@ -99,4 +99,5 @@
     <string name="file_upload_failure">Failure uploading file</string>
     <string name="message_image">Imagem da Mensagem</string>
     <string name="logo_toolbar">Logo da Barra de Ferramentas</string>
+    <string name="please_wait">Por favor Aguarde</string>
 </resources>

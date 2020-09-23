@@ -99,4 +99,5 @@
     <string name="file_upload_failure">Fehler beim Hochladen der Datei</string>
     <string name="message_image">Nachrichtenbild</string>
     <string name="logo_toolbar">Logo-Symbolleiste</string>
+    <string name="please_wait">Warten Sie mal</string>
 </resources>

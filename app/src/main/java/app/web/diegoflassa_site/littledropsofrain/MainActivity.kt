@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -24,7 +23,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import app.web.diegoflassa_site.littledropsofrain.contracts.AuthActivityResultContract
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
@@ -35,21 +33,19 @@ import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewState
 import app.web.diegoflassa_site.littledropsofrain.services.SetupProductsUpdateWorkerService
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
-import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.joanzapata.iconify.IconDrawable
-import com.joanzapata.iconify.fonts.FontAwesomeIcons
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.joanzapata.iconify.fonts.TypiconsIcons
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 
-class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
+class MainActivity : AppCompatActivity(),
     OnUserFoundListener, ComponentCallbacks2 {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -63,8 +59,8 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
     private lateinit var mAuth: FirebaseAuth
     private lateinit var fab: FloatingActionButton
     private lateinit var binding: ActivityMainBinding
-    private lateinit var authMenuItem: MenuItem
     private lateinit var toggle : ActionBarDrawerToggle
+    private var authenticateOnResume = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,8 +157,8 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
 
         mAuth = FirebaseAuth.getInstance()
         if(mAuth.currentUser==null){
+            authenticateOnResume = true
             // Create and launch sign-in intent
-            registerForActivityResult(AuthActivityResultContract(), this).launch(null)
         }else{
             Toast.makeText(
                 applicationContext, getString(
@@ -176,8 +172,10 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         firebaseUserLiveData.observe(this,
             { firebaseUser ->
                 if (firebaseUser != null) {
+                    fab.isEnabled= true
                     UserDao.findByEMail(firebaseUser.email, this)
                 } else {
+                    fab.isEnabled= false
                     currentUser = User()
                     setupDrawerMenuIntems()
                     val navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_home, true).build()
@@ -243,6 +241,10 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
 
     override fun onResume() {
         super.onResume()
+        if(authenticateOnResume){
+            authenticateOnResume= false
+            findNavController(R.id.nav_host_fragment).navigate(R.id.nav_authentication)
+        }
         updateUI(viewModel.viewState)
         handleIntent()
     }
@@ -279,14 +281,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
-        authMenuItem = menu.findItem(R.id.action_authentication)
-        if(mAuth.currentUser==null){
-            authMenuItem.title = getString(R.string.login)
-            fab.isEnabled= false
-        }else{
-            authMenuItem.title = getString(R.string.logout)
-            fab.isEnabled= true
-        }
         return true
     }
 
@@ -298,7 +292,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         var ret= false
-        authMenuItem= item
         when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
@@ -307,18 +300,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
             R.id.action_settings -> {
                 findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalSettingsFragment())
                 ret = true
-            }
-            R.id.action_authentication -> {
-                fab.isEnabled = false
-                if (mAuth.currentUser == null) {
-                    // Create and launch sign-in intent
-                    registerForActivityResult(AuthActivityResultContract(), this).launch(null)
-                    item.isEnabled = false
-                } else {
-                    logout()
-                    item.title = getString(R.string.login)
-                    authMenuItem.icon = IconDrawable(this, FontAwesomeIcons.fa_user_plus)
-                }
             }
             R.id.action_licenses -> {
                 OssLicensesMenuActivity.setActivityTitle(getString(R.string.licenses))
@@ -333,31 +314,6 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         return ret
     }
 
-    override fun onActivityResult(result: Int) {
-        if (result == RESULT_OK) {
-            fab.isEnabled= true
-            // Successfully signed in
-            val user = mAuth.currentUser
-            if(user!=null) {
-                UserDao.findByEMail(user.email, this)
-            }
-            authMenuItem.title = getString(R.string.logout)
-            Toast.makeText(this, getString(R.string.log_in_successful), Toast.LENGTH_SHORT).show()
-        } else {
-            // Sign in failed. If response is null the user canceled the
-            // sign-in flow using the back button. Otherwise check
-            // response.getError().getErrorCode() and handle the error.
-            // ...
-            authMenuItem.title = getString(R.string.login)
-            Toast.makeText(this, R.string.unable_to_log_in, Toast.LENGTH_SHORT).show()
-        }
-        authMenuItem.isEnabled = true
-    }
-
-    private fun logout() {
-        AuthUI.getInstance().signOut(this)
-    }
-
     private fun setupDrawerMenuIntems() {
         val navView = findViewById<NavigationView>(R.id.nav_view)
         val navHome = navView.menu.findItem(R.id.nav_home)
@@ -370,6 +326,14 @@ class MainActivity : AppCompatActivity(), ActivityResultCallback<Int>,
         navMessages.icon = IconDrawable(this, SimpleLineIconsIcons.icon_envelope)
         val navAdmin = navView.menu.findItem(R.id.nav_all_messages)
         navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
+        val navAuthentication = navView.menu.findItem(R.id.nav_authentication)
+        if(mAuth.currentUser!=null) {
+            navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_logout)
+            navAuthentication.title = getString(R.string.logout)
+        }else{
+            navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_login)
+            navAuthentication.title = getString(R.string.login)
+        }
         if(mAuth.currentUser!=null){
             navMessages.isEnabled = true
             navMessages.isVisible = true

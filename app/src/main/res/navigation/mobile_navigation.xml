@@ -124,5 +124,10 @@
         android:label="@string/label_privacy"
         tools:layout="@layout/fragment_privacy" />
 
+    <fragment
+        android:id="@+id/nav_authentication"
+        android:name="app.web.diegoflassa_site.littledropsofrain.ui.AuthenticationProxyFragment"
+        android:label="AuthenticationProxyFragment"
+        tools:layout="@layout/fragment_authentication_proxy"/>
 
 </navigation>
