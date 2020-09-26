@@ -4,7 +4,7 @@ ext.config = [
     applicationId     : "app.web.diegoflassa_site.littledropsofrain",
     versionMajor      : 1,
     versionMinor      : 0,
-    versionPatch      : 2,
+    versionPatch      : 3,
     versionClassifier : "",
     minimumSdkVersion : 23,
     compileSdkVersion : 30,
