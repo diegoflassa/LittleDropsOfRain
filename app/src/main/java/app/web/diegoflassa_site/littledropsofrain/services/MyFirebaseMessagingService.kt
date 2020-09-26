@@ -136,6 +136,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationBody = remoteMessage.notification!!.body.toString()
             imageUri = remoteMessage.notification!!.imageUrl!!
         }
-        Helper.showNotification(applicationContext, null, imageUri, remoteMessage.from!!, notificationTitle, notificationBody)
+        Helper.showNotification(applicationContext, null, imageUri, notificationTitle, notificationBody)
     }
 }

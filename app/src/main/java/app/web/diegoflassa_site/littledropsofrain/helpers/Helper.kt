@@ -40,7 +40,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-@Suppress("Unused", "ControlFlowWithEmptyBody")
+@Suppress("Unused", "ControlFlowWithEmptyBody", "SameParameterValue")
 class Helper {
 
     companion object {
@@ -145,14 +145,13 @@ class Helper {
             body: String,
             canSave: Boolean = true
         ) {
-            showNotification(context, null, imageUri, "", title, body, canSave)
+            showNotification(context, null, imageUri, title, body, canSave)
         }
 
         fun showNotification(
             context: Context,
             notificationId: Int? = null,
             imageUri: Uri?,
-            topic: String,
             title: String,
             body: String,
             canSave: Boolean = true
@@ -173,7 +172,6 @@ class Helper {
                         action = NotificationReceiver.ACTION_SAVE
                         putExtra(NotificationReceiver.EXTRA_NID, NOTIFICATION_ID)
                         putExtra(NotificationReceiver.EXTRA_IMAGE_URI, imageUri)
-                        putExtra(NotificationReceiver.EXTRA_TOPIC, topic)
                         putExtra(NotificationReceiver.EXTRA_TITLE, title)
                         putExtra(NotificationReceiver.EXTRA_MESSAGE, body)
                     }
@@ -270,7 +268,7 @@ class Helper {
             title: String,
             body: String
         ) {
-            showNotification(context, notificationId, imageUri, "", title, body)
+            showNotification(context, notificationId, imageUri, title, body)
         }
 
         fun requestReadExternalStoragePermission(activity: Activity){
