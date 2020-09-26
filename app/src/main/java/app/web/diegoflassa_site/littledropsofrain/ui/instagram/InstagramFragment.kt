@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,17 +14,19 @@ import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentInstagramBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
+import app.web.diegoflassa_site.littledropsofrain.interfaces.OnKeyLongPressListener
 import app.web.diegoflassa_site.littledropsofrain.models.InstagramViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.InstagramViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
-class InstagramFragment : Fragment() {
+class InstagramFragment : Fragment(), OnKeyLongPressListener {
 
     companion object{
         fun newInstance() = InstagramFragment()
@@ -75,10 +78,12 @@ class InstagramFragment : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        (activity as MainActivity).mOnKeyLongPressListener = this
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         showProgressDialog()
         binding.webviewInstagram.loadUrl(url)
+        saveCurrentUrl()
         return binding.root
     }
 
@@ -98,6 +103,7 @@ class InstagramFragment : Fragment() {
 
     override fun onStop(){
         isStopped = true
+        (activity as MainActivity).mOnKeyLongPressListener = null
         binding.webviewInstagram.stopLoading()
         super.onStop()
     }
@@ -105,13 +111,7 @@ class InstagramFragment : Fragment() {
     @SuppressLint("ApplySharedPref")
     override fun onPause() {
         binding.webviewInstagram.pauseTimers()
-        val prefs = requireContext().applicationContext.getSharedPreferences(
-            requireContext().packageName,
-            Activity.MODE_PRIVATE
-        )
-        val edit: SharedPreferences.Editor = prefs.edit()
-        edit.putString(KEY_PREF_LAST_URL, binding.webviewInstagram.url)
-        edit.commit()
+        saveCurrentUrl()
         super.onPause()
     }
 
@@ -119,14 +119,7 @@ class InstagramFragment : Fragment() {
         super.onResume()
         isStopped = false
         binding.webviewInstagram.resumeTimers()
-        val prefs = requireContext().applicationContext.getSharedPreferences(
-            requireContext().packageName,
-            Activity.MODE_PRIVATE
-        )
-        val url = prefs.getString(KEY_PREF_LAST_URL, "")
-        if (!url.isNullOrEmpty()) {
-            binding.webviewInstagram.loadUrl(url)
-        }
+        restoreCurrentUrl()
         updateUI(viewModel.viewState)
     }
 
@@ -144,6 +137,33 @@ class InstagramFragment : Fragment() {
     fun hideProgressDialog(){
         if (isSafeToAccessViewModel() && !isStopped) {
             binding.instagramProgress.visibility = View.GONE
+        }
+    }
+
+    override fun keyLongPress(keyCode: Int, event: KeyEvent?) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            binding.webviewInstagram.reload()
+        }
+    }
+
+    private fun saveCurrentUrl() {
+        val prefs = requireContext().applicationContext.getSharedPreferences(
+            requireContext().packageName,
+            Activity.MODE_PRIVATE
+        )
+        val edit: SharedPreferences.Editor = prefs.edit()
+        edit.putString(KEY_PREF_LAST_URL, binding.webviewInstagram.url)
+        edit.apply()
+    }
+
+    private fun restoreCurrentUrl(){
+        val prefs = requireContext().applicationContext.getSharedPreferences(
+            requireContext().packageName,
+            Activity.MODE_PRIVATE
+        )
+        val url = prefs.getString(KEY_PREF_LAST_URL, getString(R.string.url_instagram))
+        if (!url.isNullOrEmpty()) {
+            binding.webviewInstagram.loadUrl(url)
         }
     }
 }

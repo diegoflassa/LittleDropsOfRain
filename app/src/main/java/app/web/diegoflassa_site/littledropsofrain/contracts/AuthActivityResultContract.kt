@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 import com.firebase.ui.auth.AuthUI
-import com.google.firebase.auth.ActionCodeSettings
 import app.web.diegoflassa_site.littledropsofrain.R
 
 class AuthActivityResultContract: ActivityResultContract<Any, Int>() {

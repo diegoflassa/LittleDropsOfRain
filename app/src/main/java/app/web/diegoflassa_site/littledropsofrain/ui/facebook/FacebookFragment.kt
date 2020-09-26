@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,17 +14,19 @@ import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentFacebookBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
+import app.web.diegoflassa_site.littledropsofrain.interfaces.OnKeyLongPressListener
 import app.web.diegoflassa_site.littledropsofrain.models.FacebookViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.FacebookViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
-class FacebookFragment : Fragment() {
+class FacebookFragment : Fragment(), OnKeyLongPressListener {
 
     companion object{
         fun newInstance() = FacebookFragment()
@@ -75,8 +78,12 @@ class FacebookFragment : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        (activity as MainActivity).mOnKeyLongPressListener = this
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.GONE
         showProgressDialog()
         binding.webviewFacebook.loadUrl(url)
+        saveCurrentUrl()
         return binding.root
     }
 
@@ -97,19 +104,14 @@ class FacebookFragment : Fragment() {
     override fun onStop(){
         super.onStop()
         isStopped = true
+        (activity as MainActivity).mOnKeyLongPressListener = null
         binding.webviewFacebook.stopLoading()
     }
 
     @SuppressLint("ApplySharedPref")
     override fun onPause() {
         binding.webviewFacebook.pauseTimers()
-        val prefs = requireContext().applicationContext.getSharedPreferences(
-            requireContext().packageName,
-            Activity.MODE_PRIVATE
-        )
-        val edit: SharedPreferences.Editor = prefs.edit()
-        edit.putString(KEY_PREF_LAST_URL, binding.webviewFacebook.url)
-        edit.commit()
+        saveCurrentUrl()
         super.onPause()
     }
 
@@ -117,14 +119,7 @@ class FacebookFragment : Fragment() {
         super.onResume()
         isStopped = false
         binding.webviewFacebook.resumeTimers()
-        val prefs = requireContext().applicationContext.getSharedPreferences(
-            requireContext().packageName,
-            Activity.MODE_PRIVATE
-        )
-        val url = prefs.getString(KEY_PREF_LAST_URL, "")
-        if (!url.isNullOrEmpty()) {
-            binding.webviewFacebook.loadUrl(url)
-        }
+        restoreCurrentUrl()
         updateUI(viewModel.viewState)
     }
 
@@ -144,6 +139,33 @@ class FacebookFragment : Fragment() {
     fun hideProgressDialog(){
         if (isSafeToAccessViewModel() && !isStopped) {
             binding.facebookProgress.visibility = View.GONE
+        }
+    }
+
+    override fun keyLongPress(keyCode: Int, event: KeyEvent?) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            binding.webviewFacebook.reload()
+        }
+    }
+
+    private fun saveCurrentUrl(){
+        val prefs = requireContext().applicationContext.getSharedPreferences(
+            requireContext().packageName,
+            Activity.MODE_PRIVATE
+        )
+        val edit: SharedPreferences.Editor = prefs.edit()
+        edit.putString(KEY_PREF_LAST_URL, binding.webviewFacebook.url)
+        edit.apply()
+    }
+    
+    private fun restoreCurrentUrl(){
+        val prefs = requireContext().applicationContext.getSharedPreferences(
+            requireContext().packageName,
+            Activity.MODE_PRIVATE
+        )
+        val url = prefs.getString(KEY_PREF_LAST_URL, getString(R.string.url_facebook))
+        if (!url.isNullOrEmpty()) {
+            binding.webviewFacebook.loadUrl(url)
         }
     }
 }

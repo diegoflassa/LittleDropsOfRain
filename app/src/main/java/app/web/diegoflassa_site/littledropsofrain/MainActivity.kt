@@ -4,6 +4,7 @@ import android.content.ComponentCallbacks2
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -28,6 +29,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.helpers.IntentHelper
+import app.web.diegoflassa_site.littledropsofrain.interfaces.OnKeyLongPressListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUserFoundListener
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewState
@@ -61,6 +63,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle : ActionBarDrawerToggle
     private var authenticateOnResume = false
+    var mOnKeyLongPressListener : OnKeyLongPressListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -239,6 +242,10 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    override fun onKeyLongPress(keyCode: Int, event: KeyEvent?): Boolean {
+        mOnKeyLongPressListener?.keyLongPress(keyCode, event)
+        return super.onKeyLongPress(keyCode, event)
+    }
     override fun onResume() {
         super.onResume()
         if(authenticateOnResume){
