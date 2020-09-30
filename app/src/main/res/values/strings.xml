@@ -58,8 +58,15 @@
     <string name="all">All</string>
     <string name="msg_subscribed">Subscribed</string>
     <string name="msg_subscribe_failed">Subscription failed</string>
-    <string name="topic_news" translatable="false">news</string>
-    <string name="topic_promo" translatable="false">promos</string>
+    <string name="topic_news_pt" translatable="false">news_pt</string>
+    <string name="topic_news_en" translatable="false">news_en</string>
+    <string name="topic_promo_pt" translatable="false">promos_pt</string>
+    <string name="topic_promo_en" translatable="false">promos_en</string>
+    <string name="news_pt">News in Portuguese</string>
+    <string name="news_en">News in English</string>
+    <string name="promos_pt">Promos in Portuguese</string>
+    <string name="promos_en">Promos in English</string>
+    <string name="unknown">Unknown</string>
     <string name="msg_subscribed_to_news">Subscribed to News!</string>
     <string name="msg_subscribed_to_promos">Subscribed to Promos!</string>
     <string name="msg_subscribe_promos_failed">Unable to subscribe to promotions</string>

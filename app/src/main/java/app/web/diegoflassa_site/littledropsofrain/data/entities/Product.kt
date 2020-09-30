@@ -5,6 +5,18 @@ import androidx.annotation.Keep
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
+
+@Keep
+enum class Source(private val source : String){
+    ILURIA("iluria"),
+    ETSY("etsy"),
+    UNKNOWN("Unknown");
+
+    override fun toString(): String {
+        return source
+    }
+}
+
 @Keep
 @Parcelize
 @Suppress("Unchecked_Cast")
@@ -17,6 +29,7 @@ data class Product (
     var installment : String? = null,
     var disponibility : String? = null,
     var imageUrl : String? = null,
+    var source : String? = Source.UNKNOWN.toString(),
     var categories : MutableList<String> = ArrayList()
 ) : Parcelable {
 
@@ -29,6 +42,7 @@ data class Product (
         private const val INSTALLMENT= "installment"
         private const val DISPONIBILITY= "disponibility"
         private const val IMAGE_URL= "imageUrl"
+        private const val SOURCE= "source"
         const val CATEGORIES : String= "categories"
     }
 
@@ -46,6 +60,7 @@ data class Product (
         result[INSTALLMENT] = installment
         result[DISPONIBILITY] = disponibility
         result[IMAGE_URL] = imageUrl
+        result[SOURCE] = source
         result[CATEGORIES] = categories
         return result
     }
@@ -59,6 +74,7 @@ data class Product (
         installment = map[INSTALLMENT] as String?
         disponibility = map[DISPONIBILITY] as String?
         imageUrl = map[IMAGE_URL] as String?
+        source = map[SOURCE] as String?
         categories = map[CATEGORIES] as MutableList<String>
     }
 }

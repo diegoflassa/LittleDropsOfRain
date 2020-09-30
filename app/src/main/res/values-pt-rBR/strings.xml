@@ -32,6 +32,11 @@
     <string name="navigation_drawer_close">Fechar gaveta de navegação</string>
     <string name="msg_subscribed">Inscrito</string>
     <string name="msg_subscribe_failed">Erro na Inscrição</string>
+    <string name="news_pt">News em Português</string>
+    <string name="news_en">News em Inglês</string>
+    <string name="promos_pt">Promos em Português</string>
+    <string name="promos_en">Promos em Inglês</string>
+    <string name="unknown">Desconhecido</string>
     <string name="msg_subscribed_to_news">Inscreva-se para Notícias</string>
     <string name="msg_subscribed_to_promos">Inscreva-se para Promoções</string>
     <string name="msg_subscribe_promos_failed">Não foi possível inscrever-se para promoções</string>

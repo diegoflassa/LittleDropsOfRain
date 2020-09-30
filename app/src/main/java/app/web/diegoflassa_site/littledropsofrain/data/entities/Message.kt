@@ -34,7 +34,7 @@ data class Message (
     var sender : String? = FirebaseAuth.getInstance().currentUser!!.displayName,
     var senderId : String? = FirebaseAuth.getInstance().currentUser!!.uid,
     var message : String? = null,
-    var type : String? = null,
+    var type : String? = MessageType.UNKNOWN.toString(),
     @ServerTimestamp
     var creationDate : Timestamp? = Timestamp.now(),
     var read : Boolean? = false

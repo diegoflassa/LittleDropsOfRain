@@ -31,7 +31,7 @@ class NotificationReceiver : BroadcastReceiver() {
             messageToSave.type = MessageType.NOTIFICATION.toString()
             messageToSave.owners.add(FirebaseAuth.getInstance().currentUser?.email!!)
             messageToSave.imageUrl = imageUri?.toString()
-            messageToSave.message = System.lineSeparator() + title + System.lineSeparator() + message
+            messageToSave.message = title + System.lineSeparator() + System.lineSeparator() + message
             MessageDao.insert(messageToSave)
             Helper.updateNotificationMessageSaved(context, imageUri, notificationId!!, title!!, message!!)
         }

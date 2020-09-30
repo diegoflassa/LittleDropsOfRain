@@ -27,6 +27,7 @@ import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.IluriaProduct
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
+import app.web.diegoflassa_site.littledropsofrain.data.entities.Source
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.receivers.NotificationReceiver
 import com.google.firebase.auth.FirebaseUser
@@ -85,6 +86,7 @@ class Helper {
             product.price = (price.toFloat() * 100).toInt()
             product.disponibility = iluriaProduct.disponibility
             product.imageUrl = iluriaProduct.image
+            product.source = Source.ILURIA.toString()
             product.installment = iluriaProduct.installment
             product.linkProduct = iluriaProduct.linkProduct
             return product
@@ -302,6 +304,34 @@ class Helper {
                     super.draw(canvas)
                     canvas.restore()
                 }
+            }
+        }
+
+        @Suppress("DEPRECATION")
+        fun getTopicNewsForCurrentLanguage(context : Context): String {
+            val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                context.resources.configuration.locales.get(0)
+            } else {
+                context.resources.configuration.locale
+            }
+            return if(current.language == "pt"){
+                context.getString(R.string.topic_news_pt)
+            }else{
+                context.getString(R.string.topic_news_en)
+            }
+        }
+
+        @Suppress("DEPRECATION")
+        fun getTopicPromosForCurrentLanguage(context : Context): String {
+            val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                context.resources.configuration.locales.get(0)
+            } else {
+                context.resources.configuration.locale
+            }
+            return if(current.language == "pt"){
+                context.getString(R.string.topic_promo_pt)
+            }else{
+                context.getString(R.string.topic_promo_en)
             }
         }
     }

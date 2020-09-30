@@ -3,6 +3,7 @@ package app.web.diegoflassa_site.littledropsofrain
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.preference.PreferenceManager
@@ -15,7 +16,9 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.*
 import app.web.diegoflassa_site.littledropsofrain.preferences.MyOnSharedPreferenceChangeListener
+import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import java.lang.ref.WeakReference
+import java.util.*
 
 class MyApplication : Application() {
 
@@ -33,6 +36,7 @@ class MyApplication : Application() {
             .with(WeathericonsModule())
             .with(SimpleLineIconsModule())
             .with(IoniconsModule())
+
         setup()
         setupCacheSize()
 
@@ -44,7 +48,8 @@ class MyApplication : Application() {
     private fun subscribeToNews() {
         val sp : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         if(sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_NEWS, true)) {
-            FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topic_news))
+            val topic = Helper.getTopicNewsForCurrentLanguage(this)
+            FirebaseMessaging.getInstance().subscribeToTopic(topic)
                 .addOnCompleteListener { task ->
                     var msg = getString(R.string.msg_subscribed_to_news)
                     if (!task.isSuccessful) {
@@ -61,7 +66,8 @@ class MyApplication : Application() {
     private fun subscribeToPromotions() {
         val sp : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         if(sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_PROMOS, true)) {
-            FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topic_promo))
+            val topic = Helper.getTopicPromosForCurrentLanguage(this)
+            FirebaseMessaging.getInstance().subscribeToTopic(topic)
                 .addOnCompleteListener { task ->
                     var msg = getString(R.string.msg_subscribed_to_promos)
                     if (!task.isSuccessful) {

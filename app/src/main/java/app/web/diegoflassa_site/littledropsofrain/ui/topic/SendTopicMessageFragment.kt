@@ -80,20 +80,16 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         for(topic in TopicMessage.Topic.values()) {
             if(topic != TopicMessage.Topic.UNKNOWN) {
                 val chip = Chip(requireContext())
-                chip.text = topic.toString()
+                chip.text = topic.toTitle()
                 chip.isCheckable = true
                 chip.setOnCheckedChangeListener { compoundButton: CompoundButton, state: Boolean ->
                     if (state) {
                         viewModel.viewState.topics.add(
-                            TopicMessage.Topic.valueOf(
-                                compoundButton.text.toString().toUpperCase(Locale.ROOT)
-                            )
+                            TopicMessage.Topic.fromTitle(compoundButton.text.toString())
                         )
                     } else {
                         viewModel.viewState.topics.remove(
-                            TopicMessage.Topic.valueOf(
-                                compoundButton.text.toString().toUpperCase(Locale.ROOT)
-                            )
+                            TopicMessage.Topic.fromTitle(compoundButton.text.toString())
                         )
                     }
                 }
@@ -204,9 +200,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         // Update the UI
         for(chip in binding.cpGrpTopics.children) {
             if(viewState?.topics?.contains(
-                    TopicMessage.Topic.valueOf(
-                        (chip as Chip).text.toString().toUpperCase(Locale.ROOT)
-                    )
+                    TopicMessage.Topic.fromTitle((chip as Chip).text.toString())
                 )!!) {
                 (chip as Chip).isChecked = true
             }
@@ -230,11 +224,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         val chipIds = binding.cpGrpTopics.checkedChipIds
         for(chipId in chipIds){
             val chip = binding.cpGrpTopics.findViewById<Chip>(chipId)
-            ret.add(
-                TopicMessage.Topic.valueOf(
-                    chip.text.toString().toUpperCase(Locale.ROOT)
-                )
-            )
+            ret.add(TopicMessage.Topic.fromTitle(chip.text.toString()))
         }
         return ret
     }

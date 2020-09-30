@@ -2,10 +2,13 @@ package app.web.diegoflassa_site.littledropsofrain.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.messaging.FirebaseMessaging
+import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.R
+import java.util.*
 
 class MyOnSharedPreferenceChangeListener(var context: Context): SharedPreferences.OnSharedPreferenceChangeListener {
     companion object {
@@ -31,7 +34,8 @@ class MyOnSharedPreferenceChangeListener(var context: Context): SharedPreference
     }
 
     private fun unsubscribeToPromos() {
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(context.getString(R.string.topic_promo))
+        val topic = Helper.getTopicPromosForCurrentLanguage(context)
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
             .addOnCompleteListener { task ->
                 var msg = context.getString(R.string.msg_unsubscribed)
                 if (!task.isSuccessful) {
@@ -42,7 +46,8 @@ class MyOnSharedPreferenceChangeListener(var context: Context): SharedPreference
     }
 
     private fun subscribeToPromos() {
-        FirebaseMessaging.getInstance().subscribeToTopic(context.getString(R.string.topic_promo))
+        val topic = Helper.getTopicPromosForCurrentLanguage(context)
+        FirebaseMessaging.getInstance().subscribeToTopic(topic)
             .addOnCompleteListener { task ->
                 var msg = context.getString(R.string.msg_subscribed)
                 if (!task.isSuccessful) {
@@ -54,7 +59,8 @@ class MyOnSharedPreferenceChangeListener(var context: Context): SharedPreference
     }
 
     private fun unsubscribeToNews() {
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(context.getString(R.string.topic_news))
+        val topic = Helper.getTopicNewsForCurrentLanguage(context)
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
             .addOnCompleteListener { task ->
                 var msg = context.getString(R.string.msg_unsubscribed)
                 if (!task.isSuccessful) {
@@ -65,7 +71,8 @@ class MyOnSharedPreferenceChangeListener(var context: Context): SharedPreference
     }
 
     private fun subscribeToNews() {
-        FirebaseMessaging.getInstance().subscribeToTopic(context.getString(R.string.topic_news))
+        val topic = Helper.getTopicNewsForCurrentLanguage(context)
+        FirebaseMessaging.getInstance().subscribeToTopic(topic)
             .addOnCompleteListener { task ->
                 var msg = context.getString(R.string.msg_subscribed)
                 if (!task.isSuccessful) {
