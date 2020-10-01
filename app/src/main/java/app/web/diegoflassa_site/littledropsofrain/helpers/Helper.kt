@@ -81,7 +81,7 @@ class Helper {
             while (st.hasMoreTokens()) {
                 product.categories.add(st.nextToken().trim())
             }
-            product.idIluria = iluriaProduct.idProduct
+            product.idSource = iluriaProduct.idProduct
             val price = iluriaProduct.price!!.replace(',', '.')
             product.price = (price.toFloat() * 100).toInt()
             product.disponibility = iluriaProduct.disponibility

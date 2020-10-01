@@ -106,7 +106,7 @@ dependencies {
     implementation 'com.github.yalantis:ucrop:2.2.6'
 
     // com.google.firebase
-    implementation 'com.google.firebase:firebase-iid:20.2.4'
+    implementation 'com.google.firebase:firebase-iid:20.3.0'
     // Add the Firebase SDK for Google Analytics
     // For an optimal experience using FCM, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.
@@ -116,12 +116,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-appindexing:19.1.0'
     // Firebase Authentication (Kotlin)
     implementation 'com.google.firebase:firebase-auth-ktx:19.4.0'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:17.2.1'
-    implementation 'com.google.firebase:firebase-database-ktx:19.4.0'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:17.2.2'
+    implementation 'com.google.firebase:firebase-database-ktx:19.5.0'
     // Add the SDK for Firebase Cloud Messaging
-    implementation 'com.google.firebase:firebase-firestore-ktx:21.6.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:21.7.0'
     implementation 'com.google.firebase:firebase-inappmessaging-display-ktx:19.1.1'
-    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    implementation 'com.google.firebase:firebase-messaging:20.3.0'
     implementation 'com.google.firebase:firebase-storage-ktx:19.2.0'
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-auth:6.3.0'
@@ -135,8 +135,8 @@ dependencies {
 
 
     implementation 'com.google.firebase:firebase-dynamic-links:19.1.0'
-    implementation 'com.google.firebase:firebase-firestore:21.6.0'
-    implementation 'com.google.firebase:firebase-perf:19.0.8'
+    implementation 'com.google.firebase:firebase-firestore:21.7.0'
+    implementation 'com.google.firebase:firebase-perf:19.0.9'
 
     // Leak Canary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
@@ -144,7 +144,7 @@ dependencies {
     // Google Sign In SDK (only required for Google Sign In)
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.google.android.material:material:1.2.1'
-    implementation 'com.google.gms:google-services:4.3.3'
+    implementation 'com.google.gms:google-services:4.3.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'androidx.activity:activity-ktx:1.2.0-alpha08'
     implementation 'androidx.annotation:annotation:1.1.0'

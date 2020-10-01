@@ -16,4 +16,9 @@
         android:orderInCategory="100"
         android:title="@string/privacy"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_tos"
+        android:orderInCategory="100"
+        android:title="@string/tos"
+        app:showAsAction="never" />
 </menu>

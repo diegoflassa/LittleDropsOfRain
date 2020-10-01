@@ -1,5 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain
 
+import android.app.Activity
 import android.content.ComponentCallbacks2
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +26,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import app.web.diegoflassa_site.littledropsofrain.contracts.EmailAuthActivityResultContract
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
@@ -35,6 +38,7 @@ import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewState
 import app.web.diegoflassa_site.littledropsofrain.services.SetupProductsUpdateWorkerService
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
+import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -48,7 +52,7 @@ import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 
 class MainActivity : AppCompatActivity(),
-    OnUserFoundListener, ComponentCallbacks2 {
+    OnUserFoundListener, ComponentCallbacks2, ActivityResultCallback<Int> {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -150,9 +154,18 @@ class MainActivity : AppCompatActivity(),
         binding.navView.setupWithNavController(navController)
         val bnv = findViewById<BottomNavigationView>(R.id.nav_bottom)
         val menu = bnv.menu
-        menu.findItem(R.id.nav_all_messages).icon = IconDrawable(this, SimpleLineIconsIcons.icon_envelope_letter)
-        menu.findItem(R.id.nav_reload_products).icon = IconDrawable(this, SimpleLineIconsIcons.icon_loop)
-        menu.findItem(R.id.nav_send_topic_message).icon = IconDrawable(this, SimpleLineIconsIcons.icon_envelope)
+        menu.findItem(R.id.nav_all_messages).icon = IconDrawable(
+            this,
+            SimpleLineIconsIcons.icon_envelope_letter
+        )
+        menu.findItem(R.id.nav_reload_products).icon = IconDrawable(
+            this,
+            SimpleLineIconsIcons.icon_loop
+        )
+        menu.findItem(R.id.nav_send_topic_message).icon = IconDrawable(
+            this,
+            SimpleLineIconsIcons.icon_envelope
+        )
         menu.findItem(R.id.nav_users).icon = IconDrawable(this, SimpleLineIconsIcons.icon_users)
 
         bnv.setupWithNavController(navController)
@@ -175,17 +188,22 @@ class MainActivity : AppCompatActivity(),
         firebaseUserLiveData.observe(this,
             { firebaseUser ->
                 if (firebaseUser != null) {
-                    fab.isEnabled= true
+                    fab.isEnabled = true
                     UserDao.findByEMail(firebaseUser.email, this)
                 } else {
-                    fab.isEnabled= false
+                    fab.isEnabled = false
                     currentUser = User()
                     setupDrawerMenuIntems()
                     val navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_home, true).build()
-                    findNavController(R.id.nav_host_fragment).navigate(R.id.nav_home, null, navOptions)
+                    findNavController(R.id.nav_host_fragment).navigate(
+                        R.id.nav_home,
+                        null,
+                        navOptions
+                    )
                 }
             })
         SetupProductsUpdateWorkerService.setupWorker(applicationContext)
+        handleIntent()
     }
 
     /**
@@ -242,10 +260,16 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
     override fun onKeyLongPress(keyCode: Int, event: KeyEvent?): Boolean {
         mOnKeyLongPressListener?.keyLongPress(keyCode, event)
         return super.onKeyLongPress(keyCode, event)
     }
+
     override fun onResume() {
         super.onResume()
         if(authenticateOnResume){
@@ -270,12 +294,48 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun handleIntent(){
-        if(intent.extras!=null && intent.extras!!.containsKey(IntentHelper.EXTRA_START_WHAT)){
-            when(intent.extras!!.get(IntentHelper.EXTRA_START_WHAT)){
-                "privacy" -> {
-                    findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
-                    intent.removeExtra(IntentHelper.EXTRA_START_WHAT)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent : Intent?){
+        if(intent!=null) {
+            if (intent.extras != null && intent.extras!!.containsKey(IntentHelper.EXTRA_START_WHAT)) {
+                when (intent.extras!!.get(IntentHelper.EXTRA_START_WHAT)) {
+                    "privacy" -> {
+                        findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
+                        intent.removeExtra(IntentHelper.EXTRA_START_WHAT)
+                    }
                 }
+            }
+            if (AuthUI.canHandleIntent(intent)) {
+                if (intent.extras == null) {
+                    return
+                }
+                registerForActivityResult(EmailAuthActivityResultContract(), this).launch(intent)
+            }
+            val auth = FirebaseAuth.getInstance()
+            val emailLink = intent.data.toString()
+
+            // Confirm the link is a sign-in with email link.
+            if (auth.isSignInWithEmailLink(emailLink)) {
+                // Retrieve this from wherever you stored it
+                val email = FirebaseAuth.getInstance().currentUser?.email!!
+
+                // The client SDK will parse the code from the link for you.
+                auth.signInWithEmailLink(email, emailLink)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d(TAG, "Successfully signed in with email link!")
+                            val result = task.result
+                            // You can access the new user via result.getUser()
+                            // Additional user info profile *not* available via:
+                            // result.getAdditionalUserInfo().getProfile() == null
+                            // You can check if the user is new or existing:
+                            // result.getAdditionalUserInfo().isNewUser()
+                        } else {
+                            Log.e(TAG, "Error signing in with email link", task.exception)
+                        }
+                    }
             }
         }
     }
@@ -315,6 +375,10 @@ class MainActivity : AppCompatActivity(),
             }
             R.id.action_privacy -> {
                 findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
+                ret = true
+            }
+            R.id.action_tos -> {
+                findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalTosFragment())
                 ret = true
             }
         }
@@ -370,5 +434,19 @@ class MainActivity : AppCompatActivity(),
             UserDao.insert(userFb)
         }
         setupDrawerMenuIntems()
+    }
+
+    override fun onActivityResult(result: Int) {
+        if (result == Activity.RESULT_OK) {
+            // Successfully signed in
+            val user = FirebaseAuth.getInstance().currentUser
+            // ...
+        } else {
+            Log.d(TAG, "Error signing in")
+            // Sign in failed. If response is null the user canceled the
+            // sign-in flow using the back button. Otherwise check
+            // response.getError().getErrorCode() and handle the error.
+            // ...
+        }
     }
 }

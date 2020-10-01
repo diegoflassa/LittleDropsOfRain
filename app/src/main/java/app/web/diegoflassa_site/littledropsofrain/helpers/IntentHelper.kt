@@ -19,6 +19,10 @@ class IntentHelper {
         return i
     }
 
+    fun newMainActivityIntentCopy(context: Context?, intent : Intent): Intent {
+        return intent
+    }
+
     companion object {
         var EXTRA_START_WHAT = "app.web.diegoflassa_site.littledropsofrain.EXTRA_START_WHAT"
     }

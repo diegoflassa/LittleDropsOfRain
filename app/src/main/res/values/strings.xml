@@ -67,6 +67,7 @@
     <string name="promos_pt">Promos in Portuguese</string>
     <string name="promos_en">Promos in English</string>
     <string name="unknown">Unknown</string>
+    <string name="tos">Terms of Service</string>
     <string name="msg_subscribed_to_news">Subscribed to News!</string>
     <string name="msg_subscribed_to_promos">Subscribed to Promos!</string>
     <string name="msg_subscribe_promos_failed">Unable to subscribe to promotions</string>
@@ -139,4 +140,5 @@
     <string name="message_image">Message Image</string>
     <string name="logo_toolbar">Logo Toolbar</string>
     <string name="please_wait">Please Wait</string>
+    <string name="label_tos">Terms of Service</string>
 </resources>

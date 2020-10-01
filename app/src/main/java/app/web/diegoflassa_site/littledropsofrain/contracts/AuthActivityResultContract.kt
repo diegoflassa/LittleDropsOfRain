@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 import com.firebase.ui.auth.AuthUI
 import app.web.diegoflassa_site.littledropsofrain.R
+import com.google.firebase.auth.ActionCodeSettings
 
 class AuthActivityResultContract: ActivityResultContract<Any, Int>() {
 
@@ -17,22 +18,20 @@ class AuthActivityResultContract: ActivityResultContract<Any, Int>() {
     }
 
     private fun createSignInIntent():Intent{
-        /*
         val actionCodeSettings = ActionCodeSettings.newBuilder()
             .setAndroidPackageName("app.web.diegoflassa_site", /* installIfNotAvailable= */ true,
-                /* minimumVersion= */ null)
+                /* minimumVersion= */ "23")
             .setHandleCodeInApp(true) // This must be set to true
-            .setUrl("https://google.com") // This URL needs to be whitelisted
+            .setUrl("https://littledropsofrain.page.link/passwordless") // This URL needs to be whitelisted
             .build()
-         */
 
         // Choose authentication providers
         val providers = arrayListOf(
-            //AuthUI.IdpConfig.EmailBuilder().enableEmailLinkSignIn()
-                //.setActionCodeSettings(actionCodeSettings).build(),
-                AuthUI.IdpConfig.GoogleBuilder().build())
-                //AuthUI.IdpConfig.TwitterBuilder().build(),
-                //AuthUI.IdpConfig.GitHubBuilder().build())
+            AuthUI.IdpConfig.EmailBuilder().enableEmailLinkSignIn()
+                .setActionCodeSettings(actionCodeSettings).build(),
+                AuthUI.IdpConfig.GoogleBuilder().build(),
+                AuthUI.IdpConfig.TwitterBuilder().build(),
+                AuthUI.IdpConfig.GitHubBuilder().build())
 
         return AuthUI.getInstance()
             .createSignInIntentBuilder()
