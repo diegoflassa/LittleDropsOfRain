@@ -45,9 +45,9 @@ class AllMessagesFragment : Fragment(),
     private var isStopped: Boolean = false
     private val viewModel: AllMessagesViewModel by viewModels()
     private lateinit var mAdapter: WeakReference<MessageAdapter>
-    var binding : FragmentAllMessagesBinding by viewLifecycle()
+    var binding: FragmentAllMessagesBinding by viewLifecycle()
     private var mFilterDialog: AllMessagesFilterDialogFragment? = null
-    private lateinit var toggle : ActionBarDrawerToggle
+    private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var mFirestore: FirebaseFirestore
     private var mQuery: Query? = null
 
@@ -86,7 +86,7 @@ class AllMessagesFragment : Fragment(),
                 R.string.navigation_drawer_close
             )
             drawerLayout?.addDrawerListener(toggle)
-            if(drawerLayout!=null) {
+            if (drawerLayout != null) {
                 toggle.syncState()
                 drawerLayout.openDrawer(GravityCompat.START)
             }
@@ -108,20 +108,20 @@ class AllMessagesFragment : Fragment(),
         return binding.root
     }
 
-    override fun onDestroyView(){
+    override fun onDestroyView() {
         mFilterDialog = null
-        if(this::toggle.isInitialized) {
+        if (this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
         super.onDestroyView()
     }
 
-    private fun handleBundle(){
-        if(AllMessagesFragmentArgs.fromBundle(requireArguments()).who != KEY_ALL_MESSAGES) {
+    private fun handleBundle() {
+        if (AllMessagesFragmentArgs.fromBundle(requireArguments()).who != KEY_ALL_MESSAGES) {
             val filter = AllMessagesFilters.default
             filter.emailSender = AllMessagesFragmentArgs.fromBundle(requireArguments()).who
-            viewModel.viewState.filters =filter
+            viewModel.viewState.filters = filter
             onFilter(viewModel.viewState.filters)
         }
     }
@@ -164,15 +164,15 @@ class AllMessagesFragment : Fragment(),
         fab?.visibility = View.GONE
     }
 
-     private fun showLoadingScreen(){
+    private fun showLoadingScreen() {
         binding.allMessagesProgress.visibility = View.VISIBLE
     }
 
-    fun hideLoadingScreen(){
+    fun hideLoadingScreen() {
         binding.allMessagesProgress.visibility = View.GONE
     }
 
-    override fun onFilter(filters : AllMessagesFilters) {
+    override fun onFilter(filters: AllMessagesFilters) {
 
         // Construct query basic query
         var query: Query = mFirestore.collection(MessageDao.COLLECTION_PATH)
@@ -180,7 +180,7 @@ class AllMessagesFragment : Fragment(),
 
         // Message Type (equality filter)
         if (filters.hasMessageType()) {
-            query = query.whereEqualTo( Message.TYPE, filters.type.toString())
+            query = query.whereEqualTo(Message.TYPE, filters.type.toString())
         }
 
         // Read (equality filter)
@@ -211,7 +211,8 @@ class AllMessagesFragment : Fragment(),
         showLoadingScreen()
 
         // Set header
-        binding.textCurrentSearchAllMessages.text = HtmlCompat.fromHtml(filters.getSearchDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.textCurrentSearchAllMessages.text =
+            HtmlCompat.fromHtml(filters.getSearchDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.textCurrentSortByAllMessages.text = filters.getOrderDescription(requireContext())
 
         // Save filters
@@ -236,7 +237,8 @@ class AllMessagesFragment : Fragment(),
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = WeakReference( object : MessageAdapter(requireContext(), mQuery, this@AllMessagesFragment) {
+        mAdapter = WeakReference(object :
+            MessageAdapter(requireContext(), mQuery, this@AllMessagesFragment) {
             override fun onDataChanged() {
                 hideLoadingScreen()
                 // Show/hide content if the query returns empty.
@@ -271,7 +273,7 @@ class AllMessagesFragment : Fragment(),
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.viewState.filters= AllMessagesFilters.default
+        viewModel.viewState.filters = AllMessagesFilters.default
         onFilter(viewModel.viewState.filters)
     }
 

@@ -17,6 +17,7 @@ import android.graphics.drawable.LayerDrawable
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
@@ -29,8 +30,10 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.IluriaProduct
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Source
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
+import app.web.diegoflassa_site.littledropsofrain.preferences.MyOnSharedPreferenceChangeListener
 import app.web.diegoflassa_site.littledropsofrain.receivers.NotificationReceiver
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 import kotlinx.coroutines.Dispatchers
@@ -166,9 +169,9 @@ class Helper {
                 intent,
                 PendingIntent.FLAG_ONE_SHOT
             )
-            val saveNotificationIntent : Intent?
-            var saveNotificationPendingIntent : PendingIntent? = null
-            if(notificationId==null) {
+            val saveNotificationIntent: Intent?
+            var saveNotificationPendingIntent: PendingIntent? = null
+            if (notificationId == null) {
                 saveNotificationIntent =
                     Intent(context, NotificationReceiver::class.java).apply {
                         action = NotificationReceiver.ACTION_SAVE
@@ -200,18 +203,18 @@ class Helper {
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
 
-            if(notificationId==null) {
+            if (notificationId == null) {
                 notificationBuilder.setContentIntent(pendingIntent)
             }
 
             if (canSave) {
-                if(notificationId==null) {
+                if (notificationId == null) {
                     notificationBuilder.addAction(
                         android.R.drawable.ic_menu_save,
                         context.getString(R.string.save),
                         saveNotificationPendingIntent
                     )
-                }else{
+                } else {
                     notificationBuilder.addAction(
                         android.R.drawable.ic_menu_save,
                         context.getString(R.string.saved),
@@ -236,9 +239,10 @@ class Helper {
                         imageNotif = BitmapFactory.decodeStream(response.body().byteStream())
 
                         notificationBuilder
-                            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(imageNotif)
-                            .bigLargeIcon(null)
-                        )
+                            .setStyle(
+                                NotificationCompat.BigPictureStyle().bigPicture(imageNotif)
+                                    .bigLargeIcon(null)
+                            )
                         notificationBuilder.setLargeIcon(imageNotif)
                     }
                     job.join()
@@ -258,7 +262,7 @@ class Helper {
             }
 
             notificationManagerCompat.notify(
-                notificationId?:NOTIFICATION_ID++,
+                notificationId ?: NOTIFICATION_ID++,
                 notificationBuilder.build()
             )
         }
@@ -273,20 +277,21 @@ class Helper {
             showNotification(context, notificationId, imageUri, title, body)
         }
 
-        fun requestReadExternalStoragePermission(activity: Activity){
+        fun requestReadExternalStoragePermission(activity: Activity) {
             requestPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
         }
 
-        private fun requestPermission(activity: Activity, permission: String){
+        private fun requestPermission(activity: Activity, permission: String) {
             if (checkSelfPermission(activity, permission)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED
+            ) {
 
                 // Should we show an explanation?
                 if (shouldShowRequestPermissionRationale(activity, permission)) {
                     // Explain to the user why we need to read the contacts
                 }
 
-                val permissions : MutableList<String> = ArrayList<String>(1)
+                val permissions: MutableList<String> = ArrayList<String>(1)
                 permissions.add(permission)
                 requestPermissions(activity, permissions.toTypedArray(), 0)
 
@@ -307,32 +312,105 @@ class Helper {
             }
         }
 
-        @Suppress("DEPRECATION")
-        fun getTopicNewsForCurrentLanguage(context : Context): String {
-            val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                context.resources.configuration.locales.get(0)
-            } else {
-                context.resources.configuration.locale
-            }
-            return if(current.language == "pt"){
+        fun getTopicNewsForLocale(context: Context, locale: Locale): String {
+            return if (locale.language == "pt") {
                 context.getString(R.string.topic_news_pt)
-            }else{
+            } else {
                 context.getString(R.string.topic_news_en)
             }
         }
 
         @Suppress("DEPRECATION")
-        fun getTopicPromosForCurrentLanguage(context : Context): String {
+        fun getTopicNewsForCurrentLanguage(context: Context): String {
             val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 context.resources.configuration.locales.get(0)
             } else {
                 context.resources.configuration.locale
             }
-            return if(current.language == "pt"){
+            return if (current.language == "pt") {
+                context.getString(R.string.topic_news_pt)
+            } else {
+                context.getString(R.string.topic_news_en)
+            }
+        }
+
+        fun getTopicPromosForLocale(context: Context, locale: Locale): String {
+            return if (locale.language == "pt") {
                 context.getString(R.string.topic_promo_pt)
-            }else{
+            } else {
                 context.getString(R.string.topic_promo_en)
             }
+        }
+
+        @Suppress("DEPRECATION")
+        fun getTopicPromosForCurrentLanguage(context: Context): String {
+            val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                context.resources.configuration.locales.get(0)
+            } else {
+                context.resources.configuration.locale
+            }
+            return if (current.language == "pt") {
+                context.getString(R.string.topic_promo_pt)
+            } else {
+                context.getString(R.string.topic_promo_en)
+            }
+        }
+
+        fun unsubscribeToPromos(context: Context) {
+            val topic = Helper.getTopicPromosForCurrentLanguage(context)
+            unsubscribeToPromos(context, topic)
+        }
+
+        fun unsubscribeToPromos(context: Context, topic: String) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
+                .addOnCompleteListener { task ->
+                    var msg = context.getString(R.string.msg_unsubscribed)
+                    if (!task.isSuccessful) {
+                        msg = context.getString(R.string.msg_subscribe_failed)
+                    }
+                    Log.d(MyOnSharedPreferenceChangeListener.TAG, msg)
+                }
+        }
+
+        fun subscribeToPromos(context: Context) {
+            val topic = Helper.getTopicPromosForCurrentLanguage(context)
+            FirebaseMessaging.getInstance().subscribeToTopic(topic)
+                .addOnCompleteListener { task ->
+                    var msg = context.getString(R.string.msg_subscribed)
+                    if (!task.isSuccessful) {
+                        msg = context.getString(R.string.msg_subscribe_failed)
+                    }
+                    Log.d(MyOnSharedPreferenceChangeListener.TAG, msg)
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                }
+        }
+
+        fun unsubscribeToNews(context: Context, topic: String) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
+                .addOnCompleteListener { task ->
+                    var msg = context.getString(R.string.msg_unsubscribed)
+                    if (!task.isSuccessful) {
+                        msg = context.getString(R.string.msg_subscribe_failed)
+                    }
+                    Log.d(MyOnSharedPreferenceChangeListener.TAG, msg)
+                }
+        }
+
+        fun unsubscribeToNews(context: Context) {
+            val topic = getTopicNewsForCurrentLanguage(context)
+            unsubscribeToNews(context, topic)
+        }
+
+        fun subscribeToNews(context: Context) {
+            val topic = getTopicNewsForCurrentLanguage(context)
+            FirebaseMessaging.getInstance().subscribeToTopic(topic)
+                .addOnCompleteListener { task ->
+                    var msg = context.getString(R.string.msg_subscribed)
+                    if (!task.isSuccessful) {
+                        msg = context.getString(R.string.msg_subscribe_failed)
+                    }
+                    Log.d(MyOnSharedPreferenceChangeListener.TAG, msg)
+                }
         }
     }
 }

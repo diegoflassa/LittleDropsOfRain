@@ -3,6 +3,8 @@ package app.web.diegoflassa_site.littledropsofrain
 import android.app.Activity
 import android.content.ComponentCallbacks2
 import android.content.Intent
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -26,7 +28,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import app.web.diegoflassa_site.littledropsofrain.contracts.EmailAuthActivityResultContract
+import androidx.preference.PreferenceManager
+import app.web.diegoflassa_site.littledropsofrain.contracts.EmailLinkAuthActivityResultContract
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
@@ -37,18 +40,23 @@ import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUserFoundListener
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewState
 import app.web.diegoflassa_site.littledropsofrain.services.SetupProductsUpdateWorkerService
+import app.web.diegoflassa_site.littledropsofrain.ui.SettingsFragment
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.joanzapata.iconify.fonts.TypiconsIcons
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(),
@@ -65,9 +73,10 @@ class MainActivity : AppCompatActivity(),
     private lateinit var mAuth: FirebaseAuth
     private lateinit var fab: FloatingActionButton
     private lateinit var binding: ActivityMainBinding
-    private lateinit var toggle : ActionBarDrawerToggle
+    private lateinit var toggle: ActionBarDrawerToggle
     private var authenticateOnResume = false
-    var mOnKeyLongPressListener : OnKeyLongPressListener? = null
+    private var lastIntent: Intent? = null
+    var mOnKeyLongPressListener: OnKeyLongPressListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +91,7 @@ class MainActivity : AppCompatActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         fab = findViewById(R.id.fab)
-        fab.isEnabled= false
+        fab.isEnabled = false
         fab.setOnClickListener {
             val bundle = Bundle()
             bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
@@ -116,12 +125,25 @@ class MainActivity : AppCompatActivity(),
                 Log.i(TAG, "onDrawerOpened")
                 val currentUser = mAuth.currentUser
                 if (currentUser != null) {
-                    Picasso.get().load(currentUser.photoUrl)
-                        .placeholder(R.drawable.image_placeholder).into(
-                            binding.navView.nav_vw_image
+                    if (currentUser.photoUrl != null) {
+                        Picasso.get().load(currentUser.photoUrl)
+                            .placeholder(R.drawable.image_placeholder).into(
+                                binding.navView.nav_vw_image
+                            )
+                    } else {
+                        binding.navView.nav_vw_image.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                applicationContext,
+                                R.mipmap.ic_launcher_round
+                            )
                         )
+                    }
+                    binding.navView.nav_vw_image.setOnClickListener {
+                        findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalUserProfileFragment())
+                    }
                     binding.navView.nav_vw_name.text = currentUser.displayName
                     binding.navView.nav_vw_email.text = currentUser.email
+
                 } else {
                     binding.navView.nav_vw_image.setImageDrawable(
                         ContextCompat.getDrawable(
@@ -135,7 +157,8 @@ class MainActivity : AppCompatActivity(),
             }
         })
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController: NavController = navHostFragment.navController
 
         // Passing each menu ID as a set of Ids because each
@@ -172,10 +195,9 @@ class MainActivity : AppCompatActivity(),
         bnv.visibility = View.GONE
 
         mAuth = FirebaseAuth.getInstance()
-        if(mAuth.currentUser==null){
+        if (mAuth.currentUser == null) {
             authenticateOnResume = true
-            // Create and launch sign-in intent
-        }else{
+        } else {
             Toast.makeText(
                 applicationContext, getString(
                     R.string.user_logged_as,
@@ -189,6 +211,7 @@ class MainActivity : AppCompatActivity(),
             { firebaseUser ->
                 if (firebaseUser != null) {
                     fab.isEnabled = true
+                    firebaseUser.reload()
                     UserDao.findByEMail(firebaseUser.email, this)
                 } else {
                     fab.isEnabled = false
@@ -260,6 +283,35 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    @Suppress("DEPRECATION")
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val subscribedLanguage = PreferenceManager.getDefaultSharedPreferences(this).getString(
+            SettingsFragment.SUBSCRIBED_LANGUAGE_KEY, ""
+        )
+        val sll = Locale(subscribedLanguage!!)
+
+        val currentLocale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            resources.configuration.locales.get(0)
+        } else {
+            resources.configuration.locale
+        }
+
+        if (currentLocale.language != sll.language) {
+            val oldTopicNews = Helper.getTopicNewsForLocale(this, sll)
+            Helper.unsubscribeToNews(this, oldTopicNews)
+            Helper.subscribeToNews(this)
+
+            val oldTopicPromos = Helper.getTopicPromosForLocale(this, sll)
+            Helper.unsubscribeToPromos(this, oldTopicPromos)
+            Helper.subscribeToPromos(this)
+
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
+                SettingsFragment.SUBSCRIBED_LANGUAGE_KEY, currentLocale.language
+            ).apply()
+        }
+    }
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         handleIntent(intent)
@@ -272,16 +324,17 @@ class MainActivity : AppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
-        if(authenticateOnResume){
-            authenticateOnResume= false
-            findNavController(R.id.nav_host_fragment).navigate(R.id.nav_authentication)
+        if (authenticateOnResume) {
+            authenticateOnResume = false
+            // Navigate to the sign-in/authentication fragment
+            findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalAuthenticationFragment())
         }
         updateUI(viewModel.viewState)
         handleIntent()
     }
 
     override fun onStop() {
-        if(this::toggle.isInitialized) {
+        if (this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
@@ -293,50 +346,33 @@ class MainActivity : AppCompatActivity(),
         super.onDestroy()
     }
 
-    private fun handleIntent(){
+    private fun handleIntent() {
         handleIntent(intent)
     }
 
-    private fun handleIntent(intent : Intent?){
-        if(intent!=null) {
-            if (intent.extras != null && intent.extras!!.containsKey(IntentHelper.EXTRA_START_WHAT)) {
-                when (intent.extras!!.get(IntentHelper.EXTRA_START_WHAT)) {
-                    "privacy" -> {
-                        findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
-                        intent.removeExtra(IntentHelper.EXTRA_START_WHAT)
-                    }
-                }
-            }
-            if (AuthUI.canHandleIntent(intent)) {
-                if (intent.extras == null) {
-                    return
-                }
-                registerForActivityResult(EmailAuthActivityResultContract(), this).launch(intent)
-            }
-            val auth = FirebaseAuth.getInstance()
-            val emailLink = intent.data.toString()
-
-            // Confirm the link is a sign-in with email link.
-            if (auth.isSignInWithEmailLink(emailLink)) {
-                // Retrieve this from wherever you stored it
-                val email = FirebaseAuth.getInstance().currentUser?.email!!
-
-                // The client SDK will parse the code from the link for you.
-                auth.signInWithEmailLink(email, emailLink)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d(TAG, "Successfully signed in with email link!")
-                            val result = task.result
-                            // You can access the new user via result.getUser()
-                            // Additional user info profile *not* available via:
-                            // result.getAdditionalUserInfo().getProfile() == null
-                            // You can check if the user is new or existing:
-                            // result.getAdditionalUserInfo().isNewUser()
-                        } else {
-                            Log.e(TAG, "Error signing in with email link", task.exception)
+    private fun handleIntent(intent: Intent?) {
+        if (lastIntent != intent) {
+            if (intent != null) {
+                if (intent.extras != null && intent.extras!!.containsKey(IntentHelper.EXTRA_START_WHAT)) {
+                    when (intent.extras!!.get(IntentHelper.EXTRA_START_WHAT)) {
+                        "privacy" -> {
+                            findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
+                            intent.removeExtra(IntentHelper.EXTRA_START_WHAT)
                         }
                     }
+                }
+                if (AuthUI.canHandleIntent(intent)) {
+                    authenticateOnResume = false
+                    if (intent.extras == null) {
+                        return
+                    }
+                    registerForActivityResult(
+                        EmailLinkAuthActivityResultContract(),
+                        this
+                    ).launch(intent)
+                }
             }
+            lastIntent = intent
         }
     }
 
@@ -358,7 +394,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        var ret= false
+        var ret = false
         when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
@@ -398,24 +434,24 @@ class MainActivity : AppCompatActivity(),
         val navAdmin = navView.menu.findItem(R.id.nav_all_messages)
         navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
         val navAuthentication = navView.menu.findItem(R.id.nav_authentication)
-        if(mAuth.currentUser!=null) {
+        if (mAuth.currentUser != null) {
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_logout)
             navAuthentication.title = getString(R.string.logout)
-        }else{
+        } else {
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_login)
             navAuthentication.title = getString(R.string.login)
         }
-        if(mAuth.currentUser!=null){
+        if (mAuth.currentUser != null) {
             navMessages.isEnabled = true
             navMessages.isVisible = true
-        }else{
+        } else {
             navMessages.isEnabled = false
             navMessages.isVisible = false
         }
-        if(!currentUser.isAdmin) {
+        if (!currentUser.isAdmin) {
             navAdmin.isEnabled = false
             navAdmin.isVisible = false
-        }else{
+        } else {
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
         }
@@ -425,13 +461,29 @@ class MainActivity : AppCompatActivity(),
     override fun onUserFound(user: User?) {
         if (user != null) {
             currentUser = user
-            if(user.isAdmin){
+            if (user.isAdmin) {
                 Helper.requestReadExternalStoragePermission(this)
             }
             UserDao.insert(currentUser)
-        }else if(FirebaseAuth.getInstance().currentUser!=null) {
+        } else if (FirebaseAuth.getInstance().currentUser != null) {
             val userFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
             UserDao.insert(userFb)
+            currentUser = userFb
+            Firebase.auth.fetchSignInMethodsForEmail(currentUser.email!!)
+                .addOnSuccessListener { result ->
+                    val signInMethods = result.signInMethods!!
+                    if (signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD) || signInMethods.contains(
+                            EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD
+                        )
+                    ) {
+                        findNavController(R.id.nav_host_fragment).navigate(
+                            MainActivityDirections.actionGlobalUserProfileFragment()
+                        )
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.e(TAG, "Error getting sign in methods for user", exception)
+                }
         }
         setupDrawerMenuIntems()
     }
@@ -439,7 +491,7 @@ class MainActivity : AppCompatActivity(),
     override fun onActivityResult(result: Int) {
         if (result == Activity.RESULT_OK) {
             // Successfully signed in
-            val user = FirebaseAuth.getInstance().currentUser
+            //val user = FirebaseAuth.getInstance().currentUser
             // ...
         } else {
             Log.d(TAG, "Error signing in")

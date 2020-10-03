@@ -37,7 +37,6 @@
     <string name="promos_pt">Promos em Português</string>
     <string name="promos_en">Promos em Inglês</string>
     <string name="unknown">Desconhecido</string>
-    <string name="tos">Termos de Serviço</string>
     <string name="msg_subscribed_to_news">Inscreva-se para Notícias</string>
     <string name="msg_subscribed_to_promos">Inscreva-se para Promoções</string>
     <string name="msg_subscribe_promos_failed">Não foi possível inscrever-se para promoções</string>
@@ -107,4 +106,9 @@
     <string name="logo_toolbar">Logo da Barra de Ferramentas</string>
     <string name="please_wait">Por favor Aguarde</string>
     <string name="label_tos">Termos de Serviço</string>
+    <string name="name">Nome</string>
+    <string name="change_image">Alterar Imagem</string>
+    <string name="update">Atualizar</string>
+    <string name="user_image">Imagem do Usuário</string>
+    <string name="exit">Sair</string>
 </resources>

@@ -29,10 +29,14 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-open class MessageAdapter(context : Context, query: Query?, private val mListener: OnMessageSelectedListener)
-    : FirestoreAdapter<MessageAdapter.ViewHolder?>(query) {
+open class MessageAdapter(
+    context: Context,
+    query: Query?,
+    private val mListener: OnMessageSelectedListener
+) : FirestoreAdapter<MessageAdapter.ViewHolder?>(query) {
 
     private val mContext = context
+
     interface OnMessageSelectedListener {
         fun onMessageSelected(message: DocumentSnapshot?)
     }
@@ -41,7 +45,11 @@ open class MessageAdapter(context : Context, query: Query?, private val mListene
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val binding = RecyclerviewItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = RecyclerviewItemMessageBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(mContext, binding.root)
     }
 
@@ -52,7 +60,7 @@ open class MessageAdapter(context : Context, query: Query?, private val mListene
         holder.bind(getSnapshot(position), mListener)
     }
 
-    class ViewHolder(context : Context, itemView: View) :
+    class ViewHolder(context: Context, itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         private val mContext = context
         val binding = RecyclerviewItemMessageBinding.bind(itemView)
@@ -65,13 +73,13 @@ open class MessageAdapter(context : Context, query: Query?, private val mListene
             val message: Message? = snapshot.toObject(Message::class.java)
             message?.uid = snapshot.id
 
-            if(message?.creationDate !=null) {
+            if (message?.creationDate != null) {
                 binding.msgCreationDate.text = Helper.getDateTime(message.creationDate!!.toDate())
             }
             binding.msgSender.text = message?.emailSender
             binding.msgTo.text = message?.emailTo
             binding.msgMessage.setText(message?.message)
-            if(message?.read !=null)
+            if (message?.read != null)
                 binding.msgRead.isChecked = message.read!!
             binding.msgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
                 ioScope.launch {
@@ -85,7 +93,7 @@ open class MessageAdapter(context : Context, query: Query?, private val mListene
 
             // Click listener
             itemView.setOnClickListener { listener?.onMessageSelected(snapshot) }
-            when(MessageType.valueOf(message?.type?.toUpperCase(Locale.ROOT)!!)){
+            when (MessageType.valueOf(message?.type?.toUpperCase(Locale.ROOT)!!)) {
                 MessageType.MESSAGE -> {
                     binding.msgImage.visibility = View.GONE
                     binding.btnViewAsNotification.visibility = View.GONE
@@ -105,38 +113,65 @@ open class MessageAdapter(context : Context, query: Query?, private val mListene
                     }
                 }
                 MessageType.NOTIFICATION -> {
-                    if(message.imageUrl!=null) {
+                    if (message.imageUrl != null) {
                         binding.msgImage.visibility = View.VISIBLE
-                        Picasso.get().load(message.imageUrl).placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(binding.msgImage)
-                    }else{
+                        Picasso.get().load(message.imageUrl)
+                            .placeholder(R.drawable.image_placeholder)
+                            .error(R.drawable.image_placeholder).into(binding.msgImage)
+                    } else {
                         binding.msgImage.visibility = View.GONE
                     }
                     binding.btnViewAsNotification.visibility = View.VISIBLE
-                    itemView.background = ContextCompat.getDrawable(MyApplication.getContext(), R.color.colorMessageNotification)
+                    itemView.background = ContextCompat.getDrawable(
+                        MyApplication.getContext(),
+                        R.color.colorMessageNotification
+                    )
                 }
                 MessageType.UNKNOWN -> {
                     // DO nothing
                 }
             }
 
-            binding.btnViewAsNotification.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_envelope_letter))
+            binding.btnViewAsNotification.setImageDrawable(
+                IconDrawable(
+                    MyApplication.getContext(),
+                    SimpleLineIconsIcons.icon_envelope_letter
+                )
+            )
             binding.btnViewAsNotification.setOnClickListener {
-                Helper.showNotification(mContext, message.getImageUrlAsUri(), "", message.message!!, false)
+                Helper.showNotification(
+                    mContext,
+                    message.getImageUrlAsUri(),
+                    "",
+                    message.message!!,
+                    false
+                )
             }
 
-            binding.btnReply.isEnabled = (message.emailSender != FirebaseAuth.getInstance().currentUser?.email)
-            binding.btnReply.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_action_undo))
+            binding.btnReply.isEnabled =
+                (message.emailSender != FirebaseAuth.getInstance().currentUser?.email)
+            binding.btnReply.setImageDrawable(
+                IconDrawable(
+                    MyApplication.getContext(),
+                    SimpleLineIconsIcons.icon_action_undo
+                )
+            )
             binding.btnReply.setOnClickListener {
                 replyMessage(it, message)
             }
 
-            binding.btnDelete.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_trash))
-            binding.btnDelete.setOnClickListener{
+            binding.btnDelete.setImageDrawable(
+                IconDrawable(
+                    MyApplication.getContext(),
+                    SimpleLineIconsIcons.icon_trash
+                )
+            )
+            binding.btnDelete.setOnClickListener {
                 MessageDao.delete(message)
             }
         }
 
-        private fun replyMessage(view : View, message : Message) {
+        private fun replyMessage(view: View, message: Message) {
             val messageToEdit = Message()
             messageToEdit.replyUid = message.uid
             messageToEdit.senderId = message.senderId

@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 class NotificationReceiver : BroadcastReceiver() {
 
-    companion object{
+    companion object {
         const val ACTION_SAVE = "ACTION_SAVE"
         const val EXTRA_NID = "EXTRA_NID"
         const val EXTRA_IMAGE_URI = "EXTRA_IMAGE_URI"
@@ -21,7 +21,7 @@ class NotificationReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        if(intent.action.equals(ACTION_SAVE)){
+        if (intent.action.equals(ACTION_SAVE)) {
             val notificationId = intent.extras?.getInt(EXTRA_NID)
             val imageUri = intent.extras?.get(EXTRA_IMAGE_URI) as Uri?
             val title = intent.extras?.getString(EXTRA_TITLE)
@@ -31,9 +31,16 @@ class NotificationReceiver : BroadcastReceiver() {
             messageToSave.type = MessageType.NOTIFICATION.toString()
             messageToSave.owners.add(FirebaseAuth.getInstance().currentUser?.email!!)
             messageToSave.imageUrl = imageUri?.toString()
-            messageToSave.message = title + System.lineSeparator() + System.lineSeparator() + message
+            messageToSave.message =
+                title + System.lineSeparator() + System.lineSeparator() + message
             MessageDao.insert(messageToSave)
-            Helper.updateNotificationMessageSaved(context, imageUri, notificationId!!, title!!, message!!)
+            Helper.updateNotificationMessageSaved(
+                context,
+                imageUri,
+                notificationId!!,
+                title!!,
+                message!!
+            )
         }
     }
 }

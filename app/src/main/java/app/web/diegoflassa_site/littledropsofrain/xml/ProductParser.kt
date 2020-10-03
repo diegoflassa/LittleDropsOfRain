@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit
 
 class ProductParser(listener: OnParseProgress? = null) {
 
-    interface OnParseProgress{
-        fun onParseProgressChange(progress : String)
+    interface OnParseProgress {
+        fun onParseProgressChange(progress: String)
     }
 
     companion object {
@@ -34,18 +34,19 @@ class ProductParser(listener: OnParseProgress? = null) {
         const val CATEGORIA = "categoria"
     }
 
-    private val mListener : OnParseProgress? = listener
-    private val xmlIluriaSource= "http://admin.iluria.com/xml/buscape/?user=7C36F628368750071BFF6FF1FCBF56F5E5BB31A40DD39535"
+    private val mListener: OnParseProgress? = listener
+    private val xmlIluriaSource =
+        "http://admin.iluria.com/xml/buscape/?user=7C36F628368750071BFF6FF1FCBF56F5E5BB31A40DD39535"
     var text: String? = null
     private var products = ArrayList<IluriaProduct>()
-    fun parse(): List<IluriaProduct>{
+    fun parse(): List<IluriaProduct> {
         val client = OkHttpClient()
         client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
         client.setReadTimeout(30, TimeUnit.SECONDS)    // socket timeout
         val request: Request = Request.Builder()
-                .url(xmlIluriaSource)
-                .build()
-        val response : Response = client.newCall(request).execute()
+            .url(xmlIluriaSource)
+            .build()
+        val response: Response = client.newCall(request).execute()
         val inputStream: InputStream = ByteArrayInputStream(response.body().bytes())
         return parse(inputStream)
     }
@@ -68,11 +69,11 @@ class ProductParser(listener: OnParseProgress? = null) {
                         if (tagname == PRODUTOS) {
                             mListener?.onParseProgressChange("Starting parsing products")
                             Log.i(TAG, "Starting parsing products")
-                        }else if (tagname == PRODUTO){
+                        } else if (tagname == PRODUTO) {
                             progressBuilder.clear()
                             progressBuilder.append("Created new product object")
                             Log.i(TAG, "Created new product object")
-                            product= IluriaProduct()
+                            product = IluriaProduct()
                         }
                     XmlPullParser.END_TAG ->
                         when (tagname) {
@@ -90,50 +91,50 @@ class ProductParser(listener: OnParseProgress? = null) {
                                 products.add(product)
                             }
                             ID_PRODUTO -> {
-                                product.idProduct= text.toString()
+                                product.idProduct = text.toString()
                                 progressBuilder.append("Setted product ${product.idProduct} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.idProduct} to the object")
                             }
                             LINK_PRODUTO -> {
-                                product.linkProduct= text
+                                product.linkProduct = text
                                 progressBuilder.append("Setted product ${product.linkProduct} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.linkProduct} to the object")
                             }
                             TITULO -> {
-                                product.title= text
+                                product.title = text
                                 progressBuilder.append("Setted product ${product.title} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.title} to the object")
                             }
                             PRECO -> {
-                                product.price= text
+                                product.price = text
                                 progressBuilder.append("Setted product ${product.price} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.price} to the object")
                             }
                             PARCELAMENTO -> {
-                                product.installment= text
+                                product.installment = text
                                 progressBuilder.append("Setted product ${product.installment} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.installment} to the object")
                             }
                             DISPONIBILIDADE -> {
-                                product.disponibility= text
+                                product.disponibility = text
                                 progressBuilder.append("Setted product ${product.disponibility} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.disponibility} to the object")
                             }
                             IMAGEM -> {
-                                product.image= text
+                                product.image = text
                                 progressBuilder.append("Setted product ${product.image} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.image} to the object")
                             }
                             CATEGORIA -> {
-                                product.category= text
+                                product.category = text
                                 progressBuilder.append("Setted product ${product.category} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.category} to the object")
                             }
                         }
-                        else -> {
-                            Log.i(TAG,"Unknown tag : $tagname")
-                            progressBuilder.append("Unknown tag : $tagname")
-                        }
+                    else -> {
+                        Log.i(TAG, "Unknown tag : $tagname")
+                        progressBuilder.append("Unknown tag : $tagname")
+                    }
                 }
                 eventType = parser.next()
             }

@@ -12,13 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.adapters.MessageAdapter
@@ -31,6 +24,13 @@ import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.MessagesViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.MessagesViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
 import java.lang.ref.WeakReference
 
 
@@ -41,7 +41,7 @@ class MessagesFragment : Fragment(),
 
     private val viewModel: MessagesViewModel by viewModels()
     private lateinit var mAdapter: WeakReference<MessageAdapter>
-    var binding : FragmentMessagesBinding by viewLifecycle()
+    var binding: FragmentMessagesBinding by viewLifecycle()
     private var mFilterDialog: MyMessagesFilterDialogFragment? = null
     private lateinit var mFirestore: FirebaseFirestore
     private var mQuery: Query? = null
@@ -83,7 +83,7 @@ class MessagesFragment : Fragment(),
         return binding.root
     }
 
-    override fun onDestroyView(){
+    override fun onDestroyView() {
         mFilterDialog = null
         super.onDestroyView()
     }
@@ -124,15 +124,15 @@ class MessagesFragment : Fragment(),
         fab?.visibility = View.GONE
     }
 
-     private fun showLoadingScreen(){
+    private fun showLoadingScreen() {
         binding.messagesProgress.visibility = View.VISIBLE
     }
 
-    fun hideLoadingScreen(){
+    fun hideLoadingScreen() {
         binding.messagesProgress.visibility = View.GONE
     }
 
-    override fun onFilter(filters : MyMessagesFilters) {
+    override fun onFilter(filters: MyMessagesFilters) {
 
         // Construct query basic query
         var query: Query = mFirestore.collection(MessageDao.COLLECTION_PATH)
@@ -172,7 +172,8 @@ class MessagesFragment : Fragment(),
         showLoadingScreen()
 
         // Set header
-        binding.textCurrentSearchMyMessages.text = HtmlCompat.fromHtml(filters.getSearchDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.textCurrentSearchMyMessages.text =
+            HtmlCompat.fromHtml(filters.getSearchDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.textCurrentSortByMyMessages.text = filters.getOrderDescription(requireContext())
 
         // Save filters
@@ -197,29 +198,30 @@ class MessagesFragment : Fragment(),
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = WeakReference( object : MessageAdapter(requireContext(), mQuery, this@MessagesFragment) {
-            override fun onDataChanged() {
-                hideLoadingScreen()
-                // Show/hide content if the query returns empty.
-                if (itemCount == 0) {
-                    binding.recyclerviewMessages.visibility = View.GONE
-                    binding.messagesViewEmpty.visibility = View.VISIBLE
-                } else {
-                    binding.recyclerviewMessages.visibility = View.VISIBLE
-                    binding.messagesViewEmpty.visibility = View.GONE
+        mAdapter =
+            WeakReference(object : MessageAdapter(requireContext(), mQuery, this@MessagesFragment) {
+                override fun onDataChanged() {
+                    hideLoadingScreen()
+                    // Show/hide content if the query returns empty.
+                    if (itemCount == 0) {
+                        binding.recyclerviewMessages.visibility = View.GONE
+                        binding.messagesViewEmpty.visibility = View.VISIBLE
+                    } else {
+                        binding.recyclerviewMessages.visibility = View.VISIBLE
+                        binding.messagesViewEmpty.visibility = View.GONE
+                    }
                 }
-            }
 
-            override fun onError(e: FirebaseFirestoreException?) {
-                // Show a snackbar on errors
-                activity?.findViewById<View>(android.R.id.content)?.let {
-                    Snackbar.make(
-                        it,
-                        "Error: check logs for info.", Snackbar.LENGTH_LONG
-                    ).show()
+                override fun onError(e: FirebaseFirestoreException?) {
+                    // Show a snackbar on errors
+                    activity?.findViewById<View>(android.R.id.content)?.let {
+                        Snackbar.make(
+                            it,
+                            "Error: check logs for info.", Snackbar.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
-        })
+            })
         binding.recyclerviewMessages.layoutManager = LinearLayoutManager(activity)
         binding.recyclerviewMessages.adapter = mAdapter.get()
     }
@@ -232,7 +234,7 @@ class MessagesFragment : Fragment(),
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.viewState.filters= MyMessagesFilters.default
+        viewModel.viewState.filters = MyMessagesFilters.default
         onFilter(viewModel.viewState.filters)
     }
 

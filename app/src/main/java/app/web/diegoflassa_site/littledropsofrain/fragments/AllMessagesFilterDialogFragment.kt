@@ -41,14 +41,14 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
         fun onFilter(filters: AllMessagesFilters)
     }
 
-    private lateinit var mSpinnerUsers : Spinner
-    private lateinit var  mSpinnerSort : Spinner
-    private lateinit var  mSpinnerType : Spinner
+    private lateinit var mSpinnerUsers: Spinner
+    private lateinit var mSpinnerSort: Spinner
+    private lateinit var mSpinnerType: Spinner
     var filterListener: FilterListener? = null
     val viewModel: AllMessagesFilterDialogViewModel by viewModels()
     var binding: FragmentAllMessagesFiltersBinding by viewLifecycle()
     private var mSavedInstanceState: Bundle? = null
-    private var mRootView : View?= null
+    private var mRootView: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,9 +70,9 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
         binding.buttonCancelMessages.setOnClickListener(this)
         binding.checkBoxMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             binding.switchMsgRead.isEnabled = checked
-            if(!checked) {
+            if (!checked) {
                 filters.read = null
-            }else{
+            } else {
                 binding.spinnerSort.setSelection(0)
             }
             binding.spinnerSort.isEnabled = !checked
@@ -82,11 +82,11 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
             filters.read = checked
         }
         UserDao.loadAll(this)
-        mRootView= binding.root
+        mRootView = binding.root
         return binding.root
     }
 
-    override fun onDismiss(dialog: DialogInterface){
+    override fun onDismiss(dialog: DialogInterface) {
         val fragment: Fragment? = parentFragmentManager.fragments[0]
         if (fragment is DialogInterface.OnDismissListener) {
             (fragment as DialogInterface.OnDismissListener).onDismiss(dialog)
@@ -123,7 +123,7 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
 
     private val selectedSortBy: String?
         get() {
-            if(mRootView!=null&&!isDetached) {
+            if (mRootView != null && !isDetached) {
                 return when (binding.spinnerSort.selectedItem as String) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
@@ -141,13 +141,13 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
 
     private val selectedType: MessageType?
         get() {
-            if(mRootView!=null&&!isDetached) {
-                return if(binding.spinnerType.selectedItemPosition>0) {
+            if (mRootView != null && !isDetached) {
+                return if (binding.spinnerType.selectedItemPosition > 0) {
                     MessageType.valueOf(
                         binding.spinnerType.selectedItem.toString()
                             .toUpperCase(Locale.ROOT)
                     )
-                }else{
+                } else {
                     null
                 }
             }
@@ -156,8 +156,8 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
 
     private val selectedRead: Boolean?
         get() {
-            if(mRootView!=null&&!isDetached) {
-                if(binding.checkBoxMsgRead.isChecked){
+            if (mRootView != null && !isDetached) {
+                if (binding.checkBoxMsgRead.isChecked) {
                     return binding.switchMsgRead.isChecked
                 }
             }
@@ -166,7 +166,7 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
 
     private val selectedEmailSender: String?
         get() {
-            if(mRootView!=null&&!isDetached) {
+            if (mRootView != null && !isDetached) {
                 return if (binding.spinnerUsers.selectedItemPosition > 0) {
                     return (binding.spinnerUsers.selectedItem as User).email
                 } else null
@@ -176,7 +176,7 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
 
     private val sortDirection: Query.Direction?
         get() {
-            if(mRootView!=null&&!isDetached) {
+            if (mRootView != null && !isDetached) {
                 return when (binding.spinnerSort.selectedItem as String) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
@@ -193,7 +193,7 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
         }
 
     fun resetFilters() {
-        if(mRootView!=null&&!isDetached) {
+        if (mRootView != null && !isDetached) {
             mSpinnerUsers.setSelection(0)
             mSpinnerSort.setSelection(0)
             mSpinnerType.setSelection(0)
@@ -224,20 +224,21 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
             android.R.layout.simple_spinner_item, usersWithDefault
         )
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerUsers.adapter= dataAdapter
+        binding.spinnerUsers.adapter = dataAdapter
         binding.spinnerUsers.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
                 filters.emailSender = (binding.spinnerUsers.adapter.getItem(pos) as User).email
                 viewModel.viewState.selectedUserEmail = filters.emailSender.toString()
             }
+
             override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
                 filters.emailSender = null
             }
         }
-        if(viewModel.viewState.selectedUserEmail.isNotEmpty()) {
-            for(index in 0 until binding.spinnerUsers.adapter.count) {
+        if (viewModel.viewState.selectedUserEmail.isNotEmpty()) {
+            for (index in 0 until binding.spinnerUsers.adapter.count) {
                 val userAdapter = binding.spinnerUsers.adapter.getItem(index) as User
-                if(userAdapter.email == viewModel.viewState.selectedUserEmail) {
+                if (userAdapter.email == viewModel.viewState.selectedUserEmail) {
                     binding.spinnerUsers.setSelection(index)
                     break
                 }

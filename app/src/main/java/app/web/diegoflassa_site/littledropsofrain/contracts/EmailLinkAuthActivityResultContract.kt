@@ -3,11 +3,10 @@ package app.web.diegoflassa_site.littledropsofrain.contracts
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
-import com.firebase.ui.auth.AuthUI
 import app.web.diegoflassa_site.littledropsofrain.R
-import com.firebase.ui.auth.util.ExtraConstants
+import com.firebase.ui.auth.AuthUI
 
-class EmailAuthActivityResultContract: ActivityResultContract<Intent, Int>() {
+class EmailLinkAuthActivityResultContract : ActivityResultContract<Intent, Int>() {
 
     override fun createIntent(context: Context, input: Intent?): Intent {
         return createSignInIntent(input!!)
@@ -17,17 +16,18 @@ class EmailAuthActivityResultContract: ActivityResultContract<Intent, Int>() {
         return resultCode
     }
 
-    private fun createSignInIntent(intent : Intent):Intent{
+    private fun createSignInIntent(intent: Intent): Intent {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
-            AuthUI.IdpConfig.GoogleBuilder().build(),
-            AuthUI.IdpConfig.FacebookBuilder().build(),
-            AuthUI.IdpConfig.TwitterBuilder().build())
-        val link = intent.extras!!.getString(ExtraConstants.EMAIL_LINK_SIGN_IN)
+        )
+
+        val emailLink = intent.data.toString()
         return AuthUI.getInstance()
             .createSignInIntentBuilder()
-            .setEmailLink(link!!)
+            .setEmailLink(emailLink)
             .setAvailableProviders(providers)
+            .setLogo(R.mipmap.little_drops_of_rain) // Set logo drawable
+            .setTheme(R.style.AppTheme) // Set theme
             .build()
     }
 

@@ -110,6 +110,14 @@
         android:id="@+id/action_global_tos_fragment"
         app:destination="@id/nav_tos" />
 
+    <action
+        android:id="@+id/action_global_user_profile_fragment"
+        app:destination="@id/nav_user_profile" />
+
+    <action
+        android:id="@+id/action_global_authentication_fragment"
+        app:destination="@id/nav_authentication" />
+
     <fragment
         android:id="@+id/nav_users"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.users.UsersFragment"
@@ -139,5 +147,11 @@
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.AuthenticationProxyFragment"
         android:label="AuthenticationProxyFragment"
         tools:layout="@layout/fragment_authentication_proxy"/>
+
+    <fragment
+        android:id="@+id/nav_user_profile"
+        android:name="app.web.diegoflassa_site.littledropsofrain.ui.user_profile.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
 
 </navigation>

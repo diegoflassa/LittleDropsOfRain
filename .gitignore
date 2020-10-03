@@ -114,3 +114,4 @@ app/release/
 gradle.properties
 deployment_cert.der
 little-drops-of-rain.2020-09-20.private-key.pem
+app/src/main/res/values/api_keys.xml

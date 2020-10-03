@@ -54,9 +54,9 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
     }
 
     private val viewModel: SendMessageViewModel by viewModels()
-    private var binding : FragmentSendMessageBinding by viewLifecycle()
+    private var binding: FragmentSendMessageBinding by viewLifecycle()
     private val ioScope = CoroutineScope(Dispatchers.IO)
-    private lateinit var toggle : ActionBarDrawerToggle
+    private lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,12 +70,12 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
             val callback = Callback(this)
             // Coroutine has multiple dispatchers suited for different type of workloads
             ioScope.launch {
-                when(viewModel.viewState.sendMethod){
-                    SendMessageViewState.SendMethod.MESSAGE ->{
+                when (viewModel.viewState.sendMethod) {
+                    SendMessageViewState.SendMethod.MESSAGE -> {
                         val message = Message()
                         message.replyUid = viewModel.viewState.replyUid
                         message.owners.add(viewModel.viewState.sender.email.toString())
-                        if(viewModel.viewState.isUserAdmin) {
+                        if (viewModel.viewState.isUserAdmin) {
                             message.owners.add(viewModel.viewState.dest.email.toString())
                         }
                         message.replyUid = viewModel.viewState.replyUid
@@ -88,12 +88,17 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
                         message.read = false
                         MessageDao.insert(message, callback)
                     }
-                    SendMessageViewState.SendMethod.EMAIL ->{
+                    SendMessageViewState.SendMethod.EMAIL -> {
                         val sendTos = ArrayList<String>()
                         sendTos.add(binding.spnrContacts.selectedItem.toString())
-                        Helper.sendEmail(requireContext(), sendTos, binding.edttxtTitle.text.toString(), binding.mltxtMessage.text.toString())
+                        Helper.sendEmail(
+                            requireContext(),
+                            sendTos,
+                            binding.edttxtTitle.text.toString(),
+                            binding.mltxtMessage.text.toString()
+                        )
                     }
-                    SendMessageViewState.SendMethod.UNKNOWN ->{
+                    SendMessageViewState.SendMethod.UNKNOWN -> {
                         activity?.runOnUiThread {
                             Toast.makeText(
                                 requireContext(),
@@ -112,7 +117,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         UserDao.loadAll(this)
-        mSavedInstanceState= savedInstanceState
+        mSavedInstanceState = savedInstanceState
         handleBundle()
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
@@ -125,7 +130,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
                 R.string.navigation_drawer_close
             )
             drawerLayout?.addDrawerListener(toggle)
-            if(drawerLayout!=null)
+            if (drawerLayout != null)
                 toggle.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
@@ -136,15 +141,15 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         return binding.root
     }
 
-    override fun onDestroyView(){
-        if(this::toggle.isInitialized) {
+    override fun onDestroyView() {
+        if (this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
         super.onDestroyView()
     }
 
-    override fun onSaveInstanceState(outState : Bundle){
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.viewState.title = binding.edttxtTitle.text.toString()
         viewModel.viewState.body = binding.mltxtMessage.text.toString()
@@ -156,10 +161,10 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
     }
 
     private fun setupViewForUser() {
-        if(FirebaseAuth.getInstance().currentUser!=null){
+        if (FirebaseAuth.getInstance().currentUser != null) {
             val user = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
             UserDao.findByEMail(user.email, this)
-        }else{
+        } else {
             onUserFound(null)
         }
     }
@@ -170,7 +175,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         if (sendModes != null) {
             for ((index, sendMode) in sendModes.withIndex()) {
                 val rdMode = RadioButton(requireContext())
-                if(sendModesValues!![index] == SendMessageViewState.SendMethod.MESSAGE.toString())
+                if (sendModesValues!![index] == SendMessageViewState.SendMethod.MESSAGE.toString())
                     rdMode.isSelected = true
                 rdMode.text = sendMode
                 rdMode.tag = sendModesValues[index]
@@ -180,7 +185,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         binding.rdGrpSendMethod.setOnCheckedChangeListener { radioGroup: RadioGroup, checkedId: Int ->
             val radioButton = radioGroup.findViewById<RadioButton>(checkedId)
             val sendMethod = radioButton.tag as String
-            when(SendMessageViewState.SendMethod.valueOf(sendMethod.toUpperCase(Locale.ROOT))) {
+            when (SendMessageViewState.SendMethod.valueOf(sendMethod.toUpperCase(Locale.ROOT))) {
                 SendMessageViewState.SendMethod.EMAIL -> {
                     binding.edttxtTitle.visibility = View.VISIBLE
                 }
@@ -200,39 +205,44 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
     @Suppress("UNCHECKED_CAST")
     private fun updateUI(viewState: SendMessageViewState) {
         // Update the UI
-        binding.edttxtTitle.visibility = if(viewState.sendMethod == SendMessageViewState.SendMethod.EMAIL){View.VISIBLE}else{View.GONE}
+        binding.edttxtTitle.visibility =
+            if (viewState.sendMethod == SendMessageViewState.SendMethod.EMAIL) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         binding.edttxtTitle.setText(viewState.title)
         binding.mltxtMessage.setText(viewState.body)
-        if(viewState.isUserAdmin && binding.spnrContacts.adapter!=null) {
+        if (viewState.isUserAdmin && binding.spnrContacts.adapter != null) {
             val user = viewState.dest
             val dataAdapter: ArrayAdapter<User> =
                 binding.spnrContacts.adapter as ArrayAdapter<User>
             val spinnerPosition: Int = dataAdapter.getPosition(user)
             binding.spnrContacts.setSelection(spinnerPosition)
-        }else{
+        } else {
             binding.spnrContacts.setSelection(-1)
         }
-        if(viewState.isUserAdmin) {
+        if (viewState.isUserAdmin) {
             for (view in binding.rdGrpSendMethod.children) {
                 val radioButton = view as RadioButton
                 radioButton.isChecked = (radioButton.tag == viewState.sendMethod.toString())
             }
-        }else{
+        } else {
             for (view in binding.rdGrpSendMethod.children) {
                 val radioButton = view as RadioButton
-                if(radioButton.text == SendMessageViewState.SendMethod.MESSAGE.toString()){
+                if (radioButton.text == SendMessageViewState.SendMethod.MESSAGE.toString()) {
                     radioButton.isChecked = true
                     break
                 }
             }
         }
-        if(!viewState.isUserAdmin){
+        if (!viewState.isUserAdmin) {
             binding.spnrContacts.visibility = View.GONE
             binding.rdGrpSendMethod.visibility = View.GONE
-        }else{
-            if(binding.spnrContacts.adapter!=null && !binding.spnrContacts.adapter.isEmpty)
+        } else {
+            if (binding.spnrContacts.adapter != null && !binding.spnrContacts.adapter.isEmpty)
                 binding.spnrContacts.visibility = View.VISIBLE
-            else{
+            else {
                 binding.spnrContacts.visibility = View.GONE
             }
             binding.rdGrpSendMethod.visibility = View.VISIBLE
@@ -242,10 +252,13 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun setSelectedMessageSender(){
-        if(mSavedInstanceState!=null &&(mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY||mSavedInstanceState?.getString(ACTION_SEND_KEY) == ACTION_SEND)) {
+    private fun setSelectedMessageSender() {
+        if (mSavedInstanceState != null && (mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY || mSavedInstanceState?.getString(
+                ACTION_SEND_KEY
+            ) == ACTION_SEND)
+        ) {
             val message = mSavedInstanceState?.getParcelable<Message>(KEY_MESSAGE)
-            if(message!=null) {
+            if (message != null) {
                 val user = User()
                 var name = message.sender
                 if (message.sender?.contains(":")!!) {
@@ -263,7 +276,7 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
     }
 
     private fun handleBundle() {
-        if (mSavedInstanceState != null){
+        if (mSavedInstanceState != null) {
             if (mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_SEND) {
                 setSelectedMessageSender()
             } else if (mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY) {
@@ -286,25 +299,29 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         return super.onOptionsItemSelected(item)
     }
 
-    private class Callback( var fragment : SendMessageFragment) :
+    private class Callback(var fragment: SendMessageFragment) :
         OnDataChangeListener<DocumentReference> {
         override fun onDataChanged(item: DocumentReference) {
             fragment.binding.btnSend.isEnabled = true
-            Toast.makeText(fragment.requireContext(),  "Message sent successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                fragment.requireContext(),
+                "Message sent successfully",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     override fun onUserFound(user: User?) {
-        viewModel.viewState.sender = user?: User()
-        viewModel.viewState.isUserAdmin = !(user==null || !user.isAdmin)
+        viewModel.viewState.sender = user ?: User()
+        viewModel.viewState.isUserAdmin = !(user == null || !user.isAdmin)
         binding.btnSend.isEnabled = true
         updateUI(viewModel.viewState)
     }
 
     override fun onUsersLoaded(users: List<User>) {
         val mutableUsers = ArrayList<User>(users)
-        for(user in users){
-            if(user.email == FirebaseAuth.getInstance().currentUser?.email){
+        for (user in users) {
+            if (user.email == FirebaseAuth.getInstance().currentUser?.email) {
                 mutableUsers.remove(user)
             }
         }
@@ -313,26 +330,27 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
             android.R.layout.simple_spinner_item, mutableUsers
         )
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spnrContacts.adapter= dataAdapter
+        binding.spnrContacts.adapter = dataAdapter
         binding.spnrContacts.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
                 viewModel.viewState.dest = (binding.spnrContacts.adapter.getItem(pos) as User)
             }
+
             override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
                 viewModel.viewState.dest = User()
             }
         }
-        if(binding.spnrContacts.adapter.isEmpty){
+        if (binding.spnrContacts.adapter.isEmpty) {
             binding.spnrContacts.visibility = View.GONE
-            for( radio in binding.rdGrpSendMethod.children ){
-                if(radio.tag == SendMessageViewState.SendMethod.EMAIL.toString()){
+            for (radio in binding.rdGrpSendMethod.children) {
+                if (radio.tag == SendMessageViewState.SendMethod.EMAIL.toString()) {
                     radio.isEnabled = false
-                }else if(radio.tag == SendMessageViewState.SendMethod.MESSAGE.toString() ){
-                    viewModel.viewState.sendMethod =  SendMessageViewState.SendMethod.MESSAGE
+                } else if (radio.tag == SendMessageViewState.SendMethod.MESSAGE.toString()) {
+                    viewModel.viewState.sendMethod = SendMessageViewState.SendMethod.MESSAGE
                     (radio as RadioButton).isChecked = true
                 }
             }
-        }else {
+        } else {
             setSelectedMessageSender()
         }
     }

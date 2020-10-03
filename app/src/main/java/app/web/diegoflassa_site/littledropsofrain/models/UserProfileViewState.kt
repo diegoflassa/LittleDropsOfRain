@@ -2,9 +2,11 @@ package app.web.diegoflassa_site.littledropsofrain.models
 
 import androidx.lifecycle.LiveData
 
-class UsersViewState : LiveData<UsersViewState>() {
+class UserProfileViewState : LiveData<UserProfileViewState>() {
 
     var text: String = ""
+    var name: String = ""
+    var email: String = ""
 
 }
 

@@ -7,6 +7,9 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.preference.PreferenceManager
+import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.preferences.MyOnSharedPreferenceChangeListener
+import app.web.diegoflassa_site.littledropsofrain.ui.SettingsFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
@@ -15,14 +18,11 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.*
-import app.web.diegoflassa_site.littledropsofrain.preferences.MyOnSharedPreferenceChangeListener
-import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import java.lang.ref.WeakReference
-import java.util.*
 
 class MyApplication : Application() {
 
-    private lateinit var db : FirebaseFirestore
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate() {
         super.onCreate()
@@ -42,12 +42,26 @@ class MyApplication : Application() {
 
         subscribeToNews()
         subscribeToPromotions()
-        context =  WeakReference(this)
+        updateSubscribedLanguage()
+        context = WeakReference(this)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun updateSubscribedLanguage() {
+        val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            resources.configuration.locales.get(0)
+        } else {
+            resources.configuration.locale
+        }
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
+            SettingsFragment.SUBSCRIBED_LANGUAGE_KEY, current.language
+        ).apply()
+
     }
 
     private fun subscribeToNews() {
-        val sp : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        if(sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_NEWS, true)) {
+        val sp: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        if (sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_NEWS, true)) {
             val topic = Helper.getTopicNewsForCurrentLanguage(this)
             FirebaseMessaging.getInstance().subscribeToTopic(topic)
                 .addOnCompleteListener { task ->
@@ -58,14 +72,14 @@ class MyApplication : Application() {
                     Log.d(TAG, msg)
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                 }
-        }else{
+        } else {
             Log.d(TAG, "Not registered to receive news")
         }
     }
 
     private fun subscribeToPromotions() {
-        val sp : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        if(sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_PROMOS, true)) {
+        val sp: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        if (sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_TO_PROMOS, true)) {
             val topic = Helper.getTopicPromosForCurrentLanguage(this)
             FirebaseMessaging.getInstance().subscribeToTopic(topic)
                 .addOnCompleteListener { task ->
@@ -76,7 +90,7 @@ class MyApplication : Application() {
                     Log.d(TAG, msg)
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                 }
-        }else{
+        } else {
             Log.d(TAG, "Not registered to receive promos")
         }
     }
@@ -103,10 +117,10 @@ class MyApplication : Application() {
         // [END fs_setup_cache]
     }
 
-    companion object{
-        private val TAG= MyApplication::class.simpleName
+    companion object {
+        private val TAG = MyApplication::class.simpleName
         private lateinit var context: WeakReference<Context>
-        fun getContext():Context{
+        fun getContext(): Context {
             return context.get()!!
         }
     }

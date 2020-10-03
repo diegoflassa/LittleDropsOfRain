@@ -27,12 +27,14 @@ import kotlinx.coroutines.withContext
 
 @Suppress("DeferredResultUnused")
 class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
-    CoroutineWorker(context, workerParams), ProductParser.OnParseProgress, OnProductInsertedListener,
+    CoroutineWorker(context, workerParams), ProductParser.OnParseProgress,
+    OnProductInsertedListener,
     OnTaskFinishedListener<List<Product>> {
 
     companion object {
         val TAG: String = UpdateProductsWork::class.java.simpleName
         private const val NOTIFICATION_ID = 424242
+
         // Notification channel ID.
         private const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
         const val KEY_IN_REMOVE_NOT_FOUND = "in_remove_not_found"
@@ -50,7 +52,7 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
 
         // Create the notification channel.
         createNotificationChannel()
-        
+
         // Set up the notification content intent to launch the app when
         // clicked.
         val contentPendingIntent = PendingIntent.getActivity(
@@ -75,13 +77,18 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
 
         val removeNotFound = inputData.getBoolean(KEY_IN_REMOVE_NOT_FOUND, false)
 
-        var result= Result.success()
+        var result = Result.success()
         try {
             val productParser = ProductParser(this@UpdateProductsWork)
             val products = productParser.parse()
-            ProductDao.insertAll(Helper.iluriaProductToProduct(products), removeNotFound, this@UpdateProductsWork, this@UpdateProductsWork)
-        }catch (ex: Exception){
-            result =  Result.retry()
+            ProductDao.insertAll(
+                Helper.iluriaProductToProduct(products),
+                removeNotFound,
+                this@UpdateProductsWork,
+                this@UpdateProductsWork
+            )
+        } catch (ex: Exception) {
+            result = Result.retry()
         }
         mNotifyManager!!.cancel(NOTIFICATION_ID)
         result
@@ -110,7 +117,8 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
             notificationChannel.enableLights(true)
             notificationChannel.lightColor = Color.RED
             notificationChannel.enableVibration(true)
-            notificationChannel.description = appContext.getString(R.string.notification_worker_channel_description)
+            notificationChannel.description =
+                appContext.getString(R.string.notification_worker_channel_description)
             mNotifyManager!!.createNotificationChannel(notificationChannel)
         }
     }

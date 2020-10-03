@@ -7,7 +7,8 @@ import java.util.*
 
 
 @Keep
-enum class Source(private val source : String){
+@Suppress("unused")
+enum class Source(private val source: String) {
     ILURIA("iluria"),
     ETSY("etsy"),
     UNKNOWN("Unknown");
@@ -20,30 +21,30 @@ enum class Source(private val source : String){
 @Keep
 @Parcelize
 @Suppress("Unchecked_Cast")
-data class Product (
-    var uid : String? = null,
-    var idSource : String? = null,
-    var linkProduct : String? = null,
-    var title : String? = null,
-    var price : Int? = null,
-    var installment : String? = null,
-    var disponibility : String? = null,
-    var imageUrl : String? = null,
-    var source : String? = Source.UNKNOWN.toString(),
-    var categories : MutableList<String> = ArrayList()
+data class Product(
+    var uid: String? = null,
+    var idSource: String? = null,
+    var linkProduct: String? = null,
+    var title: String? = null,
+    var price: Int? = null,
+    var installment: String? = null,
+    var disponibility: String? = null,
+    var imageUrl: String? = null,
+    var source: String? = Source.UNKNOWN.toString(),
+    var categories: MutableList<String> = ArrayList()
 ) : Parcelable {
 
-    companion object{
-        private const val UID= "uid"
-        private const val ID_SOURCE= "idSource"
-        private const val LINK_PRODUCT= "linkProduct"
-        private const val TITLE= "title"
-        const val PRICE= "price"
-        private const val INSTALLMENT= "installment"
-        private const val DISPONIBILITY= "disponibility"
-        private const val IMAGE_URL= "imageUrl"
-        private const val SOURCE= "source"
-        const val CATEGORIES : String= "categories"
+    companion object {
+        private const val UID = "uid"
+        private const val ID_SOURCE = "idSource"
+        private const val LINK_PRODUCT = "linkProduct"
+        private const val TITLE = "title"
+        const val PRICE = "price"
+        private const val INSTALLMENT = "installment"
+        private const val DISPONIBILITY = "disponibility"
+        private const val IMAGE_URL = "imageUrl"
+        private const val SOURCE = "source"
+        const val CATEGORIES: String = "categories"
     }
 
     constructor(map: Map<String, Any>) : this() {
@@ -65,7 +66,7 @@ data class Product (
         return result
     }
 
-    private fun fromMap(map: Map<String, Any>){
+    private fun fromMap(map: Map<String, Any>) {
         uid = map[UID] as String?
         idSource = map[ID_SOURCE] as String?
         linkProduct = map[LINK_PRODUCT] as String?

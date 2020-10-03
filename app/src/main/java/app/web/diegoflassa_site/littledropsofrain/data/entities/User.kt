@@ -10,19 +10,26 @@ import java.util.*
 import kotlin.collections.HashMap
 
 @Parcelize
-data class User(var imageUrl : String? = null, var email : String? = null, var name : String? = null, var uid: String? = null, @field:JvmField var isAdmin : Boolean = false, @ServerTimestamp
-var creationDate : Timestamp? = Timestamp.now() ) :
+data class User(
+    var imageUrl: String? = null,
+    var email: String? = null,
+    var name: String? = null,
+    var uid: String? = null,
+    @field:JvmField var isAdmin: Boolean = false,
+    @ServerTimestamp
+    var creationDate: Timestamp? = Timestamp.now()
+) :
     Parcelable {
 
-    companion object{
-        private const val UID= "uid"
-        private const val IMAGE_URL= "imageUrl"
-        private const val EMAIL= "email"
-        private const val NAME= "name"
-        private const val IS_ADMIN= "isAdmin"
-        private const val CREATION_DATE= "creationDate"
+    companion object {
+        private const val UID = "uid"
+        private const val IMAGE_URL = "imageUrl"
+        private const val EMAIL = "email"
+        private const val NAME = "name"
+        private const val IS_ADMIN = "isAdmin"
+        private const val CREATION_DATE = "creationDate"
 
-        fun fromString(text : String) : User{
+        fun fromString(text: String): User {
             val user = User()
             val separated = text.split("-")
             user.name = separated[0].trim()
@@ -69,7 +76,7 @@ var creationDate : Timestamp? = Timestamp.now() ) :
         return result
     }
 
-    private fun fromMap(map: Map<String, Any>){
+    private fun fromMap(map: Map<String, Any>) {
         uid = map[UID] as String?
         imageUrl = map[IMAGE_URL] as String?
         email = map[EMAIL] as String?
@@ -78,7 +85,7 @@ var creationDate : Timestamp? = Timestamp.now() ) :
         creationDate = map[CREATION_DATE] as Timestamp?
     }
 
-    override fun toString():String{
+    override fun toString(): String {
         return "$name - $email"
     }
 

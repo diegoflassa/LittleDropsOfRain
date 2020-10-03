@@ -2,11 +2,11 @@ package app.web.diegoflassa_site.littledropsofrain.fragments
 
 import android.content.Context
 import android.text.TextUtils
-import com.google.firebase.firestore.Query
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
+import com.google.firebase.firestore.Query
 
 /**
  * Object for passing filters around.
@@ -19,11 +19,11 @@ class MyMessagesFilters {
 
 
     fun hasRead(): Boolean {
-        return (read!=null)
+        return (read != null)
     }
 
     fun hasMessageType(): Boolean {
-        return ((type!=null)&&(type!=MessageType.UNKNOWN))
+        return ((type != null) && (type != MessageType.UNKNOWN))
     }
 
     fun hasSortBy(): Boolean {
@@ -36,22 +36,25 @@ class MyMessagesFilters {
             desc.append("<b>")
             desc.append(type.toString())
             desc.append("</b>")
-        }else{
+        } else {
             desc.append("<b>")
-            desc.append(MyApplication.getContext()
-                .getString(R.string.all))
+            desc.append(
+                MyApplication.getContext()
+                    .getString(R.string.all)
+            )
             desc.append("</b>")
         }
 
         if (hasRead()) {
             desc.append(MyApplication.getContext().getString(R.string.for_filter))
             desc.append("<b>")
-            var yesNoRead=MyApplication.getContext().getString(R.string.no)
-            if(read!=null && read!!)
+            var yesNoRead = MyApplication.getContext().getString(R.string.no)
+            if (read != null && read!!)
                 yesNoRead = MyApplication.getContext().getString(R.string.yes)
             desc.append(
                 MyApplication.getContext()
-                    .getString(R.string.msg_read_filter, yesNoRead))
+                    .getString(R.string.msg_read_filter, yesNoRead)
+            )
             desc.append("</b>")
         }
 

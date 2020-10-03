@@ -15,8 +15,11 @@ import com.google.firebase.firestore.Query
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormatSymbols
 
-open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?, private val mListener: OnProductSelectedListener)
-    : FirestoreAdapter<ProductAdapter.ViewHolder?>(query) {
+open class ProductAdapter(
+    private var homeFragment: HomeFragment,
+    query: Query?,
+    private val mListener: OnProductSelectedListener
+) : FirestoreAdapter<ProductAdapter.ViewHolder?>(query) {
 
     interface OnProductSelectedListener {
         fun onProductSelected(product: DocumentSnapshot?)
@@ -26,7 +29,11 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val binding = RecyclerviewItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = RecyclerviewItemProductBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(homeFragment, binding.root)
     }
 
@@ -37,7 +44,7 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
         holder.bind(getSnapshot(position), mListener)
     }
 
-    class ViewHolder(private var homeFragment : HomeFragment, itemView: View) :
+    class ViewHolder(private var homeFragment: HomeFragment, itemView: View) :
         RecyclerView.ViewHolder(itemView), CompoundButton.OnCheckedChangeListener {
         val binding = RecyclerviewItemProductBinding.bind(itemView)
         fun bind(
@@ -49,23 +56,26 @@ open class ProductAdapter(private var homeFragment: HomeFragment, query: Query?,
             val resources = itemView.resources
 
             // Load image
-            Picasso.get().load(product?.imageUrl).placeholder(R.drawable.image_placeholder).into(binding.picture)
+            Picasso.get().load(product?.imageUrl).placeholder(R.drawable.image_placeholder)
+                .into(binding.picture)
             binding.title.text = resources.getString(R.string.rv_title, product?.title)
-            var chipCategory : Chip
+            var chipCategory: Chip
             binding.chipCategories.removeAllViews()
-            for(category in product?.categories!!) {
-                if(category.isNotEmpty()) {
+            for (category in product?.categories!!) {
+                if (category.isNotEmpty()) {
                     chipCategory = Chip(itemView.context)
                     chipCategory.isCheckable = true
-                    chipCategory.isChecked = homeFragment.mFilterDialog?.categories!!.contains(category)
+                    chipCategory.isChecked =
+                        homeFragment.mFilterDialog?.categories!!.contains(category)
                     chipCategory.text = category
                     chipCategory.setOnCheckedChangeListener(this)
                     binding.chipCategories.addView(chipCategory)
                 }
             }
-            binding.disponibility.text = resources.getString(R.string.rv_disponibility,  product.disponibility)
-            var priceStr= (product.price?.div(100)).toString()
-            priceStr+= DecimalFormatSymbols.getInstance().decimalSeparator +"00"
+            binding.disponibility.text =
+                resources.getString(R.string.rv_disponibility, product.disponibility)
+            var priceStr = (product.price?.div(100)).toString()
+            priceStr += DecimalFormatSymbols.getInstance().decimalSeparator + "00"
             binding.price.text = resources.getString(R.string.rv_price, priceStr)
 
             // Click listener

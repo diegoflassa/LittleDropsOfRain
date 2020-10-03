@@ -13,20 +13,20 @@ class UriToIntentMapper(context: Context, intentHelper: IntentHelper) {
     fun dispatchIntent(intent: Intent) {
         val uri: Uri? = intent.data
         var dispatchIntent: Intent? = null
-        if(uri!=null) {
+        if (uri != null) {
             val scheme: String = uri.scheme!!.toLowerCase(Locale.ROOT)
             val host: String = uri.host!!.toLowerCase(Locale.ROOT)
             if ("app" == scheme) {
-                dispatchIntent = mapAppLink(uri)
+                dispatchIntent = mapAppLink(uri, intent)
             } else if (("http" == scheme || "https" == scheme) &&
-                ("littledropsofrain.web.app" == host || "littledropsofrain" == host)
+                ("littledropsofrain-site.web.app" == host || "littledropsofrain.web.app" == host || "littledropsofrain" == host)
             ) {
-                dispatchIntent = mapWebLink(uri)
+                dispatchIntent = mapWebLink(uri, intent)
             }
             if (dispatchIntent != null) {
                 mContext.startActivity(dispatchIntent)
             }
-        }else{
+        } else {
             routeToAppropriatePage()
         }
     }
@@ -35,18 +35,22 @@ class UriToIntentMapper(context: Context, intentHelper: IntentHelper) {
         mContext.startActivity(Intent(mContext, MainActivity::class.java))
     }
 
-    private fun mapAppLink(uri: Uri): Intent? {
+    private fun mapAppLink(uri: Uri, intent: Intent): Intent? {
         when (uri.host!!.toLowerCase(Locale.ROOT)) {
             "app" -> return mIntents.newMainActivityIntent(mContext)
             "privacy" -> {
                 val startWhat: String = uri.path!!.substring(1)
                 return mIntents.newMainActivityIntent(mContext, startWhat)
             }
+            "passwordless" -> {
+                intent.setClass(mContext, MainActivity::class.java)
+                return intent
+            }
         }
         return null
     }
 
-    private fun mapWebLink(uri: Uri, intent : Intent): Intent? {
+    private fun mapWebLink(uri: Uri, intent: Intent): Intent? {
         when (uri.path) {
             "/app" -> return mIntents.newMainActivityIntent(mContext)
             "/privacy" -> {
@@ -54,7 +58,7 @@ class UriToIntentMapper(context: Context, intentHelper: IntentHelper) {
                 return mIntents.newMainActivityIntent(mContext, startWhat)
             }
             "/passwordless" -> {
-                intent.setClass(MainActivity::class.java)
+                intent.setClass(mContext, MainActivity::class.java)
                 return intent
             }
         }

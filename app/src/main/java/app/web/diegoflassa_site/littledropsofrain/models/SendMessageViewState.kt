@@ -4,10 +4,10 @@ import androidx.annotation.Keep
 import androidx.lifecycle.LiveData
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 
-class SendMessageViewState : LiveData<SendMessageViewState>(){
+class SendMessageViewState : LiveData<SendMessageViewState>() {
 
     @Keep
-    enum class SendMethod(private val method : String){
+    enum class SendMethod(private val method: String) {
         MESSAGE("message"),
         EMAIL("email"),
         UNKNOWN("unknown");

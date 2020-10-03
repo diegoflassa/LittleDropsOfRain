@@ -8,7 +8,7 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.helpers.IntentHelper
 import app.web.diegoflassa_site.littledropsofrain.helpers.UriToIntentMapper
 
-class SplashActivity: AppCompatActivity() {
+class SplashActivity : AppCompatActivity() {
 
     private val mMapper: UriToIntentMapper = UriToIntentMapper(this, IntentHelper())
 

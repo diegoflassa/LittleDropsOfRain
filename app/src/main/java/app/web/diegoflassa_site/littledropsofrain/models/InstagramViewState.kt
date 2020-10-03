@@ -2,8 +2,8 @@ package app.web.diegoflassa_site.littledropsofrain.models
 
 import androidx.lifecycle.LiveData
 
-class InstagramViewState : LiveData<InstagramViewState>(){
+class InstagramViewState : LiveData<InstagramViewState>() {
 
-    var text : String = ""
+    var text: String = ""
 
 }

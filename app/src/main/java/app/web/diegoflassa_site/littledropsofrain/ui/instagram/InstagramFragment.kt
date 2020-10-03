@@ -28,14 +28,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class InstagramFragment : Fragment(), OnKeyLongPressListener {
 
-    companion object{
+    companion object {
         fun newInstance() = InstagramFragment()
         private const val KEY_PREF_LAST_URL = "KEY_PREF_LAST_URL_INSTAGRAM"
     }
 
     private var isStopped: Boolean = false
     private val viewModel: InstagramViewModel by viewModels()
-    private var binding : FragmentInstagramBinding by viewLifecycle()
+    private var binding: FragmentInstagramBinding by viewLifecycle()
     private var url = ""
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -53,9 +53,12 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         // set up the webview
         binding.webviewInstagram.settings.javaScriptEnabled = true
         binding.webviewInstagram.settings.domStorageEnabled = true
-        binding.webviewInstagram.webViewClient = object: WebViewClient() {
+        binding.webviewInstagram.webViewClient = object : WebViewClient() {
 
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
                 view?.loadUrl(request?.url.toString())
                 return super.shouldOverrideUrlLoading(view, request)
             }
@@ -68,7 +71,7 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(binding.webviewInstagram.canGoBack()){
+                if (binding.webviewInstagram.canGoBack()) {
                     binding.webviewInstagram.goBack()
                 } else {
                     isEnabled = false
@@ -87,7 +90,7 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         return binding.root
     }
 
-    override fun onSaveInstanceState(outState: Bundle){
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (isSafeToAccessViewModel() && !isStopped) {
             binding.webviewInstagram.saveState(outState)
@@ -96,12 +99,12 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        if(savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             binding.webviewInstagram.restoreState(savedInstanceState)
         }
     }
 
-    override fun onStop(){
+    override fun onStop() {
         isStopped = true
         (activity as MainActivity).mOnKeyLongPressListener = null
         binding.webviewInstagram.stopLoading()
@@ -134,14 +137,14 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         binding.instagramProgress.visibility = View.VISIBLE
     }
 
-    fun hideProgressDialog(){
+    fun hideProgressDialog() {
         if (isSafeToAccessViewModel() && !isStopped) {
             binding.instagramProgress.visibility = View.GONE
         }
     }
 
     override fun keyLongPress(keyCode: Int, event: KeyEvent?) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             binding.webviewInstagram.reload()
         }
     }
@@ -156,7 +159,7 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         edit.apply()
     }
 
-    private fun restoreCurrentUrl(){
+    private fun restoreCurrentUrl() {
         val prefs = requireContext().applicationContext.getSharedPreferences(
             requireContext().packageName,
             Activity.MODE_PRIVATE

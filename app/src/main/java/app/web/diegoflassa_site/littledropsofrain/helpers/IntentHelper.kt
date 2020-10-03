@@ -12,15 +12,11 @@ class IntentHelper {
         return i
     }
 
-    fun newMainActivityIntent(context: Context?, whatToStart : String): Intent {
+    fun newMainActivityIntent(context: Context?, whatToStart: String): Intent {
         val i = Intent(context, MainActivity::class.java)
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         i.putExtra(EXTRA_START_WHAT, whatToStart)
         return i
-    }
-
-    fun newMainActivityIntentCopy(context: Context?, intent : Intent): Intent {
-        return intent
     }
 
     companion object {

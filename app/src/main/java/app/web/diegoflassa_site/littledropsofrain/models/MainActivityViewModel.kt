@@ -5,9 +5,9 @@ import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.auth.FirebaseAuthLiveData
 
 class MainActivityViewModel : ViewModel() {
-    private val mFirebaseAuthLiveData : FirebaseAuthLiveData= FirebaseAuthLiveData()
+    private val mFirebaseAuthLiveData: FirebaseAuthLiveData = FirebaseAuthLiveData()
 
-    fun getFirebaseAuthLiveData() : FirebaseAuthLiveData {
+    fun getFirebaseAuthLiveData(): FirebaseAuthLiveData {
         return mFirebaseAuthLiveData
     }
 

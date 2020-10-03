@@ -33,11 +33,11 @@ open class MyMessagesFilterDialogFragment : DialogFragment(),
         fun onFilter(filters: MyMessagesFilters)
     }
 
-    private lateinit var  mSpinnerSort : Spinner
-    private lateinit var  mSpinnerType : Spinner
+    private lateinit var mSpinnerSort: Spinner
+    private lateinit var mSpinnerType: Spinner
     var filterListener: FilterListener? = null
     var binding: FragmentMyMessagesFiltersBinding by viewLifecycle()
-    private var mRootView : View?= null
+    private var mRootView: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,9 +49,9 @@ open class MyMessagesFilterDialogFragment : DialogFragment(),
         binding.buttonCancelMessages.setOnClickListener(this)
         binding.checkBoxMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             binding.switchMsgRead.isEnabled = checked
-            if(!checked) {
+            if (!checked) {
                 filters.read = null
-            }else{
+            } else {
                 binding.spinnerSort.setSelection(0)
             }
             binding.spinnerSort.isEnabled = !checked
@@ -62,11 +62,11 @@ open class MyMessagesFilterDialogFragment : DialogFragment(),
         binding.switchMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             filters.read = checked
         }
-        mRootView= binding.root
+        mRootView = binding.root
         return binding.root
     }
 
-    override fun onDismiss(dialog: DialogInterface){
+    override fun onDismiss(dialog: DialogInterface) {
         val fragment: Fragment? = parentFragmentManager.fragments[0]
         if (fragment is DialogInterface.OnDismissListener) {
             (fragment as DialogInterface.OnDismissListener).onDismiss(dialog)
@@ -103,7 +103,7 @@ open class MyMessagesFilterDialogFragment : DialogFragment(),
 
     private val selectedSortBy: String?
         get() {
-            if(mRootView!=null&&!isDetached) {
+            if (mRootView != null && !isDetached) {
                 return when (binding.spinnerSort.selectedItem as String) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
@@ -121,8 +121,8 @@ open class MyMessagesFilterDialogFragment : DialogFragment(),
 
     private val selectedRead: Boolean?
         get() {
-            if(mRootView!=null&&!isDetached) {
-                if(binding.checkBoxMsgRead.isChecked){
+            if (mRootView != null && !isDetached) {
+                if (binding.checkBoxMsgRead.isChecked) {
                     return binding.switchMsgRead.isChecked
                 }
             }
@@ -131,13 +131,13 @@ open class MyMessagesFilterDialogFragment : DialogFragment(),
 
     private val selectedType: MessageType?
         get() {
-            if(mRootView!=null&&!isDetached) {
-                return if(binding.spinnerType.selectedItemPosition>0) {
+            if (mRootView != null && !isDetached) {
+                return if (binding.spinnerType.selectedItemPosition > 0) {
                     MessageType.valueOf(
                         binding.spinnerType.selectedItem.toString()
                             .toUpperCase(Locale.ROOT)
                     )
-                }else{
+                } else {
                     null
                 }
             }
@@ -146,7 +146,7 @@ open class MyMessagesFilterDialogFragment : DialogFragment(),
 
     private val sortDirection: Query.Direction?
         get() {
-            if(mRootView!=null&&!isDetached) {
+            if (mRootView != null && !isDetached) {
                 return when (binding.spinnerSort.selectedItem as String) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
@@ -163,7 +163,7 @@ open class MyMessagesFilterDialogFragment : DialogFragment(),
         }
 
     fun resetFilters() {
-        if(mRootView!=null&&!isDetached) {
+        if (mRootView != null && !isDetached) {
             mSpinnerSort.setSelection(0)
             mSpinnerType.setSelection(0)
         }

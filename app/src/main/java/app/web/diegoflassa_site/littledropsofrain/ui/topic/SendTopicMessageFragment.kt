@@ -25,7 +25,10 @@ import app.web.diegoflassa_site.littledropsofrain.contracts.CropImageResultContr
 import app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendTopicMessageBinding
-import app.web.diegoflassa_site.littledropsofrain.helpers.*
+import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
+import app.web.diegoflassa_site.littledropsofrain.helpers.runOnUiThread
+import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedFailureListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedListener
 import app.web.diegoflassa_site.littledropsofrain.models.TopicMessageViewModel
@@ -55,9 +58,9 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
     ActivityResultCallback<Uri?> {
 
     private val ioScope = CoroutineScope(Dispatchers.IO)
-    private lateinit var toggle : ActionBarDrawerToggle
-    private lateinit var getContentLauncher : ActivityResultLauncher<String>
-    private lateinit var cropImageLauncher : ActivityResultLauncher<Uri?>
+    private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var getContentLauncher: ActivityResultLauncher<String>
+    private lateinit var cropImageLauncher: ActivityResultLauncher<Uri?>
     private var isStopped = false
     private var messageSent = false
 
@@ -67,7 +70,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
     }
 
     private val viewModel: TopicMessageViewModel by viewModels()
-    private var binding : FragmentSendTopicMessageBinding by viewLifecycle()
+    private var binding: FragmentSendTopicMessageBinding by viewLifecycle()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,8 +80,8 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
-        for(topic in TopicMessage.Topic.values()) {
-            if(topic != TopicMessage.Topic.UNKNOWN) {
+        for (topic in TopicMessage.Topic.values()) {
+            if (topic != TopicMessage.Topic.UNKNOWN && topic != TopicMessage.Topic.NEWS && topic != TopicMessage.Topic.PROMOS) {
                 val chip = Chip(requireContext())
                 chip.text = topic.toTitle()
                 chip.isCheckable = true
@@ -98,41 +101,58 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         }
         binding.imgVwNotificationImage.visibility = View.GONE
         cropImageLauncher = registerForActivityResult(CropImageResultContract(), this)
-        getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){
-            if(it==null){
+        getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
+            if (it == null) {
                 binding.imgVwNotificationImage.setImageDrawable(null)
                 binding.imgVwNotificationImage.visibility = View.GONE
                 binding.fabSelectImage.setImageDrawable(
-                    ResourcesCompat.getDrawable(resources, android.R.drawable.ic_menu_gallery, activity?.theme)
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        android.R.drawable.ic_menu_gallery,
+                        activity?.theme
+                    )
                 )
-            }else{
+            } else {
                 cropImageLauncher.launch(it)
             }
         }
         binding.fabSelectImage.setOnClickListener {
-            if(binding.imgVwNotificationImage.drawable==null) {
+            if (binding.imgVwNotificationImage.drawable == null) {
                 binding.fabSelectImage.setImageDrawable(
-                    ResourcesCompat.getDrawable(resources, android.R.drawable.ic_menu_close_clear_cancel, activity?.theme)
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        android.R.drawable.ic_menu_close_clear_cancel,
+                        activity?.theme
+                    )
                 )
                 getContentLauncher.launch("image/*")
-            }else{
+            } else {
                 binding.fabSelectImage.setImageDrawable(
-                    ResourcesCompat.getDrawable(resources, android.R.drawable.ic_menu_gallery, activity?.theme)
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        android.R.drawable.ic_menu_gallery,
+                        activity?.theme
+                    )
                 )
                 binding.imgVwNotificationImage.visibility = View.GONE
                 binding.imgVwNotificationImage.setImageDrawable(null)
                 viewModel.viewState.imageUriFirestore = null
-                if(viewModel.viewState.imageUriLocal!=null){
+                if (viewModel.viewState.imageUriLocal != null) {
                     viewModel.viewState.imageUriLocal!!.toFile().delete()
                     viewModel.viewState.imageUriLocal = null
                 }
             }
         }
         binding.fabSendTopicMessage.setOnClickListener {
-            if(getSelectedTopics().isNotEmpty()) {
-                sendMessage(getSelectedTopics(), viewModel.viewState.imageUriFirestore, binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
+            if (getSelectedTopics().isNotEmpty()) {
+                sendMessage(
+                    getSelectedTopics(),
+                    viewModel.viewState.imageUriFirestore,
+                    binding.edtTxtTitle.text.toString(),
+                    binding.edtTxtMlMessage.text.toString()
+                )
                 messageSent = true
-            }else{
+            } else {
                 Toast.makeText(
                     requireContext(),
                     getString(R.string.please_select_a_topic),
@@ -141,7 +161,12 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
             }
         }
         binding.fabPreviewTopicMessage.setOnClickListener {
-            Helper.showNotification(requireContext(), viewModel.viewState.imageUriFirestore, binding.edtTxtTitle.text.toString(), binding.edtTxtMlMessage.text.toString())
+            Helper.showNotification(
+                requireContext(),
+                viewModel.viewState.imageUriFirestore,
+                binding.edtTxtTitle.text.toString(),
+                binding.edtTxtMlMessage.text.toString()
+            )
         }
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
@@ -154,7 +179,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
                 R.string.navigation_drawer_close
             )
             drawerLayout?.addDrawerListener(toggle)
-            if(drawerLayout!=null)
+            if (drawerLayout != null)
                 toggle.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
@@ -169,23 +194,23 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         updateUI(viewModel.viewState)
     }
 
-    override fun onStop(){
-        if(!messageSent&&viewModel.viewState.imageUriFirestore!=null){
+    override fun onStop() {
+        if (!messageSent && viewModel.viewState.imageUriFirestore != null) {
             FilesDao.remove(viewModel.viewState.imageUriFirestore)
         }
         isStopped = true
         super.onStop()
     }
 
-    override fun onDestroyView(){
-        if(this::toggle.isInitialized) {
+    override fun onDestroyView() {
+        if (this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
         super.onDestroyView()
     }
 
-    override fun onSaveInstanceState(outState: Bundle){
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.viewState.title = binding.edtTxtTitle.text.toString()
         viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
@@ -196,19 +221,20 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         updateUI(viewModel.viewState)
     }
 
-    private fun updateUI(viewState: TopicMessageViewState?){
+    private fun updateUI(viewState: TopicMessageViewState?) {
         // Update the UI
-        for(chip in binding.cpGrpTopics.children) {
-            if(viewState?.topics?.contains(
+        for (chip in binding.cpGrpTopics.children) {
+            if (viewState?.topics?.contains(
                     TopicMessage.Topic.fromTitle((chip as Chip).text.toString())
-                )!!) {
+                )!!
+            ) {
                 (chip as Chip).isChecked = true
             }
         }
         Picasso.get().load(viewModel.viewState.imageUriLocal).into(binding.imgVwNotificationImage)
-        if(viewModel.viewState.imageUriLocal!=null){
+        if (viewModel.viewState.imageUriLocal != null) {
             binding.imgVwNotificationImage.visibility = View.VISIBLE
-        }else{
+        } else {
             binding.imgVwNotificationImage.visibility = View.GONE
         }
         binding.edtTxtTitle.setText(viewModel.viewState.title)
@@ -219,12 +245,17 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         fab?.visibility = View.GONE
     }
 
-    private fun getSelectedTopics(): Set<TopicMessage.Topic>{
-        val ret= HashSet<TopicMessage.Topic>()
+    private fun getSelectedTopics(): Set<TopicMessage.Topic> {
+        val ret = HashSet<TopicMessage.Topic>()
         val chipIds = binding.cpGrpTopics.checkedChipIds
-        for(chipId in chipIds){
+        for (chipId in chipIds) {
             val chip = binding.cpGrpTopics.findViewById<Chip>(chipId)
-            ret.add(TopicMessage.Topic.fromTitle(chip.text.toString()))
+            val topic = TopicMessage.Topic.fromTitle(chip.text.toString())
+            if (topic == TopicMessage.Topic.NEWS_EN || topic == TopicMessage.Topic.NEWS_PT)
+                ret.add(TopicMessage.Topic.NEWS)
+            if (topic == TopicMessage.Topic.PROMOS_EN || topic == TopicMessage.Topic.PROMOS_PT)
+                ret.add(TopicMessage.Topic.PROMOS)
+            ret.add(topic)
         }
         return ret
     }
@@ -236,7 +267,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         messageContent: String
     ) {
         ioScope.launch {
-            if(topics.isNotEmpty()) {
+            if (topics.isNotEmpty()) {
                 activity?.runOnUiThread {
                     binding.fabSendTopicMessage.isEnabled = false
                 }
@@ -244,9 +275,9 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
                 Log.d(TAG, "Got access token : $tokenValue")
                 var condition = ""
                 for (topic in topics) {
-                    if(condition.isNotEmpty())
-                        condition+= " || "
-                    condition+= "'${topic.toString().toLowerCase(Locale.ROOT)}' in topics"
+                    if (condition.isNotEmpty())
+                        condition += " || "
+                    condition += "'${topic.toString().toLowerCase(Locale.ROOT)}' in topics"
                 }
                 val url = getString(R.string.url_push_message)
                 val myReq: StringRequest = object : StringRequest(
@@ -313,19 +344,19 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
                 }
                 Volley.newRequestQueue(activity).add(myReq)
 
-            }else{
+            } else {
                 Log.d(TAG, "No topic selected!")
             }
         }
     }
 
-    private fun showLoadingScreen(){
+    private fun showLoadingScreen() {
         binding.fabPreviewTopicMessage.isEnabled = false
         binding.fabSendTopicMessage.isEnabled = false
         binding.topicMessageProgress.visibility = View.VISIBLE
     }
 
-    private fun hideLoadingScreen(){
+    private fun hideLoadingScreen() {
         runOnUiThread {
             if (isSafeToAccessViewModel() && !isStopped) {
                 binding.fabPreviewTopicMessage.isEnabled = true
@@ -335,9 +366,10 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         }
     }
 
-    private fun getAccessToken() : AccessToken? {
-        val resource = resources.openRawResource(R.raw.littledropsofrain_site_firebase_adminsdk_9dvd0_c718bc2981)
-        val scopes : MutableList<String> = ArrayList()
+    private fun getAccessToken(): AccessToken? {
+        val resource =
+            resources.openRawResource(R.raw.littledropsofrain_site_firebase_adminsdk_9dvd0_c718bc2981)
+        val scopes: MutableList<String> = ArrayList()
         scopes.add("https://www.googleapis.com/auth/firebase.messaging")
         val credential = GoogleCredentials.fromStream(resource).createScoped(scopes)
         return credential.refreshAccessToken()
@@ -355,7 +387,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         Toast.makeText(context, getString(R.string.file_upload_failure), Toast.LENGTH_LONG).show()
     }
 
-    override fun onActivityResult(uri : Uri?) {
+    override fun onActivityResult(uri: Uri?) {
         binding.imgVwNotificationImage.visibility = View.VISIBLE
         showLoadingScreen()
         FilesDao.insert(uri!!, this, this)

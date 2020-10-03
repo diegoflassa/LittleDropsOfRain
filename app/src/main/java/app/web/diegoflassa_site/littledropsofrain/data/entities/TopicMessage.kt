@@ -1,18 +1,20 @@
 package app.web.diegoflassa_site.littledropsofrain.data.entities
 
-import app.web.diegoflassa_site.littledropsofrain.R
 import androidx.annotation.Keep
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
+import app.web.diegoflassa_site.littledropsofrain.R
 
 data class TopicMessage(
-    var title : String,
-    var message : String,
-    var topic : Topic){
+    var title: String,
+    var message: String,
+    var topic: Topic
+) {
 
     @Keep
     @Suppress("UNUSED")
-    enum class Topic(private val topic: String, private val stringId : Int){
-
+    enum class Topic(private val topic: String, private val stringId: Int) {
+        NEWS("News", 0),
+        PROMOS("Promos", 0),
         NEWS_PT("News_PT", R.string.news_pt),
         NEWS_EN("News_EN", R.string.news_en),
         PROMOS_PT("Promos_PT", R.string.promos_pt),
@@ -27,15 +29,15 @@ data class TopicMessage(
             return stringId
         }
 
-        fun toTitle() : String {
+        fun toTitle(): String {
             return MyApplication.getContext().getString(stringId)
         }
 
         companion object {
             fun fromTitle(title: String): Topic {
-                return when(title) {
+                return when (title) {
                     MyApplication.getContext().getString(NEWS_PT.getStringId()) -> NEWS_PT
-                    MyApplication.getContext().getString(NEWS_EN.getStringId())  -> NEWS_EN
+                    MyApplication.getContext().getString(NEWS_EN.getStringId()) -> NEWS_EN
                     MyApplication.getContext().getString(PROMOS_PT.getStringId()) -> PROMOS_PT
                     MyApplication.getContext().getString(PROMOS_EN.getStringId()) -> PROMOS_EN
                     else -> UNKNOWN

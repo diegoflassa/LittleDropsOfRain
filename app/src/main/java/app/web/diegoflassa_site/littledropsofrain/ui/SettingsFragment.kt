@@ -20,9 +20,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
-    private lateinit var mpcl : SharedPreferences.OnSharedPreferenceChangeListener
-    private var toggle : ActionBarDrawerToggle? = null
-    companion object{
+    private lateinit var mpcl: SharedPreferences.OnSharedPreferenceChangeListener
+    private var toggle: ActionBarDrawerToggle? = null
+
+    companion object {
+        const val SUBSCRIBED_LANGUAGE_KEY = "SUBSCRIBED_LANGUAGE_KEY"
         val TAG = SettingsFragment::class.simpleName
         fun newInstance(): Fragment {
             return SettingsFragment()
@@ -38,9 +40,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val info = manager.getPackageInfo(requireContext().packageName, 0)
 
         val versionCode = PreferenceCategory(requireContext())
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             versionCode.title = "Version Code: ${info.longVersionCode}"
-        }else{
+        } else {
             versionCode.title = "Version Code: ${info.versionCode}"
         }
         preferenceScreen.addPreference(versionCode)
@@ -50,20 +52,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceScreen.addPreference(versionName)
 
         val permissions = PreferenceCategory(requireContext())
-        permissions.title = "Permissions: ${info.permissions?:"None"}"
+        permissions.title = "Permissions: ${info.permissions ?: "None"}"
         preferenceScreen.addPreference(permissions)
 
         updateUI()
     }
 
-    private fun updateUI(){
+    private fun updateUI() {
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE
     }
 
-    override fun onResume(){
+    override fun onResume() {
         super.onResume()
         removeToogleListener()
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
@@ -77,13 +79,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 R.string.navigation_drawer_close
             )
             drawerLayout?.addDrawerListener(toggle!!)
-            if(drawerLayout!=null)
+            if (drawerLayout != null)
                 toggle?.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
     }
 
-    override fun onDestroyView(){
+    override fun onDestroyView() {
         removeToogleListener()
         super.onDestroyView()
     }
@@ -93,8 +95,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         super.onDestroy()
     }
 
-    private fun removeToogleListener(){
-        if(toggle!=null) {
+    private fun removeToogleListener() {
+        if (toggle != null) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle!!)
             toggle = null
@@ -103,14 +105,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun registerPreferencesListener() {
         mpcl = MyOnSharedPreferenceChangeListener(requireContext())
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(
-            mpcl
-        )
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .registerOnSharedPreferenceChangeListener(
+                mpcl
+            )
     }
 
     private fun unregisterPreferencesListener() {
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(
-            mpcl
-        )
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .unregisterOnSharedPreferenceChangeListener(
+                mpcl
+            )
     }
 }

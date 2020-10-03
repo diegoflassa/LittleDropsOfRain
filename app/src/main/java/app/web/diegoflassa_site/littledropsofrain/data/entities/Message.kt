@@ -11,7 +11,7 @@ import java.util.*
 
 
 @Keep
-enum class MessageType(private val method : String){
+enum class MessageType(private val method: String) {
     MESSAGE("message"),
     NOTIFICATION("notification"),
     UNKNOWN("Unknown");
@@ -24,35 +24,35 @@ enum class MessageType(private val method : String){
 @Keep
 @Parcelize
 @Suppress("Unchecked_Cast")
-data class Message (
-    var uid : String? = null,
-    var replyUid : String? = null,
-    var imageUrl : String? = null,
-    var owners : MutableList<String> = ArrayList(),
-    var emailSender : String? = FirebaseAuth.getInstance().currentUser!!.email,
-    var emailTo : String? = null,
-    var sender : String? = FirebaseAuth.getInstance().currentUser!!.displayName,
-    var senderId : String? = FirebaseAuth.getInstance().currentUser!!.uid,
-    var message : String? = null,
-    var type : String? = MessageType.UNKNOWN.toString(),
+data class Message(
+    var uid: String? = null,
+    var replyUid: String? = null,
+    var imageUrl: String? = null,
+    var owners: MutableList<String> = ArrayList(),
+    var emailSender: String? = FirebaseAuth.getInstance().currentUser!!.email,
+    var emailTo: String? = null,
+    var sender: String? = FirebaseAuth.getInstance().currentUser!!.displayName,
+    var senderId: String? = FirebaseAuth.getInstance().currentUser!!.uid,
+    var message: String? = null,
+    var type: String? = MessageType.UNKNOWN.toString(),
     @ServerTimestamp
-    var creationDate : Timestamp? = Timestamp.now(),
-    var read : Boolean? = false
+    var creationDate: Timestamp? = Timestamp.now(),
+    var read: Boolean? = false
 ) : Parcelable {
 
     companion object {
-        private const val UID= "uid"
-        private const val REPLY_UID= "replyUid"
-        private const val IMAGE_URL= "imageUrl"
-        const val EMAIL_SENDER= "emailSender"
-        const val EMAIL_TO= "emailTo"
-        const val OWNERS= "owners"
-        private const val SENDER= "sender"
-        private const val SENDER_ID= "senderId"
-        private const val MESSAGE= "message"
-        const val TYPE= "type"
-        const val CREATION_DATE= "creationDate"
-        const val READ= "read"
+        private const val UID = "uid"
+        private const val REPLY_UID = "replyUid"
+        private const val IMAGE_URL = "imageUrl"
+        const val EMAIL_SENDER = "emailSender"
+        const val EMAIL_TO = "emailTo"
+        const val OWNERS = "owners"
+        private const val SENDER = "sender"
+        private const val SENDER_ID = "senderId"
+        private const val MESSAGE = "message"
+        const val TYPE = "type"
+        const val CREATION_DATE = "creationDate"
+        const val READ = "read"
     }
 
     constructor(map: Map<String, Any>) : this() {
@@ -76,7 +76,7 @@ data class Message (
         return result
     }
 
-    private fun fromMap(map: Map<String, Any>){
+    private fun fromMap(map: Map<String, Any>) {
         uid = map[UID] as String?
         replyUid = map[REPLY_UID] as String?
         imageUrl = map[IMAGE_URL] as String?
@@ -91,7 +91,7 @@ data class Message (
         read = map[READ] as Boolean?
     }
 
-    fun getImageUrlAsUri() : Uri {
+    fun getImageUrlAsUri(): Uri {
         return Uri.parse(imageUrl)
     }
 }

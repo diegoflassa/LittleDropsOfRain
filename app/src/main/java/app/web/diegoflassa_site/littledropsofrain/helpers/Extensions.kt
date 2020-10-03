@@ -10,5 +10,5 @@ fun Fragment?.runOnUiThread(action: () -> Unit) {
 
 fun Fragment?.isSafeToAccessViewModel(): Boolean {
     this ?: return false
-    return  (!isRemoving && !isDetached && isAdded)
+    return (!isRemoving && !isDetached && isAdded)
 }

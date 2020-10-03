@@ -38,7 +38,6 @@
     <string name="promos_pt">Promos auf Portugiesisch</string>
     <string name="promos_en">Promos auf Englisch</string>
     <string name="unknown">Unbekannt</string>
-    <string name="tos">Nutzungsbedingungen</string>
     <string name="msg_subscribed_to_news">News abonniert!</string>
     <string name="msg_subscribed_to_promos">Promotions abonniert!</string>
     <string name="msg_subscribe_promos_failed">Werbeaktionen können nicht abonniert werden</string>
@@ -107,4 +106,9 @@
     <string name="logo_toolbar">Logo-Symbolleiste</string>
     <string name="please_wait">Warten Sie mal</string>
     <string name="label_tos">Nutzungsbedingungen</string>
+    <string name="name">Name</string>
+    <string name="change_image">Bild ändern</string>
+    <string name="update">Aktualisieren</string>
+    <string name="user_image">Benutzerbild</string>
+    <string name="exit">Exit</string>
 </resources>

@@ -29,15 +29,17 @@ object ProductDao {
     private val TAG: String? = ProductDao::class.simpleName
     private val ioScope = CoroutineScope(Dispatchers.IO)
     const val COLLECTION_PATH: String = "products"
-    private var db : WeakReference<FirebaseFirestore> = WeakReference(FirebaseFirestore.getInstance())
+    private var db: WeakReference<FirebaseFirestore> =
+        WeakReference(FirebaseFirestore.getInstance())
     private var storage = Firebase.storage
 
     fun loadAll(listener: OnDataChangeListener<List<Product>>): Task<QuerySnapshot>? {
         val products: MutableList<Product> = ArrayList()
-        return db.get()?.collection(COLLECTION_PATH)?.orderBy("idSource", Query.Direction.DESCENDING)
+        return db.get()?.collection(COLLECTION_PATH)
+            ?.orderBy("idSource", Query.Direction.DESCENDING)
             ?.get()
             ?.addOnSuccessListener { result ->
-                var product : Product
+                var product: Product
                 for (document in result) {
                     product = document.toObject(Product::class.java)
                     product.uid = document.id
@@ -47,14 +49,17 @@ object ProductDao {
                 }
                 listener.onDataChanged(products)
             }
-           ?.addOnFailureListener { exception ->
+            ?.addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting documents: ", exception)
             }
     }
 
-    fun loadAllByIds(productIds: List<String>, listener: OnDataChangeListener<List<Product>>): Task<QuerySnapshot>? {
+    fun loadAllByIds(
+        productIds: List<String>,
+        listener: OnDataChangeListener<List<Product>>
+    ): Task<QuerySnapshot>? {
         val products: MutableList<Product> = ArrayList()
-        val itemsRef =db.get()?.collection(COLLECTION_PATH)
+        val itemsRef = db.get()?.collection(COLLECTION_PATH)
         return itemsRef?.get()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 var product: Product
@@ -72,14 +77,17 @@ object ProductDao {
         }
     }
 
-    fun findByTitle(title: String, listener: OnDataChangeListener<List<Product>>): Task<QuerySnapshot>? {
+    fun findByTitle(
+        title: String,
+        listener: OnDataChangeListener<List<Product>>
+    ): Task<QuerySnapshot>? {
         val products: MutableList<Product> = ArrayList()
         return db.get()?.collection(COLLECTION_PATH)
             ?.get()
             ?.addOnSuccessListener { result ->
-                var product : Product
+                var product: Product
                 for (document in result) {
-                    if(document.get("title").toString().contains(title)) {
+                    if (document.get("title").toString().contains(title)) {
                         product = document.toObject(Product::class.java)
                         product.uid = document.id
                         Log.d(TAG, "${document.id} => ${document.data}")
@@ -93,10 +101,15 @@ object ProductDao {
             }
     }
 
-    fun insertAll(products: List<Product>, removeNotFoundInFirebase : Boolean= false, listener : OnProductInsertedListener? = null, finishListener : OnTaskFinishedListener<List<Product>>? = null) {
-        val hashProducts : MutableMap<String, Product> = HashMap<String, Product>(products.size)
-        val listTasksAll = ArrayList<Task<*>> (products.size)
-        var taskInsert : Task<*>?
+    fun insertAll(
+        products: List<Product>,
+        removeNotFoundInFirebase: Boolean = false,
+        listener: OnProductInsertedListener? = null,
+        finishListener: OnTaskFinishedListener<List<Product>>? = null
+    ) {
+        val hashProducts: MutableMap<String, Product> = HashMap<String, Product>(products.size)
+        val listTasksAll = ArrayList<Task<*>>(products.size)
+        var taskInsert: Task<*>?
         db.get()?.collection(COLLECTION_PATH)?.orderBy("idSource", Query.Direction.DESCENDING)
             ?.get()
             ?.addOnSuccessListener { result ->
@@ -105,15 +118,15 @@ object ProductDao {
                     val data = product.toMap()
                     if (product.uid == null) {
                         var found = false
-                        lateinit var productFS : Product
-                        for(document in result){
+                        lateinit var productFS: Product
+                        for (document in result) {
                             productFS = document.toObject(Product::class.java)
-                            if(product.idSource == productFS.idSource){
+                            if (product.idSource == productFS.idSource) {
                                 found = true
                                 break
                             }
                         }
-                        if(!found){
+                        if (!found) {
                             taskInsert =
                                 db.get()?.collection(COLLECTION_PATH)
                                     ?.add(data)
@@ -123,13 +136,16 @@ object ProductDao {
                                         if (!product.imageUrl?.startsWith("https://firebasestorage")!!)
                                             insertBlob(product)
                                         listener?.onProductInserted(product)
-                                        Log.i(TAG,"Product ${product.idSource} inserted successfully")
+                                        Log.i(
+                                            TAG,
+                                            "Product ${product.idSource} inserted successfully"
+                                        )
                                     }?.addOnFailureListener {
                                         Log.i(TAG, "Error inserting product")
                                     }
 
                             listTasksAll.add(taskInsert!!)
-                        }else{
+                        } else {
                             product.uid = productFS.uid
                             hashProducts[product.uid!!] = product
                             taskInsert = insert(product, listener)
@@ -142,7 +158,10 @@ object ProductDao {
                             db.get()?.collection(COLLECTION_PATH)?.document(product.uid!!)
                                 ?.set(data)
                                 ?.addOnSuccessListener {
-                                    Log.i(TAG, "[insert]Product ${product.uid} updated successfully")
+                                    Log.i(
+                                        TAG,
+                                        "[insert]Product ${product.uid} updated successfully"
+                                    )
                                     hashProducts[product.uid!!] = product
                                     listener?.onProductInserted(product)
                                 }?.addOnFailureListener {
@@ -176,33 +195,35 @@ object ProductDao {
             }
     }
 
-    private fun insert(product: Product, listener : OnProductInsertedListener? = null): Task<*> {
-        val task : Task<*>
+    private fun insert(product: Product, listener: OnProductInsertedListener? = null): Task<*> {
+        val task: Task<*>
         val data = product.toMap()
-        if(product.uid==null){
+        if (product.uid == null) {
             task =
-                db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("idSource", product.idSource)?.get()?.addOnSuccessListener { querySnapshot ->
-                    if(querySnapshot.isEmpty) {
+                db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("idSource", product.idSource)
+                    ?.get()?.addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.isEmpty) {
                         db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener {
-                            product.uid= it.id
-                            if(!product.imageUrl?.startsWith("https://firebasestorage")!!)
+                            product.uid = it.id
+                            if (!product.imageUrl?.startsWith("https://firebasestorage")!!)
                                 insertBlob(product)
                             listener?.onProductInserted(product)
                             Log.i(TAG, "Product ${product.idSource} inserted successfully")
                         }?.addOnFailureListener {
                             Log.i(TAG, "Error inserting product")
                         }
-                    }else{
-                        product.uid= querySnapshot.documents[0].id
+                    } else {
+                        product.uid = querySnapshot.documents[0].id
                         insert(product)
                     }
                 }!!
-        }else{
-            if(!product.imageUrl?.startsWith("https://firebasestorage")!!)
+        } else {
+            if (!product.imageUrl?.startsWith("https://firebasestorage")!!)
                 insertBlob(product)
-            task = db.get()?.collection(COLLECTION_PATH)?.document(product.uid!!)?.set(data)?.addOnSuccessListener{
-                Log.i(TAG, "[insert]Product ${product.uid} updated successfully")
-            }?.addOnFailureListener{
+            task = db.get()?.collection(COLLECTION_PATH)?.document(product.uid!!)?.set(data)
+                ?.addOnSuccessListener {
+                    Log.i(TAG, "[insert]Product ${product.uid} updated successfully")
+                }?.addOnFailureListener {
                 Log.i(TAG, "Error updating product")
             }!!
         }
@@ -212,9 +233,12 @@ object ProductDao {
     private fun removeBlob(product: Product): Task<Void> {
         val reference = storage.reference.child("$COLLECTION_PATH/${product.uid}.jpg")
         return reference.delete().addOnSuccessListener {
-            Log.d(TAG, "[insertBlob]Image successfully removed for product ${product.uid} at ${product.imageUrl}")
+            Log.d(
+                TAG,
+                "[insertBlob]Image successfully removed for product ${product.uid} at ${product.imageUrl}"
+            )
         }.addOnFailureListener {
-            Log.d(TAG,"Error deleting image ${product.uid}")
+            Log.d(TAG, "Error deleting image ${product.uid}")
         }
     }
 
@@ -249,25 +273,27 @@ object ProductDao {
         }
     }
 
-    private fun update(product: Product, checkForUrl: Boolean = true ): Task<Void>? {
+    private fun update(product: Product, checkForUrl: Boolean = true): Task<Void>? {
         val data = product.toMap()
-        return db.get()?.collection(COLLECTION_PATH)?.document(product.uid.toString())?.set(data)?.addOnSuccessListener{
-            if(checkForUrl && (!product.imageUrl?.startsWith("https://firebasestorage")!!))
-                insertBlob(product)
-            Log.d(TAG, "[update]Product ${product.uid} updated successfully")
-        }?.addOnFailureListener{
+        return db.get()?.collection(COLLECTION_PATH)?.document(product.uid.toString())?.set(data)
+            ?.addOnSuccessListener {
+                if (checkForUrl && (!product.imageUrl?.startsWith("https://firebasestorage")!!))
+                    insertBlob(product)
+                Log.d(TAG, "[update]Product ${product.uid} updated successfully")
+            }?.addOnFailureListener {
         }
     }
 
     fun delete(product: Product): Task<Void>? {
-       return db.get()?.collection(COLLECTION_PATH)?.document(product.uid.toString())?.delete()?.addOnSuccessListener {
-            val reference = storage.reference
-            reference.child("$COLLECTION_PATH/${product.uid}.jpg").delete()
-            Log.i(TAG, "Message ${product.uid} deleted successfully")
-        }
+        return db.get()?.collection(COLLECTION_PATH)?.document(product.uid.toString())?.delete()
+            ?.addOnSuccessListener {
+                val reference = storage.reference
+                reference.child("$COLLECTION_PATH/${product.uid}.jpg").delete()
+                Log.i(TAG, "Message ${product.uid} deleted successfully")
+            }
     }
 
-    fun deleteAll() : Task<QuerySnapshot>? {
+    fun deleteAll(): Task<QuerySnapshot>? {
         val itemsRef = db.get()?.collection(COLLECTION_PATH)
         return itemsRef?.get()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {

@@ -20,13 +20,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.adapters.ProductAdapter
@@ -41,6 +34,13 @@ import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.HomeViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.HomeViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
 import java.lang.ref.WeakReference
 
 
@@ -54,19 +54,19 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     private lateinit var mAdapter: WeakReference<ProductAdapter>
     private lateinit var mFirestore: FirebaseFirestore
     var mFilterDialog: ProductsFilterDialogFragment? = null
-    private lateinit var toggle : ActionBarDrawerToggle
+    private lateinit var toggle: ActionBarDrawerToggle
     private var mQuery: Query? = null
 
-    companion object{
+    companion object {
         val TAG = HomeFragment::class.simpleName
         const val LIMIT = 50
         fun newInstance() = HomeFragment()
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel.viewState.observe(viewLifecycleOwner, {
@@ -99,13 +99,13 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
         binding.filterBar.isEnabled = false
 
-        Log.i(TAG,"$TAG activity successfully created>")
+        Log.i(TAG, "$TAG activity successfully created>")
         return binding.root
     }
 
-    override fun onDestroyView(){
+    override fun onDestroyView() {
         mFilterDialog = null
-        if(this::toggle.isInitialized) {
+        if (this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
@@ -138,15 +138,15 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         onFilter(viewModel.viewState.filters)
     }
 
-    private fun showLoadingScreen(){
+    private fun showLoadingScreen() {
         binding.homeProgress.visibility = View.VISIBLE
     }
 
-    fun hideLoadingScreen(){
+    fun hideLoadingScreen() {
         binding.homeProgress.visibility = View.GONE
     }
 
-    override fun onFilter(filters : ProductsFilters) {
+    override fun onFilter(filters: ProductsFilters) {
 
         // Construct query basic query
         var query: Query = mFirestore.collection(ProductDao.COLLECTION_PATH)
@@ -164,8 +164,8 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         */
         // Price (equality filter)
         if (filters.hasPrice()) {
-            val price0=  filters.price?.get(0)
-            val price1=  filters.price?.get(1)
+            val price0 = filters.price?.get(0)
+            val price1 = filters.price?.get(1)
             query = query.whereGreaterThanOrEqualTo(Product.PRICE, Integer.valueOf(price0!!))
                 .whereLessThanOrEqualTo(Product.PRICE, Integer.valueOf(price1!!))
         }
@@ -183,7 +183,8 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         showLoadingScreen()
 
         // Set header
-        binding.textCurrentSearch.text = HtmlCompat.fromHtml(filters.getSearchDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.textCurrentSearch.text =
+            HtmlCompat.fromHtml(filters.getSearchDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
@@ -225,43 +226,49 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = WeakReference( object : ProductAdapter(this@HomeFragment, mQuery, this@HomeFragment) {
-            override fun onDataChanged() {
-                binding.filterBar.isEnabled = true
-                hideLoadingScreen()
-                // Show/hide content if the query returns empty.
-                if (itemCount == 0) {
-                    binding.recyclerview.visibility = View.GONE
-                    binding.homeViewEmpty.visibility = View.VISIBLE
-                } else {
-                    binding.recyclerview.visibility = View.VISIBLE
-                    binding.homeViewEmpty.visibility = View.GONE
+        mAdapter =
+            WeakReference(object : ProductAdapter(this@HomeFragment, mQuery, this@HomeFragment) {
+                override fun onDataChanged() {
+                    binding.filterBar.isEnabled = true
+                    hideLoadingScreen()
+                    // Show/hide content if the query returns empty.
+                    if (itemCount == 0) {
+                        binding.recyclerview.visibility = View.GONE
+                        binding.homeViewEmpty.visibility = View.VISIBLE
+                    } else {
+                        binding.recyclerview.visibility = View.VISIBLE
+                        binding.homeViewEmpty.visibility = View.GONE
+                    }
                 }
-            }
 
-            override fun onError(e: FirebaseFirestoreException?) {
-                // Show a snackbar on errors
-                activity?.findViewById<View>(android.R.id.content)?.let {
-                    Snackbar.make(it,"Error: check logs for info.", Snackbar.LENGTH_LONG).show()
+                override fun onError(e: FirebaseFirestoreException?) {
+                    // Show a snackbar on errors
+                    activity?.findViewById<View>(android.R.id.content)?.let {
+                        Snackbar.make(it, "Error: check logs for info.", Snackbar.LENGTH_LONG)
+                            .show()
+                    }
                 }
-            }
-        })
+            })
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
         binding.recyclerview.adapter = mAdapter.get()
     }
 
-    override fun onActivityResult(result : Int) {
+    override fun onActivityResult(result: Int) {
         if (result == AppCompatActivity.RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
-            if(user!=null) {
+            if (user != null) {
                 val userFb = User()
                 userFb.uid = user.uid
                 userFb.name = user.displayName
                 userFb.email = user.email
                 UserDao.insert(userFb)
             }
-            Toast.makeText(requireContext(), getString(R.string.log_in_successful), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.log_in_successful),
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check

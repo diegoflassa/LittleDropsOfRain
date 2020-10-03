@@ -38,13 +38,13 @@ class ReloadProductsFragment : Fragment() {
     private lateinit var observer: Observer<WorkInfo>
     private var isStopped: Boolean = false
     private val viewModel: ReloadProductsViewModel by viewModels()
-    var binding : FragmentReloadProductsBinding by viewLifecycle()
-    private lateinit var toggle : ActionBarDrawerToggle
+    var binding: FragmentReloadProductsBinding by viewLifecycle()
+    private lateinit var toggle: ActionBarDrawerToggle
 
     companion object {
         fun newInstance() = ReloadProductsFragment()
-        private var worker : OneTimeWorkRequest? = null
-        private var DELAY_JOB_COMPLETED : Long = 90000
+        private var worker: OneTimeWorkRequest? = null
+        private var DELAY_JOB_COMPLETED: Long = 90000
     }
 
     override fun onCreateView(
@@ -61,9 +61,9 @@ class ReloadProductsFragment : Fragment() {
             viewModel.viewState.removeNotFoundProducts = checked
         }
         binding.fabReloadProducts.setOnClickListener {
-            if(worker==null) {
+            if (worker == null) {
                 reloadProducts()
-            }else{
+            } else {
                 cancel()
             }
         }
@@ -78,7 +78,7 @@ class ReloadProductsFragment : Fragment() {
                 R.string.navigation_drawer_close
             )
             drawerLayout?.addDrawerListener(toggle)
-            if(drawerLayout!=null)
+            if (drawerLayout != null)
                 toggle.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
@@ -89,7 +89,11 @@ class ReloadProductsFragment : Fragment() {
                         viewModel.viewState.progress.append("Writing values to Firestore. Please wait" + System.lineSeparator())
                         updateUI(viewModel.viewState)
                         Handler(Looper.getMainLooper()).postDelayed({
-                            Toast.makeText(requireContext(), getString(R.string.finished), Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.finished),
+                                Toast.LENGTH_LONG
+                            ).show()
                             cancel()
                         }, DELAY_JOB_COMPLETED)
                     }
@@ -118,65 +122,84 @@ class ReloadProductsFragment : Fragment() {
                 }
             }
         }
-        if(worker!=null) {
-            WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(worker!!.id).observe(viewLifecycleOwner, observer)
+        if (worker != null) {
+            WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(worker!!.id)
+                .observe(viewLifecycleOwner, observer)
             reloadProducts(false)
             showLoadingScreen()
-        }else {
+        } else {
             hideLoadingScreen()
         }
-        binding.fabReloadProducts.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_refresh))
+        binding.fabReloadProducts.setImageDrawable(
+            IconDrawable(
+                requireContext(),
+                SimpleLineIconsIcons.icon_refresh
+            )
+        )
         return binding.root
     }
 
-    override fun onDestroyView(){
-        if(this::toggle.isInitialized) {
+    override fun onDestroyView() {
+        if (this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
         super.onDestroyView()
     }
 
-    private fun reloadProducts(executeFetch : Boolean = true){
-        if(executeFetch && !wasShowed) {
+    private fun reloadProducts(executeFetch: Boolean = true) {
+        if (executeFetch && !wasShowed) {
             wasShowed = true
-            Toast.makeText(requireContext(), getString(R.string.be_patient), Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), getString(R.string.be_patient), Toast.LENGTH_LONG)
+                .show()
         }
-        if(executeFetch)
+        if (executeFetch)
             fetchProducts()
-        binding.fabReloadProducts.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_close))
+        binding.fabReloadProducts.setImageDrawable(
+            IconDrawable(
+                requireContext(),
+                SimpleLineIconsIcons.icon_close
+            )
+        )
     }
 
-    private fun cancel(){
-        if(worker!=null) {
+    private fun cancel() {
+        if (worker != null) {
             WorkManager.getInstance(requireContext()).cancelWorkById(worker!!.id)
             worker = null
         }
         viewModel.viewState.progress.clear()
-        binding.fabReloadProducts.setImageDrawable(IconDrawable(requireContext(), SimpleLineIconsIcons.icon_refresh))
+        binding.fabReloadProducts.setImageDrawable(
+            IconDrawable(
+                requireContext(),
+                SimpleLineIconsIcons.icon_refresh
+            )
+        )
         hideLoadingScreen()
         updateUI(viewModel.viewState)
     }
 
     override fun onStop() {
-        if(worker!=null) {
-            WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(worker!!.id).removeObserver(observer)
+        if (worker != null) {
+            WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(worker!!.id)
+                .removeObserver(observer)
             WorkManager.getInstance(requireContext()).cancelWorkById(worker!!.id)
         }
         isStopped = true
         super.onStop()
     }
+
     override fun onResume() {
         super.onResume()
         isStopped = false
         updateUI(viewModel.viewState)
     }
 
-    private fun showLoadingScreen(){
+    private fun showLoadingScreen() {
         binding.reloadProgress.visibility = View.VISIBLE
     }
 
-    private fun hideLoadingScreen(){
+    private fun hideLoadingScreen() {
         binding.reloadProgress.visibility = View.GONE
         binding.reloadProgress.invalidate()
     }
@@ -205,15 +228,17 @@ class ReloadProductsFragment : Fragment() {
         showLoadingScreen()
         worker = setupWorker()
         WorkManager.getInstance(requireContext()).enqueue(worker!!)
-        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(worker!!.id).observe(viewLifecycleOwner, observer)
+        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(worker!!.id)
+            .observe(viewLifecycleOwner, observer)
     }
 
-    private fun setupWorker() : OneTimeWorkRequest {
+    private fun setupWorker(): OneTimeWorkRequest {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .setRequiresBatteryNotLow(true)
             .build()
-        val removeNotFound = workDataOf(UpdateProductsWork.KEY_IN_REMOVE_NOT_FOUND to viewModel.viewState.removeNotFoundProducts)
+        val removeNotFound =
+            workDataOf(UpdateProductsWork.KEY_IN_REMOVE_NOT_FOUND to viewModel.viewState.removeNotFoundProducts)
         return OneTimeWorkRequest.Builder(UpdateProductsWork::class.java)
             .setConstraints(constraints)
             .setInputData(removeNotFound)

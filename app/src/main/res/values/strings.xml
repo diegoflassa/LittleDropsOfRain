@@ -67,7 +67,6 @@
     <string name="promos_pt">Promos in Portuguese</string>
     <string name="promos_en">Promos in English</string>
     <string name="unknown">Unknown</string>
-    <string name="tos">Terms of Service</string>
     <string name="msg_subscribed_to_news">Subscribed to News!</string>
     <string name="msg_subscribed_to_promos">Subscribed to Promos!</string>
     <string name="msg_subscribe_promos_failed">Unable to subscribe to promotions</string>
@@ -141,4 +140,14 @@
     <string name="logo_toolbar">Logo Toolbar</string>
     <string name="please_wait">Please Wait</string>
     <string name="label_tos">Terms of Service</string>
+    <string name="privacy_url" translatable="false">https://littledropsofrain-site.web.app/privacy.html</string>
+    <string name="tos_url" translatable="false">https://littledropsofrain-site.web.app/tos.html</string>
+    <string name="name">Name</string>
+    <string name="change_image">Change Image</string>
+    <string name="update">Update</string>
+    <string name="user_image">User Image</string>
+    <string name="android_package_name" translatable="false">app.web.diegoflassa_site</string>
+    <string name="dynamic_link_domain" translatable="false">ldor.page.link</string>
+    <string name="dynamic_link_url" translatable="false">https://ldor.page.link/passwordless</string>
+    <string name="exit">Exit</string>
 </resources>

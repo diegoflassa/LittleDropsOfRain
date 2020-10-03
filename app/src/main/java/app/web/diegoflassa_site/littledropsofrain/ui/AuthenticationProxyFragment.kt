@@ -38,16 +38,20 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
         fun newInstance() = AuthenticationProxyFragment()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         binding = FragmentAuthenticationProxyBinding.inflate(inflater, container, false)
         binding.authenticationProgress.visibility = View.VISIBLE
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         mAuth = FirebaseAuth.getInstance()
-        if(mAuth.currentUser==null) {
+        if (mAuth.currentUser == null) {
             registerForActivityResult(AuthActivityResultContract(), this).launch(null)
-        }else {
+        } else {
             logout()
             findNavController().navigate(R.id.nav_home)
         }
@@ -61,13 +65,21 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
     override fun onActivityResult(result: Int) {
         if (result == AppCompatActivity.RESULT_OK) {
             // Successfully signed in
-            Toast.makeText(requireContext(), getString(R.string.log_in_successful), Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.log_in_successful),
+                Toast.LENGTH_LONG
+            ).show()
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
             // response.getError().getErrorCode() and handle the error.
             // ...
-            Toast.makeText(requireContext(), getString(R.string.unable_to_log_in), Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.unable_to_log_in),
+                Toast.LENGTH_LONG
+            ).show()
         }
         findNavController().navigate(R.id.nav_home)
     }

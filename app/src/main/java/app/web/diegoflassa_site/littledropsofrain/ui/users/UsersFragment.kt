@@ -16,12 +16,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.adapters.UsersAdapter
@@ -35,6 +29,12 @@ import app.web.diegoflassa_site.littledropsofrain.models.UsersViewState
 import app.web.diegoflassa_site.littledropsofrain.ui.home.HomeFragment
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
 import java.lang.ref.WeakReference
 
 
@@ -45,11 +45,12 @@ class UsersFragment : Fragment(),
         val TAG = UsersFragment::class.simpleName
         fun newInstance() = UsersFragment()
     }
+
     private val viewModel: UsersViewModel by viewModels()
     var binding: FragmentUsersBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<UsersAdapter>
     private lateinit var mFirestore: FirebaseFirestore
-    private lateinit var toggle : ActionBarDrawerToggle
+    private lateinit var toggle: ActionBarDrawerToggle
     private var mQuery: Query? = null
 
     override fun onCreateView(
@@ -72,7 +73,7 @@ class UsersFragment : Fragment(),
                 R.string.navigation_drawer_close
             )
             drawerLayout?.addDrawerListener(toggle)
-            if(drawerLayout!=null)
+            if (drawerLayout != null)
                 toggle.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
@@ -83,8 +84,8 @@ class UsersFragment : Fragment(),
         return binding.root
     }
 
-    override fun onDestroyView(){
-        if(this::toggle.isInitialized) {
+    override fun onDestroyView() {
+        if (this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
@@ -110,6 +111,7 @@ class UsersFragment : Fragment(),
         super.onResume()
         updateUI(viewModel.viewState)
     }
+
     private fun updateUI(viewState: UsersViewState) {
         // Update the UI
         viewState.text = ""
@@ -119,11 +121,11 @@ class UsersFragment : Fragment(),
         fab?.visibility = View.GONE
     }
 
-    fun showLoadingScreen(){
+    fun showLoadingScreen() {
         binding.usersProgress.visibility = View.VISIBLE
     }
 
-    fun hideLoadingScreen(){
+    fun hideLoadingScreen() {
         binding.usersProgress.visibility = View.GONE
     }
 
@@ -185,29 +187,30 @@ class UsersFragment : Fragment(),
             Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
         }
 
-        mAdapter = WeakReference( object : UsersAdapter(this@UsersFragment, mQuery, this@UsersFragment) {
-            override fun onDataChanged() {
-                hideLoadingScreen()
-                // Show/hide content if the query returns empty.
-                if (itemCount == 0) {
-                    binding.recyclerview.visibility = View.GONE
-                    binding.usersViewEmpty.visibility = View.VISIBLE
-                } else {
-                    binding.recyclerview.visibility = View.VISIBLE
-                    binding.usersViewEmpty.visibility = View.GONE
+        mAdapter =
+            WeakReference(object : UsersAdapter(this@UsersFragment, mQuery, this@UsersFragment) {
+                override fun onDataChanged() {
+                    hideLoadingScreen()
+                    // Show/hide content if the query returns empty.
+                    if (itemCount == 0) {
+                        binding.recyclerview.visibility = View.GONE
+                        binding.usersViewEmpty.visibility = View.VISIBLE
+                    } else {
+                        binding.recyclerview.visibility = View.VISIBLE
+                        binding.usersViewEmpty.visibility = View.GONE
+                    }
                 }
-            }
 
-            override fun onError(e: FirebaseFirestoreException?) {
-                // Show a snackbar on errors
-                activity?.findViewById<View>(android.R.id.content)?.let {
-                    Snackbar.make(
-                        it,
-                        "Error: check logs for info.", Snackbar.LENGTH_LONG
-                    ).show()
+                override fun onError(e: FirebaseFirestoreException?) {
+                    // Show a snackbar on errors
+                    activity?.findViewById<View>(android.R.id.content)?.let {
+                        Snackbar.make(
+                            it,
+                            "Error: check logs for info.", Snackbar.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
-        })
+            })
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
         binding.recyclerview.adapter = mAdapter.get()
     }
@@ -215,7 +218,7 @@ class UsersFragment : Fragment(),
     override fun onUserSelected(user: DocumentSnapshot?) {
         val parsedUser = user?.toObject(User::class.java)
         showSendMessageTo(parsedUser!!)
-   }
+    }
 
     private fun showSendMessageTo(user: User) {
         val message = Message()

@@ -20,7 +20,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         private val TAG = MyFirebaseMessagingService::class.simpleName
     }
 
-     /**
+    /**
      * Called when message is received.
      *
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
@@ -125,17 +125,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      * @param remoteMessage FCM message body received.
      */
     private fun handleNotification(remoteMessage: RemoteMessage) {
-        val notificationTitle : String
-        val notificationBody : String
-        var imageUri : Uri?
-        if(remoteMessage.data.isNotEmpty()){
+        val notificationTitle: String
+        val notificationBody: String
+        var imageUri: Uri?
+        if (remoteMessage.data.isNotEmpty()) {
             notificationTitle = remoteMessage.data["title"].toString()
             notificationBody = remoteMessage.data["body"].toString()
             imageUri = Uri.parse(remoteMessage.data["imageUri"].toString())
-            if(imageUri.toString().contains("null")){
+            if (imageUri.toString().contains("null")) {
                 imageUri = null
             }
-        }else{
+        } else {
             notificationTitle = remoteMessage.notification!!.title.toString()
             notificationBody = remoteMessage.notification!!.body.toString()
             imageUri = remoteMessage.notification!!.imageUrl!!
@@ -145,9 +145,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         messageToSave.type = MessageType.NOTIFICATION.toString()
         messageToSave.owners.add(FirebaseAuth.getInstance().currentUser?.email!!)
         messageToSave.imageUrl = imageUri?.toString()
-        messageToSave.message = notificationTitle + System.lineSeparator() + System.lineSeparator() + notificationBody
+        messageToSave.message =
+            notificationTitle + System.lineSeparator() + System.lineSeparator() + notificationBody
         MessageDao.insert(messageToSave)
 
-        Helper.showNotification(applicationContext, null, imageUri, notificationTitle, notificationBody, false)
+        Helper.showNotification(
+            applicationContext,
+            null,
+            imageUri,
+            notificationTitle,
+            notificationBody,
+            false
+        )
     }
 }

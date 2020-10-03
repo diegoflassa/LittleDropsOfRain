@@ -15,7 +15,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentFacebookBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
@@ -24,18 +23,19 @@ import app.web.diegoflassa_site.littledropsofrain.interfaces.OnKeyLongPressListe
 import app.web.diegoflassa_site.littledropsofrain.models.FacebookViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.FacebookViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class FacebookFragment : Fragment(), OnKeyLongPressListener {
 
-    companion object{
+    companion object {
         fun newInstance() = FacebookFragment()
         private const val KEY_PREF_LAST_URL = "KEY_PREF_LAST_URL_FACEBOOK"
     }
 
     private var isStopped: Boolean = false
     private val viewModel: FacebookViewModel by viewModels()
-    private var binding :FragmentFacebookBinding by viewLifecycle()
+    private var binding: FragmentFacebookBinding by viewLifecycle()
     private var url = ""
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -53,9 +53,12 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
         // set up the webview
         binding.webviewFacebook.settings.javaScriptEnabled = true
         binding.webviewFacebook.settings.domStorageEnabled = true
-        binding.webviewFacebook.webViewClient = object: WebViewClient() {
+        binding.webviewFacebook.webViewClient = object : WebViewClient() {
 
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
                 view?.loadUrl(request?.url.toString())
                 return super.shouldOverrideUrlLoading(view, request)
             }
@@ -68,7 +71,7 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(binding.webviewFacebook.canGoBack()){
+                if (binding.webviewFacebook.canGoBack()) {
                     binding.webviewFacebook.goBack()
                 } else {
                     isEnabled = false
@@ -87,7 +90,7 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
         return binding.root
     }
 
-    override fun onSaveInstanceState(outState : Bundle){
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (isSafeToAccessViewModel() && !isStopped) {
             binding.webviewFacebook.saveState(outState)
@@ -96,12 +99,12 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        if(savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             binding.webviewFacebook.restoreState(savedInstanceState)
         }
     }
 
-    override fun onStop(){
+    override fun onStop() {
         super.onStop()
         isStopped = true
         (activity as MainActivity).mOnKeyLongPressListener = null
@@ -136,19 +139,19 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
         binding.facebookProgress.visibility = View.VISIBLE
     }
 
-    fun hideProgressDialog(){
+    fun hideProgressDialog() {
         if (isSafeToAccessViewModel() && !isStopped) {
             binding.facebookProgress.visibility = View.GONE
         }
     }
 
     override fun keyLongPress(keyCode: Int, event: KeyEvent?) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             binding.webviewFacebook.reload()
         }
     }
 
-    private fun saveCurrentUrl(){
+    private fun saveCurrentUrl() {
         val prefs = requireContext().applicationContext.getSharedPreferences(
             requireContext().packageName,
             Activity.MODE_PRIVATE
@@ -157,8 +160,8 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
         edit.putString(KEY_PREF_LAST_URL, binding.webviewFacebook.url)
         edit.apply()
     }
-    
-    private fun restoreCurrentUrl(){
+
+    private fun restoreCurrentUrl() {
         val prefs = requireContext().applicationContext.getSharedPreferences(
             requireContext().packageName,
             Activity.MODE_PRIVATE

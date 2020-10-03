@@ -2,11 +2,11 @@ package app.web.diegoflassa_site.littledropsofrain.fragments
 
 import android.content.Context
 import android.text.TextUtils
-import com.google.firebase.firestore.Query
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
+import com.google.firebase.firestore.Query
 
 /**
  * Object for passing filters around.
@@ -34,10 +34,12 @@ class ProductsFilters {
             desc.append("<b>")
             desc.append(categories)
             desc.append("</b>")
-        }else{
+        } else {
             desc.append("<b>")
-            desc.append(MyApplication.getContext()
-                    .getString(R.string.all))
+            desc.append(
+                MyApplication.getContext()
+                    .getString(R.string.all)
+            )
             desc.append("</b>")
         }
         if (price != null) {
@@ -52,7 +54,7 @@ class ProductsFilters {
     fun getOrderDescription(context: Context): String {
         return if (Product.PRICE == sortBy) {
             context.getString(R.string.sorted_by_price)
-        }else{
+        } else {
             context.getString(R.string.sorted_by_categories)
         }
     }
