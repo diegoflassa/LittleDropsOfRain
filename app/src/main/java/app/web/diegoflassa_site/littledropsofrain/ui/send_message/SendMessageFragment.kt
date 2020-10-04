@@ -22,16 +22,15 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendMessageBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.helpers.runOnUiThread
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
-import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUserFoundListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUsersLoadedListener
 import app.web.diegoflassa_site.littledropsofrain.models.SendMessageViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.SendMessageViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +38,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SendMessageFragment : Fragment(), OnUserFoundListener,
+class SendMessageFragment : Fragment(),
     OnUsersLoadedListener {
 
     companion object {
@@ -161,12 +160,10 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
     }
 
     private fun setupViewForUser() {
-        if (FirebaseAuth.getInstance().currentUser != null) {
-            val user = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
-            UserDao.findByEMail(user.email, this)
-        } else {
-            onUserFound(null)
-        }
+        viewModel.viewState.sender = LoggedUser.user ?: User()
+        viewModel.viewState.isUserAdmin = !(LoggedUser.user == null || !LoggedUser.user!!.isAdmin)
+        binding.btnSend.isEnabled = true
+        updateUI(viewModel.viewState)
     }
 
     private fun setupRadioGroupSendMethods() {
@@ -311,17 +308,10 @@ class SendMessageFragment : Fragment(), OnUserFoundListener,
         }
     }
 
-    override fun onUserFound(user: User?) {
-        viewModel.viewState.sender = user ?: User()
-        viewModel.viewState.isUserAdmin = !(user == null || !user.isAdmin)
-        binding.btnSend.isEnabled = true
-        updateUI(viewModel.viewState)
-    }
-
     override fun onUsersLoaded(users: List<User>) {
         val mutableUsers = ArrayList<User>(users)
         for (user in users) {
-            if (user.email == FirebaseAuth.getInstance().currentUser?.email) {
+            if (user.email == LoggedUser.firebaseUserLiveData.value?.email) {
                 mutableUsers.remove(user)
             }
         }

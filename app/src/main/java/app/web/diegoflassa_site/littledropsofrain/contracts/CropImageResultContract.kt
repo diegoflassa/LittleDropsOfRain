@@ -10,14 +10,15 @@ import app.web.diegoflassa_site.littledropsofrain.helpers.FIleUtils
 import com.yalantis.ucrop.UCrop
 import java.io.File
 
-class CropImageResultContract : ActivityResultContract<Uri, Uri?>() {
+class CropImageResultContract : ActivityResultContract<Pair<Uri, Pair<Float, Float>>, Uri?>() {
 
     companion object {
-        val ASPECT_RATIO = Pair(2F, 1F)
+        val ASPECT_RATIO_BOX = Pair(1F, 1F)
+        val ASPECT_RATIO_RECTANGLE = Pair(2F, 1F)
         val MAX_IMAGE_SIZE = Pair(512, 256)
     }
 
-    override fun createIntent(context: Context, input: Uri): Intent {
+    override fun createIntent(context: Context, input: Pair<Uri, Pair<Float, Float>>): Intent {
         return createCropIntent(context, input)
     }
 
@@ -32,8 +33,8 @@ class CropImageResultContract : ActivityResultContract<Uri, Uri?>() {
         return resultUri
     }
 
-    private fun createCropIntent(context: Context, uri: Uri): Intent {
-        val pathUri = Uri.parse("file:/" + FIleUtils.getPath(context, uri))
+    private fun createCropIntent(context: Context, data: Pair<Uri, Pair<Float, Float>>): Intent {
+        val pathUri = Uri.parse("file:/" + FIleUtils.getPath(context, data.first))
         val lastIndex = pathUri.toString().lastIndexOf(".")
         var fileExtension: String? = ""
         val fileNameLastIndex = pathUri.toString().lastIndexOf("/")
@@ -49,8 +50,8 @@ class CropImageResultContract : ActivityResultContract<Uri, Uri?>() {
         }
         val tempFile = File.createTempFile(fileName + "_cropped", fileExtension, fFilePath)
         val uriDest = Uri.fromFile(tempFile)
-        return UCrop.of(uri, uriDest)
-            .withAspectRatio(ASPECT_RATIO.first, ASPECT_RATIO.second)
+        return UCrop.of(data.first, uriDest)
+            .withAspectRatio(data.second.first, data.second.second)
             .withMaxResultSize(MAX_IMAGE_SIZE.first, MAX_IMAGE_SIZE.second)
             .getIntent(context)
     }

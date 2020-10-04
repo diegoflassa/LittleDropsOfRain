@@ -30,13 +30,13 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentHomeBinding
 import app.web.diegoflassa_site.littledropsofrain.fragments.ProductsFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.fragments.ProductsFilters
+import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.HomeViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.HomeViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -256,7 +256,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     override fun onActivityResult(result: Int) {
         if (result == AppCompatActivity.RESULT_OK) {
             // Successfully signed in
-            val user = FirebaseAuth.getInstance().currentUser
+            val user = LoggedUser.firebaseUserLiveData.value
             if (user != null) {
                 val userFb = User()
                 userFb.uid = user.uid

@@ -8,7 +8,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
-import com.google.firebase.auth.FirebaseAuth
+import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 
 class NotificationReceiver : BroadcastReceiver() {
 
@@ -29,7 +29,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
             val messageToSave = Message()
             messageToSave.type = MessageType.NOTIFICATION.toString()
-            messageToSave.owners.add(FirebaseAuth.getInstance().currentUser?.email!!)
+            messageToSave.owners.add(LoggedUser.firebaseUserLiveData.value?.email!!)
             messageToSave.imageUrl = imageUri?.toString()
             messageToSave.message =
                 title + System.lineSeparator() + System.lineSeparator() + message

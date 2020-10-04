@@ -111,4 +111,6 @@
     <string name="update">Aktualisieren</string>
     <string name="user_image">Benutzerbild</string>
     <string name="exit">Exit</string>
+    <string name="tos_title">Nutzungsbedingungen</string>
+    <string name="label_user_profile">Benutzerprofil</string>
 </resources>

@@ -24,6 +24,7 @@ enum class Source(private val source: String) {
 data class Product(
     var uid: String? = null,
     var idSource: String? = null,
+    var idIluria: String? = null,
     var linkProduct: String? = null,
     var title: String? = null,
     var price: Int? = null,
@@ -37,6 +38,7 @@ data class Product(
     companion object {
         private const val UID = "uid"
         private const val ID_SOURCE = "idSource"
+        const val ID_ILURIA = "idIluria"
         private const val LINK_PRODUCT = "linkProduct"
         private const val TITLE = "title"
         const val PRICE = "price"
@@ -55,6 +57,7 @@ data class Product(
         val result: HashMap<String, Any?> = HashMap()
         result[UID] = uid
         result[ID_SOURCE] = idSource
+        result[ID_ILURIA] = idIluria
         result[LINK_PRODUCT] = linkProduct
         result[TITLE] = title
         result[PRICE] = price
@@ -69,6 +72,7 @@ data class Product(
     private fun fromMap(map: Map<String, Any>) {
         uid = map[UID] as String?
         idSource = map[ID_SOURCE] as String?
+        idIluria = map[ID_ILURIA] as String?
         linkProduct = map[LINK_PRODUCT] as String?
         title = map[TITLE] as String?
         price = map[PRICE] as Int?

@@ -13,11 +13,11 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemUserBinding
+import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataFailureListener
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
 import app.web.diegoflassa_site.littledropsofrain.ui.users.UsersFragment
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
@@ -27,13 +27,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private val mListener: OnUserSelectedListener)
-    : FirestoreAdapter<UsersAdapter.ViewHolder?>(query), OnDataChangeListener<Void?>,
+open class UsersAdapter(
+    usersFragment: UsersFragment,
+    query: Query?,
+    private val mListener: OnUserSelectedListener
+) : FirestoreAdapter<UsersAdapter.ViewHolder?>(query), OnDataChangeListener<Void?>,
     OnDataFailureListener<Exception> {
 
-    private val mUsersFragment : UsersFragment = usersFragment
+    private val mUsersFragment: UsersFragment = usersFragment
     private val ioScope = CoroutineScope(Dispatchers.IO)
-    private var mOnCheckChangeListener : ((compoundButton : CompoundButton, checked : Boolean) -> Unit)? = { _: CompoundButton, _: Boolean -> }
+    private var mOnCheckChangeListener: ((compoundButton: CompoundButton, checked: Boolean) -> Unit)? =
+        { _: CompoundButton, _: Boolean -> }
 
     interface OnUserSelectedListener {
         fun onUserSelected(user: DocumentSnapshot?)
@@ -43,7 +47,8 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val binding = RecyclerviewItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            RecyclerviewItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding.root)
     }
 
@@ -52,15 +57,16 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
         position: Int
     ) {
         holder.bind(getSnapshot(position), mListener)
-        val listener: ((compoundButton : CompoundButton, checked : Boolean) -> Unit)? = { _: CompoundButton, checked: Boolean ->
-            val user = getSnapshot(holder.adapterPosition).toObject(User::class.java)
-            user?.isAdmin = checked
-            mUsersFragment.showLoadingScreen()
-            mUsersFragment.binding.recyclerview.isEnabled = false
-            ioScope.launch {
-                UserDao.update(user!!, this@UsersAdapter, this@UsersAdapter)
+        val listener: ((compoundButton: CompoundButton, checked: Boolean) -> Unit)? =
+            { _: CompoundButton, checked: Boolean ->
+                val user = getSnapshot(holder.adapterPosition).toObject(User::class.java)
+                user?.isAdmin = checked
+                mUsersFragment.showLoadingScreen()
+                mUsersFragment.binding.recyclerview.isEnabled = false
+                ioScope.launch {
+                    UserDao.update(user!!, this@UsersAdapter, this@UsersAdapter)
+                }
             }
-         }
         mOnCheckChangeListener = listener
         holder.binding.userIsAdmin.setOnCheckedChangeListener(mOnCheckChangeListener)
     }
@@ -79,7 +85,8 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
             val resources = itemView.resources
 
             // Load image
-            Picasso.get().load(user?.imageUrl).placeholder(R.drawable.image_placeholder).into(binding.userPicture)
+            Picasso.get().load(user?.imageUrl).placeholder(R.drawable.image_placeholder)
+                .into(binding.userPicture)
             binding.userName.text = resources.getString(R.string.rv_user_name, user?.name)
             binding.userEmail.text = resources.getString(R.string.rv_user_email, user?.email)
             binding.userIsAdmin.text = resources.getString(R.string.rv_user_is_admin)
@@ -90,25 +97,46 @@ open class UsersAdapter(usersFragment : UsersFragment, query: Query?, private va
                 }
             }
 
-            binding.btnReplyUser.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
-            binding.btnReplyUser.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_envelope))
+            binding.btnReplyUser.isEnabled =
+                (user.email != LoggedUser.firebaseUserLiveData.value?.email)
+            binding.btnReplyUser.setImageDrawable(
+                IconDrawable(
+                    MyApplication.getContext(),
+                    SimpleLineIconsIcons.icon_envelope
+                )
+            )
             binding.btnReplyUser.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
+                bundle.putString(
+                    SendMessageFragment.ACTION_SEND_KEY,
+                    SendMessageFragment.ACTION_SEND
+                )
                 itemView.findNavController().navigate(R.id.send_message_fragment, bundle)
             }
 
-            binding.btnDeleteUser.setImageDrawable(IconDrawable(MyApplication.getContext(), SimpleLineIconsIcons.icon_trash))
+            binding.btnDeleteUser.setImageDrawable(
+                IconDrawable(
+                    MyApplication.getContext(),
+                    SimpleLineIconsIcons.icon_trash
+                )
+            )
 
-            binding.userIsAdmin.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
-            binding.btnDeleteUser.isEnabled = (user.email != FirebaseAuth.getInstance().currentUser?.email)
+            binding.userIsAdmin.isEnabled =
+                (user.email != LoggedUser.firebaseUserLiveData.value?.email)
+            binding.btnDeleteUser.isEnabled =
+                (user.email != LoggedUser.firebaseUserLiveData.value?.email)
 
             // Click listener
-            if(user.email != FirebaseAuth.getInstance().currentUser?.email) {
+            if (user.email != LoggedUser.firebaseUserLiveData.value?.email) {
                 itemView.setOnClickListener { listener?.onUserSelected(snapshot) }
-            }else{
-                itemView.setOnClickListener { Toast.makeText(MyApplication.getContext(), MyApplication.getContext().getString(
-                                    R.string.cannot_send_message_to_yourself), Toast.LENGTH_SHORT).show() }
+            } else {
+                itemView.setOnClickListener {
+                    Toast.makeText(
+                        MyApplication.getContext(), MyApplication.getContext().getString(
+                            R.string.cannot_send_message_to_yourself
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }

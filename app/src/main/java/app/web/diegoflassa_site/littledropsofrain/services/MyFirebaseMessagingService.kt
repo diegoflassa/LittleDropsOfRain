@@ -8,8 +8,8 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.workers.MyWorker
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -143,7 +143,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val messageToSave = Message()
         messageToSave.type = MessageType.NOTIFICATION.toString()
-        messageToSave.owners.add(FirebaseAuth.getInstance().currentUser?.email!!)
+        messageToSave.owners.add(LoggedUser.firebaseUserLiveData.value?.email!!)
         messageToSave.imageUrl = imageUri?.toString()
         messageToSave.message =
             notificationTitle + System.lineSeparator() + System.lineSeparator() + notificationBody

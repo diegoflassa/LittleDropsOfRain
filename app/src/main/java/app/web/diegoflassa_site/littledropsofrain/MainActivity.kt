@@ -35,6 +35,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.helpers.IntentHelper
+import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnKeyLongPressListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUserFoundListener
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewModel
@@ -48,7 +49,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.joanzapata.iconify.IconDrawable
@@ -69,8 +69,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
-    private var currentUser: User = User()
-    private lateinit var mAuth: FirebaseAuth
     private lateinit var fab: FloatingActionButton
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
@@ -84,6 +82,8 @@ class MainActivity : AppCompatActivity(),
         viewModel.viewState.observe(this, {
             updateUI(it)
         })
+        // Initialize the singleton class
+        LoggedUser.user= null
         setContentView(binding.root)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -123,11 +123,16 @@ class MainActivity : AppCompatActivity(),
 
             override fun onDrawerOpened(drawerView: View) {
                 Log.i(TAG, "onDrawerOpened")
-                val currentUser = mAuth.currentUser
-                if (currentUser != null) {
-                    if (currentUser.photoUrl != null) {
-                        Picasso.get().load(currentUser.photoUrl)
-                            .placeholder(R.drawable.image_placeholder).into(
+                if (LoggedUser.user != null) {
+                    if (LoggedUser.user!!.imageUrl != null) {
+                        Picasso.get().load(LoggedUser.user!!.imageUrl)
+                            .placeholder(R.drawable.image_placeholder)
+                            .error(
+                                ContextCompat.getDrawable(
+                                    applicationContext,
+                                    R.mipmap.ic_launcher_round
+                                )!!
+                            ).into(
                                 binding.navView.nav_vw_image
                             )
                     } else {
@@ -139,10 +144,11 @@ class MainActivity : AppCompatActivity(),
                         )
                     }
                     binding.navView.nav_vw_image.setOnClickListener {
+                        drawerLayout.close()
                         findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalUserProfileFragment())
                     }
-                    binding.navView.nav_vw_name.text = currentUser.displayName
-                    binding.navView.nav_vw_email.text = currentUser.email
+                    binding.navView.nav_vw_name.text = LoggedUser.user!!.name
+                    binding.navView.nav_vw_email.text = LoggedUser.user!!.email
 
                 } else {
                     binding.navView.nav_vw_image.setImageDrawable(
@@ -194,14 +200,13 @@ class MainActivity : AppCompatActivity(),
         bnv.setupWithNavController(navController)
         bnv.visibility = View.GONE
 
-        mAuth = FirebaseAuth.getInstance()
-        if (mAuth.currentUser == null) {
+        if (LoggedUser.firebaseUserLiveData.value == null) {
             authenticateOnResume = true
         } else {
             Toast.makeText(
                 applicationContext, getString(
                     R.string.user_logged_as,
-                    mAuth.currentUser!!.displayName
+                    LoggedUser.firebaseUserLiveData.value!!.displayName
                 ), Toast.LENGTH_LONG
             ).show()
         }
@@ -211,11 +216,9 @@ class MainActivity : AppCompatActivity(),
             { firebaseUser ->
                 if (firebaseUser != null) {
                     fab.isEnabled = true
-                    firebaseUser.reload()
                     UserDao.findByEMail(firebaseUser.email, this)
                 } else {
                     fab.isEnabled = false
-                    currentUser = User()
                     setupDrawerMenuIntems()
                     val navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_home, true).build()
                     findNavController(R.id.nav_host_fragment).navigate(
@@ -359,6 +362,13 @@ class MainActivity : AppCompatActivity(),
                             findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
                             intent.removeExtra(IntentHelper.EXTRA_START_WHAT)
                         }
+                        "tos" -> {
+                            findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalTosFragment())
+                            intent.removeExtra(IntentHelper.EXTRA_START_WHAT)
+                        }
+                        "licenses" -> {
+                            showLicenses()
+                        }
                     }
                 }
                 if (AuthUI.canHandleIntent(intent)) {
@@ -405,8 +415,7 @@ class MainActivity : AppCompatActivity(),
                 ret = true
             }
             R.id.action_licenses -> {
-                OssLicensesMenuActivity.setActivityTitle(getString(R.string.licenses))
-                startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+                showLicenses()
                 ret = true
             }
             R.id.action_privacy -> {
@@ -434,42 +443,40 @@ class MainActivity : AppCompatActivity(),
         val navAdmin = navView.menu.findItem(R.id.nav_all_messages)
         navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
         val navAuthentication = navView.menu.findItem(R.id.nav_authentication)
-        if (mAuth.currentUser != null) {
+        if (LoggedUser.firebaseUserLiveData.value != null) {
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_logout)
             navAuthentication.title = getString(R.string.logout)
         } else {
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_login)
             navAuthentication.title = getString(R.string.login)
         }
-        if (mAuth.currentUser != null) {
+        if (LoggedUser.firebaseUserLiveData.value != null) {
             navMessages.isEnabled = true
             navMessages.isVisible = true
         } else {
             navMessages.isEnabled = false
             navMessages.isVisible = false
         }
-        if (!currentUser.isAdmin) {
-            navAdmin.isEnabled = false
-            navAdmin.isVisible = false
-        } else {
+        if (LoggedUser.user != null && LoggedUser.user!!.isAdmin) {
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
+        } else {
+            navAdmin.isEnabled = false
+            navAdmin.isVisible = false
         }
         navHome.isChecked = true
     }
 
     override fun onUserFound(user: User?) {
         if (user != null) {
-            currentUser = user
             if (user.isAdmin) {
                 Helper.requestReadExternalStoragePermission(this)
             }
-            UserDao.insert(currentUser)
-        } else if (FirebaseAuth.getInstance().currentUser != null) {
-            val userFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
+        } else if (LoggedUser.firebaseUserLiveData.value != null) {
+            val userFb = Helper.firebaseUserToUser(LoggedUser.firebaseUserLiveData.value!!)
             UserDao.insert(userFb)
-            currentUser = userFb
-            Firebase.auth.fetchSignInMethodsForEmail(currentUser.email!!)
+            LoggedUser.user = userFb
+            Firebase.auth.fetchSignInMethodsForEmail(LoggedUser.user!!.email!!)
                 .addOnSuccessListener { result ->
                     val signInMethods = result.signInMethods!!
                     if (signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD) || signInMethods.contains(
@@ -500,5 +507,10 @@ class MainActivity : AppCompatActivity(),
             // response.getError().getErrorCode() and handle the error.
             // ...
         }
+    }
+
+    private fun showLicenses(){
+        OssLicensesMenuActivity.setActivityTitle(getString(R.string.licenses))
+        startActivity(Intent(this, OssLicensesMenuActivity::class.java))
     }
 }

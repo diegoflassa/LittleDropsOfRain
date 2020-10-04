@@ -22,6 +22,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentUserProfileBinding
+import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
 import app.web.diegoflassa_site.littledropsofrain.helpers.runOnUiThread
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
@@ -32,7 +33,6 @@ import app.web.diegoflassa_site.littledropsofrain.models.UserProfileViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.UserProfileViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 
 class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListener,
@@ -47,8 +47,7 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
     private val viewModel: UserProfileViewModel by viewModels()
     private var binding: FragmentUserProfileBinding by viewLifecycle()
     private lateinit var getContentLauncher: ActivityResultLauncher<String>
-    private lateinit var cropImageLauncher: ActivityResultLauncher<Uri?>
-    private var currentUser: User? = null
+    private lateinit var cropImageLauncher: ActivityResultLauncher<Pair<Uri, Pair<Float, Float>>>
     private var isStopped = false
 
     override fun onCreateView(
@@ -60,6 +59,7 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
             updateUI(it)
         })
 
+        activity?.setTitle(R.string.label_user_profile)
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -85,11 +85,13 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
             getContentLauncher.launch("image/*")
         }
         binding.userBtnUpdate.setOnClickListener {
-            if (currentUser != null) {
-                currentUser!!.name = binding.userEdtTxtName.text.toString()
-                currentUser!!.email = binding.userEdtTxtEmail.text.toString()
-                UserDao.update(currentUser!!)
+            if (LoggedUser.user != null) {
+                LoggedUser.user!!.name = binding.userEdtTxtName.text.toString()
+                LoggedUser.user!!.email = binding.userEdtTxtEmail.text.toString()
+                UserDao.update(LoggedUser.user!!)
             }
+            Toast.makeText(context, getString(R.string.saved), Toast.LENGTH_SHORT).show()
+            findNavController().navigateUp()
         }
         binding.userBtnExit.setOnClickListener {
             findNavController().navigateUp()
@@ -98,12 +100,13 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
         cropImageLauncher = registerForActivityResult(CropImageResultContract(), this)
         getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
             if (it == null) {
-                if (currentUser != null) {
-                    currentUser!!.imageUrl = null
+                if (LoggedUser.user != null) {
+                    LoggedUser.user!!.imageUrl = null
                 }
                 binding.userPicture.setImageDrawable(null)
             } else {
-                cropImageLauncher.launch(it)
+                val data = Pair(it, CropImageResultContract.ASPECT_RATIO_BOX)
+                cropImageLauncher.launch(data)
             }
         }
 
@@ -130,6 +133,7 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
     }
 
     override fun onResume() {
+        isStopped = false
         updateUI(viewModel.viewState)
         super.onResume()
     }
@@ -155,18 +159,18 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
     }
 
     private fun setCurrentUserToUI() {
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = LoggedUser.firebaseUserLiveData.value
         if (user != null) {
             UserDao.findByEMail(user.email, this)
         }
     }
 
     override fun onUserFound(user: User?) {
-        currentUser = user
-        if (currentUser != null) {
-            binding.userEdtTxtName.setText(currentUser!!.name)
-            binding.userEdtTxtEmail.setText(currentUser!!.email)
-            Picasso.get().load(currentUser!!.imageUrl)
+        LoggedUser.user = user
+        if (LoggedUser.user != null) {
+            binding.userEdtTxtName.setText(LoggedUser.user!!.name)
+            binding.userEdtTxtEmail.setText(LoggedUser.user!!.email)
+            Picasso.get().load(LoggedUser.user!!.imageUrl)
                 .placeholder(R.drawable.image_placeholder).into(
                     binding.userPicture
                 )
@@ -181,9 +185,9 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
     }
 
     override fun onFileUploaded(local: Uri, remote: Uri) {
-        if (currentUser != null) {
-            currentUser!!.imageUrl = remote.toString()
-            Picasso.get().load(currentUser!!.imageUrl)
+        if (LoggedUser.user != null) {
+            LoggedUser.user!!.imageUrl = remote.toString()
+            Picasso.get().load(LoggedUser.user!!.imageUrl)
                 .placeholder(R.drawable.image_placeholder).into(
                     binding.userPicture
                 )
@@ -193,6 +197,7 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
 
     override fun onFileUploadedFailure(file: Uri, exception: Exception?) {
         Toast.makeText(context, getString(R.string.file_upload_failure), Toast.LENGTH_LONG).show()
+        hideLoadingScreen()
     }
 
 }

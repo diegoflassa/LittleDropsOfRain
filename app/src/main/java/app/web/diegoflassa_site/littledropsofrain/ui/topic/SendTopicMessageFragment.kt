@@ -60,7 +60,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var getContentLauncher: ActivityResultLauncher<String>
-    private lateinit var cropImageLauncher: ActivityResultLauncher<Uri?>
+    private lateinit var cropImageLauncher: ActivityResultLauncher<Pair<Uri, Pair<Float, Float>>>
     private var isStopped = false
     private var messageSent = false
 
@@ -113,7 +113,8 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
                     )
                 )
             } else {
-                cropImageLauncher.launch(it)
+                val data = Pair(it, CropImageResultContract.ASPECT_RATIO_RECTANGLE)
+                cropImageLauncher.launch(data)
             }
         }
         binding.fabSelectImage.setOnClickListener {

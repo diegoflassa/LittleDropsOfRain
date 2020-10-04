@@ -36,7 +36,7 @@ object ProductDao {
     fun loadAll(listener: OnDataChangeListener<List<Product>>): Task<QuerySnapshot>? {
         val products: MutableList<Product> = ArrayList()
         return db.get()?.collection(COLLECTION_PATH)
-            ?.orderBy("idSource", Query.Direction.DESCENDING)
+            ?.orderBy(Product.ID_ILURIA, Query.Direction.DESCENDING)
             ?.get()
             ?.addOnSuccessListener { result ->
                 var product: Product
@@ -110,7 +110,7 @@ object ProductDao {
         val hashProducts: MutableMap<String, Product> = HashMap<String, Product>(products.size)
         val listTasksAll = ArrayList<Task<*>>(products.size)
         var taskInsert: Task<*>?
-        db.get()?.collection(COLLECTION_PATH)?.orderBy("idSource", Query.Direction.DESCENDING)
+        db.get()?.collection(COLLECTION_PATH)?.orderBy(Product.ID_ILURIA, Query.Direction.DESCENDING)
             ?.get()
             ?.addOnSuccessListener { result ->
 
@@ -121,7 +121,7 @@ object ProductDao {
                         lateinit var productFS: Product
                         for (document in result) {
                             productFS = document.toObject(Product::class.java)
-                            if (product.idSource == productFS.idSource) {
+                            if (product.idIluria == productFS.idIluria) {
                                 found = true
                                 break
                             }
@@ -138,7 +138,7 @@ object ProductDao {
                                         listener?.onProductInserted(product)
                                         Log.i(
                                             TAG,
-                                            "Product ${product.idSource} inserted successfully"
+                                            "Product ${product.idIluria} inserted successfully"
                                         )
                                     }?.addOnFailureListener {
                                         Log.i(TAG, "Error inserting product")
@@ -200,7 +200,7 @@ object ProductDao {
         val data = product.toMap()
         if (product.uid == null) {
             task =
-                db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("idSource", product.idSource)
+                db.get()?.collection(COLLECTION_PATH)?.whereEqualTo(Product.ID_ILURIA, product.idIluria)
                     ?.get()?.addOnSuccessListener { querySnapshot ->
                     if (querySnapshot.isEmpty) {
                         db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener {
@@ -208,7 +208,7 @@ object ProductDao {
                             if (!product.imageUrl?.startsWith("https://firebasestorage")!!)
                                 insertBlob(product)
                             listener?.onProductInserted(product)
-                            Log.i(TAG, "Product ${product.idSource} inserted successfully")
+                            Log.i(TAG, "Product ${product.idIluria} inserted successfully")
                         }?.addOnFailureListener {
                             Log.i(TAG, "Error inserting product")
                         }

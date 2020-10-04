@@ -85,6 +85,7 @@ class Helper {
                 product.categories.add(st.nextToken().trim())
             }
             product.idSource = iluriaProduct.idProduct
+            product.idIluria = iluriaProduct.idProduct
             val price = iluriaProduct.price!!.replace(',', '.')
             product.price = (price.toFloat() * 100).toInt()
             product.disponibility = iluriaProduct.disponibility
@@ -357,7 +358,7 @@ class Helper {
         }
 
         fun unsubscribeToPromos(context: Context) {
-            val topic = Helper.getTopicPromosForCurrentLanguage(context)
+            val topic = getTopicPromosForCurrentLanguage(context)
             unsubscribeToPromos(context, topic)
         }
 
@@ -373,7 +374,7 @@ class Helper {
         }
 
         fun subscribeToPromos(context: Context) {
-            val topic = Helper.getTopicPromosForCurrentLanguage(context)
+            val topic = getTopicPromosForCurrentLanguage(context)
             FirebaseMessaging.getInstance().subscribeToTopic(topic)
                 .addOnCompleteListener { task ->
                     var msg = context.getString(R.string.msg_subscribed)

@@ -20,13 +20,13 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMessagesBinding
 import app.web.diegoflassa_site.littledropsofrain.fragments.MyMessagesFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.fragments.MyMessagesFilters
+import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.MessagesViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.MessagesViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -138,7 +138,7 @@ class MessagesFragment : Fragment(),
         var query: Query = mFirestore.collection(MessageDao.COLLECTION_PATH)
         query.orderBy(Message.CREATION_DATE, Query.Direction.DESCENDING)
         val users = ArrayList<String>(1)
-        users.add(FirebaseAuth.getInstance().currentUser?.email!!)
+        users.add(LoggedUser.firebaseUserLiveData.value?.email!!)
         query = query.whereArrayContainsAny(Message.OWNERS, users)
 
         // Message Type (equality filter)

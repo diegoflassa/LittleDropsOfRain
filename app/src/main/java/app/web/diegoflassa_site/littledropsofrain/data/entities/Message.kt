@@ -3,8 +3,8 @@ package app.web.diegoflassa_site.littledropsofrain.data.entities
 import android.net.Uri
 import android.os.Parcelable
 import androidx.annotation.Keep
+import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ServerTimestamp
 import kotlinx.android.parcel.Parcelize
 import java.util.*
@@ -29,10 +29,10 @@ data class Message(
     var replyUid: String? = null,
     var imageUrl: String? = null,
     var owners: MutableList<String> = ArrayList(),
-    var emailSender: String? = FirebaseAuth.getInstance().currentUser!!.email,
+    var emailSender: String? = LoggedUser.firebaseUserLiveData.value!!.email,
     var emailTo: String? = null,
-    var sender: String? = FirebaseAuth.getInstance().currentUser!!.displayName,
-    var senderId: String? = FirebaseAuth.getInstance().currentUser!!.uid,
+    var sender: String? = LoggedUser.firebaseUserLiveData.value!!.displayName,
+    var senderId: String? = LoggedUser.firebaseUserLiveData.value!!.uid,
     var message: String? = null,
     var type: String? = MessageType.UNKNOWN.toString(),
     @ServerTimestamp

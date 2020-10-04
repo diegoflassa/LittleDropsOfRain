@@ -38,9 +38,9 @@ object FilesDao {
         image: Uri,
         listener: OnFileUploadedListener? = null,
         failureListener: OnFileUploadedFailureListener? = null,
-        isUSerAvatar: Boolean = false
+        isUserAvatar: Boolean = false
     ) {
-        val storageRef = if (isUSerAvatar) {
+        val storageRef = if (isUserAvatar) {
             storage.reference.child("${COLLECTION_PATH_USER_AVATAR}/${image.lastPathSegment}")
         } else {
             storage.reference.child("${COLLECTION_PATH}/${image.lastPathSegment}")

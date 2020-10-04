@@ -16,8 +16,8 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemMessageBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
@@ -98,13 +98,13 @@ open class MessageAdapter(
                     binding.msgImage.visibility = View.GONE
                     binding.btnViewAsNotification.visibility = View.GONE
                     when {
-                        message.emailSender == FirebaseAuth.getInstance().currentUser?.email -> {
+                        message.emailSender == LoggedUser.firebaseUserLiveData.value?.email -> {
                             itemView.background = ContextCompat.getDrawable(
                                 MyApplication.getContext(),
                                 android.R.color.white
                             )
                         }
-                        message.emailTo == FirebaseAuth.getInstance().currentUser?.email -> {
+                        message.emailTo == LoggedUser.firebaseUserLiveData.value?.email -> {
                             itemView.background = ContextCompat.getDrawable(
                                 MyApplication.getContext(),
                                 R.color.colorMessageMine
@@ -149,7 +149,7 @@ open class MessageAdapter(
             }
 
             binding.btnReply.isEnabled =
-                (message.emailSender != FirebaseAuth.getInstance().currentUser?.email)
+                (message.emailSender != LoggedUser.firebaseUserLiveData.value?.email)
             binding.btnReply.setImageDrawable(
                 IconDrawable(
                     MyApplication.getContext(),
@@ -175,7 +175,7 @@ open class MessageAdapter(
             val messageToEdit = Message()
             messageToEdit.replyUid = message.uid
             messageToEdit.senderId = message.senderId
-            messageToEdit.emailSender = FirebaseAuth.getInstance().currentUser?.email
+            messageToEdit.emailSender = LoggedUser.firebaseUserLiveData.value?.email
             messageToEdit.sender = binding.msgSender.text.toString()
             messageToEdit.message = binding.msgMessage.text.toString()
             val bundle = Bundle()

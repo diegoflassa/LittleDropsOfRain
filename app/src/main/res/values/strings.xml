@@ -150,4 +150,6 @@
     <string name="dynamic_link_domain" translatable="false">ldor.page.link</string>
     <string name="dynamic_link_url" translatable="false">https://ldor.page.link/passwordless</string>
     <string name="exit">Exit</string>
+    <string name="tos_title">Terms of Service</string>
+    <string name="label_user_profile">User Profile</string>
 </resources>

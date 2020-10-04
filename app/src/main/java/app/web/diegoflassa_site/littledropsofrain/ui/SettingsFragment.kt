@@ -33,6 +33,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     @Suppress("DEPRECATION")
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        activity?.setTitle(R.string.label_settings)
+
         registerPreferencesListener()
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
 

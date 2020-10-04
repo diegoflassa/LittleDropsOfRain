@@ -33,6 +33,7 @@ class TosFragment : Fragment() {
         binding = FragmentTosBinding.inflate(inflater, container, false)
 
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
+        activity?.setTitle(R.string.tos_title)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
             toggle = ActionBarDrawerToggle(
