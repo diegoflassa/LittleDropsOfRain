@@ -48,10 +48,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.joanzapata.iconify.fonts.TypiconsIcons
@@ -493,27 +490,15 @@ class MainActivity : AppCompatActivity(),
                 val userFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
                 UserDao.insert(userFb)
                 LoggedUser.userLiveData.value = userFb
-                Firebase.auth.fetchSignInMethodsForEmail(LoggedUser.userLiveData.value!!.email!!)
-                    .addOnSuccessListener { result ->
-                        Toast.makeText(
-                            applicationContext, getString(
-                                R.string.user_logged_as,
-                                LoggedUser.userLiveData.value!!.name
-                            ), Toast.LENGTH_LONG
-                        ).show()
-                        val signInMethods = result.signInMethods!!
-                        if (signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD) || signInMethods.contains(
-                                EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD
-                            )
-                        ) {
-                            findNavController(R.id.nav_host_fragment).navigate(
-                                MainActivityDirections.actionGlobalUserProfileFragment()
-                            )
-                        }
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.e(TAG, "Error getting sign in methods for user", exception)
-                    }
+                findNavController(R.id.nav_host_fragment).navigate(
+                    MainActivityDirections.actionGlobalUserProfileFragment()
+                )
+                Toast.makeText(
+                    applicationContext, getString(
+                        R.string.user_logged_as,
+                        LoggedUser.userLiveData.value!!.name
+                    ), Toast.LENGTH_LONG
+                ).show()
             }
             else -> {
                 authenticateOnResume = true
