@@ -17,7 +17,6 @@ import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.auth.FirebaseAuth
 
 /**
  * A simple [Fragment] subclass.
@@ -27,7 +26,6 @@ import com.google.firebase.auth.FirebaseAuth
 class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
 
     var binding: FragmentAuthenticationProxyBinding by viewLifecycle()
-    private lateinit var mAuth: FirebaseAuth
 
     companion object {
         /**
@@ -50,8 +48,7 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
         binding.authenticationProgress.visibility = View.VISIBLE
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
-        mAuth = FirebaseAuth.getInstance()
-        if (mAuth.currentUser == null) {
+        if (LoggedUser.userLiveData.value == null) {
             registerForActivityResult(AuthActivityResultContract(), this).launch(null)
         } else {
             logout()
@@ -63,7 +60,8 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
     private fun logout() {
         AuthUI.getInstance().signOut(requireContext())
         PreferenceManager.getDefaultSharedPreferences(requireContext()).edit().putString(
-            SettingsFragment.LOGGED_USER_EMAIL_KEY, "").apply()
+            SettingsFragment.LOGGED_USER_EMAIL_KEY, ""
+        ).apply()
         LoggedUser.userLiveData.value = null
     }
 

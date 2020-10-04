@@ -17,7 +17,9 @@ data class User(
     var uid: String? = null,
     @field:JvmField var isAdmin: Boolean = false,
     @ServerTimestamp
-    var creationDate: Timestamp? = Timestamp.now()
+    var creationDate: Timestamp? = Timestamp.now(),
+    @ServerTimestamp
+    var lastSeen: Timestamp? = Timestamp.now()
 ) :
     Parcelable {
 
@@ -28,6 +30,7 @@ data class User(
         private const val NAME = "name"
         private const val IS_ADMIN = "isAdmin"
         private const val CREATION_DATE = "creationDate"
+        private const val LAST_SEEN = "lastSeen"
 
         fun fromString(text: String): User {
             val user = User()
@@ -73,6 +76,7 @@ data class User(
         result[NAME] = name
         result[IS_ADMIN] = isAdmin
         result[CREATION_DATE] = creationDate
+        result[LAST_SEEN] = creationDate
         return result
     }
 
@@ -83,6 +87,7 @@ data class User(
         name = map[NAME] as String?
         isAdmin = map[IS_ADMIN] as Boolean
         creationDate = map[CREATION_DATE] as Timestamp?
+        lastSeen = map[LAST_SEEN] as Timestamp?
     }
 
     override fun toString(): String {

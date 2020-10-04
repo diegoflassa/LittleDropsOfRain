@@ -47,6 +47,7 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var fab: FloatingActionButton
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
+    private var authenticateOnResume = false
     private var isSetUpUserInDrawer = false
     private var lastIntent: Intent? = null
     var mOnKeyLongPressListener: OnKeyLongPressListener? = null
@@ -167,17 +169,15 @@ class MainActivity : AppCompatActivity(),
         bnv.setupWithNavController(navController)
         bnv.visibility = View.GONE
 
-        FirebaseAuth.getInstance().addAuthStateListener { authData ->
-            val firebaseUser = authData.currentUser
-            if (firebaseUser != null) {
-                fab.isEnabled = true
-                firebaseUser.getIdToken(true).addOnCompleteListener {
-                    PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
-                        SettingsFragment.LOGGED_USER_EMAIL_KEY, firebaseUser.email
-                    ).apply()
-                }
-                UserDao.findByEMail(firebaseUser.email, this)
+        LoggedUser.userLiveData.observe(this) {
+            if (it != null) {
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
+                    SettingsFragment.LOGGED_USER_EMAIL_KEY, it.email
+                ).apply()
             }
+            fab.isEnabled = (it != null)
+            isSetUpUserInDrawer = false
+            setupDrawerMenuIntems()
         }
         signInUser()
         handleIntent()
@@ -190,8 +190,7 @@ class MainActivity : AppCompatActivity(),
         if (!email.isNullOrEmpty()) {
             UserDao.findByEMail(email, this)
         } else {
-            // Navigate to the sign-in/authentication fragment
-            findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalAuthenticationFragment())
+            authenticateOnResume = true
         }
     }
 
@@ -331,6 +330,11 @@ class MainActivity : AppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
+        if (authenticateOnResume) {
+            authenticateOnResume = false
+            // Navigate to the sign-in/authentication fragment
+            findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalAuthenticationFragment())
+        }
         updateUI(viewModel.viewState)
         handleIntent()
     }
@@ -371,6 +375,7 @@ class MainActivity : AppCompatActivity(),
                     }
                 }
                 if (AuthUI.canHandleIntent(intent)) {
+                    authenticateOnResume = false
                     if (intent.extras == null) {
                         return
                     }
@@ -387,6 +392,8 @@ class MainActivity : AppCompatActivity(),
     private fun updateUI(viewState: MainActivityViewState) {
         // Update he UI
         viewState.text = ""
+        isSetUpUserInDrawer = false
+        setupDrawerMenuIntems()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -468,10 +475,13 @@ class MainActivity : AppCompatActivity(),
     override fun onUserFound(user: User?) {
         when {
             user != null -> {
+                user.lastSeen = Timestamp.now()
+                UserDao.update(user)
                 if (user.isAdmin) {
                     Helper.requestReadExternalStoragePermission(this)
                     SetupProductsUpdateWorkerService.setupWorker(applicationContext)
                 }
+                LoggedUser.userLiveData.value = user
                 Toast.makeText(
                     applicationContext, getString(
                         R.string.user_logged_as,
@@ -506,10 +516,10 @@ class MainActivity : AppCompatActivity(),
                     }
             }
             else -> {
-                // Navigate to the sign-in/authentication fragment
-                findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalAuthenticationFragment())
+                authenticateOnResume = true
             }
         }
+        setUpUserInDrawer()
         setupDrawerMenuIntems()
     }
 

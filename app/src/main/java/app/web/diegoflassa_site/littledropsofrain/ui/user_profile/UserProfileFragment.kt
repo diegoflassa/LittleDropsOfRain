@@ -75,7 +75,6 @@ class UserProfileFragment : Fragment(), OnFileUploadedListener,
 
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
-        setCurrentUserToUI()
         binding.userBtnUpdate.isEnabled = false
         binding.userBtnChangeImage.isEnabled = false
         binding.userBtnChangeImage.setOnClickListener {
@@ -109,7 +108,7 @@ class UserProfileFragment : Fragment(), OnFileUploadedListener,
                 cropImageLauncher.launch(data)
             }
         }
-
+        setCurrentUserToUI()
         return binding.root
     }
 
@@ -162,6 +161,9 @@ class UserProfileFragment : Fragment(), OnFileUploadedListener,
         val user = LoggedUser.userLiveData.value
         LoggedUser.userLiveData.value = user
         if (LoggedUser.userLiveData.value != null) {
+            viewModel.viewState.name = LoggedUser.userLiveData.value?.name!!
+            viewModel.viewState.email = LoggedUser.userLiveData.value?.email!!
+
             binding.userEdtTxtName.setText(LoggedUser.userLiveData.value!!.name)
             binding.userTxtVwEmail.text = LoggedUser.userLiveData.value!!.email
             Picasso.get().load(LoggedUser.userLiveData.value!!.imageUrl)
