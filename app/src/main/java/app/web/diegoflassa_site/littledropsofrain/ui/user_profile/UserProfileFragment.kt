@@ -97,7 +97,7 @@ class UserProfileFragment : Fragment(), OnFileUploadedListener,
         getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
             if (it == null) {
                 if (LoggedUser.userLiveData.value != null) {
-                    if(LoggedUser.userLiveData.value!!.imageUrl!=null){
+                    if (LoggedUser.userLiveData.value!!.imageUrl != null) {
                         FilesDao.remove(Uri.parse(LoggedUser.userLiveData.value!!.imageUrl))
                     }
                     LoggedUser.userLiveData.value!!.imageUrl = null
@@ -182,7 +182,7 @@ class UserProfileFragment : Fragment(), OnFileUploadedListener,
 
     override fun onFileUploaded(local: Uri, remote: Uri) {
         if (LoggedUser.userLiveData.value != null) {
-            if(LoggedUser.userLiveData.value!!.imageUrl!=null) {
+            if (LoggedUser.userLiveData.value!!.imageUrl != null) {
                 FilesDao.remove(Uri.parse(LoggedUser.userLiveData.value!!.imageUrl))
             }
             LoggedUser.userLiveData.value!!.imageUrl = remote.toString()
