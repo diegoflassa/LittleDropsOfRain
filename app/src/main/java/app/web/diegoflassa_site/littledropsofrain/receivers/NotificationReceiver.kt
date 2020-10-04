@@ -29,7 +29,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
             val messageToSave = Message()
             messageToSave.type = MessageType.NOTIFICATION.toString()
-            messageToSave.owners.add(LoggedUser.firebaseUserLiveData.value?.email!!)
+            messageToSave.owners.add(LoggedUser.userLiveData.value?.email!!)
             messageToSave.imageUrl = imageUri?.toString()
             messageToSave.message =
                 title + System.lineSeparator() + System.lineSeparator() + message

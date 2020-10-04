@@ -24,6 +24,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private var toggle: ActionBarDrawerToggle? = null
 
     companion object {
+        const val LOGGED_USER_EMAIL_KEY = "LOGGED_USER_EMAIL_KEY"
         const val SUBSCRIBED_LANGUAGE_KEY = "SUBSCRIBED_LANGUAGE_KEY"
         val TAG = SettingsFragment::class.simpleName
         fun newInstance(): Fragment {
@@ -33,7 +34,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     @Suppress("DEPRECATION")
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        activity?.setTitle(R.string.label_settings)
 
         registerPreferencesListener()
         setPreferencesFromResource(R.xml.root_preferences, rootKey)

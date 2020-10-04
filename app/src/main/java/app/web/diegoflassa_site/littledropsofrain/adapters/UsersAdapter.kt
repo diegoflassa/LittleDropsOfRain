@@ -98,7 +98,7 @@ open class UsersAdapter(
             }
 
             binding.btnReplyUser.isEnabled =
-                (user.email != LoggedUser.firebaseUserLiveData.value?.email)
+                (user.email != LoggedUser.userLiveData.value?.email)
             binding.btnReplyUser.setImageDrawable(
                 IconDrawable(
                     MyApplication.getContext(),
@@ -122,12 +122,12 @@ open class UsersAdapter(
             )
 
             binding.userIsAdmin.isEnabled =
-                (user.email != LoggedUser.firebaseUserLiveData.value?.email)
+                (user.email != LoggedUser.userLiveData.value?.email)
             binding.btnDeleteUser.isEnabled =
-                (user.email != LoggedUser.firebaseUserLiveData.value?.email)
+                (user.email != LoggedUser.userLiveData.value?.email)
 
             // Click listener
-            if (user.email != LoggedUser.firebaseUserLiveData.value?.email) {
+            if (user.email != LoggedUser.userLiveData.value?.email) {
                 itemView.setOnClickListener { listener?.onUserSelected(snapshot) }
             } else {
                 itemView.setOnClickListener {

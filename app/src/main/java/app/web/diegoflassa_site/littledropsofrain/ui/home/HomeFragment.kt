@@ -256,11 +256,11 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     override fun onActivityResult(result: Int) {
         if (result == AppCompatActivity.RESULT_OK) {
             // Successfully signed in
-            val user = LoggedUser.firebaseUserLiveData.value
+            val user = LoggedUser.userLiveData.value
             if (user != null) {
                 val userFb = User()
                 userFb.uid = user.uid
-                userFb.name = user.displayName
+                userFb.name = user.name
                 userFb.email = user.email
                 UserDao.insert(userFb)
             }

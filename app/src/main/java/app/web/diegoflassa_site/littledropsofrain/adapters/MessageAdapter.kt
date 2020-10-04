@@ -98,13 +98,13 @@ open class MessageAdapter(
                     binding.msgImage.visibility = View.GONE
                     binding.btnViewAsNotification.visibility = View.GONE
                     when {
-                        message.emailSender == LoggedUser.firebaseUserLiveData.value?.email -> {
+                        message.emailSender == LoggedUser.userLiveData.value?.email -> {
                             itemView.background = ContextCompat.getDrawable(
                                 MyApplication.getContext(),
                                 android.R.color.white
                             )
                         }
-                        message.emailTo == LoggedUser.firebaseUserLiveData.value?.email -> {
+                        message.emailTo == LoggedUser.userLiveData.value?.email -> {
                             itemView.background = ContextCompat.getDrawable(
                                 MyApplication.getContext(),
                                 R.color.colorMessageMine
@@ -149,7 +149,7 @@ open class MessageAdapter(
             }
 
             binding.btnReply.isEnabled =
-                (message.emailSender != LoggedUser.firebaseUserLiveData.value?.email)
+                (message.emailSender != LoggedUser.userLiveData.value?.email)
             binding.btnReply.setImageDrawable(
                 IconDrawable(
                     MyApplication.getContext(),
@@ -175,7 +175,7 @@ open class MessageAdapter(
             val messageToEdit = Message()
             messageToEdit.replyUid = message.uid
             messageToEdit.senderId = message.senderId
-            messageToEdit.emailSender = LoggedUser.firebaseUserLiveData.value?.email
+            messageToEdit.emailSender = LoggedUser.userLiveData.value?.email
             messageToEdit.sender = binding.msgSender.text.toString()
             messageToEdit.message = binding.msgMessage.text.toString()
             val bundle = Bundle()

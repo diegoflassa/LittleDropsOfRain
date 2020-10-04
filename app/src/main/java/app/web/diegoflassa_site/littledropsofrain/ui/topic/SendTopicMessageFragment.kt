@@ -213,8 +213,10 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        viewModel.viewState.title = binding.edtTxtTitle.text.toString()
-        viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
+        if (isSafeToAccessViewModel() && !isStopped) {
+            viewModel.viewState.title = binding.edtTxtTitle.text.toString()
+            viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

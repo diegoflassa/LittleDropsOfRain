@@ -20,7 +20,6 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.contracts.CropImageResultContract
 import app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
-import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentUserProfileBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.helpers.isSafeToAccessViewModel
@@ -28,14 +27,13 @@ import app.web.diegoflassa_site.littledropsofrain.helpers.runOnUiThread
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedFailureListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedListener
-import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUserFoundListener
 import app.web.diegoflassa_site.littledropsofrain.models.UserProfileViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.UserProfileViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
 
-class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListener,
+class UserProfileFragment : Fragment(), OnFileUploadedListener,
     OnFileUploadedFailureListener,
     ActivityResultCallback<Uri?> {
 
@@ -59,7 +57,6 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
             updateUI(it)
         })
 
-        activity?.setTitle(R.string.label_user_profile)
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -85,10 +82,10 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
             getContentLauncher.launch("image/*")
         }
         binding.userBtnUpdate.setOnClickListener {
-            if (LoggedUser.user != null) {
-                LoggedUser.user!!.name = binding.userEdtTxtName.text.toString()
-                LoggedUser.user!!.email = binding.userEdtTxtEmail.text.toString()
-                UserDao.update(LoggedUser.user!!)
+            if (LoggedUser.userLiveData.value != null) {
+                LoggedUser.userLiveData.value!!.name = binding.userEdtTxtName.text.toString()
+                LoggedUser.userLiveData.value!!.email = binding.userTxtVwEmail.text.toString()
+                UserDao.update(LoggedUser.userLiveData.value!!)
             }
             Toast.makeText(context, getString(R.string.saved), Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
@@ -100,8 +97,11 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
         cropImageLauncher = registerForActivityResult(CropImageResultContract(), this)
         getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
             if (it == null) {
-                if (LoggedUser.user != null) {
-                    LoggedUser.user!!.imageUrl = null
+                if (LoggedUser.userLiveData.value != null) {
+                    if(LoggedUser.userLiveData.value!!.imageUrl!=null){
+                        FilesDao.remove(Uri.parse(LoggedUser.userLiveData.value!!.imageUrl))
+                    }
+                    LoggedUser.userLiveData.value!!.imageUrl = null
                 }
                 binding.userPicture.setImageDrawable(null)
             } else {
@@ -115,7 +115,7 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
 
     override fun onPause() {
         viewModel.viewState.name = binding.userEdtTxtName.text.toString()
-        viewModel.viewState.email = binding.userEdtTxtEmail.text.toString()
+        viewModel.viewState.email = binding.userTxtVwEmail.text.toString()
         super.onPause()
     }
 
@@ -140,7 +140,7 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
 
     private fun updateUI(viewState: UserProfileViewState) {
         binding.userEdtTxtName.setText(viewState.name)
-        binding.userEdtTxtEmail.setText(viewState.email)
+        binding.userTxtVwEmail.text = viewState.email
         // Update the UI
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE
@@ -159,18 +159,12 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
     }
 
     private fun setCurrentUserToUI() {
-        val user = LoggedUser.firebaseUserLiveData.value
-        if (user != null) {
-            UserDao.findByEMail(user.email, this)
-        }
-    }
-
-    override fun onUserFound(user: User?) {
-        LoggedUser.user = user
-        if (LoggedUser.user != null) {
-            binding.userEdtTxtName.setText(LoggedUser.user!!.name)
-            binding.userEdtTxtEmail.setText(LoggedUser.user!!.email)
-            Picasso.get().load(LoggedUser.user!!.imageUrl)
+        val user = LoggedUser.userLiveData.value
+        LoggedUser.userLiveData.value = user
+        if (LoggedUser.userLiveData.value != null) {
+            binding.userEdtTxtName.setText(LoggedUser.userLiveData.value!!.name)
+            binding.userTxtVwEmail.text = LoggedUser.userLiveData.value!!.email
+            Picasso.get().load(LoggedUser.userLiveData.value!!.imageUrl)
                 .placeholder(R.drawable.image_placeholder).into(
                     binding.userPicture
                 )
@@ -185,9 +179,12 @@ class UserProfileFragment : Fragment(), OnUserFoundListener, OnFileUploadedListe
     }
 
     override fun onFileUploaded(local: Uri, remote: Uri) {
-        if (LoggedUser.user != null) {
-            LoggedUser.user!!.imageUrl = remote.toString()
-            Picasso.get().load(LoggedUser.user!!.imageUrl)
+        if (LoggedUser.userLiveData.value != null) {
+            if(LoggedUser.userLiveData.value!!.imageUrl!=null) {
+                FilesDao.remove(Uri.parse(LoggedUser.userLiveData.value!!.imageUrl))
+            }
+            LoggedUser.userLiveData.value!!.imageUrl = remote.toString()
+            Picasso.get().load(LoggedUser.userLiveData.value!!.imageUrl)
                 .placeholder(R.drawable.image_placeholder).into(
                     binding.userPicture
                 )

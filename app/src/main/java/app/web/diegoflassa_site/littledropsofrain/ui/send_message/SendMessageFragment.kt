@@ -160,8 +160,9 @@ class SendMessageFragment : Fragment(),
     }
 
     private fun setupViewForUser() {
-        viewModel.viewState.sender = LoggedUser.user ?: User()
-        viewModel.viewState.isUserAdmin = !(LoggedUser.user == null || !LoggedUser.user!!.isAdmin)
+        viewModel.viewState.sender = LoggedUser.userLiveData.value ?: User()
+        viewModel.viewState.isUserAdmin =
+            !(LoggedUser.userLiveData.value == null || !LoggedUser.userLiveData.value!!.isAdmin)
         binding.btnSend.isEnabled = true
         updateUI(viewModel.viewState)
     }
@@ -311,7 +312,7 @@ class SendMessageFragment : Fragment(),
     override fun onUsersLoaded(users: List<User>) {
         val mutableUsers = ArrayList<User>(users)
         for (user in users) {
-            if (user.email == LoggedUser.firebaseUserLiveData.value?.email) {
+            if (user.email == LoggedUser.userLiveData.value?.email) {
                 mutableUsers.remove(user)
             }
         }

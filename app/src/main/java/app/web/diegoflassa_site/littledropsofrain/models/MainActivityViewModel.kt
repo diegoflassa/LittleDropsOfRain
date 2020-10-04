@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.auth.FirebaseAuthLiveData
 
+@Suppress("unused")
 class MainActivityViewModel : ViewModel() {
     private val mFirebaseAuthLiveData: FirebaseAuthLiveData = FirebaseAuthLiveData()
 

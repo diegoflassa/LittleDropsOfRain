@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -49,6 +48,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.joanzapata.iconify.IconDrawable
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var fab: FloatingActionButton
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
-    private var authenticateOnResume = false
+    private var isSetUpUserInDrawer = false
     private var lastIntent: Intent? = null
     var mOnKeyLongPressListener: OnKeyLongPressListener? = null
 
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity(),
             updateUI(it)
         })
         // Initialize the singleton class
-        LoggedUser.user= null
+        LoggedUser.userLiveData.value = null
         setContentView(binding.root)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -122,44 +122,11 @@ class MainActivity : AppCompatActivity(),
             }
 
             override fun onDrawerOpened(drawerView: View) {
-                Log.i(TAG, "onDrawerOpened")
-                if (LoggedUser.user != null) {
-                    if (LoggedUser.user!!.imageUrl != null) {
-                        Picasso.get().load(LoggedUser.user!!.imageUrl)
-                            .placeholder(R.drawable.image_placeholder)
-                            .error(
-                                ContextCompat.getDrawable(
-                                    applicationContext,
-                                    R.mipmap.ic_launcher_round
-                                )!!
-                            ).into(
-                                binding.navView.nav_vw_image
-                            )
-                    } else {
-                        binding.navView.nav_vw_image.setImageDrawable(
-                            ContextCompat.getDrawable(
-                                applicationContext,
-                                R.mipmap.ic_launcher_round
-                            )
-                        )
-                    }
-                    binding.navView.nav_vw_image.setOnClickListener {
-                        drawerLayout.close()
-                        findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalUserProfileFragment())
-                    }
-                    binding.navView.nav_vw_name.text = LoggedUser.user!!.name
-                    binding.navView.nav_vw_email.text = LoggedUser.user!!.email
-
-                } else {
-                    binding.navView.nav_vw_image.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            applicationContext,
-                            R.mipmap.ic_launcher_round
-                        )
-                    )
-                    binding.navView.nav_vw_name.text = getString(R.string.not_logged_in)
-                    binding.navView.nav_vw_email.text = ""
+                if (!isSetUpUserInDrawer) {
+                    setUpUserInDrawer()
+                    isSetUpUserInDrawer = true
                 }
+                Log.i(TAG, "onDrawerOpened")
             }
         })
 
@@ -200,36 +167,73 @@ class MainActivity : AppCompatActivity(),
         bnv.setupWithNavController(navController)
         bnv.visibility = View.GONE
 
-        if (LoggedUser.firebaseUserLiveData.value == null) {
-            authenticateOnResume = true
-        } else {
-            Toast.makeText(
-                applicationContext, getString(
-                    R.string.user_logged_as,
-                    LoggedUser.firebaseUserLiveData.value!!.displayName
-                ), Toast.LENGTH_LONG
-            ).show()
-        }
-
-        val firebaseUserLiveData = viewModel.getFirebaseAuthLiveData()
-        firebaseUserLiveData.observe(this,
-            { firebaseUser ->
-                if (firebaseUser != null) {
-                    fab.isEnabled = true
-                    UserDao.findByEMail(firebaseUser.email, this)
-                } else {
-                    fab.isEnabled = false
-                    setupDrawerMenuIntems()
-                    val navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_home, true).build()
-                    findNavController(R.id.nav_host_fragment).navigate(
-                        R.id.nav_home,
-                        null,
-                        navOptions
-                    )
+        FirebaseAuth.getInstance().addAuthStateListener { authData ->
+            val firebaseUser = authData.currentUser
+            if (firebaseUser != null) {
+                fab.isEnabled = true
+                firebaseUser.getIdToken(true).addOnCompleteListener {
+                    PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
+                        SettingsFragment.LOGGED_USER_EMAIL_KEY, firebaseUser.email
+                    ).apply()
                 }
-            })
-        SetupProductsUpdateWorkerService.setupWorker(applicationContext)
+                UserDao.findByEMail(firebaseUser.email, this)
+            }
+        }
+        signInUser()
         handleIntent()
+    }
+
+    private fun signInUser() {
+        val email = PreferenceManager.getDefaultSharedPreferences(this).getString(
+            SettingsFragment.LOGGED_USER_EMAIL_KEY, ""
+        )
+        if (!email.isNullOrEmpty()) {
+            UserDao.findByEMail(email, this)
+        } else {
+            // Navigate to the sign-in/authentication fragment
+            findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalAuthenticationFragment())
+        }
+    }
+
+    private fun setUpUserInDrawer() {
+        if (LoggedUser.userLiveData.value != null) {
+            if (LoggedUser.userLiveData.value!!.imageUrl != null) {
+                Picasso.get().load(LoggedUser.userLiveData.value!!.imageUrl)
+                    .placeholder(R.drawable.image_placeholder)
+                    .error(
+                        ContextCompat.getDrawable(
+                            applicationContext,
+                            R.mipmap.ic_launcher_round
+                        )!!
+                    ).into(
+                        binding.navView.nav_vw_image
+                    )
+            } else {
+                binding.navView.nav_vw_image.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        applicationContext,
+                        R.mipmap.ic_launcher_round
+                    )
+                )
+            }
+            val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+            binding.navView.nav_vw_image.setOnClickListener {
+                drawerLayout.close()
+                findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalUserProfileFragment())
+            }
+            binding.navView.nav_vw_name.text = LoggedUser.userLiveData.value!!.name
+            binding.navView.nav_vw_email.text = LoggedUser.userLiveData.value!!.email
+
+        } else {
+            binding.navView.nav_vw_image.setImageDrawable(
+                ContextCompat.getDrawable(
+                    applicationContext,
+                    R.mipmap.ic_launcher_round
+                )
+            )
+            binding.navView.nav_vw_name.text = getString(R.string.not_logged_in)
+            binding.navView.nav_vw_email.text = ""
+        }
     }
 
     /**
@@ -327,11 +331,6 @@ class MainActivity : AppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
-        if (authenticateOnResume) {
-            authenticateOnResume = false
-            // Navigate to the sign-in/authentication fragment
-            findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalAuthenticationFragment())
-        }
         updateUI(viewModel.viewState)
         handleIntent()
     }
@@ -372,7 +371,6 @@ class MainActivity : AppCompatActivity(),
                     }
                 }
                 if (AuthUI.canHandleIntent(intent)) {
-                    authenticateOnResume = false
                     if (intent.extras == null) {
                         return
                     }
@@ -443,21 +441,21 @@ class MainActivity : AppCompatActivity(),
         val navAdmin = navView.menu.findItem(R.id.nav_all_messages)
         navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
         val navAuthentication = navView.menu.findItem(R.id.nav_authentication)
-        if (LoggedUser.firebaseUserLiveData.value != null) {
+        if (LoggedUser.userLiveData.value != null) {
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_logout)
             navAuthentication.title = getString(R.string.logout)
         } else {
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_login)
             navAuthentication.title = getString(R.string.login)
         }
-        if (LoggedUser.firebaseUserLiveData.value != null) {
+        if (LoggedUser.userLiveData.value != null) {
             navMessages.isEnabled = true
             navMessages.isVisible = true
         } else {
             navMessages.isEnabled = false
             navMessages.isVisible = false
         }
-        if (LoggedUser.user != null && LoggedUser.user!!.isAdmin) {
+        if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
         } else {
@@ -468,29 +466,49 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onUserFound(user: User?) {
-        if (user != null) {
-            if (user.isAdmin) {
-                Helper.requestReadExternalStoragePermission(this)
+        when {
+            user != null -> {
+                if (user.isAdmin) {
+                    Helper.requestReadExternalStoragePermission(this)
+                    SetupProductsUpdateWorkerService.setupWorker(applicationContext)
+                }
+                Toast.makeText(
+                    applicationContext, getString(
+                        R.string.user_logged_as,
+                        LoggedUser.userLiveData.value!!.name
+                    ), Toast.LENGTH_LONG
+                ).show()
             }
-        } else if (LoggedUser.firebaseUserLiveData.value != null) {
-            val userFb = Helper.firebaseUserToUser(LoggedUser.firebaseUserLiveData.value!!)
-            UserDao.insert(userFb)
-            LoggedUser.user = userFb
-            Firebase.auth.fetchSignInMethodsForEmail(LoggedUser.user!!.email!!)
-                .addOnSuccessListener { result ->
-                    val signInMethods = result.signInMethods!!
-                    if (signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD) || signInMethods.contains(
-                            EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD
-                        )
-                    ) {
-                        findNavController(R.id.nav_host_fragment).navigate(
-                            MainActivityDirections.actionGlobalUserProfileFragment()
-                        )
+            FirebaseAuth.getInstance().currentUser != null -> {
+                val userFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
+                UserDao.insert(userFb)
+                LoggedUser.userLiveData.value = userFb
+                Firebase.auth.fetchSignInMethodsForEmail(LoggedUser.userLiveData.value!!.email!!)
+                    .addOnSuccessListener { result ->
+                        Toast.makeText(
+                            applicationContext, getString(
+                                R.string.user_logged_as,
+                                LoggedUser.userLiveData.value!!.name
+                            ), Toast.LENGTH_LONG
+                        ).show()
+                        val signInMethods = result.signInMethods!!
+                        if (signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD) || signInMethods.contains(
+                                EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD
+                            )
+                        ) {
+                            findNavController(R.id.nav_host_fragment).navigate(
+                                MainActivityDirections.actionGlobalUserProfileFragment()
+                            )
+                        }
                     }
-                }
-                .addOnFailureListener { exception ->
-                    Log.e(TAG, "Error getting sign in methods for user", exception)
-                }
+                    .addOnFailureListener { exception ->
+                        Log.e(TAG, "Error getting sign in methods for user", exception)
+                    }
+            }
+            else -> {
+                // Navigate to the sign-in/authentication fragment
+                findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalAuthenticationFragment())
+            }
         }
         setupDrawerMenuIntems()
     }
@@ -509,7 +527,7 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    private fun showLicenses(){
+    private fun showLicenses() {
         OssLicensesMenuActivity.setActivityTitle(getString(R.string.licenses))
         startActivity(Intent(this, OssLicensesMenuActivity::class.java))
     }

@@ -8,6 +8,7 @@ import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedFailu
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 
 @Suppress("UNUSED")
@@ -21,7 +22,11 @@ object FilesDao {
     fun remove(image: Uri?): Task<Void>? {
         var task: Task<Void>? = null
         if (image != null) {
-            val reference = storage.reference.child("${COLLECTION_PATH}/${image.lastPathSegment}")
+            val reference : StorageReference = if(image.toString().contains(COLLECTION_PATH_USER_AVATAR)) {
+                storage.reference.child("${COLLECTION_PATH_USER_AVATAR}/${image.lastPathSegment}")
+            }else {
+                storage.reference.child("${COLLECTION_PATH}/${image.lastPathSegment}")
+            }
             task = reference.delete().addOnSuccessListener {
                 Log.d(
                     TAG,

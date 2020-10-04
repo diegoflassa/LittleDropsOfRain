@@ -17,11 +17,11 @@ class UriToIntentMapper(context: Context, intentHelper: IntentHelper) {
             val scheme: String = uri.scheme!!.toLowerCase(Locale.ROOT)
             val host: String = uri.host!!.toLowerCase(Locale.ROOT)
             if ("app" == scheme) {
-                dispatchIntent = mapAppLink(uri, intent)
+                dispatchIntent = mapAppLink(uri)
             } else if (("http" == scheme || "https" == scheme) &&
-                ("littledropsofrain-site.web.app" == host || "littledropsofrain.web.app" == host || "littledropsofrain" == host)
+                ("ldor.page.link" == host || "littledropsofrain-site.web.app" == host || "littledropsofrain.web.app" == host || "littledropsofrain" == host)
             ) {
-                dispatchIntent = mapWebLink(uri, intent)
+                dispatchIntent = mapWebLink(uri)
             }
             if (dispatchIntent != null) {
                 mContext.startActivity(dispatchIntent)
@@ -35,31 +35,26 @@ class UriToIntentMapper(context: Context, intentHelper: IntentHelper) {
         mContext.startActivity(Intent(mContext, MainActivity::class.java))
     }
 
-    private fun mapAppLink(uri: Uri, intent: Intent): Intent? {
+    private fun mapAppLink(uri: Uri): Intent? {
         when (uri.host!!.toLowerCase(Locale.ROOT)) {
             "app" -> return mIntents.newMainActivityIntent(mContext)
-            "privacy" -> {
-                val startWhat: String = uri.path!!.substring(1)
-                return mIntents.newMainActivityIntent(mContext, startWhat)
-            }
-            "passwordless" -> {
-                intent.setClass(mContext, MainActivity::class.java)
-                return intent
-            }
         }
         return null
     }
 
-    private fun mapWebLink(uri: Uri, intent: Intent): Intent? {
+    private fun mapWebLink(uri: Uri): Intent? {
         when (uri.path) {
-            "/app" -> return mIntents.newMainActivityIntent(mContext)
             "/privacy" -> {
                 val startWhat: String = uri.path!!.substring(1)
                 return mIntents.newMainActivityIntent(mContext, startWhat)
             }
-            "/passwordless" -> {
-                intent.setClass(mContext, MainActivity::class.java)
-                return intent
+            "/tos" -> {
+                val startWhat: String = uri.path!!.substring(1)
+                return mIntents.newMainActivityIntent(mContext, startWhat)
+            }
+            "/licenses" -> {
+                val startWhat: String = uri.path!!.substring(1)
+                return mIntents.newMainActivityIntent(mContext, startWhat)
             }
         }
         return null

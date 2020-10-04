@@ -9,9 +9,11 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.contracts.AuthActivityResultContract
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAuthenticationProxyBinding
+import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -60,6 +62,9 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
 
     private fun logout() {
         AuthUI.getInstance().signOut(requireContext())
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).edit().putString(
+            SettingsFragment.LOGGED_USER_EMAIL_KEY, "").apply()
+        LoggedUser.userLiveData.value = null
     }
 
     override fun onActivityResult(result: Int) {

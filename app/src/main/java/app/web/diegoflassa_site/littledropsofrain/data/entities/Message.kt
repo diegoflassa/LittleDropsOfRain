@@ -29,10 +29,10 @@ data class Message(
     var replyUid: String? = null,
     var imageUrl: String? = null,
     var owners: MutableList<String> = ArrayList(),
-    var emailSender: String? = LoggedUser.firebaseUserLiveData.value!!.email,
+    var emailSender: String? = LoggedUser.userLiveData.value!!.email,
     var emailTo: String? = null,
-    var sender: String? = LoggedUser.firebaseUserLiveData.value!!.displayName,
-    var senderId: String? = LoggedUser.firebaseUserLiveData.value!!.uid,
+    var sender: String? = LoggedUser.userLiveData.value!!.name,
+    var senderId: String? = LoggedUser.userLiveData.value!!.uid,
     var message: String? = null,
     var type: String? = MessageType.UNKNOWN.toString(),
     @ServerTimestamp

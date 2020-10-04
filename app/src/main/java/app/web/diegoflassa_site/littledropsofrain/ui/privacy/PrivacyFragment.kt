@@ -32,7 +32,6 @@ class PrivacyFragment : Fragment() {
     ): View? {
         binding = FragmentPrivacyBinding.inflate(inflater, container, false)
 
-        activity?.setTitle(R.string.privacy)
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)

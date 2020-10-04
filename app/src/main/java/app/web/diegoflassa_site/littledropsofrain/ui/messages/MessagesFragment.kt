@@ -138,7 +138,7 @@ class MessagesFragment : Fragment(),
         var query: Query = mFirestore.collection(MessageDao.COLLECTION_PATH)
         query.orderBy(Message.CREATION_DATE, Query.Direction.DESCENDING)
         val users = ArrayList<String>(1)
-        users.add(LoggedUser.firebaseUserLiveData.value?.email!!)
+        users.add(LoggedUser.userLiveData.value?.email!!)
         query = query.whereArrayContainsAny(Message.OWNERS, users)
 
         // Message Type (equality filter)
