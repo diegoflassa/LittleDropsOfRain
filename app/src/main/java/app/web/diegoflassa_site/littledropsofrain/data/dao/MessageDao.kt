@@ -173,8 +173,8 @@ object MessageDao {
             ?.addOnSuccessListener {
                 onSuccessListener?.onDataChanged(it)
             }?.addOnFailureListener {
-            onFailureListener?.onDataFailure(it)
-        }
+                onFailureListener?.onDataFailure(it)
+            }
     }
 
     fun delete(message: Message?): Task<Void>? {

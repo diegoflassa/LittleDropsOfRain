@@ -1,16 +1,15 @@
 package app.web.diegoflassa_site.littledropsofrain.xml
 
 import android.util.Log
+import app.web.diegoflassa_site.littledropsofrain.data.entities.IluriaProduct
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 import com.squareup.okhttp.Response
-import app.web.diegoflassa_site.littledropsofrain.data.entities.IluriaProduct
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
-import java.lang.StringBuilder
 import java.util.concurrent.TimeUnit
 
 

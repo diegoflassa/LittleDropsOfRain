@@ -116,10 +116,10 @@ object UserDao {
         val data = user.toMap()
         return db.get()?.collection(COLLECTION_PATH)?.document(user.uid.toString())
             ?.set(data, SetOptions.merge())?.addOnSuccessListener {
-            onSuccessListener?.onDataChanged(it)
-        }?.addOnFailureListener {
-            onFailureListener?.onDataFailure(it)
-        }
+                onSuccessListener?.onDataChanged(it)
+            }?.addOnFailureListener {
+                onFailureListener?.onDataFailure(it)
+            }
     }
 
     fun update(
@@ -130,10 +130,10 @@ object UserDao {
         val data = user.toMap()
         return db.get()?.collection(COLLECTION_PATH)?.document(user.uid.toString())
             ?.set(data, SetOptions.merge())?.addOnSuccessListener {
-            onSuccessListener?.onDataChanged(it)
-        }?.addOnFailureListener {
-            onFailureListener?.onDataFailure(it)
-        }
+                onSuccessListener?.onDataChanged(it)
+            }?.addOnFailureListener {
+                onFailureListener?.onDataFailure(it)
+            }
     }
 
     fun delete(user: User?): Task<Void>? {
