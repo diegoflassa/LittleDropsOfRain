@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.instagram.InstagramFragment"
-    android:tag="InstagramFragment">
+    android:tag="InstagramFragment"
+    tools:context=".ui.instagram.InstagramFragment">
 
     <WebView
         android:id="@+id/webviewInstagram"

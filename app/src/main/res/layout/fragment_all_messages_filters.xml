@@ -7,8 +7,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="@dimen/paddingSmall"
-    tools:context="fragments.AllMessagesFilterDialogFragment"
-    android:tag="AllMessagesFilterDialogFragment">
+    android:tag="AllMessagesFilterDialogFragment"
+    tools:context="fragments.AllMessagesFilterDialogFragment">
 
     <TextView
         android:layout_width="wrap_content"
@@ -70,12 +70,12 @@
 
         <ImageView
             android:id="@+id/icon_msg_read"
-            android:layout_centerVertical="true"
-            app:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_filter_list_white_24px"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:contentDescription="@string/icon_category" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/icon_category"
+            app:srcCompat="@drawable/ic_filter_list_white_24px"
+            app:tint="@color/colorAccent" />
 
         <CheckBox
             android:id="@+id/checkBoxMsgRead"
@@ -90,11 +90,11 @@
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_msg_read"
-            android:text="@string/msg_read"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
-            android:layout_toEndOf="@+id/checkBoxMsgRead">
+            android:layout_toEndOf="@+id/checkBoxMsgRead"
+            android:text="@string/msg_read">
 
         </com.google.android.material.switchmaterial.SwitchMaterial>
 
@@ -116,11 +116,11 @@
 
         <Spinner
             android:id="@+id/spinner_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/icon_sort"
-            android:entries="@array/messages_sort_by"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content" />
+            android:entries="@array/messages_sort_by" />
     </RelativeLayout>
 
     <!-- Cancel and apply buttons -->
@@ -144,8 +144,8 @@
             android:textColor="@color/colorAccent"
             android:theme="@style/MyMaterialButtonTheme"
             app:icon="@drawable/btn_clear"
-            app:iconTint="@color/colorAccent"
             app:iconGravity="textStart"
+            app:iconTint="@color/colorAccent"
             tools:ignore="ButtonOrder" />
 
 

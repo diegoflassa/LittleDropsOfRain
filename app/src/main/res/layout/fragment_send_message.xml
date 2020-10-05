@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.send_message.SendMessageFragment"
-    android:tag="FragmentSendMessage">
+    android:tag="FragmentSendMessage"
+    tools:context=".ui.send_message.SendMessageFragment">
 
     <Spinner
         android:id="@+id/spnr_contacts"
@@ -74,11 +73,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/paddingSmall"
         android:clickable="true"
+        android:focusable="true"
         android:src="@android:drawable/ic_menu_send"
         app:layout_constraintBottom_toBottomOf="@+id/mltxtMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/mltxtMessage"
-        app:layout_constraintVertical_bias="0.575"
-        android:focusable="true" />
+        app:layout_constraintVertical_bias="0.575" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

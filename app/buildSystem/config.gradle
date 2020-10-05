@@ -1,15 +1,15 @@
 //https://medium.com/@rey5137/how-i-organize-android-project-structure-5ed9b849dc30
 
 ext.config = [
-    applicationId     : "app.web.diegoflassa_site.littledropsofrain",
-    versionMajor      : 1,
-    versionMinor      : 0,
-    versionPatch      : 4,
-    versionClassifier : "",
-    minimumSdkVersion : 23,
-    compileSdkVersion : 30,
-    targetSdkVersion  : 30,
-    buildToolsVersion : "30.0.2"
+        applicationId    : "app.web.diegoflassa_site.littledropsofrain",
+        versionMajor     : 1,
+        versionMinor     : 0,
+        versionPatch     : 5,
+        versionClassifier: "",
+        minimumSdkVersion: 23,
+        compileSdkVersion: 30,
+        targetSdkVersion : 30,
+        buildToolsVersion: "30.0.2"
 ]
 
 def config = ext.config

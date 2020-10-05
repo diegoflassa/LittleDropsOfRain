@@ -504,7 +504,7 @@ class MainActivity : AppCompatActivity(),
                 authenticateOnResume = true
             }
         }
-        setUpUserInDrawer()
+        isSetUpUserInDrawer = false
         setupDrawerMenuIntems()
     }
 

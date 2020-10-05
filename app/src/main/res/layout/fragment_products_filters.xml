@@ -7,8 +7,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="@dimen/paddingSmall"
-    tools:context="fragments.ProductsFilterDialogFragment"
-    android:tag="ProductsFilterDialogFragment">
+    android:tag="ProductsFilterDialogFragment"
+    tools:context="fragments.ProductsFilterDialogFragment">
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,21 +23,21 @@
 
         <ImageView
             android:id="@+id/icon_category"
-            android:layout_centerVertical="true"
-            app:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_filter_list_white_24px"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:contentDescription="@string/icon_category" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/icon_category"
+            app:srcCompat="@drawable/ic_filter_list_white_24px"
+            app:tint="@color/colorAccent" />
 
         <com.google.android.material.chip.ChipGroup
-            android:paddingStart="64dp"
-            android:paddingEnd="64dp"
             android:id="@+id/category_chip_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="-24dp"
-            android:layout_toEndOf="@+id/icon_category">
+            android:layout_toEndOf="@+id/icon_category"
+            android:paddingStart="64dp"
+            android:paddingEnd="64dp">
 
         </com.google.android.material.chip.ChipGroup>
 
@@ -50,20 +50,20 @@
 
         <ImageView
             android:id="@+id/icon_price"
-            android:layout_centerVertical="true"
-            app:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_monetization_on_white_24px"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:contentDescription="@string/icon_price" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/icon_price"
+            app:srcCompat="@drawable/ic_monetization_on_white_24px"
+            app:tint="@color/colorAccent" />
 
         <Spinner
             android:id="@+id/spinner_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/icon_price"
-            android:entries="@array/prices"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content" />
+            android:entries="@array/prices" />
 
     </RelativeLayout>
 
@@ -74,12 +74,12 @@
 
         <ImageView
             android:id="@+id/icon_sort"
-            android:layout_centerVertical="true"
-            app:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_sort_white_24px"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:contentDescription="@string/icon_sort" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/icon_sort"
+            app:srcCompat="@drawable/ic_sort_white_24px"
+            app:tint="@color/colorAccent" />
 
         <Spinner
             android:id="@+id/spinner_sort"
@@ -111,8 +111,8 @@
             android:textColor="@color/colorAccent"
             android:theme="@style/MyMaterialButtonTheme"
             app:icon="@drawable/btn_clear"
-            app:iconTint="@color/colorAccent"
             app:iconGravity="textStart"
+            app:iconTint="@color/colorAccent"
             tools:ignore="ButtonOrder" />
 
 
@@ -126,7 +126,7 @@
             android:theme="@style/MyMaterialButtonTheme"
             app:icon="@drawable/fui_ic_check_circle_black_128dp"
             app:iconGravity="textStart"
-            app:iconSize="30dp"/>
+            app:iconSize="30dp" />
 
     </LinearLayout>
 

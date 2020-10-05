@@ -12,11 +12,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.contracts.AuthActivityResultContract
+import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAuthenticationProxyBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.Timestamp
 
 /**
  * A simple [Fragment] subclass.
@@ -58,6 +60,8 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
     }
 
     private fun logout() {
+        LoggedUser.userLiveData.value!!.lastSeen = Timestamp.now()
+        UserDao.update(LoggedUser.userLiveData.value!!)
         AuthUI.getInstance().signOut(requireContext())
         PreferenceManager.getDefaultSharedPreferences(requireContext()).edit().putString(
             SettingsFragment.LOGGED_USER_EMAIL_KEY, ""

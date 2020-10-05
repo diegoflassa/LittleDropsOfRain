@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.topic.SendTopicMessageFragment"
-    android:tag="SendTopicMessageFragment">
+    android:tag="SendTopicMessageFragment"
+    tools:context=".ui.topic.SendTopicMessageFragment">
 
     <TextView
         android:id="@+id/ml_txt_vw_progress"
@@ -39,11 +39,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/paddingSmall"
         android:clickable="true"
+        android:focusable="true"
         android:src="@android:drawable/ic_menu_rotate"
         app:layout_constraintBottom_toBottomOf="@+id/chkbx_remove_not_found_products"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/chkbx_remove_not_found_products"
-        android:focusable="true" />
+        app:layout_constraintTop_toTopOf="@+id/chkbx_remove_not_found_products" />
 
     <!-- Progress bar -->
     <ProgressBar

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android" tools:keep="@drawable/default_text_color_secondary">
-    <item android:state_enabled="false" android:color="@android:color/darker_gray"/>
-    <item android:color="@color/secondaryTextColor"/>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:keep="@drawable/default_text_color_secondary">
+    <item android:color="@android:color/darker_gray" android:state_enabled="false" />
+    <item android:color="@color/secondaryTextColor" />
 </selector>

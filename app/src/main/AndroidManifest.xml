@@ -48,9 +48,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="ldor.page.link"
-                    android:pathPattern="/privacy" />
+                    android:pathPattern="/privacy"
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -59,9 +59,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="ldor.page.link"
-                    android:pathPattern="/tos" />
+                    android:pathPattern="/tos"
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -70,16 +70,16 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="ldor.page.link"
-                    android:pathPattern="/licenses" />
+                    android:pathPattern="/licenses"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
+            android:configChanges="locale"
             android:label="@string/app_name"
             android:noHistory="false"
-            android:configChanges="locale"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
             <intent-filter android:autoVerify="true">
