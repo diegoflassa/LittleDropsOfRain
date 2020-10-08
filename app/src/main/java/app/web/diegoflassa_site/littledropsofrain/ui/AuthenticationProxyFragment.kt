@@ -1,6 +1,7 @@
 package app.web.diegoflassa_site.littledropsofrain.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
     var binding: FragmentAuthenticationProxyBinding by viewLifecycle()
 
     companion object {
+        val TAG = AuthenticationProxyFragment::class.simpleName
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -51,6 +53,7 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         if (LoggedUser.userLiveData.value == null) {
+            Log.d(TAG, "login in...")
             registerForActivityResult(AuthActivityResultContract(), this).launch(null)
         } else {
             logout()
@@ -60,6 +63,7 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
     }
 
     private fun logout() {
+        Log.d(TAG, "logout: ${LoggedUser.userLiveData.value!!.email}")
         LoggedUser.userLiveData.value!!.lastSeen = Timestamp.now()
         UserDao.update(LoggedUser.userLiveData.value!!)
         AuthUI.getInstance().signOut(requireContext())

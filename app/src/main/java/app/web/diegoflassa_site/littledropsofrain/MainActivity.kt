@@ -176,19 +176,16 @@ class MainActivity : AppCompatActivity(),
             isSetUpUserInDrawer = false
             setupDrawerMenuIntems()
         }
-        signInUser()
-        handleIntent()
-    }
 
-    private fun signInUser() {
-        val email = PreferenceManager.getDefaultSharedPreferences(this).getString(
-            SettingsFragment.LOGGED_USER_EMAIL_KEY, ""
-        )
-        if (!email.isNullOrEmpty()) {
-            UserDao.findByEMail(email, this)
-        } else {
-            authenticateOnResume = true
+        FirebaseAuth.getInstance().addAuthStateListener { authData ->
+            val firebaseUser = authData.currentUser
+            var emailUser = ""
+            if (firebaseUser != null) {
+                emailUser = firebaseUser.email!!
+            }
+            UserDao.findByEMail(emailUser, this)
         }
+        handleIntent()
     }
 
     private fun setUpUserInDrawer() {
