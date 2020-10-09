@@ -189,6 +189,15 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         return binding.root
     }
 
+    override fun onPause() {
+        super.onPause()
+        isStopped = false
+        if (isSafeToAccessViewModel() && !isStopped) {
+            viewModel.viewState.title = binding.edtTxtTitle.text.toString()
+            viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         isStopped = false

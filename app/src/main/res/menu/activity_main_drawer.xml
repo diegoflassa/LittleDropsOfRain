@@ -28,6 +28,6 @@
         <item
             android:id="@+id/nav_authentication"
             android:icon="@drawable/image_placeholder"
-            android:title="@string/login"></item>
+            android:title="@string/login" />
     </group>
 </menu>
