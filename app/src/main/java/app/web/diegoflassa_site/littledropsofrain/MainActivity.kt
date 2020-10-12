@@ -3,8 +3,6 @@ package app.web.diegoflassa_site.littledropsofrain
 import android.app.Activity
 import android.content.ComponentCallbacks2
 import android.content.Intent
-import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -49,12 +47,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.joanzapata.iconify.fonts.TypiconsIcons
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.nav_header_main.view.*
-import java.util.*
 
 
 class MainActivity : AppCompatActivity(),
@@ -162,6 +161,9 @@ class MainActivity : AppCompatActivity(),
             SimpleLineIconsIcons.icon_envelope
         )
         menu.findItem(R.id.nav_users).icon = IconDrawable(this, SimpleLineIconsIcons.icon_users)
+        menu.findItem(R.id.nav_off_air).icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
+        menu.findItem(R.id.nav_all_products).icon =
+            IconDrawable(this, SimpleLineIconsIcons.icon_present)
 
         bnv.setupWithNavController(navController)
         bnv.visibility = View.GONE
@@ -280,35 +282,6 @@ class MainActivity : AppCompatActivity(),
                   from the system. Treat this as a generic low-memory message.
                 */
             }
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val subscribedLanguage = PreferenceManager.getDefaultSharedPreferences(this).getString(
-            SettingsFragment.SUBSCRIBED_LANGUAGE_KEY, ""
-        )
-        val sll = Locale(subscribedLanguage!!)
-
-        val currentLocale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            resources.configuration.locales.get(0)
-        } else {
-            resources.configuration.locale
-        }
-
-        if (currentLocale.language != sll.language) {
-            val oldTopicNews = Helper.getTopicNewsForLocale(this, sll)
-            Helper.unsubscribeToNews(this, oldTopicNews)
-            Helper.subscribeToNews(this)
-
-            val oldTopicPromos = Helper.getTopicPromosForLocale(this, sll)
-            Helper.unsubscribeToPromos(this, oldTopicPromos)
-            Helper.subscribeToPromos(this)
-
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
-                SettingsFragment.SUBSCRIBED_LANGUAGE_KEY, currentLocale.language
-            ).apply()
         }
     }
 
@@ -442,6 +415,8 @@ class MainActivity : AppCompatActivity(),
         val navAdmin = navView.menu.findItem(R.id.nav_all_messages)
         navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
         val navAuthentication = navView.menu.findItem(R.id.nav_authentication)
+        val navMyLikedProducts = navView.menu.findItem(R.id.nav_my_liked_products)
+        navMyLikedProducts.icon = IconDrawable(this, SimpleLineIconsIcons.icon_heart)
         if (LoggedUser.userLiveData.value != null) {
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_logout)
             navAuthentication.title = getString(R.string.logout)
@@ -452,9 +427,13 @@ class MainActivity : AppCompatActivity(),
         if (LoggedUser.userLiveData.value != null) {
             navMessages.isEnabled = true
             navMessages.isVisible = true
+            navMyLikedProducts.isEnabled = true
+            navMyLikedProducts.isVisible = true
         } else {
             navMessages.isEnabled = false
             navMessages.isVisible = false
+            navMyLikedProducts.isEnabled = false
+            navMyLikedProducts.isVisible = false
         }
         if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
             navAdmin.isEnabled = true

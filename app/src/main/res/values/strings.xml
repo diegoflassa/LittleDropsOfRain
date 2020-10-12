@@ -152,4 +152,21 @@
     <string name="exit">Exit</string>
     <string name="tos_title">Terms of Service</string>
     <string name="label_user_profile">User Profile</string>
+    <string name="maintenance">Store in Maintenance</string>
+    <string name="menu_off_air">Off Air</string>
+    <string name="off_air">Off Air</string>
+    <string name="configuration_applied">Configuration applied successfully</string>
+    <string name="configuration_fetch_failed">Configuration Fetch failed</string>
+    <string name="configuration_fetch_successfull">Remote config Fetch Successful</string>
+    <string name="liked">Liked</string>
+    <string name="label_my_liked_products">My Likes</string>
+    <string name="unpublish_not_found_products">Unpublish not found products</string>
+    <string name="likes_filter">Likes : %1$b</string>
+    <string name="likes">Likes</string>
+    <string name="menu_all_products">All Products</string>
+    <string name="label_all_products">All Products</string>
+    <string name="close">Close</string>
+    <string name="sort_by_likes">Likes</string>
+    <string name="off_air_en">Off Air message in English</string>
+    <string name="off_air_pt">Off Air message in Portuguese</string>
 </resources>

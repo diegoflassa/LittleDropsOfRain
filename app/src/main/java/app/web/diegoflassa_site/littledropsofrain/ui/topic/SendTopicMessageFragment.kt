@@ -81,7 +81,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
             updateUI(it)
         })
         for (topic in TopicMessage.Topic.values()) {
-            if (topic != TopicMessage.Topic.UNKNOWN && topic != TopicMessage.Topic.NEWS && topic != TopicMessage.Topic.PROMOS) {
+            if (topic != TopicMessage.Topic.UNKNOWN) {
                 val chip = Chip(requireContext())
                 chip.text = topic.toTitle()
                 chip.isCheckable = true
@@ -263,10 +263,6 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         for (chipId in chipIds) {
             val chip = binding.cpGrpTopics.findViewById<Chip>(chipId)
             val topic = TopicMessage.Topic.fromTitle(chip.text.toString())
-            if (topic == TopicMessage.Topic.NEWS_EN || topic == TopicMessage.Topic.NEWS_PT)
-                ret.add(TopicMessage.Topic.NEWS)
-            if (topic == TopicMessage.Topic.PROMOS_EN || topic == TopicMessage.Topic.PROMOS_PT)
-                ret.add(TopicMessage.Topic.PROMOS)
             ret.add(topic)
         }
         return ret

@@ -48,7 +48,7 @@ class MessagesFragment : Fragment(),
 
     companion object {
         val TAG = MessagesFragment::class.simpleName
-        const val LIMIT = 50
+        const val LIMIT = 50000
         fun newInstance() = MessagesFragment()
     }
 
@@ -151,14 +151,8 @@ class MessagesFragment : Fragment(),
             query = query.whereEqualTo(Message.READ, filters.read)
         }
 
-        /*
-        // City (equality filter)
-        if (filters.hasCity()) {
-            query = query.whereEqualTo("city", filters.getCity())
-        }
-        */
-        // Price (equality filter)
 
+        // Price (equality filter)
         // Sort by (orderBy with direction)
         if (filters.hasSortBy()) {
             query = query.orderBy(filters.sortBy!!, filters.sortDirection!!)

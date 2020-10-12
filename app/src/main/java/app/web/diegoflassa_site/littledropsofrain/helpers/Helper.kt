@@ -85,11 +85,11 @@ class Helper {
                 product.categories.add(st.nextToken().trim())
             }
             product.idSource = iluriaProduct.idProduct
-            product.idIluria = iluriaProduct.idProduct
             val price = iluriaProduct.price!!.replace(',', '.')
             product.price = (price.toFloat() * 100).toInt()
             product.disponibility = iluriaProduct.disponibility
             product.imageUrl = iluriaProduct.image
+            product.isPublished = true
             product.source = Source.ILURIA.toString()
             product.installment = iluriaProduct.installment
             product.linkProduct = iluriaProduct.linkProduct
@@ -362,7 +362,7 @@ class Helper {
             unsubscribeToPromos(context, topic)
         }
 
-        fun unsubscribeToPromos(context: Context, topic: String) {
+        private fun unsubscribeToPromos(context: Context, topic: String) {
             FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
                 .addOnCompleteListener { task ->
                     var msg = context.getString(R.string.msg_unsubscribed)
@@ -386,7 +386,7 @@ class Helper {
                 }
         }
 
-        fun unsubscribeToNews(context: Context, topic: String) {
+        private fun unsubscribeToNews(context: Context, topic: String) {
             FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
                 .addOnCompleteListener { task ->
                     var msg = context.getString(R.string.msg_unsubscribed)
@@ -412,6 +412,14 @@ class Helper {
                     }
                     Log.d(MyOnSharedPreferenceChangeListener.TAG, msg)
                 }
+        }
+
+        fun userListToIdsList(users: List<User>): ArrayList<String> {
+            val ret = ArrayList<String>()
+            for(user in users){
+                ret.add(user.uid!!)
+            }
+            return ret
         }
     }
 }

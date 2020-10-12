@@ -64,7 +64,7 @@
             android:paddingEnd="12dp"
             android:text="@string/rv_disponibility"
             app:layout_constraintBottom_toTopOf="@+id/chipCategories"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imgVwLike"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/price" />
 
@@ -78,6 +78,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/disponibility" />
+
+        <ImageView
+            android:id="@+id/imgVwLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/paddingSmall"
+            android:contentDescription="@string/liked"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/price"
+            app:srcCompat="@drawable/image_placeholder" />
+
+        <TextView
+            android:id="@+id/likes_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -49,16 +49,14 @@ object MessageDao {
         listener: OnDataChangeListener<List<Message>>
     ): Task<QuerySnapshot>? {
         val messages: MutableList<Message> = ArrayList()
-        val itemsRef = db.get()?.collection(COLLECTION_PATH)
+        val itemsRef = db.get()?.collection(COLLECTION_PATH)?.whereIn(Message.UID, messageIds)
         return itemsRef?.get()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 var message: Message
                 for (document in task.result) {
-                    if (messageIds.contains(document.id)) {
-                        message = document.toObject(Message::class.java)
-                        message.uid = document.id
-                        messages.add(message)
-                    }
+                    message = document.toObject(Message::class.java)
+                    message.uid = document.id
+                    messages.add(message)
                 }
                 listener.onDataChanged(messages)
             } else {

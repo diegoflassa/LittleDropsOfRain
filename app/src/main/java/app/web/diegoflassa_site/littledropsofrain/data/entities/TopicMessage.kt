@@ -13,8 +13,6 @@ data class TopicMessage(
     @Keep
     @Suppress("UNUSED")
     enum class Topic(private val topic: String, private val stringId: Int) {
-        NEWS("News", 0),
-        PROMOS("Promos", 0),
         NEWS_PT("News_PT", R.string.news_pt),
         NEWS_EN("News_EN", R.string.news_en),
         PROMOS_PT("Promos_PT", R.string.promos_pt),

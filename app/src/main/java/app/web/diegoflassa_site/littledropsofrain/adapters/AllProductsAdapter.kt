@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemProductBinding
-import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
-import app.web.diegoflassa_site.littledropsofrain.ui.home.HomeFragment
+import app.web.diegoflassa_site.littledropsofrain.dialogs.LikesDialogFragment
+import app.web.diegoflassa_site.littledropsofrain.ui.all_products.AllProductsFragment
 import com.google.android.material.chip.Chip
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
@@ -20,11 +19,11 @@ import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormatSymbols
 
-open class ProductAdapter(
-    private var homeFragment: HomeFragment,
+open class AllProductsAdapter(
+    private var allProductsFragment: AllProductsFragment,
     query: Query?,
     private val mListener: OnProductSelectedListener
-) : FirestoreAdapter<ProductAdapter.ViewHolder?>(query) {
+) : FirestoreAdapter<AllProductsAdapter.ViewHolder?>(query) {
 
     interface OnProductSelectedListener {
         fun onProductSelected(product: DocumentSnapshot?)
@@ -39,7 +38,7 @@ open class ProductAdapter(
             parent,
             false
         )
-        return ViewHolder(homeFragment, binding.root)
+        return ViewHolder(allProductsFragment, binding.root)
     }
 
     override fun onBindViewHolder(
@@ -49,7 +48,7 @@ open class ProductAdapter(
         holder.bind(getSnapshot(position), mListener)
     }
 
-    class ViewHolder(private var homeFragment: HomeFragment, itemView: View) :
+    class ViewHolder(private var allProductsFragment: AllProductsFragment, itemView: View) :
         RecyclerView.ViewHolder(itemView), CompoundButton.OnCheckedChangeListener {
         val binding = RecyclerviewItemProductBinding.bind(itemView)
         fun bind(
@@ -71,7 +70,7 @@ open class ProductAdapter(
                     chipCategory = Chip(itemView.context)
                     chipCategory.isCheckable = true
                     chipCategory.isChecked =
-                        homeFragment.mFilterDialog?.categories!!.contains(category)
+                        allProductsFragment.mFilterDialog?.categories!!.contains(category)
                     chipCategory.text = category
                     chipCategory.setOnCheckedChangeListener(this)
                     binding.chipCategories.addView(chipCategory)
@@ -82,27 +81,25 @@ open class ProductAdapter(
             var priceStr = (product.price?.div(100)).toString()
             priceStr += DecimalFormatSymbols.getInstance().decimalSeparator + "00"
             binding.price.text = resources.getString(R.string.rv_price, priceStr)
-            val heartIcon = IconDrawable(homeFragment.requireContext(), SimpleLineIconsIcons.icon_heart)
-            if(product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
-                heartIcon.setTint(Color.RED)
-            }
+            val heartIcon =
+                IconDrawable(allProductsFragment.requireContext(), SimpleLineIconsIcons.icon_heart)
+            heartIcon.setTint(Color.RED)
             binding.imgVwLike.setImageDrawable(heartIcon)
-            binding.imgVwLike.setOnClickListener{
-                if(product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
-                    product.likes.remove(LoggedUser.userLiveData.value?.uid!!)
-                }else{
-                    product.likes.add(LoggedUser.userLiveData.value?.uid!!)
-                }
-                ProductDao.update(product)
+            binding.imgVwLike.setOnClickListener {
+                LikesDialogFragment(product).show(
+                    allProductsFragment.activity?.supportFragmentManager!!,
+                    LikesDialogFragment.TAG
+                )
             }
+            binding.likesCount.text = product.likes.size.toString()
 
             // Click listener
             itemView.setOnClickListener { listener?.onProductSelected(snapshot) }
         }
 
         override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
-            homeFragment.mFilterDialog?.onCheckedChanged(p0, p1)
-            homeFragment.onFilter(homeFragment.mFilterDialog!!.filters)
+            allProductsFragment.mFilterDialog?.onCheckedChanged(p0, p1)
+            allProductsFragment.onFilter(allProductsFragment.mFilterDialog!!.filters)
         }
 
     }

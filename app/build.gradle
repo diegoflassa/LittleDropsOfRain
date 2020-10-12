@@ -102,6 +102,8 @@ dependencies {
     // UCrop
     implementation 'com.github.yalantis:ucrop:2.2.6'
 
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:25.12.0')
     // com.google.firebase
     implementation 'com.google.firebase:firebase-iid:20.3.0'
     // Add the Firebase SDK for Google Analytics
@@ -109,6 +111,9 @@ dependencies {
     // for Google Analytics. This is recommended, but not required.
     // Recommended: Add the Firebase SDK for Google Analytics.
     // Add the Firebase Crashlytics SDK.
+    // Declare the dependencies for the Remote Config and Analytics libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-config-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx:17.6.0'
     implementation 'com.google.firebase:firebase-appindexing:19.1.0'
     // Firebase Authentication (Kotlin)

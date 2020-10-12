@@ -33,6 +33,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <CheckBox
+        android:id="@+id/chkbx_unpublish_not_found_products"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:text="@string/unpublish_not_found_products"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_reload_products"
         android:layout_width="wrap_content"

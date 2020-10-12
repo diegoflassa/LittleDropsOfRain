@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>remote_config_off_air_message</key>
+        <value>Off Air</value>
+    </entry>
+    <entry>
+        <key>remote_config_is_off_air</key>
+        <value>false</value>
+    </entry>
+</defaultsMap>

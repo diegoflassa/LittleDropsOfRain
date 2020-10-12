@@ -24,7 +24,7 @@ data class User(
     Parcelable {
 
     companion object {
-        private const val UID = "uid"
+        const val UID = "uid"
         private const val IMAGE_URL = "imageUrl"
         private const val EMAIL = "email"
         private const val NAME = "name"

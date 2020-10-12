@@ -41,7 +41,7 @@ data class Message(
 ) : Parcelable {
 
     companion object {
-        private const val UID = "uid"
+        const val UID = "uid"
         private const val REPLY_UID = "replyUid"
         private const val IMAGE_URL = "imageUrl"
         const val EMAIL_SENDER = "emailSender"

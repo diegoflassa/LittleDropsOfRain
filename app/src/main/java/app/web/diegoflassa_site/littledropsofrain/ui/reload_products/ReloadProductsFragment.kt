@@ -56,7 +56,7 @@ class ReloadProductsFragment : Fragment() {
             updateUI(it)
         })
         binding.mlTxtVwProgress.movementMethod = ScrollingMovementMethod()
-        binding.chkbxRemoveNotFoundProducts.isChecked = true
+        binding.chkbxRemoveNotFoundProducts.isChecked = false
         binding.chkbxRemoveNotFoundProducts.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             viewModel.viewState.removeNotFoundProducts = checked
         }

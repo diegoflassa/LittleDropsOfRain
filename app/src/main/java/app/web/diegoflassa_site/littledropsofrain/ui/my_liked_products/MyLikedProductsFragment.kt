@@ -1,4 +1,4 @@
-package app.web.diegoflassa_site.littledropsofrain.ui.home
+package app.web.diegoflassa_site.littledropsofrain.ui.my_liked_products
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -22,19 +22,18 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.adapters.ProductAdapter
+import app.web.diegoflassa_site.littledropsofrain.adapters.MyLikedProductsAdapter
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
-import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentHomeBinding
+import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMyLikedProductsBinding
 import app.web.diegoflassa_site.littledropsofrain.fragments.ProductsFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.fragments.ProductsFilters
 import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.models.HomeViewModel
-import app.web.diegoflassa_site.littledropsofrain.models.HomeViewState
-import app.web.diegoflassa_site.littledropsofrain.ui.off_air.OffAirFragment
+import app.web.diegoflassa_site.littledropsofrain.models.MyLikedProductsViewModel
+import app.web.diegoflassa_site.littledropsofrain.models.MyLikedProductsViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -42,29 +41,27 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.get
-import com.google.firebase.remoteconfig.ktx.remoteConfig
 import java.lang.ref.WeakReference
 
 
-class HomeFragment : Fragment(), ActivityResultCallback<Int>,
+class MyLikedProductsFragment : Fragment(), ActivityResultCallback<Int>,
     View.OnClickListener,
     ProductsFilterDialogFragment.FilterListener,
-    ProductAdapter.OnProductSelectedListener, DialogInterface.OnDismissListener {
+    DialogInterface.OnDismissListener,
+    MyLikedProductsAdapter.OnProductSelectedListener {
 
-    private val viewModel: HomeViewModel by viewModels()
-    var binding: FragmentHomeBinding by viewLifecycle()
-    private lateinit var mAdapter: WeakReference<ProductAdapter>
+    private val viewModel: MyLikedProductsViewModel by viewModels()
+    var binding: FragmentMyLikedProductsBinding by viewLifecycle()
+    private lateinit var mAdapter: WeakReference<MyLikedProductsAdapter>
     private lateinit var mFirestore: FirebaseFirestore
     var mFilterDialog: ProductsFilterDialogFragment? = null
     private lateinit var toggle: ActionBarDrawerToggle
     private var mQuery: Query? = null
 
     companion object {
-        val TAG = HomeFragment::class.simpleName
+        val TAG = MyLikedProductsFragment::class.simpleName
         const val LIMIT = 50000
-        fun newInstance() = HomeFragment()
+        fun newInstance() = MyLikedProductsFragment()
     }
 
     override fun onCreateView(
@@ -72,7 +69,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentMyLikedProductsBinding.inflate(inflater, container, false)
         viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
@@ -97,24 +94,9 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
         toggle.syncState()
 
-        val remoteConfig = Firebase.remoteConfig
-        val isOffAir = remoteConfig[OffAirFragment.REMOTE_CONFIG_IS_OFF_AIR].asBoolean()
-        if(isOffAir){
-            if(Locale.getDefault().getLanguage()=="pt") {
-                showOffAirScreen(
-                    remoteConfig[OffAirFragment.REMOTE_CONFIG_OFF_AIR_MESSAGE_PT].asString()
-                )
-            }else{
-                showOffAirScreen(
-                    remoteConfig[OffAirFragment.REMOTE_CONFIG_OFF_AIR_MESSAGE_EN].asString()
-                )
-            }
-        }else {
-            hideOffAirScreen()
-            showLoadingScreen()
-            initFirestore()
-            initRecyclerView()
-        }
+        showLoadingScreen()
+        initFirestore()
+        initRecyclerView()
 
         binding.filterBar.isEnabled = false
 
@@ -136,7 +118,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         updateUI(viewModel.viewState)
     }
 
-    private fun updateUI(viewState: HomeViewState) {
+    private fun updateUI(viewState: MyLikedProductsViewState) {
         // Update the UI
         viewState.text = ""
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
@@ -157,14 +139,6 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         onFilter(viewModel.viewState.filters)
     }
 
-    private fun showOffAirScreen(message : String) {
-        binding.homeViewOffAir.text = message
-        binding.homeViewOffAir.visibility = View.VISIBLE
-    }
-
-    private fun hideOffAirScreen() {
-        binding.homeViewOffAir.visibility = View.GONE
-    }
 
     private fun showLoadingScreen() {
         binding.homeProgress.visibility = View.VISIBLE
@@ -178,8 +152,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
         // Construct query basic query
         var query: Query = mFirestore.collection(ProductDao.COLLECTION_PATH)
-        query.whereEqualTo(Product.IS_PUBLISHED, true)
-        query.orderBy(Product.PRICE, Query.Direction.DESCENDING)
+        query.whereArrayContains(Product.LIKES, LoggedUser.userLiveData.value?.uid!!)
 
         // Category (equality filter)
         if (filters.hasCategory()) {
@@ -251,7 +224,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         }
 
         mAdapter =
-            WeakReference(object : ProductAdapter(this@HomeFragment, mQuery, this@HomeFragment) {
+            WeakReference(object : MyLikedProductsAdapter(this@MyLikedProductsFragment, mQuery, this@MyLikedProductsFragment) {
                 override fun onDataChanged() {
                     binding.filterBar.isEnabled = true
                     hideLoadingScreen()

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:tag="HomeFragment"
-    tools:context=".ui.home.HomeFragment">
+    android:tag="AllProductsFragment"
+    tools:context=".ui.all_products.AllProductsFragment">
 
     <!-- Filter Bar -->
     <FrameLayout
@@ -102,21 +102,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filter_bar_container"
         tools:listitem="@layout/recyclerview_item_product" />
-
-    <!-- Maintenance list view -->
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/home_view_off_air"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:drawableTop="@drawable/splash"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:text="@string/maintenance"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_bar_container" />
 
     <!-- Empty list view -->
     <androidx.appcompat.widget.AppCompatTextView

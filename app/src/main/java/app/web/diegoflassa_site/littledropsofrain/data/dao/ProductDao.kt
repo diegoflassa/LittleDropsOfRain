@@ -2,6 +2,7 @@ package app.web.diegoflassa_site.littledropsofrain.data.dao
 
 import android.util.Log
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
+import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnProductInsertedListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnTaskFinishedListener
@@ -33,19 +34,95 @@ object ProductDao {
         WeakReference(FirebaseFirestore.getInstance())
     private var storage = Firebase.storage
 
-    fun loadAll(listener: OnDataChangeListener<List<Product>>): Task<QuerySnapshot>? {
+    fun loadMostLiked(
+        user: User,
+        listener: OnDataChangeListener<HashMap<Product, Int>>
+    ): Task<QuerySnapshot>? {
+        val mostLiked = HashMap<Product, Int>()
         val products: MutableList<Product> = ArrayList()
-        return db.get()?.collection(COLLECTION_PATH)
-            ?.orderBy(Product.ID_ILURIA, Query.Direction.DESCENDING)
+        return db.get()?.collection(COLLECTION_PATH)?.whereArrayContains(Product.LIKES, user.uid!!)
+            ?.orderBy(Product.ID_SOURCE, Query.Direction.DESCENDING)
             ?.get()
             ?.addOnSuccessListener { result ->
                 var product: Product
                 for (document in result) {
                     product = document.toObject(Product::class.java)
-                    product.uid = document.id
-                    //message = Message(document.data)
+                    mostLiked[product] = product.likes.size
+                    if (product.uid == null) {
+                        product.uid = document.id
+                        products.add(product)
+                    }
                     Log.d(TAG, "${document.id} => ${document.data}")
-                    products.add(product)
+                }
+                listener.onDataChanged(mostLiked)
+            }
+            ?.addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
+    }
+
+    fun loadMyLiked(
+        user: User,
+        listener: OnDataChangeListener<List<Product>>
+    ): Task<QuerySnapshot>? {
+        val products: MutableList<Product> = ArrayList()
+        return db.get()?.collection(COLLECTION_PATH)?.whereArrayContains(Product.LIKES, user.uid!!)
+            ?.orderBy(Product.ID_SOURCE, Query.Direction.DESCENDING)
+            ?.get()
+            ?.addOnSuccessListener { result ->
+                var product: Product
+                for (document in result) {
+                    product = document.toObject(Product::class.java)
+                    if (product.uid == null) {
+                        product.uid = document.id
+                        products.add(product)
+                    }
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                }
+                listener.onDataChanged(products)
+            }
+            ?.addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
+    }
+
+    fun loadAllPublished(listener: OnDataChangeListener<List<Product>>): Task<QuerySnapshot>? {
+        val products: MutableList<Product> = ArrayList()
+        return db.get()?.collection(COLLECTION_PATH)?.whereEqualTo(Product.IS_PUBLISHED, true)
+            ?.orderBy(Product.ID_SOURCE, Query.Direction.DESCENDING)
+            ?.get()
+            ?.addOnSuccessListener { result ->
+                var product: Product
+                for (document in result) {
+                    product = document.toObject(Product::class.java)
+                    if (product.uid == null) {
+                        product.uid = document.id
+                        products.add(product)
+                    }
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                }
+                listener.onDataChanged(products)
+            }
+            ?.addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
+    }
+
+
+    fun loadAll(listener: OnDataChangeListener<List<Product>>): Task<QuerySnapshot>? {
+        val products: MutableList<Product> = ArrayList()
+        return db.get()?.collection(COLLECTION_PATH)
+            ?.orderBy(Product.ID_SOURCE, Query.Direction.DESCENDING)
+            ?.get()
+            ?.addOnSuccessListener { result ->
+                var product: Product
+                for (document in result) {
+                    product = document.toObject(Product::class.java)
+                    if (product.uid == null) {
+                        product.uid = document.id
+                        products.add(product)
+                    }
+                    Log.d(TAG, "${document.id} => ${document.data}")
                 }
                 listener.onDataChanged(products)
             }
@@ -59,13 +136,13 @@ object ProductDao {
         listener: OnDataChangeListener<List<Product>>
     ): Task<QuerySnapshot>? {
         val products: MutableList<Product> = ArrayList()
-        val itemsRef = db.get()?.collection(COLLECTION_PATH)
+        val itemsRef = db.get()?.collection(COLLECTION_PATH)?.whereIn(Product.UID, productIds)
         return itemsRef?.get()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 var product: Product
                 for (document in task.result) {
-                    if (productIds.contains(document.id)) {
-                        product = document.toObject(Product::class.java)
+                    product = document.toObject(Product::class.java)
+                    if (product.uid == null) {
                         product.uid = document.id
                         products.add(product)
                     }
@@ -89,9 +166,11 @@ object ProductDao {
                 for (document in result) {
                     if (document.get("title").toString().contains(title)) {
                         product = document.toObject(Product::class.java)
-                        product.uid = document.id
+                        if (product.uid == null) {
+                            product.uid = document.id
+                            products.add(product)
+                        }
                         Log.d(TAG, "${document.id} => ${document.data}")
-                        products.add(product)
                     }
                 }
                 listener.onDataChanged(products)
@@ -111,7 +190,7 @@ object ProductDao {
         val listTasksAll = ArrayList<Task<*>>(products.size)
         var taskInsert: Task<*>?
         db.get()?.collection(COLLECTION_PATH)
-            ?.orderBy(Product.ID_ILURIA, Query.Direction.DESCENDING)
+            ?.orderBy(Product.ID_SOURCE, Query.Direction.DESCENDING)
             ?.get()
             ?.addOnSuccessListener { result ->
 
@@ -122,7 +201,7 @@ object ProductDao {
                         lateinit var productFS: Product
                         for (document in result) {
                             productFS = document.toObject(Product::class.java)
-                            if (product.idIluria == productFS.idIluria) {
+                            if (product.idSource == productFS.idSource) {
                                 found = true
                                 break
                             }
@@ -139,7 +218,7 @@ object ProductDao {
                                         listener?.onProductInserted(product)
                                         Log.i(
                                             TAG,
-                                            "Product ${product.idIluria} inserted successfully"
+                                            "Product ${product.idSource} inserted successfully"
                                         )
                                     }?.addOnFailureListener {
                                         Log.i(TAG, "Error inserting product")
@@ -173,24 +252,27 @@ object ProductDao {
                 }
 
                 Tasks.whenAll(*listTasksAll.toTypedArray()).addOnCompleteListener {
-                    if (removeNotFoundInFirebase) {
-                        db.get()?.collection(
-                            COLLECTION_PATH
-                        )?.get()
-                            ?.addOnSuccessListener { result ->
-                                var product: Product
-                                for (document in result) {
-                                    product = document.toObject(Product::class.java)
-                                    if (!hashProducts.containsKey(document.id)) {
+                    db.get()?.collection(
+                        COLLECTION_PATH
+                    )?.get()
+                        ?.addOnSuccessListener { result ->
+                            var product: Product
+                            for (document in result) {
+                                product = document.toObject(Product::class.java)
+                                if (!hashProducts.containsKey(document.id)) {
+                                    if (removeNotFoundInFirebase) {
                                         delete(product)
                                         removeBlob(product)
+                                    } else {
+                                        product.isPublished = false
+                                        update(product)
                                     }
                                 }
                             }
-                            ?.addOnFailureListener { exception ->
-                                Log.d(TAG, "Error getting documents: ", exception)
-                            }
-                    }
+                        }
+                        ?.addOnFailureListener { exception ->
+                            Log.d(TAG, "Error getting documents: ", exception)
+                        }
                     finishListener?.onTaskFinished(ArrayList(hashProducts.values))
                 }
             }
@@ -202,7 +284,7 @@ object ProductDao {
         if (product.uid == null) {
             task =
                 db.get()?.collection(COLLECTION_PATH)
-                    ?.whereEqualTo(Product.ID_ILURIA, product.idIluria)
+                    ?.whereEqualTo(Product.ID_SOURCE, product.idSource)
                     ?.get()?.addOnSuccessListener { querySnapshot ->
                         if (querySnapshot.isEmpty) {
                             db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener {
@@ -210,7 +292,7 @@ object ProductDao {
                                 if (!product.imageUrl?.startsWith("https://firebasestorage")!!)
                                     insertBlob(product)
                                 listener?.onProductInserted(product)
-                                Log.i(TAG, "Product ${product.idIluria} inserted successfully")
+                                Log.i(TAG, "Product ${product.idSource} inserted successfully")
                             }?.addOnFailureListener {
                                 Log.i(TAG, "Error inserting product")
                             }
@@ -275,7 +357,7 @@ object ProductDao {
         }
     }
 
-    private fun update(product: Product, checkForUrl: Boolean = true): Task<Void>? {
+    fun update(product: Product, checkForUrl: Boolean = true): Task<Void>? {
         val data = product.toMap()
         return db.get()?.collection(COLLECTION_PATH)?.document(product.uid.toString())?.set(data)
             ?.addOnSuccessListener {

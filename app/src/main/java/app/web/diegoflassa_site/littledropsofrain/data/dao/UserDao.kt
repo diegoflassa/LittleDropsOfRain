@@ -40,19 +40,17 @@ object UserDao {
     }
 
     fun loadAllByIds(
-        messageIds: List<String>,
+        userIds: List<String>,
         listener: OnUsersLoadedListener
     ): Task<QuerySnapshot>? {
         val users: MutableList<User> = ArrayList()
-        val itemsRef = db.get()?.collection(COLLECTION_PATH)
+        val itemsRef = db.get()?.collection(COLLECTION_PATH)?.whereIn(User.UID, userIds)
         return itemsRef?.get()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 var user: User
                 for (document in task.result) {
-                    if (messageIds.contains(document.id)) {
-                        user = document.toObject(User::class.java)
-                        users.add(user)
-                    }
+                    user = document.toObject(User::class.java)
+                    users.add(user)
                 }
                 listener.onUsersLoaded(users)
             } else {

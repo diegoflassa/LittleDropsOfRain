@@ -23,6 +23,12 @@
         <item>@string/sort_by_price</item>
     </string-array>
 
+    <!-- Ways you can sort products -->
+    <string-array name="all_products_sort_by">
+        <item>@string/sort_by_price</item>
+        <item>@string/sort_by_likes</item>
+    </string-array>
+
     <!-- Ways you can sort messages -->
     <string-array name="messages_sort_by">
         <item>@string/sort_by_creation_date</item>

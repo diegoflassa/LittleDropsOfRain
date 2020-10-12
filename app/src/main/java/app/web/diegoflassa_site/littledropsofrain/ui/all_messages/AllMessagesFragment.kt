@@ -54,7 +54,7 @@ class AllMessagesFragment : Fragment(),
     companion object {
         const val KEY_ALL_MESSAGES: String = "Admin - All Messages"
         val TAG = AllMessagesFragment::class.simpleName
-        const val LIMIT = 50
+        const val LIMIT = 50000
         fun newInstance() = AllMessagesFragment()
     }
 
@@ -187,12 +187,7 @@ class AllMessagesFragment : Fragment(),
         if (filters.hasRead()) {
             query = query.whereEqualTo(Message.READ, filters.read)
         }
-        /*
-        // City (equality filter)
-        if (filters.hasCity()) {
-            query = query.whereEqualTo("city", filters.getCity())
-        }
-        */
+
         // EMail sender (equality filter)
         if (filters.hasEMailSender()) {
             query = query.whereEqualTo(Message.EMAIL_SENDER, filters.emailSender!!)

@@ -113,4 +113,21 @@
     <string name="exit">Sair</string>
     <string name="tos_title">Termos de Serviço</string>
     <string name="label_user_profile">Perfil do Usuário</string>
+    <string name="maintenance">Loja em Manutenção</string>
+    <string name="menu_off_air">Fora do ar</string>
+    <string name="off_air">Fora do ar</string>
+    <string name="configuration_applied">Configurações aplicadas com sucesso</string>
+    <string name="configuration_fetch_failed">Falha ao buscar configurações</string>
+    <string name="configuration_fetch_successfull">Busca de configuração remota com sucesso</string>
+    <string name="liked">Gostados</string>
+    <string name="label_my_liked_products">Meus gosteis</string>
+    <string name="unpublish_not_found_products">Cancelar a publicação de produtos não encontrados</string>
+    <string name="likes_filter">Gostados : %1$b</string>
+    <string name="likes">Gostados</string>
+    <string name="menu_all_products">Todos os Produtos</string>
+    <string name="label_all_products">Todos os Produtos</string>
+    <string name="close">Fechar</string>
+    <string name="sort_by_likes">Gostados</string>
+    <string name="off_air_en">Mensagem de fora do ar em Inglês</string>
+    <string name="off_air_pt">Mensagem de fora do ar em Portugues</string>
 </resources>

@@ -113,4 +113,21 @@
     <string name="exit">Exit</string>
     <string name="tos_title">Nutzungsbedingungen</string>
     <string name="label_user_profile">Benutzerprofil</string>
+    <string name="maintenance">In der Wartung aufbewahren</string>
+    <string name="menu_off_air">aus der Luft</string>
+    <string name="off_air">aus der Luft</string>
+    <string name="configuration_applied">Konfiguration erfolgreich angewendet</string>
+    <string name="configuration_fetch_failed">Konfigurationsabruf fehlgeschlagen</string>
+    <string name="configuration_fetch_successfull">Remote Config Fetch erfolgreich</string>
+    <string name="liked">Gefallen</string>
+    <string name="label_my_liked_products">Mein gefiel</string>
+    <string name="unpublish_not_found_products">Nicht gefundene Produkte nicht veröffentlichen</string>
+    <string name="likes_filter">Gefallen : %1$b</string>
+    <string name="likes">Likes</string>
+    <string name="menu_all_products">Alle Produkte</string>
+    <string name="label_all_products">Alle Produkte</string>
+    <string name="close">Schließen</string>
+    <string name="sort_by_likes">Likes</string>
+    <string name="off_air_en">Off Air Nachricht in Englisch</string>
+    <string name="off_air_pt">Off Air Nachricht in Portugiesisch</string>
 </resources>

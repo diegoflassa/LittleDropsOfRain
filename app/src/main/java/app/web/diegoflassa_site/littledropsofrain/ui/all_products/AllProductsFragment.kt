@@ -1,4 +1,4 @@
-package app.web.diegoflassa_site.littledropsofrain.ui.home
+package app.web.diegoflassa_site.littledropsofrain.ui.all_products
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -22,19 +22,21 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.adapters.ProductAdapter
+import app.web.diegoflassa_site.littledropsofrain.adapters.AllProductsAdapter
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
-import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentHomeBinding
+import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAllProductsBinding
+import app.web.diegoflassa_site.littledropsofrain.fragments.AllProductsFilterDialogFragment
+import app.web.diegoflassa_site.littledropsofrain.fragments.AllProductsFilters
 import app.web.diegoflassa_site.littledropsofrain.fragments.ProductsFilterDialogFragment
-import app.web.diegoflassa_site.littledropsofrain.fragments.ProductsFilters
+import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.models.HomeViewModel
-import app.web.diegoflassa_site.littledropsofrain.models.HomeViewState
-import app.web.diegoflassa_site.littledropsofrain.ui.off_air.OffAirFragment
+import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUsersLoadedListener
+import app.web.diegoflassa_site.littledropsofrain.models.AllProductsViewModel
+import app.web.diegoflassa_site.littledropsofrain.models.AllProductsViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -42,29 +44,28 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.get
-import com.google.firebase.remoteconfig.ktx.remoteConfig
 import java.lang.ref.WeakReference
 
 
-class HomeFragment : Fragment(), ActivityResultCallback<Int>,
+class AllProductsFragment : Fragment(), ActivityResultCallback<Int>,
     View.OnClickListener,
-    ProductsFilterDialogFragment.FilterListener,
-    ProductAdapter.OnProductSelectedListener, DialogInterface.OnDismissListener {
+    DialogInterface.OnDismissListener,
+    AllProductsAdapter.OnProductSelectedListener, AllProductsFilterDialogFragment.FilterListener,
+    OnUsersLoadedListener {
 
-    private val viewModel: HomeViewModel by viewModels()
-    var binding: FragmentHomeBinding by viewLifecycle()
-    private lateinit var mAdapter: WeakReference<ProductAdapter>
+    private val viewModel: AllProductsViewModel by viewModels()
+    var binding: FragmentAllProductsBinding by viewLifecycle()
+    private lateinit var mAdapter: WeakReference<AllProductsAdapter>
     private lateinit var mFirestore: FirebaseFirestore
-    var mFilterDialog: ProductsFilterDialogFragment? = null
+    var mFilterDialog: AllProductsFilterDialogFragment? = null
     private lateinit var toggle: ActionBarDrawerToggle
     private var mQuery: Query? = null
+    private var mUsersIds = ArrayList<String>()
 
     companion object {
-        val TAG = HomeFragment::class.simpleName
+        val TAG = AllProductsFragment::class.simpleName
         const val LIMIT = 50000
-        fun newInstance() = HomeFragment()
+        fun newInstance() = AllProductsFragment()
     }
 
     override fun onCreateView(
@@ -72,7 +73,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentAllProductsBinding.inflate(inflater, container, false)
         viewModel.viewState.observe(viewLifecycleOwner, {
             updateUI(it)
         })
@@ -81,7 +82,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
         // Filter Dialog
         mFilterDialog =
-            ProductsFilterDialogFragment()
+            AllProductsFilterDialogFragment()
         mFilterDialog?.filterListener = this
 
         val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
@@ -94,31 +95,19 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
-
         toggle.syncState()
 
-        val remoteConfig = Firebase.remoteConfig
-        val isOffAir = remoteConfig[OffAirFragment.REMOTE_CONFIG_IS_OFF_AIR].asBoolean()
-        if(isOffAir){
-            if(Locale.getDefault().getLanguage()=="pt") {
-                showOffAirScreen(
-                    remoteConfig[OffAirFragment.REMOTE_CONFIG_OFF_AIR_MESSAGE_PT].asString()
-                )
-            }else{
-                showOffAirScreen(
-                    remoteConfig[OffAirFragment.REMOTE_CONFIG_OFF_AIR_MESSAGE_EN].asString()
-                )
-            }
-        }else {
-            hideOffAirScreen()
-            showLoadingScreen()
-            initFirestore()
-            initRecyclerView()
-        }
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.visibility = View.GONE
+
+        showLoadingScreen()
+        initFirestore()
+        initRecyclerView()
 
         binding.filterBar.isEnabled = false
 
         Log.i(TAG, "$TAG activity successfully created>")
+        UserDao.loadAll(this)
         return binding.root
     }
 
@@ -136,7 +125,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         updateUI(viewModel.viewState)
     }
 
-    private fun updateUI(viewState: HomeViewState) {
+    private fun updateUI(viewState: AllProductsViewState) {
         // Update the UI
         viewState.text = ""
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
@@ -153,18 +142,10 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.viewState.filters = ProductsFilters.default
+        viewModel.viewState.filters = AllProductsFilters.default
         onFilter(viewModel.viewState.filters)
     }
 
-    private fun showOffAirScreen(message : String) {
-        binding.homeViewOffAir.text = message
-        binding.homeViewOffAir.visibility = View.VISIBLE
-    }
-
-    private fun hideOffAirScreen() {
-        binding.homeViewOffAir.visibility = View.GONE
-    }
 
     private fun showLoadingScreen() {
         binding.homeProgress.visibility = View.VISIBLE
@@ -174,16 +155,18 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         binding.homeProgress.visibility = View.GONE
     }
 
-    override fun onFilter(filters: ProductsFilters) {
+    override fun onFilter(filters: AllProductsFilters) {
 
         // Construct query basic query
         var query: Query = mFirestore.collection(ProductDao.COLLECTION_PATH)
-        query.whereEqualTo(Product.IS_PUBLISHED, true)
-        query.orderBy(Product.PRICE, Query.Direction.DESCENDING)
 
         // Category (equality filter)
         if (filters.hasCategory()) {
             query = query.whereArrayContainsAny(Product.CATEGORIES, filters.categories.toList())
+        }
+
+        if (filters.hasLikes()) {
+            query = query.whereArrayContains(Product.LIKES, mUsersIds)
         }
 
         // Price (equality filter)
@@ -251,7 +234,8 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         }
 
         mAdapter =
-            WeakReference(object : ProductAdapter(this@HomeFragment, mQuery, this@HomeFragment) {
+            WeakReference(object :
+                AllProductsAdapter(this@AllProductsFragment, mQuery, this@AllProductsFragment) {
                 override fun onDataChanged() {
                     binding.filterBar.isEnabled = true
                     hideLoadingScreen()
@@ -313,4 +297,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         binding.filterBar.isEnabled = true
     }
 
+    override fun onUsersLoaded(users: List<User>) {
+        mUsersIds = Helper.userListToIdsList(users)
+    }
 }

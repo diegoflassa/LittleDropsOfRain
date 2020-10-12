@@ -21,10 +21,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendMessageBinding
-import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
-import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
-import app.web.diegoflassa_site.littledropsofrain.helpers.runOnUiThread
-import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
+import app.web.diegoflassa_site.littledropsofrain.helpers.*
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUsersLoadedListener
 import app.web.diegoflassa_site.littledropsofrain.models.SendMessageViewModel
@@ -56,6 +53,7 @@ class SendMessageFragment : Fragment(),
     private var binding: FragmentSendMessageBinding by viewLifecycle()
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private lateinit var toggle: ActionBarDrawerToggle
+    private var isStopped = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -140,6 +138,16 @@ class SendMessageFragment : Fragment(),
         return binding.root
     }
 
+    override fun onStop() {
+        isStopped= true
+        super.onStop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isStopped=false
+    }
+
     override fun onDestroyView() {
         if (this::toggle.isInitialized) {
             val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawer_layout)
@@ -150,8 +158,10 @@ class SendMessageFragment : Fragment(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        viewModel.viewState.title = binding.edttxtTitle.text.toString()
-        viewModel.viewState.body = binding.mltxtMessage.text.toString()
+        if(isSafeToAccessViewModel()&&!isStopped) {
+            viewModel.viewState.title = binding.edttxtTitle.text.toString()
+            viewModel.viewState.body = binding.mltxtMessage.text.toString()
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -310,39 +320,48 @@ class SendMessageFragment : Fragment(),
     }
 
     override fun onUsersLoaded(users: List<User>) {
-        val mutableUsers = ArrayList<User>(users)
-        for (user in users) {
-            if (user.email == LoggedUser.userLiveData.value?.email) {
-                mutableUsers.remove(user)
-            }
-        }
-        val dataAdapter: ArrayAdapter<User> = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item, mutableUsers
-        )
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spnrContacts.adapter = dataAdapter
-        binding.spnrContacts.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
-                viewModel.viewState.dest = (binding.spnrContacts.adapter.getItem(pos) as User)
-            }
-
-            override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
-                viewModel.viewState.dest = User()
-            }
-        }
-        if (binding.spnrContacts.adapter.isEmpty) {
-            binding.spnrContacts.visibility = View.GONE
-            for (radio in binding.rdGrpSendMethod.children) {
-                if (radio.tag == SendMessageViewState.SendMethod.EMAIL.toString()) {
-                    radio.isEnabled = false
-                } else if (radio.tag == SendMessageViewState.SendMethod.MESSAGE.toString()) {
-                    viewModel.viewState.sendMethod = SendMessageViewState.SendMethod.MESSAGE
-                    (radio as RadioButton).isChecked = true
+        if(isSafeToAccessViewModel()&&!isStopped) {
+            val mutableUsers = ArrayList<User>(users)
+            for (user in users) {
+                if (user.email == LoggedUser.userLiveData.value?.email) {
+                    mutableUsers.remove(user)
                 }
             }
-        } else {
-            setSelectedMessageSender()
+            val dataAdapter: ArrayAdapter<User> = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item, mutableUsers
+            )
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spnrContacts.adapter = dataAdapter
+            binding.spnrContacts.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View,
+                        pos: Int,
+                        id: Long
+                    ) {
+                        viewModel.viewState.dest =
+                            (binding.spnrContacts.adapter.getItem(pos) as User)
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
+                        viewModel.viewState.dest = User()
+                    }
+                }
+            if (binding.spnrContacts.adapter.isEmpty) {
+                binding.spnrContacts.visibility = View.GONE
+                for (radio in binding.rdGrpSendMethod.children) {
+                    if (radio.tag == SendMessageViewState.SendMethod.EMAIL.toString()) {
+                        radio.isEnabled = false
+                    } else if (radio.tag == SendMessageViewState.SendMethod.MESSAGE.toString()) {
+                        viewModel.viewState.sendMethod = SendMessageViewState.SendMethod.MESSAGE
+                        (radio as RadioButton).isChecked = true
+                    }
+                }
+            } else {
+                setSelectedMessageSender()
+            }
         }
     }
 }
