@@ -78,6 +78,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/mltxtMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/mltxtMessage"
-        app:layout_constraintVertical_bias="0.575" />
+        app:layout_constraintVertical_bias="0.575"
+        android:contentDescription="@string/fab_send_message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

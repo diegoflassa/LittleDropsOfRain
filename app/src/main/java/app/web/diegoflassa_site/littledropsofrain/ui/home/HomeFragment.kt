@@ -46,6 +46,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import java.lang.ref.WeakReference
+import java.util.*
 
 
 class HomeFragment : Fragment(), ActivityResultCallback<Int>,
@@ -100,7 +101,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         val remoteConfig = Firebase.remoteConfig
         val isOffAir = remoteConfig[OffAirFragment.REMOTE_CONFIG_IS_OFF_AIR].asBoolean()
         if(isOffAir){
-            if(Locale.getDefault().getLanguage()=="pt") {
+            if(Locale.getDefault().language =="pt") {
                 showOffAirScreen(
                     remoteConfig[OffAirFragment.REMOTE_CONFIG_OFF_AIR_MESSAGE_PT].asString()
                 )

@@ -154,17 +154,18 @@ open class AllProductsFilterDialogFragment : DialogFragment(),
     private val selectedSortBy: String?
         get() {
             if (mRootView != null && !isDetached) {
-                val selected = mSortSpinner!!.selectedItem as String
-                return if (MyApplication.getContext()
-                        .getString(R.string.sort_by_price) == selected
-                ) {
-                    return Product.PRICE
-                } else if (MyApplication.getContext()
-                        .getString(R.string.sort_by_likes) == selected
-                ) {
-                    return Product.LIKES
-                }else {
-                    return null
+                return when (mSortSpinner!!.selectedItem as String) {
+                    MyApplication.getContext()
+                        .getString(R.string.sort_by_price) -> {
+                        Product.PRICE
+                    }
+                    MyApplication.getContext()
+                        .getString(R.string.sort_by_likes) -> {
+                        Product.LIKES
+                    }
+                    else -> {
+                        null
+                    }
                 }
             }
             return null
@@ -173,16 +174,17 @@ open class AllProductsFilterDialogFragment : DialogFragment(),
     private val sortDirection: Query.Direction?
         get() {
             if (mRootView != null && !isDetached) {
-                val selected = mSortSpinner!!.selectedItem as String
-                return if (MyApplication.getContext()
-                        .getString(R.string.sort_by_price) == selected
-                ) {
-                    return Query.Direction.DESCENDING
-                } else if (MyApplication.getContext()
-                        .getString(R.string.sort_by_likes) == selected
-                ) {
-                    return Query.Direction.DESCENDING
-                } else null
+                return when (mSortSpinner!!.selectedItem as String) {
+                    MyApplication.getContext()
+                        .getString(R.string.sort_by_price) -> {
+                        return Query.Direction.DESCENDING
+                    }
+                    MyApplication.getContext()
+                        .getString(R.string.sort_by_likes) -> {
+                        return Query.Direction.DESCENDING
+                    }
+                    else -> null
+                }
             }
             return null
         }

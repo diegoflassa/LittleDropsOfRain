@@ -130,4 +130,11 @@
     <string name="sort_by_likes">Likes</string>
     <string name="off_air_en">Off Air Nachricht in Englisch</string>
     <string name="off_air_pt">Off Air Nachricht in Portugiesisch</string>
+    <string name="fab_preview_topic_message">Vorschau der Themennachricht</string>
+    <string name="fab_send_topic_message">Send Topic Message</string>
+    <string name="fab_select_image">Themennachricht senden</string>
+    <string name="fab_reload_products">Produkte neu laden</string>
+    <string name="fab_send_message">Nachricht senden</string>
+    <string name="fab_main">Fab Main</string>
+    <string name="fab_off_air">Fab Off Air</string>
 </resources>

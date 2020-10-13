@@ -48,7 +48,7 @@ class AllProductsFilters {
             desc.append("</b>")
         }
         if (likes != null) {
-            if(!desc.toString().isEmpty()) {
+            if(desc.toString().isNotEmpty()) {
                 desc.append(",")
             }
             desc.append("<b>")

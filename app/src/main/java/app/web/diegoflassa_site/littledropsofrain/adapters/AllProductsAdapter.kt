@@ -87,7 +87,7 @@ open class AllProductsAdapter(
             binding.imgVwLike.setImageDrawable(heartIcon)
             binding.imgVwLike.setOnClickListener {
                 LikesDialogFragment(product).show(
-                    allProductsFragment.activity?.supportFragmentManager!!,
+                    allProductsFragment.requireActivity().supportFragmentManager,
                     LikesDialogFragment.TAG
                 )
             }

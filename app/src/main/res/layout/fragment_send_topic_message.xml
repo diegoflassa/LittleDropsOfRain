@@ -83,7 +83,8 @@
             android:src="@android:drawable/ic_menu_gallery"
             app:layout_constraintBottom_toBottomOf="@+id/fabPreviewTopicMessage"
             app:layout_constraintEnd_toStartOf="@+id/fabPreviewTopicMessage"
-            app:layout_constraintTop_toTopOf="@+id/fabPreviewTopicMessage" />
+            app:layout_constraintTop_toTopOf="@+id/fabPreviewTopicMessage"
+            android:contentDescription="@string/fab_select_image" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabSendTopicMessage"
@@ -94,7 +95,8 @@
             android:focusable="true"
             android:src="@android:drawable/ic_menu_send"
             app:layout_constraintEnd_toEndOf="@+id/edtTxtMlMessage"
-            app:layout_constraintTop_toBottomOf="@+id/edtTxtMlMessage" />
+            app:layout_constraintTop_toBottomOf="@+id/edtTxtMlMessage"
+            android:contentDescription="@string/fab_send_topic_message" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabPreviewTopicMessage"
@@ -106,7 +108,8 @@
             android:src="@android:drawable/ic_menu_view"
             app:layout_constraintBottom_toBottomOf="@+id/fabSendTopicMessage"
             app:layout_constraintEnd_toStartOf="@+id/fabSendTopicMessage"
-            app:layout_constraintTop_toTopOf="@+id/fabSendTopicMessage" />
+            app:layout_constraintTop_toTopOf="@+id/fabSendTopicMessage"
+            android:contentDescription="@string/fab_preview_topic_message" />
 
         <!-- Progress bar -->
         <ProgressBar

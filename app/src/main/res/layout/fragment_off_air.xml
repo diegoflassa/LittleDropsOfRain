@@ -63,6 +63,7 @@
         android:focusable="true"
         android:src="@android:drawable/ic_menu_preferences"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/fab_off_air" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
