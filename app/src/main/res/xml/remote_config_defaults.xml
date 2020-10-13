@@ -2,8 +2,12 @@
 <!-- START xml_defaults -->
 <defaultsMap>
     <entry>
-        <key>remote_config_off_air_message</key>
-        <value>Off Air</value>
+        <key>remote_config_off_air_message_en</key>
+        <value>Page Off Air</value>
+    </entry>
+    <entry>
+        <key>remote_config_off_air_message_pt</key>
+        <value>Página Fora do Ar</value>
     </entry>
     <entry>
         <key>remote_config_is_off_air</key>

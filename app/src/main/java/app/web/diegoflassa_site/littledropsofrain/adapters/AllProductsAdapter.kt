@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemProductBinding
 import app.web.diegoflassa_site.littledropsofrain.dialogs.LikesDialogFragment
@@ -17,6 +18,9 @@ import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.DecimalFormatSymbols
 
 open class AllProductsAdapter(
@@ -51,6 +55,7 @@ open class AllProductsAdapter(
     class ViewHolder(private var allProductsFragment: AllProductsFragment, itemView: View) :
         RecyclerView.ViewHolder(itemView), CompoundButton.OnCheckedChangeListener {
         val binding = RecyclerviewItemProductBinding.bind(itemView)
+        private val ioScope = CoroutineScope(Dispatchers.IO)
         fun bind(
             snapshot: DocumentSnapshot,
             listener: OnProductSelectedListener?
@@ -83,13 +88,23 @@ open class AllProductsAdapter(
             binding.price.text = resources.getString(R.string.rv_price, priceStr)
             val heartIcon =
                 IconDrawable(allProductsFragment.requireContext(), SimpleLineIconsIcons.icon_heart)
-            heartIcon.setTint(Color.RED)
+            if(product.likes.size>0) {
+                heartIcon.setTint(Color.RED)
+                heartIcon.
+            }
             binding.imgVwLike.setImageDrawable(heartIcon)
             binding.imgVwLike.setOnClickListener {
                 LikesDialogFragment(product).show(
                     allProductsFragment.requireActivity().supportFragmentManager,
                     LikesDialogFragment.TAG
                 )
+            }
+            binding.swtchIsPublished.isChecked = product.isPublished
+            binding.swtchIsPublished.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
+                product.isPublished = checked
+                ioScope.launch{
+                    ProductDao.update(product)
+                }
             }
             binding.likesCount.text = product.likes.size.toString()
 

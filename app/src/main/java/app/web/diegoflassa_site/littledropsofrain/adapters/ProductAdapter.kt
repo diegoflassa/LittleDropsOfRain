@@ -18,6 +18,9 @@ import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.DecimalFormatSymbols
 
 open class ProductAdapter(
@@ -52,6 +55,7 @@ open class ProductAdapter(
     class ViewHolder(private var homeFragment: HomeFragment, itemView: View) :
         RecyclerView.ViewHolder(itemView), CompoundButton.OnCheckedChangeListener {
         val binding = RecyclerviewItemProductBinding.bind(itemView)
+        private val ioScope = CoroutineScope(Dispatchers.IO)
         fun bind(
             snapshot: DocumentSnapshot,
             listener: OnProductSelectedListener?
@@ -83,19 +87,24 @@ open class ProductAdapter(
             priceStr += DecimalFormatSymbols.getInstance().decimalSeparator + "00"
             binding.price.text = resources.getString(R.string.rv_price, priceStr)
             val heartIcon = IconDrawable(homeFragment.requireContext(), SimpleLineIconsIcons.icon_heart)
-            if(product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
-                heartIcon.setTint(Color.RED)
-            }
             binding.imgVwLike.setImageDrawable(heartIcon)
-            binding.imgVwLike.setOnClickListener{
+            if(LoggedUser.userLiveData.value!=null) {
                 if(product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
-                    product.likes.remove(LoggedUser.userLiveData.value?.uid!!)
-                }else{
-                    product.likes.add(LoggedUser.userLiveData.value?.uid!!)
+                    heartIcon.setTint(Color.RED)
                 }
-                ProductDao.update(product)
+                binding.imgVwLike.setOnClickListener {
+                    if (product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
+                        product.likes.remove(LoggedUser.userLiveData.value?.uid!!)
+                    } else {
+                        product.likes.add(LoggedUser.userLiveData.value?.uid!!)
+                    }
+                    ioScope.launch {
+                        ProductDao.update(product)
+                    }
+                }
             }
-
+            binding.swtchIsPublished.visibility = View.GONE
+            binding.likesCount.text = product.likes.size.toString()
             // Click listener
             itemView.setOnClickListener { listener?.onProductSelected(snapshot) }
         }

@@ -26,6 +26,8 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 open class UsersAdapter(
     usersFragment: UsersFragment,
@@ -89,6 +91,10 @@ open class UsersAdapter(
                 .into(binding.userPicture)
             binding.userName.text = resources.getString(R.string.rv_user_name, user?.name)
             binding.userEmail.text = resources.getString(R.string.rv_user_email, user?.email)
+            val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
+            binding.userLastSeen.text = resources.getString(
+                R.string.rv_last_seen, formatter.format(user?.lastSeen)
+            )
             binding.userIsAdmin.text = resources.getString(R.string.rv_user_is_admin)
             binding.userIsAdmin.isChecked = user?.isAdmin!!
             binding.btnDeleteUser.setOnClickListener {

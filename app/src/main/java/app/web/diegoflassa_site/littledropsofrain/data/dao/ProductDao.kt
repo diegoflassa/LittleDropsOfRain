@@ -50,8 +50,8 @@ object ProductDao {
                     mostLiked[product] = product.likes.size
                     if (product.uid == null) {
                         product.uid = document.id
-                        products.add(product)
                     }
+                    products.add(product)
                     Log.d(TAG, "${document.id} => ${document.data}")
                 }
                 listener.onDataChanged(mostLiked)
@@ -75,8 +75,8 @@ object ProductDao {
                     product = document.toObject(Product::class.java)
                     if (product.uid == null) {
                         product.uid = document.id
-                        products.add(product)
                     }
+                    products.add(product)
                     Log.d(TAG, "${document.id} => ${document.data}")
                 }
                 listener.onDataChanged(products)
@@ -97,8 +97,8 @@ object ProductDao {
                     product = document.toObject(Product::class.java)
                     if (product.uid == null) {
                         product.uid = document.id
-                        products.add(product)
                     }
+                    products.add(product)
                     Log.d(TAG, "${document.id} => ${document.data}")
                 }
                 listener.onDataChanged(products)
@@ -120,8 +120,8 @@ object ProductDao {
                     product = document.toObject(Product::class.java)
                     if (product.uid == null) {
                         product.uid = document.id
-                        products.add(product)
                     }
+                    products.add(product)
                     Log.d(TAG, "${document.id} => ${document.data}")
                 }
                 listener.onDataChanged(products)
@@ -144,8 +144,8 @@ object ProductDao {
                     product = document.toObject(Product::class.java)
                     if (product.uid == null) {
                         product.uid = document.id
-                        products.add(product)
                     }
+                    products.add(product)
                 }
                 listener.onDataChanged(products)
             } else {
@@ -168,8 +168,8 @@ object ProductDao {
                         product = document.toObject(Product::class.java)
                         if (product.uid == null) {
                             product.uid = document.id
-                            products.add(product)
                         }
+                        products.add(product)
                         Log.d(TAG, "${document.id} => ${document.data}")
                     }
                 }

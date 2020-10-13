@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.CompoundButton
 import android.widget.Spinner
 import androidx.core.view.children
@@ -58,9 +59,17 @@ open class ProductsFilterDialogFragment : DialogFragment(),
         mCategoryChipGroup = binding.categoryChipGroup
         mSortSpinner = binding.spinnerSort
         mPriceSpinner = binding.spinnerPrice
+        mPriceSpinner!!.setOnItemClickListener { _: AdapterView<*>, _: View, position: Int, _: Long ->
+            if(position>0) {
+                mSortSpinner!!.isEnabled = false
+                binding.spinnerSort.setSelection(0)
+            }else{
+                mSortSpinner!!.isEnabled = true
+            }
+        }
         binding.buttonSearch.setOnClickListener(this)
         binding.buttonCancel.setOnClickListener(this)
-        ProductDao.loadAll(this)
+        ProductDao.loadAllPublished(this)
         mRootView = binding.root
         return binding.root
     }
@@ -142,12 +151,19 @@ open class ProductsFilterDialogFragment : DialogFragment(),
     private val selectedSortBy: String?
         get() {
             if (mRootView != null && !isDetached) {
-                val selected = mSortSpinner!!.selectedItem as String
-                return if (MyApplication.getContext()
-                        .getString(R.string.sort_by_price) == selected
-                ) {
-                    return Product.PRICE
-                } else null
+                return when (mSortSpinner!!.selectedItem as String) {
+                    MyApplication.getContext()
+                        .getString(R.string.sort_by_price) -> {
+                        Product.PRICE
+                    }
+                    MyApplication.getContext()
+                        .getString(R.string.sort_by_likes) -> {
+                        Product.LIKES
+                    }
+                    else -> {
+                        null
+                    }
+                }
             }
             return null
         }
@@ -155,12 +171,17 @@ open class ProductsFilterDialogFragment : DialogFragment(),
     private val sortDirection: Query.Direction?
         get() {
             if (mRootView != null && !isDetached) {
-                val selected = mSortSpinner!!.selectedItem as String
-                return if (MyApplication.getContext()
-                        .getString(R.string.sort_by_price) == selected
-                ) {
-                    return Query.Direction.DESCENDING
-                } else null
+                return when (mSortSpinner!!.selectedItem as String) {
+                    MyApplication.getContext()
+                        .getString(R.string.sort_by_price) -> {
+                        return Query.Direction.DESCENDING
+                    }
+                    MyApplication.getContext()
+                        .getString(R.string.sort_by_likes) -> {
+                        return Query.Direction.DESCENDING
+                    }
+                    else -> null
+                }
             }
             return null
         }

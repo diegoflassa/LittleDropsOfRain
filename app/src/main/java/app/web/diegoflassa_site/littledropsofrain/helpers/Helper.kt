@@ -84,6 +84,7 @@ class Helper {
             while (st.hasMoreTokens()) {
                 product.categories.add(st.nextToken().trim())
             }
+            product.idIluria = iluriaProduct.idProduct
             product.idSource = iluriaProduct.idProduct
             val price = iluriaProduct.price!!.replace(',', '.')
             product.price = (price.toFloat() * 100).toInt()
@@ -416,7 +417,7 @@ class Helper {
 
         fun userListToIdsList(users: List<User>): ArrayList<String> {
             val ret = ArrayList<String>()
-            for(user in users){
+            for (user in users) {
                 ret.add(user.uid!!)
             }
             return ret

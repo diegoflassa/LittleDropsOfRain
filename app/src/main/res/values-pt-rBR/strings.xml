@@ -10,7 +10,7 @@
     <string name="button_filter">Botão filtrar</string>
     <string name="button_clear_filter">Botão limpar filtro</string>
     <string name="sort_by_price">Ordenar por preço</string>
-    <string name="sorted_by_price">ordenado por preço</string>
+    <string name="sorted_by_price">Ordenado por Preço</string>
     <string name="header_filters">Filtro</string>
     <string name="all_products">Todos os produtos</string>
     <string name="value_any_price">Qualquer preço</string>
@@ -137,4 +137,7 @@
     <string name="fab_send_message">Enviar Mensgagem</string>
     <string name="fab_main">Fab Principal</string>
     <string name="fab_off_air">Fab Fora do Ar</string>
+    <string name="rv_last_seen">Última vez visto : %1$s</string>
+    <string name="is_published">Publicado</string>
+    <string name="sorted_by_likes">Ordenado por Likes</string>
 </resources>

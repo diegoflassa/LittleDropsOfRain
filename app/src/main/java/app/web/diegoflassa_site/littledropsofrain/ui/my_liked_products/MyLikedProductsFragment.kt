@@ -60,7 +60,7 @@ class MyLikedProductsFragment : Fragment(), ActivityResultCallback<Int>,
 
     companion object {
         val TAG = MyLikedProductsFragment::class.simpleName
-        const val LIMIT = 50000
+        const val LIMIT = 10000
         fun newInstance() = MyLikedProductsFragment()
     }
 

@@ -153,11 +153,13 @@
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.user_profile.UserProfileFragment"
         android:label="@string/label_user_profile"
         tools:layout="@layout/fragment_user_profile" />
+
     <fragment
         android:id="@+id/nav_off_air"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.off_air.OffAirFragment"
         android:label="MaintenanceFragment"
         tools:layout="@layout/fragment_off_air"/>
+
     <fragment
         android:id="@+id/nav_my_liked_products"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.my_liked_products.MyLikedProductsFragment"

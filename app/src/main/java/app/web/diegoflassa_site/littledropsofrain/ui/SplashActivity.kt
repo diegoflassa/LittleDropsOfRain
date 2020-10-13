@@ -15,6 +15,10 @@ class SplashActivity : AppCompatActivity() {
 
     private val mMapper: UriToIntentMapper = UriToIntentMapper(this, IntentHelper())
 
+    companion object {
+        var TAG = SplashActivity::class.simpleName
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Make sure this is before calling super.onCreate
         setTheme(R.style.AppTheme_Launcher)
@@ -29,7 +33,6 @@ class SplashActivity : AppCompatActivity() {
             }
         } finally {
             // Always finish the activity so that it doesn't stay in our history
-            finish()
         }
     }
 
@@ -38,15 +41,23 @@ class SplashActivity : AppCompatActivity() {
         remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
         remoteConfig.fetchAndActivate().addOnCompleteListener {
             if (it.isSuccessful) {
+                val updated: Boolean = it.result
+                Log.d(
+                    TAG,
+                    "fetchRemoteConfig ${getString(R.string.configuration_fetch_successfull)}. Update is $updated"
+                )
                 Toast.makeText(
                     this, getString(R.string.configuration_fetch_successfull),
                     Toast.LENGTH_SHORT
                 ).show()
+                finish()
             } else {
+                Log.d(TAG, "fetchRemoteConfig ${getString(R.string.configuration_fetch_failed)}")
                 Toast.makeText(
                     this, getString(R.string.configuration_fetch_failed),
                     Toast.LENGTH_SHORT
                 ).show()
+                finish()
             }
         }
     }

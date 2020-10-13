@@ -64,7 +64,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
     companion object {
         val TAG = HomeFragment::class.simpleName
-        const val LIMIT = 50000
+        const val LIMIT = 10000
         fun newInstance() = HomeFragment()
     }
 

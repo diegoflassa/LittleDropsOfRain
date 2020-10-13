@@ -25,9 +25,4 @@
         android:icon="@drawable/image_placeholder"
         android:orderInCategory="100"
         android:title="@string/menu_off_air" />
-    <item
-        android:id="@+id/nav_all_products"
-        android:icon="@drawable/image_placeholder"
-        android:orderInCategory="100"
-        android:title="@string/menu_all_products" />
 </menu>

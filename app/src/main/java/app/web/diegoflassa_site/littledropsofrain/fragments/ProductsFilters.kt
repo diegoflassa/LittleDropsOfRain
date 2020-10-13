@@ -52,10 +52,16 @@ class ProductsFilters {
     }
 
     fun getOrderDescription(context: Context): String {
-        return if (Product.PRICE == sortBy) {
-            context.getString(R.string.sorted_by_price)
-        } else {
-            context.getString(R.string.sorted_by_categories)
+        return when (sortBy) {
+            Product.PRICE -> {
+                context.getString(R.string.sorted_by_price)
+            }
+            Product.LIKES -> {
+                context.getString(R.string.sorted_by_likes)
+            }
+            else -> {
+                context.getString(R.string.sorted_by_categories)
+            }
         }
     }
 

@@ -64,7 +64,7 @@ class AllProductsFragment : Fragment(), ActivityResultCallback<Int>,
 
     companion object {
         val TAG = AllProductsFragment::class.simpleName
-        const val LIMIT = 50000
+        const val LIMIT = 10000
         fun newInstance() = AllProductsFragment()
     }
 
@@ -163,10 +163,6 @@ class AllProductsFragment : Fragment(), ActivityResultCallback<Int>,
         // Category (equality filter)
         if (filters.hasCategory()) {
             query = query.whereArrayContainsAny(Product.CATEGORIES, filters.categories.toList())
-        }
-
-        if (filters.hasLikes()) {
-            query = query.whereArrayContains(Product.LIKES, mUsersIds)
         }
 
         // Price (equality filter)

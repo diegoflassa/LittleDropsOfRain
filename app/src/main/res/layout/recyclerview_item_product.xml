@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -20,6 +19,8 @@
             android:id="@+id/picture"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/paddingSmall"
+            android:layout_marginEnd="@dimen/paddingSmall"
             android:contentDescription="@string/product_image"
             android:cropToPadding="false"
             android:scaleType="centerCrop"
@@ -35,8 +36,11 @@
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
+            android:layout_marginStart="@dimen/paddingSmall"
+            android:layout_marginTop="@dimen/paddingSmall"
+            android:layout_marginBottom="@dimen/paddingSmall"
+            android:paddingStart="@dimen/paddingSmall"
+            android:paddingEnd="@dimen/paddingSmall"
             android:text="@string/rv_title"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/disponibility"
@@ -48,56 +52,73 @@
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
+            android:layout_marginEnd="@dimen/paddingSmall"
+            android:paddingStart="@dimen/paddingSmall"
+            android:paddingEnd="@dimen/paddingSmall"
             android:text="@string/rv_price"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/title"
-            app:layout_constraintTop_toBottomOf="@+id/picture" />
+            app:layout_constraintTop_toTopOf="@+id/title" />
 
         <TextView
             android:id="@+id/disponibility"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
+            android:layout_marginStart="@dimen/paddingSmall"
+            android:paddingStart="@dimen/paddingSmall"
+            android:paddingEnd="@dimen/paddingSmall"
             android:text="@string/rv_disponibility"
             app:layout_constraintBottom_toTopOf="@+id/chipCategories"
             app:layout_constraintEnd_toStartOf="@+id/imgVwLike"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/price" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipCategories"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/disponibility" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/imgVwLike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/paddingSmall"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:contentDescription="@string/liked"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/price"
+            app:layout_constraintEnd_toEndOf="@+id/price"
+            app:layout_constraintStart_toStartOf="@+id/price"
+            app:layout_constraintTop_toTopOf="@+id/disponibility"
             app:srcCompat="@drawable/image_placeholder" />
 
         <TextView
             android:id="@+id/likes_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
             android:layout_marginBottom="3dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imgVwLike"
+            app:layout_constraintEnd_toEndOf="@+id/imgVwLike"
+            app:layout_constraintStart_toStartOf="@+id/imgVwLike"
+            app:layout_constraintTop_toTopOf="@+id/imgVwLike" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipCategories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/paddingSmall"
+            android:paddingStart="@dimen/paddingSmall"
+            android:paddingEnd="@dimen/paddingSmall"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/disponibility" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/swtchIsPublished"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="@dimen/paddingSmall"
+            android:layout_marginBottom="16dp"
+            android:text="@string/is_published"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/chipCategories"
+            app:layout_constraintTop_toBottomOf="@+id/imgVwLike" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

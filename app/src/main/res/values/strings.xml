@@ -176,4 +176,7 @@
     <string name="fab_send_message">Send Message</string>
     <string name="fab_main">Fab Main</string>
     <string name="fab_off_air">Fab Off Air</string>
+    <string name="rv_last_seen">Last Seen : %1$s</string>
+    <string name="is_published">Is Published</string>
+    <string name="sorted_by_likes">Sorted by Likes</string>
 </resources>

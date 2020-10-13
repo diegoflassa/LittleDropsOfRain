@@ -54,7 +54,7 @@ class AllMessagesFragment : Fragment(),
     companion object {
         const val KEY_ALL_MESSAGES: String = "Admin - All Messages"
         val TAG = AllMessagesFragment::class.simpleName
-        const val LIMIT = 50000
+        const val LIMIT = 10000
         fun newInstance() = AllMessagesFragment()
     }
 

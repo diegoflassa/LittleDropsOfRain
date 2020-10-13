@@ -19,6 +19,7 @@ import app.web.diegoflassa_site.littledropsofrain.models.OffAirViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.OffAirViewState
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
@@ -31,6 +32,7 @@ class OffAirFragment : Fragment() {
         var REMOTE_CONFIG_IS_OFF_AIR = "remote_config_is_off_air"
         fun newInstance() = OffAirFragment()
     }
+
     private var toggle: ActionBarDrawerToggle? = null
     private var isStopped: Boolean = false
     private val viewModel: OffAirViewModel by viewModels()
@@ -42,18 +44,22 @@ class OffAirFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentOffAirBinding.inflate(inflater, container, false)
+        val remoteConfig = Firebase.remoteConfig
 
-        binding.fabOffAir.setOnClickListener{
-            val remoteConfig = Firebase.remoteConfig
+        binding.edtTxtMlOffAirMessageEn.setText(remoteConfig[REMOTE_CONFIG_OFF_AIR_MESSAGE_EN].asString())
+        binding.edtTxtMlOffAirMessagePt.setText(remoteConfig[REMOTE_CONFIG_OFF_AIR_MESSAGE_PT].asString())
+        binding.fabOffAir.setOnClickListener {
             val configSettings = remoteConfigSettings {
                 REMOTE_CONFIG_OFF_AIR_MESSAGE_EN = binding.edtTxtMlOffAirMessageEn.text.toString()
                 REMOTE_CONFIG_OFF_AIR_MESSAGE_PT = binding.edtTxtMlOffAirMessagePt.text.toString()
                 REMOTE_CONFIG_IS_OFF_AIR = binding.chkBxOffAir.isChecked.toString()
             }
             remoteConfig.setConfigSettingsAsync(configSettings).addOnCompleteListener {
-                if(it.isSuccessful){
-                    Toast.makeText(requireContext(), getString(R.string.configuration_applied),
-                        Toast.LENGTH_SHORT).show()
+                if (it.isSuccessful) {
+                    Toast.makeText(
+                        requireContext(), getString(R.string.configuration_applied),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -89,7 +95,7 @@ class OffAirFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if(isSafeToAccessViewModel() && !isStopped) {
+        if (isSafeToAccessViewModel() && !isStopped) {
             viewModel.viewState.messageEn = binding.edtTxtMlOffAirMessageEn.text.toString()
             viewModel.viewState.messagePt = binding.edtTxtMlOffAirMessagePt.text.toString()
         }

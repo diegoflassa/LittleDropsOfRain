@@ -48,7 +48,7 @@ class MessagesFragment : Fragment(),
 
     companion object {
         val TAG = MessagesFragment::class.simpleName
-        const val LIMIT = 50000
+        const val LIMIT = 10000
         fun newInstance() = MessagesFragment()
     }
 

@@ -160,8 +160,6 @@ class MainActivity : AppCompatActivity(),
         )
         menu.findItem(R.id.nav_users).icon = IconDrawable(this, SimpleLineIconsIcons.icon_users)
         menu.findItem(R.id.nav_off_air).icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
-        menu.findItem(R.id.nav_all_products).icon =
-            IconDrawable(this, SimpleLineIconsIcons.icon_present)
 
         bnv.setupWithNavController(navController)
         bnv.visibility = View.GONE
@@ -415,6 +413,8 @@ class MainActivity : AppCompatActivity(),
         val navAuthentication = navView.menu.findItem(R.id.nav_authentication)
         val navMyLikedProducts = navView.menu.findItem(R.id.nav_my_liked_products)
         navMyLikedProducts.icon = IconDrawable(this, SimpleLineIconsIcons.icon_heart)
+        val navAllProductsProducts = navView.menu.findItem(R.id.nav_all_products)
+        navAllProductsProducts.icon = IconDrawable(this, SimpleLineIconsIcons.icon_present)
         if (LoggedUser.userLiveData.value != null) {
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_logout)
             navAuthentication.title = getString(R.string.logout)
@@ -436,9 +436,13 @@ class MainActivity : AppCompatActivity(),
         if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
+            navAllProductsProducts.isEnabled = true
+            navAllProductsProducts.isVisible = true
         } else {
             navAdmin.isEnabled = false
             navAdmin.isVisible = false
+            navAllProductsProducts.isEnabled = false
+            navAllProductsProducts.isVisible = false
         }
         navHome.isChecked = true
     }

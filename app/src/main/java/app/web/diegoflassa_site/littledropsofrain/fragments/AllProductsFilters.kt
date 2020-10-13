@@ -13,16 +13,11 @@ import com.google.firebase.firestore.Query
  */
 class AllProductsFilters {
     var categories: MutableList<String> = ArrayList()
-    var likes: Boolean? = false
     var price: MutableList<Int>? = null
     var sortBy: String? = null
     var sortDirection: Query.Direction? = null
     fun hasCategory(): Boolean {
         return !categories.isNullOrEmpty()
-    }
-
-    fun hasLikes(): Boolean {
-        return likes!=null
     }
 
     fun hasPrice(): Boolean {
@@ -47,14 +42,7 @@ class AllProductsFilters {
             )
             desc.append("</b>")
         }
-        if (likes != null) {
-            if(desc.toString().isNotEmpty()) {
-                desc.append(",")
-            }
-            desc.append("<b>")
-            desc.append(MyApplication.getContext().getString(R.string.likes_filter, likes))
-            desc.append("</b>")
-        }
+
         if (price != null) {
             desc.append(MyApplication.getContext().getString(R.string.for_filter))
             desc.append("<b>")
@@ -65,10 +53,16 @@ class AllProductsFilters {
     }
 
     fun getOrderDescription(context: Context): String {
-        return if (Product.PRICE == sortBy) {
-            context.getString(R.string.sorted_by_price)
-        } else {
-            context.getString(R.string.sorted_by_categories)
+        return when (sortBy) {
+            Product.PRICE -> {
+                context.getString(R.string.sorted_by_price)
+            }
+            Product.LIKES -> {
+                context.getString(R.string.sorted_by_likes)
+            }
+            else -> {
+                context.getString(R.string.sorted_by_categories)
+            }
         }
     }
 

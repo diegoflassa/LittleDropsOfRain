@@ -21,6 +21,7 @@
     <!-- Ways you can sort products -->
     <string-array name="products_sort_by">
         <item>@string/sort_by_price</item>
+        <item>@string/sort_by_likes</item>
     </string-array>
 
     <!-- Ways you can sort products -->

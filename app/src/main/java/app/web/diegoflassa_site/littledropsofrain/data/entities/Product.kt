@@ -23,11 +23,12 @@ enum class Source(private val source: String) {
 @Suppress("Unchecked_Cast")
 data class Product(
     var uid: String? = null,
+    var idIluria: String? = null,
     var idSource: String? = null,
     var linkProduct: String? = null,
     var title: String? = null,
     var price: Int? = null,
-    var isPublished: Boolean = false,
+    @field:JvmField var isPublished: Boolean = false,
     var installment: String? = null,
     var disponibility: String? = null,
     var imageUrl: String? = null,
@@ -38,6 +39,7 @@ data class Product(
 
     companion object {
         const val UID = "uid"
+        const val ID_ILURIA = "idIluria"
         const val ID_SOURCE = "idSource"
         private const val LINK_PRODUCT = "linkProduct"
         private const val TITLE = "title"
@@ -58,6 +60,7 @@ data class Product(
     fun toMap(): Map<String, Any?> {
         val result: HashMap<String, Any?> = HashMap()
         result[UID] = uid
+        result[ID_ILURIA] = idIluria
         result[ID_SOURCE] = idSource
         result[LINK_PRODUCT] = linkProduct
         result[TITLE] = title
@@ -74,6 +77,7 @@ data class Product(
 
     private fun fromMap(map: Map<String, Any>) {
         uid = map[UID] as String?
+        idIluria = map[ID_ILURIA] as String?
         idSource = map[ID_SOURCE] as String?
         linkProduct = map[LINK_PRODUCT] as String?
         title = map[TITLE] as String?

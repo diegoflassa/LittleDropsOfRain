@@ -33,5 +33,9 @@
             android:id="@+id/nav_my_liked_products"
             android:icon="@drawable/image_placeholder"
             android:title="@string/liked" />
+        <item
+            android:id="@+id/nav_all_products"
+            android:icon="@drawable/image_placeholder"
+            android:title="@string/menu_all_products" />
     </group>
 </menu>
