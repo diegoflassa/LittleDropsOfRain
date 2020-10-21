@@ -6,5 +6,6 @@ class ReloadProductsViewState : LiveData<ReloadProductsViewState>() {
 
     var text = ""
     var progress = StringBuilder()
-    var removeNotFoundProducts = true
+    var removeNotFoundProducts = false
+    var unpublishNotFoundProducts = true
 }

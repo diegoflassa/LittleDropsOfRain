@@ -12,11 +12,11 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.adapters.UsersAdapter
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
@@ -46,7 +46,12 @@ class UsersFragment : Fragment(),
         fun newInstance() = UsersFragment()
     }
 
-    private val viewModel: UsersViewModel by viewModels()
+    private val viewModel: UsersViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     var binding: FragmentUsersBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<UsersAdapter>
     private lateinit var mFirestore: FirebaseFirestore
@@ -109,7 +114,7 @@ class UsersFragment : Fragment(),
 
     override fun onResume() {
         super.onResume()
-        updateUI(viewModel.viewState)
+        updateUI(viewModel.viewState.value!!)
     }
 
     private fun updateUI(viewState: UsersViewState) {
@@ -184,7 +189,7 @@ class UsersFragment : Fragment(),
         binding.recyclerview.addItemDecoration(itemDecoration)
 
         if (mQuery == null) {
-            Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
+            Log.w(TAG, "No query, not initializing RecyclerView")
         }
 
         mAdapter =

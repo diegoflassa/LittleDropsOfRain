@@ -1,12 +1,31 @@
 package app.web.diegoflassa_site.littledropsofrain.models
 
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.ui.instagram.InstagramFragment
 
-class InstagramViewModel : ViewModel() {
+class InstagramViewModel(state : SavedStateHandle) : ViewModel() {
 
-    private val mViewState = InstagramViewState().apply {
+    companion object {
+        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+    }
+
+    init {
+        saveState()
+    }
+
+    private val savedStateHandle = state
+    private fun saveState() {
+        // Sets a new value for the object associated to the key.
+        savedStateHandle.set(SAVE_STATE_KEY, mViewState)
+    }
+
+    private var mViewState = MutableLiveData(MyLikedProductsViewState()).apply {
         value?.text = "This is ${InstagramFragment::class.simpleName} Fragment"
     }
-    val viewState = mViewState
+    val viewState: InstagramViewState
+        get() :InstagramViewState {
+            return savedStateHandle.get(SAVE_STATE_KEY)!!
+        }
 }

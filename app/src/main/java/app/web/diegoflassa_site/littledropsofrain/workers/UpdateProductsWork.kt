@@ -38,6 +38,7 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
         // Notification channel ID.
         private const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
         const val KEY_IN_REMOVE_NOT_FOUND = "in_remove_not_found"
+        const val KEY_IN_UNPUBLISH_NOT_FOUND = "unpublish_not_found"
         const val KEY_PROGRESS = "progress"
         const val KEY_PRODUCT = "product"
         const val KEY_PRODUCTS = "products"
@@ -76,6 +77,7 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
         mNotifyManager!!.notify(NOTIFICATION_ID, notification)
 
         val removeNotFound = inputData.getBoolean(KEY_IN_REMOVE_NOT_FOUND, false)
+        val unpublishNotFound = inputData.getBoolean(KEY_IN_UNPUBLISH_NOT_FOUND, true)
 
         var result = Result.success()
         try {
@@ -84,6 +86,7 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
             ProductDao.insertAll(
                 Helper.iluriaProductToProduct(products),
                 removeNotFound,
+                unpublishNotFound,
                 this@UpdateProductsWork,
                 this@UpdateProductsWork
             )

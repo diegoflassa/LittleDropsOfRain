@@ -1,6 +1,7 @@
 package app.web.diegoflassa_site.littledropsofrain.services
 
 import android.app.Service
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.JobIntentService
@@ -8,7 +9,25 @@ import androidx.work.*
 import app.web.diegoflassa_site.littledropsofrain.workers.UpdateProductsWork
 import java.util.concurrent.TimeUnit
 
+
 class SetupProductsUpdateWorkerService : JobIntentService() {
+
+    companion object {
+        const val ACTION_SETUP_WORKER = "ACTION_SETUP_WORKER"
+        private const val JOB_ID = 0
+
+        fun setupWorker(context: Context) {
+            val intent = Intent(context, SetupProductsUpdateWorkerService::class.java)
+            intent.action = ACTION_SETUP_WORKER
+            val comp =
+                ComponentName(
+                    context.packageName,
+                    SetupProductsUpdateWorkerService::class.java.name
+                )
+            intent.component = comp
+            enqueueWork(context, comp, JOB_ID, intent)
+        }
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
@@ -49,16 +68,6 @@ class SetupProductsUpdateWorkerService : JobIntentService() {
             ExistingPeriodicWorkPolicy.REPLACE,
             myWorkRequest
         )
-    }
-
-    companion object {
-        const val ACTION_SETUP_WORKER = "ACTION_SETUP_WORKER"
-
-        fun setupWorker(context: Context) {
-            val intent = Intent(context, SetupProductsUpdateWorkerService::class.java)
-            intent.action = ACTION_SETUP_WORKER
-            context.startService(intent)
-        }
     }
 
 }

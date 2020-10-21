@@ -117,12 +117,12 @@
     <string name="menu_off_air">aus der Luft</string>
     <string name="off_air">aus der Luft</string>
     <string name="configuration_applied">Konfiguration erfolgreich angewendet</string>
+    <string name="configuration_not_applied">Konfiguration nicht angewendet</string>
     <string name="configuration_fetch_failed">Konfigurationsabruf fehlgeschlagen</string>
     <string name="configuration_fetch_successfull">Remote Config Fetch erfolgreich</string>
     <string name="liked">Gefallen</string>
     <string name="label_my_liked_products">Mein gefiel</string>
     <string name="unpublish_not_found_products">Nicht gefundene Produkte nicht veröffentlichen</string>
-    <string name="likes_filter">Gefallen : %1$b</string>
     <string name="likes">Likes</string>
     <string name="menu_all_products">Alle Produkte</string>
     <string name="label_all_products">Alle Produkte</string>
@@ -140,4 +140,13 @@
     <string name="rv_last_seen">Zuletzt gesehen : %1$s</string>
     <string name="is_published">Ist veröffentlicht</string>
     <string name="sorted_by_likes">Sortiert nach Likes</string>
+    <string name="remove_like_from_unpublished_product">Sie werden dergleichen von einem unveröffentlichten Produkt entfernen. Wenn Sie dies tun, können Sie es nicht mehr sehen. Sind Sie sicher, dass Sie es entfernen möchten?</string>
+    <string name="remove_message_confirmation">Sind Sie sicher, dass Sie diese Nachricht löschen möchten?</string>
+    <string name="remove_user_confirmation">Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?</string>
+    <string name="rv_creation_date">Erstellungsdatum: %1$s</string>
+    <string name="no_likes_found">Nein wie gefunden</string>
+    <string name="remove_like_from_user">Sie werden das Like vom Benutzer entfernen: %1$s. Sind Sie sicher, dass Sie es entfernen möchten?</string>
+    <string name="new_message">Neue Nachricht</string>
+    <string name="no_selection">Keine Auswahl</string>
+    <string name="none">Keiner</string>
 </resources>

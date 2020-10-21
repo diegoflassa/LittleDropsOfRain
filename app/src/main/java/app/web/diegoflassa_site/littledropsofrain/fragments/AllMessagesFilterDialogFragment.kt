@@ -10,6 +10,7 @@ import android.widget.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
@@ -45,7 +46,12 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
     private lateinit var mSpinnerSort: Spinner
     private lateinit var mSpinnerType: Spinner
     var filterListener: FilterListener? = null
-    val viewModel: AllMessagesFilterDialogViewModel by viewModels()
+    val viewModel: AllMessagesFilterDialogViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     var binding: FragmentAllMessagesFiltersBinding by viewLifecycle()
     private var mSavedInstanceState: Bundle? = null
     private var mRootView: View? = null
@@ -215,8 +221,8 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
     override fun onUsersLoaded(users: List<User>) {
         val usersWithDefault = ArrayList<User>(users.size + 1)
         val user = User()
-        user.name = "No Selection"
-        user.email = "None"
+        user.name = getString(R.string.no_selection)
+        user.email = getString(R.string.none)
         usersWithDefault.add(user)
         usersWithDefault.addAll(users)
         val dataAdapter: ArrayAdapter<User> = ArrayAdapter(
@@ -226,7 +232,7 @@ open class AllMessagesFilterDialogFragment : DialogFragment(),
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerUsers.adapter = dataAdapter
         binding.spinnerUsers.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
                 filters.emailSender = (binding.spinnerUsers.adapter.getItem(pos) as User).email
                 viewModel.viewState.selectedUserEmail = filters.emailSender.toString()
             }

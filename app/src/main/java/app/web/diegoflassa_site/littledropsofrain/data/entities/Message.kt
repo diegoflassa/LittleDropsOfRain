@@ -6,6 +6,7 @@ import androidx.annotation.Keep
 import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -34,11 +35,19 @@ data class Message(
     var sender: String? = LoggedUser.userLiveData.value!!.name,
     var senderId: String? = LoggedUser.userLiveData.value!!.uid,
     var message: String? = null,
-    var type: String? = MessageType.UNKNOWN.toString(),
+    var _type: String? = MessageType.UNKNOWN.toString(),
     @ServerTimestamp
     var creationDate: Timestamp? = Timestamp.now(),
-    var read: Boolean? = false
+    var read: Boolean? = false,
+    var fetched: Boolean? = false,
 ) : Parcelable {
+
+    @IgnoredOnParcel
+    var type = _type
+        set(value) {
+            fetched = (value != MessageType.MESSAGE.toString())
+            field = value
+        }
 
     companion object {
         const val UID = "uid"
@@ -53,6 +62,7 @@ data class Message(
         const val TYPE = "type"
         const val CREATION_DATE = "creationDate"
         const val READ = "read"
+        const val FETCHED = "fetched"
     }
 
     constructor(map: Map<String, Any>) : this() {
@@ -73,6 +83,7 @@ data class Message(
         result[TYPE] = type
         result[CREATION_DATE] = creationDate
         result[READ] = read
+        result[FETCHED] = fetched
         return result
     }
 
@@ -86,9 +97,10 @@ data class Message(
         sender = map[SENDER] as String?
         senderId = map[SENDER_ID] as String?
         message = map[MESSAGE] as String?
-        type = map[TYPE] as String?
+        _type = map[TYPE] as String?
         creationDate = map[CREATION_DATE] as Timestamp?
         read = map[READ] as Boolean?
+        fetched = map[FETCHED] as Boolean?
     }
 
     fun getImageUrlAsUri(): Uri {

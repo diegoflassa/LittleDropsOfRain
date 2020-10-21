@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemProductBinding
-import app.web.diegoflassa_site.littledropsofrain.dialogs.LikesDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.ui.all_products.AllProductsFragment
+import app.web.diegoflassa_site.littledropsofrain.ui.all_products.AllProductsFragmentDirections
 import com.google.android.material.chip.Chip
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
@@ -88,21 +89,27 @@ open class AllProductsAdapter(
             binding.price.text = resources.getString(R.string.rv_price, priceStr)
             val heartIcon =
                 IconDrawable(allProductsFragment.requireContext(), SimpleLineIconsIcons.icon_heart)
-            if(product.likes.size>0) {
-                heartIcon.setTint(Color.RED)
-                heartIcon.
-            }
-            binding.imgVwLike.setImageDrawable(heartIcon)
-            binding.imgVwLike.setOnClickListener {
+            if (product.likes.size > 0) {
+                heartIcon.color(Color.RED)
+                binding.imgVwLike.setOnClickListener {
+                    allProductsFragment.findNavController().navigate(
+                        AllProductsFragmentDirections.actionNavAllProductsToLikesDialogFragment(
+                            product
+                        )
+                    )
+                    /*
                 LikesDialogFragment(product).show(
                     allProductsFragment.requireActivity().supportFragmentManager,
                     LikesDialogFragment.TAG
                 )
+                */
+                }
             }
-            binding.swtchIsPublished.isChecked = product.isPublished
-            binding.swtchIsPublished.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
+            binding.imgVwLike.setImageDrawable(heartIcon)
+            binding.switchIsPublished.isChecked = product.isPublished
+            binding.switchIsPublished.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
                 product.isPublished = checked
-                ioScope.launch{
+                ioScope.launch {
                     ProductDao.update(product)
                 }
             }

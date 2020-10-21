@@ -32,6 +32,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.Source
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.preferences.MyOnSharedPreferenceChangeListener
 import app.web.diegoflassa_site.littledropsofrain.receivers.NotificationReceiver
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.okhttp.OkHttpClient
@@ -62,12 +63,16 @@ class Helper {
         }
 
         fun firebaseUserToUser(user: FirebaseUser): User {
-            val userFb = User()
-            userFb.uid = user.uid
-            userFb.name = user.displayName
-            userFb.email = user.email
-            userFb.imageUrl = user.photoUrl.toString()
-            return userFb
+            val userFromFb = User()
+            userFromFb.uid = user.uid
+            userFromFb.name = user.displayName
+            userFromFb.email = user.email
+            userFromFb.imageUrl = user.photoUrl.toString()
+            if(FirebaseAuth.getInstance().currentUser!!.providerData.size>1) {
+                userFromFb.providerId =
+                    FirebaseAuth.getInstance().currentUser!!.providerData[1].providerId
+            }
+            return userFromFb
         }
 
         fun iluriaProductToProduct(iluriaProducts: List<IluriaProduct>): List<Product> {
@@ -137,6 +142,21 @@ class Helper {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+
+        /**
+         * Create and show a simple notification containing the received FCM message.
+         *
+         * @param title Title of the message to be sent
+         * @param body Body of the message to be sent
+         */
+        fun showNotification(
+            context: Context,
+            title: String,
+            body: String,
+            canSave: Boolean = true
+        ) {
+            showNotification(context, null, null, title, body, canSave)
         }
 
         /**
@@ -248,7 +268,6 @@ class Helper {
                         notificationBuilder.setLargeIcon(imageNotif)
                     }
                     job.join()
-
                 }
             }
 
@@ -283,11 +302,14 @@ class Helper {
             requestPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
         }
 
+        fun requestGetCoarseLocationPermission(activity: Activity) {
+            requestPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
+        }
+
         private fun requestPermission(activity: Activity, permission: String) {
             if (checkSelfPermission(activity, permission)
                 != PackageManager.PERMISSION_GRANTED
             ) {
-
                 // Should we show an explanation?
                 if (shouldShowRequestPermissionRationale(activity, permission)) {
                     // Explain to the user why we need to read the contacts
@@ -422,5 +444,6 @@ class Helper {
             }
             return ret
         }
+
     }
 }

@@ -18,9 +18,9 @@ import androidx.core.text.HtmlCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.adapters.MyLikedProductsAdapter
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
@@ -50,7 +50,7 @@ class MyLikedProductsFragment : Fragment(), ActivityResultCallback<Int>,
     DialogInterface.OnDismissListener,
     MyLikedProductsAdapter.OnProductSelectedListener {
 
-    private val viewModel: MyLikedProductsViewModel by viewModels()
+    private val viewModel: MyLikedProductsViewModel by viewModels(factoryProducer ={ SavedStateViewModelFactory(this.requireActivity().application, this) })
     var binding: FragmentMyLikedProductsBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<MyLikedProductsAdapter>
     private lateinit var mFirestore: FirebaseFirestore
@@ -59,7 +59,7 @@ class MyLikedProductsFragment : Fragment(), ActivityResultCallback<Int>,
     private var mQuery: Query? = null
 
     companion object {
-        val TAG = MyLikedProductsFragment::class.simpleName
+        private val TAG = MyLikedProductsFragment::class.simpleName
         const val LIMIT = 10000
         fun newInstance() = MyLikedProductsFragment()
     }
@@ -97,6 +97,8 @@ class MyLikedProductsFragment : Fragment(), ActivityResultCallback<Int>,
         showLoadingScreen()
         initFirestore()
         initRecyclerView()
+        onFilter(viewModel.viewState.filters)
+        mAdapter.get()!!.startListening()
 
         binding.filterBar.isEnabled = false
 
@@ -152,7 +154,7 @@ class MyLikedProductsFragment : Fragment(), ActivityResultCallback<Int>,
 
         // Construct query basic query
         var query: Query = mFirestore.collection(ProductDao.COLLECTION_PATH)
-        query.whereArrayContains(Product.LIKES, LoggedUser.userLiveData.value?.uid!!)
+        query.whereArrayContainsAny(Product.LIKES, listOf(LoggedUser.userLiveData.value?.uid!!))
 
         // Category (equality filter)
         if (filters.hasCategory()) {
@@ -161,8 +163,8 @@ class MyLikedProductsFragment : Fragment(), ActivityResultCallback<Int>,
 
         // Price (equality filter)
         if (filters.hasPrice()) {
-            val price0 = filters.price?.get(0)
-            val price1 = filters.price?.get(1)
+            val price0 = filters.price?.first
+            val price1 = filters.price?.second
             query = query.whereGreaterThanOrEqualTo(Product.PRICE, Integer.valueOf(price0!!))
                 .whereLessThanOrEqualTo(Product.PRICE, Integer.valueOf(price1!!))
         }
@@ -220,7 +222,7 @@ class MyLikedProductsFragment : Fragment(), ActivityResultCallback<Int>,
         binding.recyclerview.addItemDecoration(itemDecoration)
 
         if (mQuery == null) {
-            Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
+            Log.w(TAG, "No query, not initializing RecyclerView")
         }
 
         mAdapter =

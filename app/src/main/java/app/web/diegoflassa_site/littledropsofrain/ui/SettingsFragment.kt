@@ -26,7 +26,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     companion object {
         const val LOGGED_USER_EMAIL_KEY = "LOGGED_USER_EMAIL_KEY"
         const val SUBSCRIBED_LANGUAGE_KEY = "SUBSCRIBED_LANGUAGE_KEY"
-        val TAG = SettingsFragment::class.simpleName
+        private val TAG = SettingsFragment::class.simpleName
         fun newInstance(): Fragment {
             return SettingsFragment()
         }

@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -37,6 +38,7 @@ import app.web.diegoflassa_site.littledropsofrain.interfaces.OnKeyLongPressListe
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnUserFoundListener
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.MainActivityViewState
+import app.web.diegoflassa_site.littledropsofrain.services.NewMessagesService
 import app.web.diegoflassa_site.littledropsofrain.services.SetupProductsUpdateWorkerService
 import app.web.diegoflassa_site.littledropsofrain.ui.SettingsFragment
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
@@ -60,10 +62,15 @@ class MainActivity : AppCompatActivity(),
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     companion object {
-        val TAG = MainActivity::class.simpleName
+        private val TAG = MainActivity::class.simpleName
     }
 
-    private val viewModel: MainActivityViewModel by viewModels()
+    private val viewModel: MainActivityViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.application,
+            this
+        )
+    })
     private lateinit var fab: FloatingActionButton
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
@@ -450,12 +457,18 @@ class MainActivity : AppCompatActivity(),
     override fun onUserFound(user: User?) {
         when {
             user != null -> {
+                if (FirebaseAuth.getInstance().currentUser!!.providerData.size > 1) {
+                    user.providerId =
+                        FirebaseAuth.getInstance().currentUser!!.providerData[1].providerId
+                }
                 user.lastSeen = Timestamp.now()
                 UserDao.update(user)
                 if (user.isAdmin) {
                     Helper.requestReadExternalStoragePermission(this)
                     SetupProductsUpdateWorkerService.setupWorker(applicationContext)
+                    NewMessagesService.setupListener(applicationContext)
                 }
+                Helper.requestGetCoarseLocationPermission(this)
                 LoggedUser.userLiveData.value = user
                 Toast.makeText(
                     applicationContext, getString(
@@ -465,9 +478,9 @@ class MainActivity : AppCompatActivity(),
                 ).show()
             }
             FirebaseAuth.getInstance().currentUser != null -> {
-                val userFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
-                UserDao.insert(userFb)
-                LoggedUser.userLiveData.value = userFb
+                val userFromFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
+                UserDao.insert(userFromFb)
+                LoggedUser.userLiveData.value = userFromFb
                 findNavController(R.id.nav_host_fragment).navigate(
                     MainActivityDirections.actionGlobalUserProfileFragment()
                 )

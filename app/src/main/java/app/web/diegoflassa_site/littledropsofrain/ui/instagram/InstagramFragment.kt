@@ -14,6 +14,7 @@ import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentInstagramBinding
@@ -34,7 +35,12 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
     }
 
     private var isStopped: Boolean = false
-    private val viewModel: InstagramViewModel by viewModels()
+    private val viewModel: InstagramViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     private var binding: FragmentInstagramBinding by viewLifecycle()
     private var url = ""
 

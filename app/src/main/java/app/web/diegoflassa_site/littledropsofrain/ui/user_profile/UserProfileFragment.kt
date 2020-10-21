@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -42,7 +43,12 @@ class UserProfileFragment : Fragment(), OnFileUploadedListener,
     }
 
     private lateinit var toggle: ActionBarDrawerToggle
-    private val viewModel: UserProfileViewModel by viewModels()
+    private val viewModel: UserProfileViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     private var binding: FragmentUserProfileBinding by viewLifecycle()
     private lateinit var getContentLauncher: ActivityResultLauncher<String>
     private lateinit var cropImageLauncher: ActivityResultLauncher<Pair<Uri, Pair<Float, Float>>>

@@ -9,9 +9,9 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.adapters.LikesDialogAdapter
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
@@ -26,7 +26,10 @@ import com.google.firebase.firestore.Query
 import com.squareup.picasso.Picasso
 import java.lang.ref.WeakReference
 
-class LikesDialogFragment(var product: Product) : DialogFragment() {
+
+class LikesDialogFragment(var product : Product?) : DialogFragment() {
+
+    constructor() : this(null)
 
     companion object {
         val TAG = LikesDialogFragment::class.simpleName
@@ -36,6 +39,7 @@ class LikesDialogFragment(var product: Product) : DialogFragment() {
     private lateinit var mFirestore: FirebaseFirestore
     private lateinit var mAdapter: WeakReference<LikesDialogAdapter>
     private var mQuery: Query? = null
+    private val args: LikesDialogFragmentArgs by navArgs()
 
     /** The system calls this only when creating the layout in a dialog.  */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -57,12 +61,25 @@ class LikesDialogFragment(var product: Product) : DialogFragment() {
         binding.btnClose.setOnClickListener {
             dismiss()
         }
-        Picasso.get().load(product.imageUrl).placeholder(R.drawable.image_placeholder)
+        product = args.product
+        Picasso.get().load(product!!.imageUrl).placeholder(R.drawable.image_placeholder)
             .into(binding.imgVwProduct)
         showLoadingScreen()
         initFirestore()
+        initQuery()
         initRecyclerView()
+        mAdapter.get()?.setQuery(createQuery(product!!.likes))
+        mAdapter.get()!!.startListening()
         return binding.root
+    }
+
+    override fun onStop() {
+        mAdapter.get()!!.stopListening()
+        super.onStop()
+    }
+
+    private fun initQuery() {
+        mQuery = createQuery(product!!.likes)
     }
 
     private fun initFirestore() {
@@ -80,12 +97,12 @@ class LikesDialogFragment(var product: Product) : DialogFragment() {
         binding.rcVwLikes.addItemDecoration(itemDecoration)
 
         if (mQuery == null) {
-            Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
+            Log.w(TAG, "No query, not initializing RecyclerView")
         }
 
         mAdapter =
-            WeakReference(object :
-                LikesDialogAdapter(this@LikesDialogFragment, createQuery(product.likes), product) {
+            WeakReference<LikesDialogAdapter>(object :
+                LikesDialogAdapter(this@LikesDialogFragment, mQuery, product!!) {
                 override fun onDataChanged() {
                     hideLoadingScreen()
                     // Show/hide content if the query returns empty.

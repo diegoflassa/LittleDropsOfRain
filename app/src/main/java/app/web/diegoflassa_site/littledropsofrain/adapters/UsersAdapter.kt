@@ -1,5 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.adapters
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -51,7 +52,7 @@ open class UsersAdapter(
     ): ViewHolder {
         val binding =
             RecyclerviewItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding.root)
+        return ViewHolder(binding.root, mUsersFragment)
     }
 
     override fun onBindViewHolder(
@@ -73,11 +74,11 @@ open class UsersAdapter(
         holder.binding.userIsAdmin.setOnCheckedChangeListener(mOnCheckChangeListener)
     }
 
-    class ViewHolder(itemView: View) :
+    class ViewHolder(itemView: View, usersFragment: UsersFragment) :
         RecyclerView.ViewHolder(itemView) {
         val binding = RecyclerviewItemUserBinding.bind(itemView)
         private val ioScope = CoroutineScope(Dispatchers.IO)
-
+        private val mUsersFragment: UsersFragment = usersFragment
         fun bind(
             snapshot: DocumentSnapshot,
             listener: OnUserSelectedListener?
@@ -92,15 +93,29 @@ open class UsersAdapter(
             binding.userName.text = resources.getString(R.string.rv_user_name, user?.name)
             binding.userEmail.text = resources.getString(R.string.rv_user_email, user?.email)
             val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
+            binding.userCreationDate.text = resources.getString(
+                R.string.rv_creation_date, formatter.format(user?.creationDate!!.toDate())
+            )
             binding.userLastSeen.text = resources.getString(
-                R.string.rv_last_seen, formatter.format(user?.lastSeen)
+                R.string.rv_last_seen, formatter.format(user.lastSeen!!.toDate())
             )
             binding.userIsAdmin.text = resources.getString(R.string.rv_user_is_admin)
-            binding.userIsAdmin.isChecked = user?.isAdmin!!
+            binding.userIsAdmin.isChecked = user.isAdmin
             binding.btnDeleteUser.setOnClickListener {
-                ioScope.launch {
-                    UserDao.delete(user)
-                }
+                val builder = AlertDialog.Builder(mUsersFragment.requireContext())
+                builder.setMessage(mUsersFragment.getString(R.string.remove_user_confirmation))
+                    .setCancelable(false)
+                    .setPositiveButton(mUsersFragment.getString(R.string.yes)) { _, _ ->
+                        ioScope.launch {
+                            UserDao.delete(user)
+                        }
+                    }
+                    .setNegativeButton(mUsersFragment.getString(R.string.no)) { dialog, _ ->
+                        // Dismiss the dialog
+                        dialog.dismiss()
+                    }
+                val alert = builder.create()
+                alert.show()
             }
 
             binding.btnReplyUser.isEnabled =

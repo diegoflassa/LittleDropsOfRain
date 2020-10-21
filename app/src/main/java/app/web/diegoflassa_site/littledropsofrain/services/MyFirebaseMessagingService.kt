@@ -142,6 +142,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         val messageToSave = Message()
+        messageToSave.fetched = true
         messageToSave.type = MessageType.NOTIFICATION.toString()
         messageToSave.owners.add(LoggedUser.userLiveData.value?.email!!)
         messageToSave.imageUrl = imageUri?.toString()

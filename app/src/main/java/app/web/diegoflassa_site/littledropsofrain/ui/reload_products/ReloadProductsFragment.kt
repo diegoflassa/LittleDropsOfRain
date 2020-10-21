@@ -15,6 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import androidx.work.*
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -37,7 +38,12 @@ class ReloadProductsFragment : Fragment() {
     private var wasShowed: Boolean = false
     private lateinit var observer: Observer<WorkInfo>
     private var isStopped: Boolean = false
-    private val viewModel: ReloadProductsViewModel by viewModels()
+    private val viewModel: ReloadProductsViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     var binding: FragmentReloadProductsBinding by viewLifecycle()
     private lateinit var toggle: ActionBarDrawerToggle
 
@@ -57,6 +63,10 @@ class ReloadProductsFragment : Fragment() {
         })
         binding.mlTxtVwProgress.movementMethod = ScrollingMovementMethod()
         binding.chkbxRemoveNotFoundProducts.isChecked = false
+        binding.chkbxRemoveNotFoundProducts.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
+            viewModel.viewState.unpublishNotFoundProducts = checked
+        }
+        binding.chkbxUnpublishNotFoundProducts.isChecked = true
         binding.chkbxRemoveNotFoundProducts.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             viewModel.viewState.removeNotFoundProducts = checked
         }
@@ -189,6 +199,12 @@ class ReloadProductsFragment : Fragment() {
         super.onStop()
     }
 
+    override fun onPause() {
+        super.onPause()
+        isStopped = false
+        updateUI(viewModel.viewState)
+    }
+
     override fun onResume() {
         super.onResume()
         isStopped = false
@@ -211,6 +227,8 @@ class ReloadProductsFragment : Fragment() {
                 binding.mlTxtVwProgress.text = viewModel.viewState.progress.toString()
                 binding.mlTxtVwProgress.invalidate()
                 binding.chkbxRemoveNotFoundProducts.isChecked = viewState.removeNotFoundProducts
+                binding.chkbxUnpublishNotFoundProducts.isChecked =
+                    viewState.unpublishNotFoundProducts
                 binding.mlTxtVwProgress.post {
                     val scrollAmount =
                         binding.mlTxtVwProgress.layout.getLineTop(binding.mlTxtVwProgress.lineCount) - binding.mlTxtVwProgress.height
@@ -238,7 +256,10 @@ class ReloadProductsFragment : Fragment() {
             .setRequiresBatteryNotLow(true)
             .build()
         val removeNotFound =
-            workDataOf(UpdateProductsWork.KEY_IN_REMOVE_NOT_FOUND to viewModel.viewState.removeNotFoundProducts)
+            workDataOf(
+                UpdateProductsWork.KEY_IN_REMOVE_NOT_FOUND to viewModel.viewState.removeNotFoundProducts,
+                UpdateProductsWork.KEY_IN_UNPUBLISH_NOT_FOUND to viewModel.viewState.unpublishNotFoundProducts
+            )
         return OneTimeWorkRequest.Builder(UpdateProductsWork::class.java)
             .setConstraints(constraints)
             .setInputData(removeNotFound)

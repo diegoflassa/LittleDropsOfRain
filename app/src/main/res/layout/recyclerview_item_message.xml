@@ -109,11 +109,11 @@
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:text="@string/msg_read"
+            android:theme="@style/ColorSwitchStyle"
             app:layout_constraintBottom_toTopOf="@+id/btn_reply"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/msg_message"
-            app:theme="@style/ColorSwitchStyle" />
+            app:layout_constraintTop_toBottomOf="@+id/msg_message" />
 
         <ImageButton
             android:id="@+id/btn_view_as_notification"

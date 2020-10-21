@@ -7,7 +7,7 @@ import java.util.*
 
 
 @Keep
-@Suppress("unused")
+@Suppress("UNUSED")
 enum class Source(private val source: String) {
     ILURIA("iluria"),
     ETSY("etsy"),
@@ -29,6 +29,7 @@ data class Product(
     var title: String? = null,
     var price: Int? = null,
     @field:JvmField var isPublished: Boolean = false,
+    @field:JvmField var isPublishedSource: String? = null,
     var installment: String? = null,
     var disponibility: String? = null,
     var imageUrl: String? = null,
@@ -45,11 +46,13 @@ data class Product(
         private const val TITLE = "title"
         const val PRICE = "price"
         const val IS_PUBLISHED = "isPublished"
+        // Compound key, used in the queries
+        const val IS_PUBLISHED_SOURCE = "isPublishedSource"
         private const val INSTALLMENT = "installment"
         private const val DISPONIBILITY = "disponibility"
         private const val IMAGE_URL = "imageUrl"
         const val LIKES = "likes"
-        private const val SOURCE = "source"
+        const val SOURCE = "source"
         const val CATEGORIES: String = "categories"
     }
 
@@ -66,6 +69,7 @@ data class Product(
         result[TITLE] = title
         result[PRICE] = price
         result[IS_PUBLISHED] = isPublished
+        result[IS_PUBLISHED_SOURCE] = (isPublished.toString() + "_" + source)
         result[INSTALLMENT] = installment
         result[DISPONIBILITY] = disponibility
         result[IMAGE_URL] = imageUrl
@@ -83,6 +87,7 @@ data class Product(
         title = map[TITLE] as String?
         price = map[PRICE] as Int?
         isPublished = map[IS_PUBLISHED] as Boolean
+        isPublishedSource = map[IS_PUBLISHED_SOURCE] as String
         installment = map[INSTALLMENT] as String?
         disponibility = map[DISPONIBILITY] as String?
         imageUrl = map[IMAGE_URL] as String?

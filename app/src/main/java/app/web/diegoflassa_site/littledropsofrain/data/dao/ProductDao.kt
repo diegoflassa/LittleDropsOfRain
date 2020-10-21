@@ -183,6 +183,7 @@ object ProductDao {
     fun insertAll(
         products: List<Product>,
         removeNotFoundInFirebase: Boolean = false,
+        unpublishNotFoundInFirebase: Boolean = true,
         listener: OnProductInsertedListener? = null,
         finishListener: OnTaskFinishedListener<List<Product>>? = null
     ) {
@@ -263,7 +264,7 @@ object ProductDao {
                                     if (removeNotFoundInFirebase) {
                                         delete(product)
                                         removeBlob(product)
-                                    } else {
+                                    } else if (unpublishNotFoundInFirebase) {
                                         product.isPublished = false
                                         update(product)
                                     }

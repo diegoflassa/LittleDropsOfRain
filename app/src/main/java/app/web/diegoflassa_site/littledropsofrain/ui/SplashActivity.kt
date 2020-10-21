@@ -9,7 +9,10 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.helpers.IntentHelper
 import app.web.diegoflassa_site.littledropsofrain.helpers.UriToIntentMapper
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.ktx.remoteConfig
+import java.util.concurrent.TimeUnit
+
 
 class SplashActivity : AppCompatActivity() {
 
@@ -33,31 +36,51 @@ class SplashActivity : AppCompatActivity() {
             }
         } finally {
             // Always finish the activity so that it doesn't stay in our history
+            finish()
         }
     }
 
     private fun fetchRemoteConfig() {
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-        remoteConfig.fetchAndActivate().addOnCompleteListener {
+        val configSettings =
+            FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(if (BuildConfig.DEBUG) 0 else TimeUnit.HOURS.toSeconds(12)).build()
+        remoteConfig.setConfigSettingsAsync(configSettings).addOnCompleteListener {
             if (it.isSuccessful) {
-                val updated: Boolean = it.result
                 Log.d(
                     TAG,
-                    "fetchRemoteConfig ${getString(R.string.configuration_fetch_successfull)}. Update is $updated"
+                    "Config applied successfully"
                 )
-                Toast.makeText(
-                    this, getString(R.string.configuration_fetch_successfull),
-                    Toast.LENGTH_SHORT
-                ).show()
-                finish()
+                remoteConfig.fetchAndActivate()
+                    .addOnCompleteListener { taskFetchAndActivate ->
+                        if (taskFetchAndActivate.isSuccessful) {
+                            Log.d(
+                                TAG,
+                                "fetchRemoteConfig ${getString(R.string.configuration_fetch_successfull)}"
+                            )
+                            Toast.makeText(
+                                this, getString(R.string.configuration_fetch_successfull),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            val updated: Boolean = taskFetchAndActivate.result
+                            Log.d(TAG, "Activation successfull. Update value is $updated")
+                        } else {
+                            taskFetchAndActivate.exception?.printStackTrace()
+                            Log.d(
+                                TAG,
+                                "fetchRemoteConfig ${getString(R.string.configuration_fetch_failed)}. Error was ${taskFetchAndActivate.exception.toString()}"
+                            )
+                            Toast.makeText(
+                                this, getString(R.string.configuration_fetch_failed),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
             } else {
-                Log.d(TAG, "fetchRemoteConfig ${getString(R.string.configuration_fetch_failed)}")
-                Toast.makeText(
-                    this, getString(R.string.configuration_fetch_failed),
-                    Toast.LENGTH_SHORT
-                ).show()
-                finish()
+                Log.d(
+                    TAG,
+                    "Error applying config"
+                )
             }
         }
     }

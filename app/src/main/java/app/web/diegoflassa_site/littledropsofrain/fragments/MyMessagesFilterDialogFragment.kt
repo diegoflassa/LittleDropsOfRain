@@ -10,12 +10,15 @@ import android.widget.CompoundButton
 import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMyMessagesFiltersBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
+import app.web.diegoflassa_site.littledropsofrain.models.MyMessagesFilterDialogViewModel
 import com.google.firebase.firestore.Query
 import java.util.*
 
@@ -33,6 +36,12 @@ open class MyMessagesFilterDialogFragment : DialogFragment(),
         fun onFilter(filters: MyMessagesFilters)
     }
 
+    val viewModel: MyMessagesFilterDialogViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     private lateinit var mSpinnerSort: Spinner
     private lateinit var mSpinnerType: Spinner
     var filterListener: FilterListener? = null

@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentOffAirBinding
@@ -19,7 +20,6 @@ import app.web.diegoflassa_site.littledropsofrain.models.OffAirViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.OffAirViewState
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
@@ -35,7 +35,12 @@ class OffAirFragment : Fragment() {
 
     private var toggle: ActionBarDrawerToggle? = null
     private var isStopped: Boolean = false
-    private val viewModel: OffAirViewModel by viewModels()
+    private val viewModel: OffAirViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     private var binding: FragmentOffAirBinding by viewLifecycle()
 
     override fun onCreateView(
@@ -45,9 +50,17 @@ class OffAirFragment : Fragment() {
     ): View? {
         binding = FragmentOffAirBinding.inflate(inflater, container, false)
         val remoteConfig = Firebase.remoteConfig
-
-        binding.edtTxtMlOffAirMessageEn.setText(remoteConfig[REMOTE_CONFIG_OFF_AIR_MESSAGE_EN].asString())
-        binding.edtTxtMlOffAirMessagePt.setText(remoteConfig[REMOTE_CONFIG_OFF_AIR_MESSAGE_PT].asString())
+        remoteConfig.activate()
+        binding.edtTxtMlOffAirMessageEn.setText(
+            remoteConfig.getString(
+                REMOTE_CONFIG_OFF_AIR_MESSAGE_EN
+            )
+        )
+        binding.edtTxtMlOffAirMessagePt.setText(
+            remoteConfig.getString(
+                REMOTE_CONFIG_OFF_AIR_MESSAGE_PT
+            )
+        )
         binding.fabOffAir.setOnClickListener {
             val configSettings = remoteConfigSettings {
                 REMOTE_CONFIG_OFF_AIR_MESSAGE_EN = binding.edtTxtMlOffAirMessageEn.text.toString()
@@ -58,6 +71,11 @@ class OffAirFragment : Fragment() {
                 if (it.isSuccessful) {
                     Toast.makeText(
                         requireContext(), getString(R.string.configuration_applied),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(), getString(R.string.configuration_not_applied),
                         Toast.LENGTH_SHORT
                     ).show()
                 }

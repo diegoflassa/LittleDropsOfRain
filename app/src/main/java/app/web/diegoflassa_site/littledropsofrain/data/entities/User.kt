@@ -14,6 +14,7 @@ data class User(
     var imageUrl: String? = null,
     var email: String? = null,
     var name: String? = null,
+    var providerId: String? = null,
     var uid: String? = null,
     @field:JvmField var isAdmin: Boolean = false,
     @ServerTimestamp
@@ -28,6 +29,7 @@ data class User(
         private const val IMAGE_URL = "imageUrl"
         private const val EMAIL = "email"
         private const val NAME = "name"
+        private const val PROVIDER_ID = "providerId"
         private const val IS_ADMIN = "isAdmin"
         private const val CREATION_DATE = "creationDate"
         private const val LAST_SEEN = "lastSeen"
@@ -74,9 +76,10 @@ data class User(
         result[IMAGE_URL] = imageUrl
         result[EMAIL] = email
         result[NAME] = name
+        result[PROVIDER_ID] = providerId
         result[IS_ADMIN] = isAdmin
         result[CREATION_DATE] = creationDate
-        result[LAST_SEEN] = creationDate
+        result[LAST_SEEN] = lastSeen
         return result
     }
 
@@ -85,6 +88,7 @@ data class User(
         imageUrl = map[IMAGE_URL] as String?
         email = map[EMAIL] as String?
         name = map[NAME] as String?
+        providerId = map[PROVIDER_ID] as String?
         isAdmin = map[IS_ADMIN] as Boolean
         creationDate = map[CREATION_DATE] as Timestamp?
         lastSeen = map[LAST_SEEN] as Timestamp?

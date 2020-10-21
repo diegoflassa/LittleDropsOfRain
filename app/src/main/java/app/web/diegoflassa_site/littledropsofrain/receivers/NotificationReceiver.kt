@@ -28,6 +28,7 @@ class NotificationReceiver : BroadcastReceiver() {
             val message = intent.extras?.getString(EXTRA_MESSAGE)
 
             val messageToSave = Message()
+            messageToSave.fetched = true
             messageToSave.type = MessageType.NOTIFICATION.toString()
             messageToSave.owners.add(LoggedUser.userLiveData.value?.email!!)
             messageToSave.imageUrl = imageUri?.toString()

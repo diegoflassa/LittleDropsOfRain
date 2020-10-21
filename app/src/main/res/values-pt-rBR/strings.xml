@@ -117,12 +117,12 @@
     <string name="menu_off_air">Fora do ar</string>
     <string name="off_air">Fora do ar</string>
     <string name="configuration_applied">Configurações aplicadas com sucesso</string>
+    <string name="configuration_not_applied">Configurações não aplicadas</string>
     <string name="configuration_fetch_failed">Falha ao buscar configurações</string>
     <string name="configuration_fetch_successfull">Busca de configuração remota com sucesso</string>
     <string name="liked">Liked</string>
     <string name="label_my_liked_products">Meus Likes</string>
     <string name="unpublish_not_found_products">Cancelar a publicação de produtos não encontrados</string>
-    <string name="likes_filter">Likes : %1$b</string>
     <string name="likes">Likes</string>
     <string name="menu_all_products">Todos os Produtos</string>
     <string name="label_all_products">Todos os Produtos</string>
@@ -140,4 +140,13 @@
     <string name="rv_last_seen">Última vez visto : %1$s</string>
     <string name="is_published">Publicado</string>
     <string name="sorted_by_likes">Ordenado por Likes</string>
+    <string name="remove_like_from_unpublished_product">Você vai remover o Like de um produto não publicado. Fazer isso impedirá que você o veja novamente. Tem certeza que deseja removê-lo?</string>
+    <string name="remove_message_confirmation">Tem certeza de que deseja excluir esta mensagem?</string>
+    <string name="remove_user_confirmation">Tem certeza de que deseja excluir este usuário?</string>
+    <string name="rv_creation_date">Data de Criação: %1$s</string>
+    <string name="no_likes_found">Nenhum Like encontrado</string>
+    <string name="remove_like_from_user">Você irá remover o Like do usuário: %1$s. Tem certeza que deseja removê-lo?</string>
+    <string name="new_message">Nova Mensagem</string>
+    <string name="no_selection">Sem seleção</string>
+    <string name="none">Nenhum</string>
 </resources>

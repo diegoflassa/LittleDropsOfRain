@@ -7,6 +7,7 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.ActionCodeSettings
 
+
 class AuthActivityResultContract : ActivityResultContract<String?, Int>() {
 
     override fun createIntent(context: Context, input: String?): Intent {
@@ -28,12 +29,19 @@ class AuthActivityResultContract : ActivityResultContract<String?, Int>() {
             .setUrl(context.getString(R.string.dynamic_link_url)) // This URL needs to be whitelisted
             .build()
 
+        val scopesGithub: List<String> = object : ArrayList<String>() {
+            init {
+                add("read:user")
+                add("user:email")
+            }
+        }
+
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().enableEmailLinkSignIn()
                 .setActionCodeSettings(actionCodeSettings).build(),
             AuthUI.IdpConfig.GoogleBuilder().build(),
-            //AuthUI.IdpConfig.TwitterBuilder().build(),
-            //AuthUI.IdpConfig.GitHubBuilder().build()
+            AuthUI.IdpConfig.TwitterBuilder().build(),
+            AuthUI.IdpConfig.GitHubBuilder().setScopes(scopesGithub).build()
         )
         val builder = AuthUI.getInstance()
             .createSignInIntentBuilder()

@@ -1,5 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.adapters
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,9 @@ import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.DecimalFormatSymbols
 
 open class MyLikedProductsAdapter(
@@ -52,6 +56,7 @@ open class MyLikedProductsAdapter(
     class ViewHolder(private var myLikedProductsFragment: MyLikedProductsFragment, itemView: View) :
         RecyclerView.ViewHolder(itemView), CompoundButton.OnCheckedChangeListener {
         val binding = RecyclerviewItemProductBinding.bind(itemView)
+        private val ioScope = CoroutineScope(Dispatchers.IO)
         fun bind(
             snapshot: DocumentSnapshot,
             listener: OnProductSelectedListener?
@@ -84,10 +89,42 @@ open class MyLikedProductsAdapter(
             binding.price.text = resources.getString(R.string.rv_price, priceStr)
             val heartIcon = IconDrawable(myLikedProductsFragment.requireContext(), SimpleLineIconsIcons.icon_heart)
             if(product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
-                heartIcon.setTint(Color.RED)
+                heartIcon.color(Color.RED)
             }
             binding.imgVwLike.setImageDrawable(heartIcon)
-            ProductDao.update(product)
+            binding.imgVwLike.setOnClickListener {
+                if (product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
+                    if(!product.isPublished) {
+                        val builder = AlertDialog.Builder(myLikedProductsFragment.requireContext())
+                        builder.setMessage(myLikedProductsFragment.getString(R.string.remove_like_from_unpublished_product))
+                            .setCancelable(false)
+                            .setPositiveButton(myLikedProductsFragment.getString(R.string.yes)) { _, _ ->
+                                product.likes.remove(LoggedUser.userLiveData.value?.uid!!)
+                                ioScope.launch {
+                                    ProductDao.update(product)
+                                }
+                            }
+                            .setNegativeButton(myLikedProductsFragment.getString(R.string.no)) { dialog, _ ->
+                                // Dismiss the dialog
+                                dialog.dismiss()
+                            }
+                        val alert = builder.create()
+                        alert.show()
+                    }else{
+                        product.likes.remove(LoggedUser.userLiveData.value?.uid!!)
+                        ioScope.launch {
+                            ProductDao.update(product)
+                        }
+                    }
+                } else {
+                    product.likes.add(LoggedUser.userLiveData.value?.uid!!)
+                    ioScope.launch {
+                        ProductDao.update(product)
+                    }
+                }
+            }
+            binding.likesCount.text = product.likes.size.toString()
+            binding.switchIsPublished.visibility = View.GONE
 
             // Click listener
             itemView.setOnClickListener { listener?.onProductSelected(snapshot) }

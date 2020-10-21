@@ -42,27 +42,7 @@
         </com.google.android.material.chip.ChipGroup>
 
     </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/icon_likes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/icon_category"
-            app:srcCompat="@drawable/ic_filter_list_white_24px"
-            app:tint="@color/colorAccent" />
-
-        <CheckBox
-            android:id="@+id/chkBxLikes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/likes"
-            android:layout_toEndOf="@+id/icon_likes" />
-
-    </RelativeLayout>
     <!-- Price -->
     <RelativeLayout
         android:layout_width="match_parent"

@@ -19,6 +19,7 @@ import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.contracts.CropImageResultContract
@@ -69,7 +70,7 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         fun newInstance() = SendTopicMessageFragment()
     }
 
-    private val viewModel: TopicMessageViewModel by viewModels()
+    private val viewModel: TopicMessageViewModel by viewModels(factoryProducer ={ SavedStateViewModelFactory(this.requireActivity().application, this) })
     private var binding: FragmentSendTopicMessageBinding by viewLifecycle()
 
     override fun onCreateView(

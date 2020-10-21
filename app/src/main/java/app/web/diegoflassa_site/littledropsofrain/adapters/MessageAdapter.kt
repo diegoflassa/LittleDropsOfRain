@@ -1,5 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.adapters
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -90,13 +91,13 @@ open class MessageAdapter(
             itemView.setOnClickListener {
                 replyMessage(it, message!!)
             }
+            binding.msgImage.visibility = View.GONE
+            binding.btnViewAsNotification.visibility = View.GONE
 
             // Click listener
             itemView.setOnClickListener { listener?.onMessageSelected(snapshot) }
             when (MessageType.valueOf(message?.type?.toUpperCase(Locale.ROOT)!!)) {
                 MessageType.MESSAGE -> {
-                    binding.msgImage.visibility = View.GONE
-                    binding.btnViewAsNotification.visibility = View.GONE
                     when {
                         message.emailSender == LoggedUser.userLiveData.value?.email -> {
                             itemView.background = ContextCompat.getDrawable(
@@ -128,7 +129,7 @@ open class MessageAdapter(
                     )
                 }
                 MessageType.UNKNOWN -> {
-                    // DO nothing
+                    // Do nothing
                 }
             }
 
@@ -167,7 +168,20 @@ open class MessageAdapter(
                 )
             )
             binding.btnDelete.setOnClickListener {
-                MessageDao.delete(message)
+                val builder = AlertDialog.Builder(mContext)
+                builder.setMessage(mContext.getString(R.string.remove_message_confirmation))
+                    .setCancelable(false)
+                    .setPositiveButton(mContext.getString(R.string.yes)) { _, _ ->
+                        ioScope.launch {
+                            MessageDao.delete(message)
+                        }
+                    }
+                    .setNegativeButton(mContext.getString(R.string.no)) { dialog, _ ->
+                        // Dismiss the dialog
+                        dialog.dismiss()
+                    }
+                val alert = builder.create()
+                alert.show()
             }
         }
 

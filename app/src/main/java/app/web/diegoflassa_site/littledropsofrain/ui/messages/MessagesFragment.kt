@@ -10,9 +10,9 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.adapters.MessageAdapter
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
@@ -39,7 +39,12 @@ class MessagesFragment : Fragment(),
     MyMessagesFilterDialogFragment.FilterListener,
     View.OnClickListener, DialogInterface.OnDismissListener {
 
-    private val viewModel: MessagesViewModel by viewModels()
+    private val viewModel: MessagesViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     private lateinit var mAdapter: WeakReference<MessageAdapter>
     var binding: FragmentMessagesBinding by viewLifecycle()
     private var mFilterDialog: MyMessagesFilterDialogFragment? = null
@@ -47,7 +52,7 @@ class MessagesFragment : Fragment(),
     private var mQuery: Query? = null
 
     companion object {
-        val TAG = MessagesFragment::class.simpleName
+        private val TAG = MessagesFragment::class.simpleName
         const val LIMIT = 10000
         fun newInstance() = MessagesFragment()
     }
@@ -189,7 +194,7 @@ class MessagesFragment : Fragment(),
         binding.recyclerviewMessages.addItemDecoration(itemDecoration)
 
         if (mQuery == null) {
-            Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
+            Log.w(TAG, "No query, not initializing RecyclerView")
         }
 
         mAdapter =

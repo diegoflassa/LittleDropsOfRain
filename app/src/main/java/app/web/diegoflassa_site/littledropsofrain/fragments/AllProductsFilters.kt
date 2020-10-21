@@ -13,7 +13,7 @@ import com.google.firebase.firestore.Query
  */
 class AllProductsFilters {
     var categories: MutableList<String> = ArrayList()
-    var price: MutableList<Int>? = null
+    var price: Pair<Int, Int>? = null
     var sortBy: String? = null
     var sortDirection: Query.Direction? = null
     fun hasCategory(): Boolean {
@@ -21,7 +21,7 @@ class AllProductsFilters {
     }
 
     fun hasPrice(): Boolean {
-        return !price.isNullOrEmpty()
+        return price!=null
     }
 
     fun hasSortBy(): Boolean {
@@ -46,7 +46,7 @@ class AllProductsFilters {
         if (price != null) {
             desc.append(MyApplication.getContext().getString(R.string.for_filter))
             desc.append("<b>")
-            desc.append(Helper.getPriceString(price!![0]))
+            desc.append(Helper.getPriceString(price!!.first))
             desc.append("</b>")
         }
         return desc.toString()

@@ -170,6 +170,20 @@
         android:id="@+id/nav_all_products"
         android:name="app.web.diegoflassa_site.littledropsofrain.ui.all_products.AllProductsFragment"
         android:label="@string/label_all_products"
-        tools:layout="@layout/fragment_all_products" />
+        tools:layout="@layout/fragment_all_products" >
+        <action
+            android:id="@+id/action_nav_all_products_to_likesDialogFragment"
+            app:destination="@id/likesDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/likesDialogFragment"
+        android:name="app.web.diegoflassa_site.littledropsofrain.dialogs.LikesDialogFragment"
+        android:label="LikesDialogFragment" >
+        <argument
+            android:name="product"
+            app:argType="app.web.diegoflassa_site.littledropsofrain.data.entities.Product"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 
 </navigation>

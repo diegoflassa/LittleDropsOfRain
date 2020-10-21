@@ -1,31 +1,40 @@
 package app.web.diegoflassa_site.littledropsofrain.ui.home
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.core.text.HtmlCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.adapters.ProductAdapter
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
+import app.web.diegoflassa_site.littledropsofrain.data.entities.Source
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentHomeBinding
 import app.web.diegoflassa_site.littledropsofrain.fragments.ProductsFilterDialogFragment
@@ -35,6 +44,7 @@ import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.HomeViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.HomeViewState
 import app.web.diegoflassa_site.littledropsofrain.ui.off_air.OffAirFragment
+import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -43,7 +53,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import java.lang.ref.WeakReference
 import java.util.*
@@ -54,16 +63,31 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     ProductsFilterDialogFragment.FilterListener,
     ProductAdapter.OnProductSelectedListener, DialogInterface.OnDismissListener {
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     var binding: FragmentHomeBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<ProductAdapter>
     private lateinit var mFirestore: FirebaseFirestore
     var mFilterDialog: ProductsFilterDialogFragment? = null
     private lateinit var toggle: ActionBarDrawerToggle
     private var mQuery: Query? = null
+    private var mCurrentLocation: Location? = null
+    private lateinit var mLocationCallback: LocationCallback
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private var mRequestingLocationUpdates = false
+    private lateinit var mPermissionLauncher: ActivityResultLauncher<String>
 
     companion object {
-        val TAG = HomeFragment::class.simpleName
+        const val BRAZIL_MIN_LATITUDE_NORTH = -5.1618
+        const val BRAZIL_MAX_LATITUDE_SOUTH = -33.4502
+        const val BRAZIL_MIN_LONGITUDE_EAST = -34.4735
+        const val BRAZIL_MAX_LONGITUDE_WEST = -73.5858
+        const val REQUESTING_LOCATION_UPDATES_KEY = "REQUESTING_LOCATION_UPDATES_KEY"
+        private val TAG = HomeFragment::class.simpleName
         const val LIMIT = 10000
         fun newInstance() = HomeFragment()
     }
@@ -99,28 +123,75 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         toggle.syncState()
 
         val remoteConfig = Firebase.remoteConfig
-        val isOffAir = remoteConfig[OffAirFragment.REMOTE_CONFIG_IS_OFF_AIR].asBoolean()
-        if(isOffAir){
-            if(Locale.getDefault().language =="pt") {
+        val isOffAir = remoteConfig.getBoolean(OffAirFragment.REMOTE_CONFIG_IS_OFF_AIR)
+        if (isOffAir) {
+            if (Locale.getDefault().language == "pt") {
                 showOffAirScreen(
-                    remoteConfig[OffAirFragment.REMOTE_CONFIG_OFF_AIR_MESSAGE_PT].asString()
+                    remoteConfig.getString(OffAirFragment.REMOTE_CONFIG_OFF_AIR_MESSAGE_PT)
                 )
-            }else{
+            } else {
                 showOffAirScreen(
-                    remoteConfig[OffAirFragment.REMOTE_CONFIG_OFF_AIR_MESSAGE_EN].asString()
+                    remoteConfig.getString(OffAirFragment.REMOTE_CONFIG_OFF_AIR_MESSAGE_EN)
                 )
             }
-        }else {
+        } else {
             hideOffAirScreen()
             showLoadingScreen()
-            initFirestore()
-            initRecyclerView()
-        }
 
+            mRequestingLocationUpdates = true
+            mFusedLocationClient =
+                LocationServices.getFusedLocationProviderClient(requireActivity())
+            mLocationCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult?) {
+                    locationResult ?: return
+                    mCurrentLocation = locationResult.lastLocation
+                    initRecyclerView()
+                    stopLocationUpdates()
+                    // Start listening for Firestore updates
+                    mAdapter.get()?.startListening()
+                    // Apply filters
+                    onFilter(viewModel.viewState.filters)
+                }
+            }
+        }
+        initFirestore()
         binding.filterBar.isEnabled = false
 
+        mPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+                if (it) {
+                    startLocationUpdates()
+                } else {
+                    hideOffAirScreen()
+                    showLoadingScreen()
+                    initRecyclerView()
+                    // Start listening for Firestore updates
+                    mAdapter.get()?.startListening()
+                    // Apply filters
+                    onFilter(viewModel.viewState.filters)
+                }
+            }
         Log.i(TAG, "$TAG activity successfully created>")
         return binding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        updateValuesFromBundle(savedInstanceState)
+    }
+
+    private fun updateValuesFromBundle(savedInstanceState: Bundle?) {
+        savedInstanceState ?: return
+
+        // Update the value of requestingLocationUpdates from the Bundle.
+        if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
+            mRequestingLocationUpdates = savedInstanceState.getBoolean(
+                REQUESTING_LOCATION_UPDATES_KEY
+            )
+        }
+
+        // Update UI to match restored state
+        updateUI(viewModel.viewState)
     }
 
     override fun onDestroyView() {
@@ -132,9 +203,55 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         super.onDestroyView()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates)
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onResume() {
         super.onResume()
         updateUI(viewModel.viewState)
+        if (mRequestingLocationUpdates) checkForLocationUpdatesPermissionAndStartUpdates()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopLocationUpdates()
+    }
+
+    private fun stopLocationUpdates() {
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback)
+    }
+
+    private fun checkForLocationUpdatesPermissionAndStartUpdates() {
+        if (ActivityCompat.checkSelfPermission(
+                this.requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this.requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            mPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+            return
+        } else {
+            startLocationUpdates()
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun startLocationUpdates() {
+        val locationRequest = LocationRequest().apply {
+            interval = 5000
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        }
+
+        mFusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            mLocationCallback,
+            Looper.getMainLooper()
+        )
     }
 
     private fun updateUI(viewState: HomeViewState) {
@@ -158,7 +275,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         onFilter(viewModel.viewState.filters)
     }
 
-    private fun showOffAirScreen(message : String) {
+    private fun showOffAirScreen(message: String) {
         binding.homeViewOffAir.text = message
         binding.homeViewOffAir.visibility = View.VISIBLE
     }
@@ -175,11 +292,39 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         binding.homeProgress.visibility = View.GONE
     }
 
+    private fun isLocationInBrazil(location: Location): Boolean {
+        return (location.latitude > BRAZIL_MAX_LATITUDE_SOUTH && location.latitude < BRAZIL_MIN_LATITUDE_NORTH) &&
+                (location.longitude > BRAZIL_MAX_LONGITUDE_WEST && location.longitude < BRAZIL_MIN_LONGITUDE_EAST)
+    }
+
+    private fun getShopByGeoLocation(query: Query): Query {
+        return if (mCurrentLocation != null) {
+            return if (isLocationInBrazil(mCurrentLocation!!)) {
+                query.whereEqualTo(
+                    Product.IS_PUBLISHED_SOURCE,
+                    (true.toString() + "_" + Source.ILURIA.toString())
+                )
+            } else {
+                query.whereEqualTo(
+                    Product.IS_PUBLISHED_SOURCE,
+                    (true.toString() + "_" + Source.ILURIA.toString())
+                )
+            }
+        } else {
+            query.whereEqualTo(
+                Product.IS_PUBLISHED_SOURCE,
+                (true.toString() + "_" + Source.ILURIA.toString())
+            )
+        }
+    }
+
     override fun onFilter(filters: ProductsFilters) {
 
         // Construct query basic query
         var query: Query = mFirestore.collection(ProductDao.COLLECTION_PATH)
         query.whereEqualTo(Product.IS_PUBLISHED, true)
+        // Note that this will override the previous whereEqualTo
+        query = getShopByGeoLocation(query)
         query.orderBy(Product.PRICE, Query.Direction.DESCENDING)
 
         // Category (equality filter)
@@ -189,8 +334,8 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
         // Price (equality filter)
         if (filters.hasPrice()) {
-            val price0 = filters.price?.get(0)
-            val price1 = filters.price?.get(1)
+            val price0 = filters.price?.first
+            val price1 = filters.price?.second
             query = query.whereGreaterThanOrEqualTo(Product.PRICE, Integer.valueOf(price0!!))
                 .whereLessThanOrEqualTo(Product.PRICE, Integer.valueOf(price1!!))
         }
@@ -223,18 +368,10 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        // Apply filters
-        onFilter(viewModel.viewState.filters)
-
-        // Start listening for Firestore updates
-        mAdapter.get()?.startListening()
-    }
-
     override fun onStop() {
-        mAdapter.get()?.stopListening()
+        if (this::mAdapter.isInitialized) {
+            mAdapter.get()?.stopListening()
+        }
         super.onStop()
     }
 
@@ -248,7 +385,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         binding.recyclerview.addItemDecoration(itemDecoration)
 
         if (mQuery == null) {
-            Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
+            Log.w(TAG, "No query, not initializing RecyclerView")
         }
 
         mAdapter =
@@ -296,9 +433,8 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
             ).show()
         } else {
             // Sign in failed. If response is null the user canceled the
-            // sign-in flow using the back button. Otherwise check
-            // response.getError().getErrorCode() and handle the error.
-            // ...
+            // sign-in flow using the back button.
+            Log.d(TAG, "${getString(R.string.unable_to_log_in)} error code: $result")
             Toast.makeText(requireContext(), R.string.unable_to_log_in, Toast.LENGTH_SHORT).show()
         }
     }

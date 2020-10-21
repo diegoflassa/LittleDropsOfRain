@@ -1,6 +1,8 @@
 package app.web.diegoflassa_site.littledropsofrain.ui.send_message
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -14,11 +16,13 @@ import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
+import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendMessageBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.*
@@ -40,7 +44,7 @@ class SendMessageFragment : Fragment(),
 
     companion object {
         fun newInstance() = SendMessageFragment()
-        val TAG = SendMessageFragment::class.simpleName
+        private val TAG = SendMessageFragment::class.simpleName
         const val ACTION_SEND_KEY = "ACTION_SEND"
         const val ACTION_SEND = "app.web.diegoflassa_site.littledropsofrain.action.ACTION_SEND"
         const val ACTION_REPLY_KEY = "ACTION_REPLY"
@@ -49,7 +53,12 @@ class SendMessageFragment : Fragment(),
         var mSavedInstanceState: Bundle? = null
     }
 
-    private val viewModel: SendMessageViewModel by viewModels()
+    private val viewModel: SendMessageViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     private var binding: FragmentSendMessageBinding by viewLifecycle()
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private lateinit var toggle: ActionBarDrawerToggle
@@ -72,14 +81,15 @@ class SendMessageFragment : Fragment(),
                         val message = Message()
                         message.replyUid = viewModel.viewState.replyUid
                         message.owners.add(viewModel.viewState.sender.email.toString())
-                        if (viewModel.viewState.isUserAdmin) {
-                            message.owners.add(viewModel.viewState.dest.email.toString())
-                        }
                         message.replyUid = viewModel.viewState.replyUid
-                        message.emailTo = viewModel.viewState.dest.email
                         message.message = binding.mltxtMessage.text.toString()
-
-
+                        if(!viewModel.viewState.dest.email.isNullOrEmpty()) {
+                            message.emailTo = viewModel.viewState.dest.email.toString()
+                            if (viewModel.viewState.isUserAdmin) {
+                                message.owners.add(viewModel.viewState.dest.email.toString())
+                            }
+                        }
+                        message.type = MessageType.MESSAGE.toString()
                         message.senderId = viewModel.viewState.sender.uid
                         message.sender = viewModel.viewState.sender.email
                         message.read = false
@@ -111,6 +121,13 @@ class SendMessageFragment : Fragment(),
                 }
             }
         }
+        binding.mltxtMessage.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.btnSend.isEnabled = binding.mltxtMessage.text.toString().trim().isNotEmpty()
+            }
+        })
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         UserDao.loadAll(this)
@@ -139,13 +156,13 @@ class SendMessageFragment : Fragment(),
     }
 
     override fun onStop() {
-        isStopped= true
+        isStopped = true
         super.onStop()
     }
 
     override fun onResume() {
         super.onResume()
-        isStopped=false
+        isStopped = false
     }
 
     override fun onDestroyView() {
@@ -158,7 +175,7 @@ class SendMessageFragment : Fragment(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if(isSafeToAccessViewModel()&&!isStopped) {
+        if (isSafeToAccessViewModel() && !isStopped) {
             viewModel.viewState.title = binding.edttxtTitle.text.toString()
             viewModel.viewState.body = binding.mltxtMessage.text.toString()
         }
@@ -195,12 +212,15 @@ class SendMessageFragment : Fragment(),
             val sendMethod = radioButton.tag as String
             when (SendMessageViewState.SendMethod.valueOf(sendMethod.toUpperCase(Locale.ROOT))) {
                 SendMessageViewState.SendMethod.EMAIL -> {
+                    binding.spnrContacts.visibility = View.VISIBLE
                     binding.edttxtTitle.visibility = View.VISIBLE
                 }
                 SendMessageViewState.SendMethod.MESSAGE -> {
+                    binding.spnrContacts.visibility = View.GONE
                     binding.edttxtTitle.visibility = View.GONE
                 }
                 else -> {
+                    binding.spnrContacts.visibility = View.GONE
                     binding.edttxtTitle.visibility = View.GONE
                 }
             }
@@ -213,12 +233,13 @@ class SendMessageFragment : Fragment(),
     @Suppress("UNCHECKED_CAST")
     private fun updateUI(viewState: SendMessageViewState) {
         // Update the UI
-        binding.edttxtTitle.visibility =
-            if (viewState.sendMethod == SendMessageViewState.SendMethod.EMAIL) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+        if (viewState.sendMethod == SendMessageViewState.SendMethod.EMAIL) {
+            binding.spnrContacts.visibility = View.VISIBLE
+            binding.edttxtTitle.visibility = View.VISIBLE
+        } else {
+            binding.spnrContacts.visibility = View.GONE
+            binding.edttxtTitle.visibility = View.GONE
+        }
         binding.edttxtTitle.setText(viewState.title)
         binding.mltxtMessage.setText(viewState.body)
         if (viewState.isUserAdmin && binding.spnrContacts.adapter != null) {
@@ -227,8 +248,10 @@ class SendMessageFragment : Fragment(),
                 binding.spnrContacts.adapter as ArrayAdapter<User>
             val spinnerPosition: Int = dataAdapter.getPosition(user)
             binding.spnrContacts.setSelection(spinnerPosition)
+            binding.spnrContacts.visibility = View.VISIBLE
         } else {
             binding.spnrContacts.setSelection(-1)
+            binding.spnrContacts.visibility = View.GONE
         }
         if (viewState.isUserAdmin) {
             for (view in binding.rdGrpSendMethod.children) {
@@ -245,14 +268,8 @@ class SendMessageFragment : Fragment(),
             }
         }
         if (!viewState.isUserAdmin) {
-            binding.spnrContacts.visibility = View.GONE
             binding.rdGrpSendMethod.visibility = View.GONE
         } else {
-            if (binding.spnrContacts.adapter != null && !binding.spnrContacts.adapter.isEmpty)
-                binding.spnrContacts.visibility = View.VISIBLE
-            else {
-                binding.spnrContacts.visibility = View.GONE
-            }
             binding.rdGrpSendMethod.visibility = View.VISIBLE
         }
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
@@ -320,16 +337,21 @@ class SendMessageFragment : Fragment(),
     }
 
     override fun onUsersLoaded(users: List<User>) {
-        if(isSafeToAccessViewModel()&&!isStopped) {
-            val mutableUsers = ArrayList<User>(users)
-            for (user in users) {
-                if (user.email == LoggedUser.userLiveData.value?.email) {
-                    mutableUsers.remove(user)
+        if (isSafeToAccessViewModel() && !isStopped) {
+            val usersWithDefault = ArrayList<User>(users.size+1)
+            val user = User()
+            user.name = getString(R.string.no_selection)
+            user.email = getString(R.string.none)
+            usersWithDefault.add(user)
+            usersWithDefault.addAll(users)
+            for (localUser in users) {
+                if (localUser.email == LoggedUser.userLiveData.value?.email) {
+                    usersWithDefault.remove(localUser)
                 }
             }
             val dataAdapter: ArrayAdapter<User> = ArrayAdapter(
                 requireContext(),
-                android.R.layout.simple_spinner_item, mutableUsers
+                android.R.layout.simple_spinner_item, usersWithDefault
             )
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spnrContacts.adapter = dataAdapter
@@ -337,7 +359,7 @@ class SendMessageFragment : Fragment(),
                 object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
                         parent: AdapterView<*>,
-                        view: View,
+                        view: View?,
                         pos: Int,
                         id: Long
                     ) {

@@ -14,6 +14,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
@@ -43,7 +44,7 @@ class AllMessagesFragment : Fragment(),
     View.OnClickListener, DialogInterface.OnDismissListener {
 
     private var isStopped: Boolean = false
-    private val viewModel: AllMessagesViewModel by viewModels()
+    private val viewModel: AllMessagesViewModel by viewModels(factoryProducer ={ SavedStateViewModelFactory(this.requireActivity().application, this) })
     private lateinit var mAdapter: WeakReference<MessageAdapter>
     var binding: FragmentAllMessagesBinding by viewLifecycle()
     private var mFilterDialog: AllMessagesFilterDialogFragment? = null
@@ -53,7 +54,7 @@ class AllMessagesFragment : Fragment(),
 
     companion object {
         const val KEY_ALL_MESSAGES: String = "Admin - All Messages"
-        val TAG = AllMessagesFragment::class.simpleName
+        private val TAG = AllMessagesFragment::class.simpleName
         const val LIMIT = 10000
         fun newInstance() = AllMessagesFragment()
     }
@@ -229,7 +230,7 @@ class AllMessagesFragment : Fragment(),
         binding.recyclerviewAllMessages.addItemDecoration(itemDecoration)
 
         if (mQuery == null) {
-            Log.w(MainActivity.TAG, "No query, not initializing RecyclerView")
+            Log.w(TAG, "No query, not initializing RecyclerView")
         }
 
         mAdapter = WeakReference(object :

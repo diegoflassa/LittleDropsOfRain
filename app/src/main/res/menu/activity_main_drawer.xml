@@ -26,10 +26,6 @@
             android:title="@string/menu_admin"
             android:visible="false" />
         <item
-            android:id="@+id/nav_authentication"
-            android:icon="@drawable/image_placeholder"
-            android:title="@string/login" />
-        <item
             android:id="@+id/nav_my_liked_products"
             android:icon="@drawable/image_placeholder"
             android:title="@string/liked" />
@@ -37,5 +33,9 @@
             android:id="@+id/nav_all_products"
             android:icon="@drawable/image_placeholder"
             android:title="@string/menu_all_products" />
+        <item
+            android:id="@+id/nav_authentication"
+            android:icon="@drawable/image_placeholder"
+            android:title="@string/login" />
     </group>
 </menu>

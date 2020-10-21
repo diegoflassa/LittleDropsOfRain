@@ -31,7 +31,7 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
     var binding: FragmentAuthenticationProxyBinding by viewLifecycle()
 
     companion object {
-        val TAG = AuthenticationProxyFragment::class.simpleName
+        private val TAG = AuthenticationProxyFragment::class.simpleName
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

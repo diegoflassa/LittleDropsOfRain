@@ -87,10 +87,9 @@ open class ProductAdapter(
             priceStr += DecimalFormatSymbols.getInstance().decimalSeparator + "00"
             binding.price.text = resources.getString(R.string.rv_price, priceStr)
             val heartIcon = IconDrawable(homeFragment.requireContext(), SimpleLineIconsIcons.icon_heart)
-            binding.imgVwLike.setImageDrawable(heartIcon)
             if(LoggedUser.userLiveData.value!=null) {
                 if(product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
-                    heartIcon.setTint(Color.RED)
+                    heartIcon.color(Color.RED)
                 }
                 binding.imgVwLike.setOnClickListener {
                     if (product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
@@ -103,7 +102,8 @@ open class ProductAdapter(
                     }
                 }
             }
-            binding.swtchIsPublished.visibility = View.GONE
+            binding.imgVwLike.setImageDrawable(heartIcon)
+            binding.switchIsPublished.visibility = View.GONE
             binding.likesCount.text = product.likes.size.toString()
             // Click listener
             itemView.setOnClickListener { listener?.onProductSelected(snapshot) }

@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/imgVwUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginStart="@dimen/paddingSmall"
             android:contentDescription="@string/user_image"
             android:paddingStart="@dimen/paddingSmall"
@@ -58,8 +58,8 @@
 
         <ImageView
             android:id="@+id/imgVwLiked"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="@dimen/paddingSmall"
             android:contentDescription="@string/liked"
             android:paddingStart="@dimen/paddingSmall"

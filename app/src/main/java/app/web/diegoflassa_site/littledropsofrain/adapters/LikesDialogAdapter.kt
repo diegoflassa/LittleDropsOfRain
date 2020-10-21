@@ -1,5 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.adapters
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,6 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemLikeBinding
-import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemUserBinding
 import app.web.diegoflassa_site.littledropsofrain.dialogs.LikesDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataFailureListener
@@ -39,7 +39,7 @@ open class LikesDialogAdapter(
         viewType: Int
     ): ViewHolder {
         val binding =
-            RecyclerviewItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            RecyclerviewItemLikeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding.root)
     }
 
@@ -70,12 +70,26 @@ open class LikesDialogAdapter(
             binding.userEmail.text = resources.getString(R.string.rv_user_email, user.email)
             val iconHeart = IconDrawable(itemView.context, SimpleLineIconsIcons.icon_heart)
             if (product.likes.contains(user.uid)) {
-                iconHeart.setTint(Color.RED)
+                iconHeart.color(Color.RED)
             }
             binding.imgVwLiked.setImageDrawable(iconHeart)
             binding.imgVwLiked.setOnClickListener {
                 if (product.likes.contains(user.uid)) {
-                    product.likes.remove(user.uid)
+                    val builder = AlertDialog.Builder(itemView.context)
+                    builder.setMessage(itemView.context.getString(R.string.remove_like_from_user, user.name))
+                        .setCancelable(false)
+                        .setPositiveButton(itemView.context.getString(R.string.yes)) { _, _ ->
+                            product.likes.remove(user.uid)
+                            ioScope.launch {
+                                ProductDao.update(product)
+                            }
+                        }
+                        .setNegativeButton(itemView.context.getString(R.string.no)) { dialog, _ ->
+                            // Dismiss the dialog
+                            dialog.dismiss()
+                        }
+                    val alert = builder.create()
+                    alert.show()
                 } else {
                     product.likes.add(user.uid!!)
                 }

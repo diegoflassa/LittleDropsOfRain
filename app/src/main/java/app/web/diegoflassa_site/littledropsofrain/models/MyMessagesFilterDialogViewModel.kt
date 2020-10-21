@@ -3,9 +3,9 @@ package app.web.diegoflassa_site.littledropsofrain.models
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.ui.all_messages.AllMessagesFragment
+import app.web.diegoflassa_site.littledropsofrain.fragments.MyMessagesFilterDialogFragment
 
-class AllMessagesViewModel(state: SavedStateHandle) : ViewModel() {
+class MyMessagesFilterDialogViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
@@ -21,11 +21,11 @@ class AllMessagesViewModel(state: SavedStateHandle) : ViewModel() {
         savedStateHandle.set(SAVE_STATE_KEY, mViewState)
     }
 
-    private var mViewState = MutableLiveData(MyLikedProductsViewState()).apply {
-        value?.text = "This is ${AllMessagesFragment::class.simpleName} Fragment"
+    private var mViewState = MutableLiveData(MyMessagesFilterDialogViewState()).apply {
+        value?.text = "This is ${MyMessagesFilterDialogFragment::class.simpleName} Fragment"
     }
-    val viewState: AllMessagesViewState
-        get() :AllMessagesViewState {
+    val viewState: AllMessagesFilterDialogViewState
+        get() :AllMessagesFilterDialogViewState {
             return savedStateHandle.get(SAVE_STATE_KEY)!!
         }
 }

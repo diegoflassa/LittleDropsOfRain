@@ -13,6 +13,7 @@ import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
@@ -41,7 +42,12 @@ open class ProductsFilterDialogFragment : DialogFragment(),
         fun onFilter(filters: ProductsFilters)
     }
 
-    val viewModel: ProductsFilterDialogViewModel by viewModels()
+    val viewModel: ProductsFilterDialogViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     var categories: LinkedHashSet<String> = LinkedHashSet()
     private lateinit var mCategoryChipGroup: ChipGroup
     private var mSortSpinner: Spinner? = null
@@ -59,13 +65,22 @@ open class ProductsFilterDialogFragment : DialogFragment(),
         mCategoryChipGroup = binding.categoryChipGroup
         mSortSpinner = binding.spinnerSort
         mPriceSpinner = binding.spinnerPrice
-        mPriceSpinner!!.setOnItemClickListener { _: AdapterView<*>, _: View, position: Int, _: Long ->
-            if(position>0) {
-                mSortSpinner!!.isEnabled = false
-                binding.spinnerSort.setSelection(0)
-            }else{
-                mSortSpinner!!.isEnabled = true
+        mPriceSpinner!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (position > 0) {
+                    mSortSpinner!!.isEnabled = false
+                    binding.spinnerSort.setSelection(0)
+                } else {
+                    mSortSpinner!!.isEnabled = true
+                }
             }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         binding.buttonSearch.setOnClickListener(this)
         binding.buttonCancel.setOnClickListener(this)
@@ -120,27 +135,25 @@ open class ProductsFilterDialogFragment : DialogFragment(),
             return categories
         }
 
-    private val selectedPrice: MutableList<Int>
+    private val selectedPrice: Pair<Int, Int>?
         get() {
-            val priceRange = ArrayList<Int>()
+            var priceRange: Pair<Int, Int>? = null
             if (mRootView != null && !isDetached) {
                 when (mPriceSpinner!!.selectedItem as String) {
                     MyApplication.getContext()
                         .getString(R.string.price_1) -> {
-                        priceRange.add(0)
-                        priceRange.add(5000)
+                        priceRange = Pair(0, 5000)
                     }
                     MyApplication.getContext()
                         .getString(R.string.price_2) -> {
-                        priceRange.add(5100)
-                        priceRange.add(10000)
+                        priceRange = Pair(5100, 10000)
                     }
                     MyApplication.getContext()
                         .getString(R.string.price_3) -> {
-                        priceRange.add(10100)
-                        priceRange.add(100000)
+                        priceRange = Pair(10100, 100000)
                     }
                     else -> {
+                        priceRange = null
                         //Do nothing
                     }
                 }
@@ -203,7 +216,7 @@ open class ProductsFilterDialogFragment : DialogFragment(),
             val filters =
                 ProductsFilters()
             filters.categories.addAll(this.selectedCategories)
-            filters.price = if (selectedPrice.isEmpty()) {
+            filters.price = if (selectedPrice == null) {
                 null
             } else {
                 selectedPrice
