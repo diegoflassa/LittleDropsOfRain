@@ -19,11 +19,11 @@ import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemMe
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
+import coil.load
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -116,9 +116,10 @@ open class MessageAdapter(
                 MessageType.NOTIFICATION -> {
                     if (message.imageUrl != null) {
                         binding.msgImage.visibility = View.VISIBLE
-                        Picasso.get().load(message.imageUrl)
-                            .placeholder(R.drawable.image_placeholder)
-                            .error(R.drawable.image_placeholder).into(binding.msgImage)
+                        binding.msgImage.load(message.imageUrl) {
+                            placeholder(R.drawable.image_placeholder)
+                            error(R.drawable.image_placeholder)
+                        }
                     } else {
                         binding.msgImage.visibility = View.GONE
                     }

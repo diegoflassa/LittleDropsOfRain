@@ -11,6 +11,7 @@ apply from: "$projectDir/buildsystem/config.gradle"
 
 android {
     compileSdkVersion config.compileSdkVersion
+
     defaultConfig {
         applicationId config.applicationId
         minSdkVersion config.minimumSdkVersion
@@ -24,6 +25,10 @@ android {
                 arguments += ["room.incremental": "true"]
             }
         }
+    }
+    buildFeatures {
+        // Enables Jetpack Compose for this module
+        compose true
     }
     sourceSets {
         //DFL - Não use por enquanto
@@ -43,7 +48,17 @@ android {
 
         }
         release {
-            minifyEnabled false
+            // Enables code shrinking, obfuscation, and optimization for only
+            // your project's release build type.
+            minifyEnabled true
+
+            // Enables resource shrinking, which is performed by the
+            // Android Gradle plugin.
+            shrinkResources true
+
+            // Includes the default ProGuard rules files that are packaged with
+            // the Android Gradle plugin. To learn more, go to the section about
+            // R8 configuration files.
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -55,11 +70,13 @@ android {
         }
     }
     compileOptions {
+        // Sets Java compatibility to Java 8
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
+        useIR = true
     }
     buildFeatures {
         viewBinding = true
@@ -70,6 +87,10 @@ android {
     buildToolsVersion config.buildToolsVersion
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
+    }
+    composeOptions {
+        kotlinCompilerVersion '1.4.20-M2'
+        kotlinCompilerExtensionVersion '1.0.0-alpha05'
     }
 }
 
@@ -90,9 +111,6 @@ dependencies {
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    // Picasso
-    implementation 'com.squareup.picasso:picasso:2.71828'
-
     // Volley
     implementation 'com.android.volley:volley:1.1.1'
 
@@ -101,6 +119,28 @@ dependencies {
 
     // UCrop
     implementation 'com.github.yalantis:ucrop:2.2.6'
+
+    // Coil COroutines Image Loader
+    implementation 'io.coil-kt:coil:1.0.0'
+
+
+    // Jetpack Compose toolkit dependencies
+    implementation 'androidx.compose.ui:ui:1.0.0-alpha05'
+    // Tooling support (Previews, etc.)
+    implementation 'androidx.ui:ui-tooling:1.0.0-alpha05'
+    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
+    implementation 'androidx.compose.foundation:foundation:1.0.0-alpha05'
+    // Material Design
+    implementation 'androidx.compose.material:material:1.0.0-alpha05'
+    // Material design icons
+    implementation 'androidx.compose.material:material-icons-core:1.0.0-alpha05'
+    implementation 'androidx.compose.material:material-icons-extended:1.0.0-alpha05'
+    // Integration with observables
+    implementation 'androidx.compose.runtime:runtime-livedata:1.0.0-alpha05'
+    implementation 'androidx.compose.runtime:runtime-rxjava2:1.0.0-alpha05'
+    // UI Tests
+    androidTestImplementation 'androidx.ui:ui-test:1.0.0-alpha05'
+
 
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:25.12.0')
@@ -119,7 +159,7 @@ dependencies {
     // Firebase Authentication (Kotlin)
     implementation 'com.google.firebase:firebase-auth-ktx:19.4.0'
     implementation 'com.google.firebase:firebase-crashlytics-ktx:17.2.2'
-    implementation 'com.google.firebase:firebase-database-ktx:19.5.0'
+    implementation 'com.google.firebase:firebase-database-ktx:19.5.1'
     // Add the SDK for Firebase Cloud Messaging
     implementation 'com.google.firebase:firebase-firestore-ktx:21.7.1'
     implementation 'com.google.firebase:firebase-inappmessaging-display-ktx:19.1.1'
@@ -130,7 +170,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:4.0.0'
     implementation 'com.firebaseui:firebase-ui-storage:6.2.1'
     // OAuth Library
-    implementation 'com.google.auth:google-auth-library-oauth2-http:0.21.1'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:0.22.0'
 
     // GSon
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -164,9 +204,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0-beta01'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
-    implementation 'androidx.navigation:navigation-runtime-ktx:2.3.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.3.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0-rc03'

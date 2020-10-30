@@ -14,11 +14,11 @@ import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemLi
 import app.web.diegoflassa_site.littledropsofrain.dialogs.LikesDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataFailureListener
+import coil.load
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -63,8 +63,7 @@ open class LikesDialogAdapter(
             user?.uid = snapshot.id
             val resources = itemView.resources
 
-            Picasso.get().load(user!!.imageUrl).placeholder(R.drawable.image_placeholder)
-                .into(binding.imgVwUser)
+            binding.imgVwUser.load(user!!.imageUrl) { placeholder(R.drawable.image_placeholder) }
 
             binding.userName.text = resources.getString(R.string.rv_user_name, user.name)
             binding.userEmail.text = resources.getString(R.string.rv_user_email, user.email)
@@ -76,7 +75,12 @@ open class LikesDialogAdapter(
             binding.imgVwLiked.setOnClickListener {
                 if (product.likes.contains(user.uid)) {
                     val builder = AlertDialog.Builder(itemView.context)
-                    builder.setMessage(itemView.context.getString(R.string.remove_like_from_user, user.name))
+                    builder.setMessage(
+                        itemView.context.getString(
+                            R.string.remove_like_from_user,
+                            user.name
+                        )
+                    )
                         .setCancelable(false)
                         .setPositiveButton(itemView.context.getString(R.string.yes)) { _, _ ->
                             product.likes.remove(user.uid)

@@ -30,9 +30,9 @@ import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedFailu
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedListener
 import app.web.diegoflassa_site.littledropsofrain.models.UserProfileViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.UserProfileViewState
+import coil.load
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.squareup.picasso.Picasso
 
 class UserProfileFragment : Fragment(), OnFileUploadedListener,
     OnFileUploadedFailureListener,
@@ -172,10 +172,9 @@ class UserProfileFragment : Fragment(), OnFileUploadedListener,
 
             binding.userEdtTxtName.setText(LoggedUser.userLiveData.value!!.name)
             binding.userTxtVwEmail.text = LoggedUser.userLiveData.value!!.email
-            Picasso.get().load(LoggedUser.userLiveData.value!!.imageUrl)
-                .placeholder(R.drawable.image_placeholder).into(
-                    binding.userPicture
-                )
+            binding.userPicture.load(LoggedUser.userLiveData.value!!.imageUrl) {
+                placeholder(R.drawable.image_placeholder)
+            }
             binding.userBtnChangeImage.isEnabled = true
             binding.userBtnUpdate.isEnabled = true
         }
@@ -192,10 +191,9 @@ class UserProfileFragment : Fragment(), OnFileUploadedListener,
                 FilesDao.remove(Uri.parse(LoggedUser.userLiveData.value!!.imageUrl))
             }
             LoggedUser.userLiveData.value!!.imageUrl = remote.toString()
-            Picasso.get().load(LoggedUser.userLiveData.value!!.imageUrl)
-                .placeholder(R.drawable.image_placeholder).into(
-                    binding.userPicture
-                )
+            binding.userPicture.load(LoggedUser.userLiveData.value!!.imageUrl) {
+                placeholder(R.drawable.image_placeholder)
+            }
         }
         hideLoadingScreen()
     }

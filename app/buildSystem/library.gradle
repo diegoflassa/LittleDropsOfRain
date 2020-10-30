@@ -21,6 +21,7 @@ ext.library = [
 
         // Picasso
         picasso                                : "",
+        coil                                   : "",
 
         //OKHttp
         okhttp                                 : "",

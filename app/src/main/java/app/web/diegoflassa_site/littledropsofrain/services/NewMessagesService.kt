@@ -57,9 +57,8 @@ class NewMessagesService : JobIntentService(), EventListener<QuerySnapshot> {
     private fun setupListener() {
         mQuery = mFirestore.collection(MessageDao.COLLECTION_PATH)
         mQuery.whereEqualTo(Message.FETCHED, false)
-        mQuery.whereEqualTo(Message.TYPE, MessageType.MESSAGE.toString())
-        mQuery.get()
-        mQuery.addSnapshotListener(this)
+            .whereEqualTo(Message.TYPE, MessageType.MESSAGE.toString())
+            .addSnapshotListener(this)
     }
 
     override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {

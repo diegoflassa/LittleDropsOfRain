@@ -34,6 +34,7 @@ import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedFailu
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnFileUploadedListener
 import app.web.diegoflassa_site.littledropsofrain.models.TopicMessageViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.TopicMessageViewState
+import coil.load
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -43,7 +44,6 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.auth.oauth2.AccessToken
 import com.google.auth.oauth2.GoogleCredentials
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -70,7 +70,12 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         fun newInstance() = SendTopicMessageFragment()
     }
 
-    private val viewModel: TopicMessageViewModel by viewModels(factoryProducer ={ SavedStateViewModelFactory(this.requireActivity().application, this) })
+    private val viewModel: TopicMessageViewModel by viewModels(factoryProducer = {
+        SavedStateViewModelFactory(
+            this.requireActivity().application,
+            this
+        )
+    })
     private var binding: FragmentSendTopicMessageBinding by viewLifecycle()
 
     override fun onCreateView(
@@ -244,7 +249,9 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
                 (chip as Chip).isChecked = true
             }
         }
-        Picasso.get().load(viewModel.viewState.imageUriLocal).into(binding.imgVwNotificationImage)
+        binding.imgVwNotificationImage.load(viewModel.viewState.imageUriLocal) {
+            placeholder(R.drawable.image_placeholder)
+        }
         if (viewModel.viewState.imageUriLocal != null) {
             binding.imgVwNotificationImage.visibility = View.VISIBLE
         } else {

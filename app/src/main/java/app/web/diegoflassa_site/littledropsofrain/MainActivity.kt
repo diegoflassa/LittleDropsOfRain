@@ -42,6 +42,7 @@ import app.web.diegoflassa_site.littledropsofrain.services.NewMessagesService
 import app.web.diegoflassa_site.littledropsofrain.services.SetupProductsUpdateWorkerService
 import app.web.diegoflassa_site.littledropsofrain.ui.SettingsFragment
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
+import coil.load
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -52,7 +53,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.joanzapata.iconify.fonts.TypiconsIcons
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 
@@ -196,16 +196,14 @@ class MainActivity : AppCompatActivity(),
     private fun setUpUserInDrawer() {
         if (LoggedUser.userLiveData.value != null) {
             if (LoggedUser.userLiveData.value!!.imageUrl != null) {
-                Picasso.get().load(LoggedUser.userLiveData.value!!.imageUrl)
-                    .placeholder(R.drawable.image_placeholder)
-                    .error(
+                binding.navView.nav_vw_image.load(LoggedUser.userLiveData.value!!.imageUrl) {
+                    placeholder(R.drawable.image_placeholder)
+                    error(
                         ContextCompat.getDrawable(
                             applicationContext,
                             R.mipmap.ic_launcher_round
-                        )!!
-                    ).into(
-                        binding.navView.nav_vw_image
-                    )
+                        ))
+                }
             } else {
                 binding.navView.nav_vw_image.setImageDrawable(
                     ContextCompat.getDrawable(

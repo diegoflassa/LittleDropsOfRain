@@ -13,12 +13,12 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemProductBinding
 import app.web.diegoflassa_site.littledropsofrain.ui.all_products.AllProductsFragment
 import app.web.diegoflassa_site.littledropsofrain.ui.all_products.AllProductsFragmentDirections
+import coil.load
 import com.google.android.material.chip.Chip
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,8 +66,7 @@ open class AllProductsAdapter(
             val resources = itemView.resources
 
             // Load image
-            Picasso.get().load(product?.imageUrl).placeholder(R.drawable.image_placeholder)
-                .into(binding.picture)
+            binding.picture.load(product?.imageUrl) { placeholder(R.drawable.image_placeholder) }
             binding.title.text = resources.getString(R.string.rv_title, product?.title)
             var chipCategory: Chip
             binding.chipCategories.removeAllViews()

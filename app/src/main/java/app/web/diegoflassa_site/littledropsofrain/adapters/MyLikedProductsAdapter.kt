@@ -8,17 +8,17 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
+import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemProductBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.ui.my_liked_products.MyLikedProductsFragment
+import coil.load
 import com.google.android.material.chip.Chip
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,8 +66,7 @@ open class MyLikedProductsAdapter(
             val resources = itemView.resources
 
             // Load image
-            Picasso.get().load(product?.imageUrl).placeholder(R.drawable.image_placeholder)
-                .into(binding.picture)
+            binding.picture.load(product?.imageUrl) { placeholder(R.drawable.image_placeholder) }
             binding.title.text = resources.getString(R.string.rv_title, product?.title)
             var chipCategory: Chip
             binding.chipCategories.removeAllViews()
@@ -87,14 +86,17 @@ open class MyLikedProductsAdapter(
             var priceStr = (product.price?.div(100)).toString()
             priceStr += DecimalFormatSymbols.getInstance().decimalSeparator + "00"
             binding.price.text = resources.getString(R.string.rv_price, priceStr)
-            val heartIcon = IconDrawable(myLikedProductsFragment.requireContext(), SimpleLineIconsIcons.icon_heart)
-            if(product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
+            val heartIcon = IconDrawable(
+                myLikedProductsFragment.requireContext(),
+                SimpleLineIconsIcons.icon_heart
+            )
+            if (product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
                 heartIcon.color(Color.RED)
             }
             binding.imgVwLike.setImageDrawable(heartIcon)
             binding.imgVwLike.setOnClickListener {
                 if (product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
-                    if(!product.isPublished) {
+                    if (!product.isPublished) {
                         val builder = AlertDialog.Builder(myLikedProductsFragment.requireContext())
                         builder.setMessage(myLikedProductsFragment.getString(R.string.remove_like_from_unpublished_product))
                             .setCancelable(false)
@@ -110,7 +112,7 @@ open class MyLikedProductsAdapter(
                             }
                         val alert = builder.create()
                         alert.show()
-                    }else{
+                    } else {
                         product.likes.remove(LoggedUser.userLiveData.value?.uid!!)
                         ioScope.launch {
                             ProductDao.update(product)

@@ -22,10 +22,19 @@ ext.buildVersionNameWithoutClassifier = {
     return "littledropsofrain"
 }
 
+Properties versionProps = new Properties()
+def versionPropsFile = file('version.properties')
+if (versionPropsFile.exists())
+    versionProps.load(new FileInputStream(versionPropsFile))
+def code = (versionProps['VERSION_CODE'] ?: "0").toInteger() + 1
+versionProps['VERSION_CODE'] = code.toString()
+versionProps.store(versionPropsFile.newWriter(), null)
+
+
 ext.buildVersionName = {
     String versionName = ext.buildVersionNameWithoutClassifier()
     if (config.versionClassifier != null && !config.versionClassifier.isEmpty()) {
-        versionName = versionName + "-" + config.versionClassifier
+        versionName = versionName + "-" + config.versionClassifier + "-Build:${code}"
     }
     return versionName
 }

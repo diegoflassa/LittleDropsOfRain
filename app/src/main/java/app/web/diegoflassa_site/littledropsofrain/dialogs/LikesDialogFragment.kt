@@ -19,6 +19,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.DialogLikesFragmentBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
+import coil.load
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -62,8 +63,7 @@ class LikesDialogFragment(var product : Product?) : DialogFragment() {
             dismiss()
         }
         product = args.product
-        Picasso.get().load(product!!.imageUrl).placeholder(R.drawable.image_placeholder)
-            .into(binding.imgVwProduct)
+        binding.imgVwProduct.load(product!!.imageUrl){placeholder(R.drawable.image_placeholder)}
         showLoadingScreen()
         initFirestore()
         initQuery()

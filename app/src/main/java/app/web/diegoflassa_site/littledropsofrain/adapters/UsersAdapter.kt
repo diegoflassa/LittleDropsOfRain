@@ -19,11 +19,11 @@ import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListene
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataFailureListener
 import app.web.diegoflassa_site.littledropsofrain.ui.send_message.SendMessageFragment
 import app.web.diegoflassa_site.littledropsofrain.ui.users.UsersFragment
+import coil.load
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -88,8 +88,7 @@ open class UsersAdapter(
             val resources = itemView.resources
 
             // Load image
-            Picasso.get().load(user?.imageUrl).placeholder(R.drawable.image_placeholder)
-                .into(binding.userPicture)
+            binding.userPicture.load(user?.imageUrl) { placeholder(R.drawable.image_placeholder) }
             binding.userName.text = resources.getString(R.string.rv_user_name, user?.name)
             binding.userEmail.text = resources.getString(R.string.rv_user_email, user?.email)
             val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
