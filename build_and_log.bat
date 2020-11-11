@@ -1,0 +1,1 @@
+.\gradlew.bat build > gradleLogs.txt 2> gradleErrors.txt

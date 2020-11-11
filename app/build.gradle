@@ -70,12 +70,12 @@ android {
         }
     }
     compileOptions {
-        // Sets Java compatibility to Java 8
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
+        // Sets Java compatibility to Java 15
+        targetCompatibility JavaVersion.VERSION_15
+        sourceCompatibility JavaVersion.VERSION_15
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_15.toString()
         useIR = true
     }
     buildFeatures {
@@ -89,7 +89,7 @@ android {
         exclude 'META-INF/DEPENDENCIES'
     }
     composeOptions {
-        kotlinCompilerVersion '1.4.20-M2'
+        kotlinCompilerVersion '1.4.20-RC'
         kotlinCompilerExtensionVersion '1.0.0-alpha05'
     }
 }
@@ -125,27 +125,27 @@ dependencies {
 
 
     // Jetpack Compose toolkit dependencies
-    implementation 'androidx.compose.ui:ui:1.0.0-alpha05'
+    implementation 'androidx.compose.ui:ui:1.0.0-alpha06'
     // Tooling support (Previews, etc.)
-    implementation 'androidx.ui:ui-tooling:1.0.0-alpha05'
+    implementation 'androidx.ui:ui-tooling:1.0.0-alpha06'
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation 'androidx.compose.foundation:foundation:1.0.0-alpha05'
+    implementation 'androidx.compose.foundation:foundation:1.0.0-alpha06'
     // Material Design
-    implementation 'androidx.compose.material:material:1.0.0-alpha05'
+    implementation 'androidx.compose.material:material:1.0.0-alpha06'
     // Material design icons
-    implementation 'androidx.compose.material:material-icons-core:1.0.0-alpha05'
-    implementation 'androidx.compose.material:material-icons-extended:1.0.0-alpha05'
+    implementation 'androidx.compose.material:material-icons-core:1.0.0-alpha06'
+    implementation 'androidx.compose.material:material-icons-extended:1.0.0-alpha06'
     // Integration with observables
-    implementation 'androidx.compose.runtime:runtime-livedata:1.0.0-alpha05'
-    implementation 'androidx.compose.runtime:runtime-rxjava2:1.0.0-alpha05'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.0.0-alpha06'
+    implementation 'androidx.compose.runtime:runtime-rxjava2:1.0.0-alpha06'
     // UI Tests
-    androidTestImplementation 'androidx.ui:ui-test:1.0.0-alpha05'
+    androidTestImplementation 'androidx.ui:ui-test:1.0.0-alpha06'
 
 
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:25.12.0')
     // com.google.firebase
-    implementation 'com.google.firebase:firebase-iid:20.3.0'
+    implementation 'com.google.firebase:firebase-iid:21.0.0'
     // Add the Firebase SDK for Google Analytics
     // For an optimal experience using FCM, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.
@@ -153,17 +153,17 @@ dependencies {
     // Add the Firebase Crashlytics SDK.
     // Declare the dependencies for the Remote Config and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation 'com.google.firebase:firebase-config-ktx:19.2.0'
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.6.0'
+    implementation 'com.google.firebase:firebase-config-ktx:20.0.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:18.0.0'
     implementation 'com.google.firebase:firebase-appindexing:19.1.0'
     // Firebase Authentication (Kotlin)
-    implementation 'com.google.firebase:firebase-auth-ktx:19.4.0'
+    implementation 'com.google.firebase:firebase-auth-ktx:20.0.0'
     implementation 'com.google.firebase:firebase-crashlytics-ktx:17.2.2'
     implementation 'com.google.firebase:firebase-database-ktx:19.5.1'
     // Add the SDK for Firebase Cloud Messaging
-    implementation 'com.google.firebase:firebase-firestore-ktx:21.7.1'
-    implementation 'com.google.firebase:firebase-inappmessaging-display-ktx:19.1.1'
-    implementation 'com.google.firebase:firebase-messaging:20.3.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:22.0.0'
+    implementation 'com.google.firebase:firebase-inappmessaging-display-ktx:19.1.2'
+    implementation 'com.google.firebase:firebase-messaging:21.0.0'
     implementation 'com.google.firebase:firebase-storage-ktx:19.2.0'
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-auth:6.3.0'
@@ -177,7 +177,7 @@ dependencies {
 
 
     implementation 'com.google.firebase:firebase-dynamic-links:19.1.1'
-    implementation 'com.google.firebase:firebase-firestore:21.7.1'
+    implementation 'com.google.firebase:firebase-firestore:22.0.0'
     implementation 'com.google.firebase:firebase-perf:19.0.9'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
 
@@ -194,7 +194,7 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.browser:browser:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.fragment:fragment-ktx:1.3.0-beta01'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
