@@ -1,13 +1,29 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics' // Apply the Crashlytics Gradle plugin
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'com.google.firebase.firebase-perf'
-apply from: "$projectDir/buildsystem/config.gradle"
+apply from: "$rootProject.projectDir/buildsystem/config.gradle"
+apply from: "$rootProject.projectDir/buildsystem/library.gradle"
+
+// import app.web.diegoflassa_site.littledropsofrain.buildsrc.Libs
+
+// Creates a variable called keystorePropertiesFile, and initializes it to the
+// keystore.properties file.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initializes a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+
+// Loads the keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+def library = ext.library
 
 android {
     compileSdkVersion config.compileSdkVersion
@@ -36,16 +52,17 @@ android {
     signingConfigs {
         // DFL - Configuração para assinar o APK. Nao se preocupe agora
         release {
-            storeFile file(KEYSTORE_FILE)
-            storePassword KEYSTORE_PASSWORD
-            keyAlias KEYSTORE_ALIAS
-            keyPassword KEY_PASSWORD
+            storeFile file(keystoreProperties['KEYSTORE_FILE'])
+            storePassword keystoreProperties['KEYSTORE_PASSWORD']
+            keyAlias keystoreProperties['KEYSTORE_ALIAS']
+            keyPassword keystoreProperties['KEY_PASSWORD']
             v2SigningEnabled true
         }
     }
     buildTypes {
         debug {
-
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
         }
         release {
             // Enables code shrinking, obfuscation, and optimization for only
@@ -70,16 +87,17 @@ android {
         }
     }
     compileOptions {
-        // Sets Java compatibility to Java 15
-        targetCompatibility JavaVersion.VERSION_15
-        sourceCompatibility JavaVersion.VERSION_15
+        // Sets Java compatibility to Java 11
+        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_15.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
         useIR = true
     }
     buildFeatures {
         viewBinding = true
+        compose = true
     }
     lintOptions {
         abortOnError false
@@ -89,25 +107,31 @@ android {
         exclude 'META-INF/DEPENDENCIES'
     }
     composeOptions {
-        kotlinCompilerVersion '1.4.20-RC'
-        kotlinCompilerExtensionVersion '1.0.0-alpha05'
+        kotlinCompilerVersion library.kotlin_compiler_version
+        kotlinCompilerExtensionVersion library.androidx_jetpack_compose
     }
 }
 
-ext.version = [
-        work_version: "2.4.0",
-]
-def version = ext.version
-apply from: "$projectDir/buildSystem/library.gradle"
-//def library = ext.library
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        // Treat all Kotlin warnings as errors
+        allWarningsAsErrors = true
+        // Set the target vm version
+        jvmTarget = JavaVersion.VERSION_11.toString()
+        // Use experimental APIs
+        freeCompilerArgs += '-Xopt-in=kotlin.RequiresOptIn'
+        freeCompilerArgs += '-Xallow-jvm-ir-dependencies'
+    }
+}
+
 dependencies {
 
     // Kotlin + coroutines
-    implementation "androidx.work:work-runtime-ktx:$version.work_version"
+    implementation "androidx.work:work-runtime-ktx:$library.work_version"
     // optional - RxJava2 support
-    implementation "androidx.work:work-rxjava2:$version.work_version"
+    implementation "androidx.work:work-rxjava2:$library.work_version"
     // optional - GCMNetworkManager support
-    implementation "androidx.work:work-gcm:$version.work_version"
+    implementation "androidx.work:work-gcm:$library.work_version"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
@@ -125,27 +149,27 @@ dependencies {
 
 
     // Jetpack Compose toolkit dependencies
-    implementation 'androidx.compose.ui:ui:1.0.0-alpha06'
+    implementation "androidx.compose.ui:ui:${library.androidx_jetpack_compose}"
     // Tooling support (Previews, etc.)
-    implementation 'androidx.ui:ui-tooling:1.0.0-alpha06'
+    implementation "androidx.ui:ui-tooling:${library.androidx_jetpack_compose}"
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation 'androidx.compose.foundation:foundation:1.0.0-alpha06'
+    implementation "androidx.compose.foundation:foundation:${library.androidx_jetpack_compose}"
     // Material Design
-    implementation 'androidx.compose.material:material:1.0.0-alpha06'
+    implementation "androidx.compose.material:material:${library.androidx_jetpack_compose}"
     // Material design icons
-    implementation 'androidx.compose.material:material-icons-core:1.0.0-alpha06'
-    implementation 'androidx.compose.material:material-icons-extended:1.0.0-alpha06'
+    implementation "androidx.compose.material:material-icons-core:${library.androidx_jetpack_compose}"
+    implementation "androidx.compose.material:material-icons-extended:${library.androidx_jetpack_compose}"
     // Integration with observables
-    implementation 'androidx.compose.runtime:runtime-livedata:1.0.0-alpha06'
-    implementation 'androidx.compose.runtime:runtime-rxjava2:1.0.0-alpha06'
+    implementation "androidx.compose.runtime:runtime-livedata:${library.androidx_jetpack_compose}"
+    implementation "androidx.compose.runtime:runtime-rxjava2:${library.androidx_jetpack_compose}"
     // UI Tests
-    androidTestImplementation 'androidx.ui:ui-test:1.0.0-alpha06'
+    androidTestImplementation "androidx.ui:ui-test:${library.androidx_jetpack_compose}"
 
 
     // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:25.12.0')
+    implementation platform('com.google.firebase:firebase-bom:26.1.0')
     // com.google.firebase
-    implementation 'com.google.firebase:firebase-iid:21.0.0'
+    implementation 'com.google.firebase:firebase-iid'
     // Add the Firebase SDK for Google Analytics
     // For an optimal experience using FCM, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.
@@ -153,18 +177,22 @@ dependencies {
     // Add the Firebase Crashlytics SDK.
     // Declare the dependencies for the Remote Config and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation 'com.google.firebase:firebase-config-ktx:20.0.0'
-    implementation 'com.google.firebase:firebase-analytics-ktx:18.0.0'
-    implementation 'com.google.firebase:firebase-appindexing:19.1.0'
+    implementation 'com.google.firebase:firebase-config-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-appindexing'
     // Firebase Authentication (Kotlin)
-    implementation 'com.google.firebase:firebase-auth-ktx:20.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:17.2.2'
-    implementation 'com.google.firebase:firebase-database-ktx:19.5.1'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-database-ktx'
     // Add the SDK for Firebase Cloud Messaging
-    implementation 'com.google.firebase:firebase-firestore-ktx:22.0.0'
-    implementation 'com.google.firebase:firebase-inappmessaging-display-ktx:19.1.2'
-    implementation 'com.google.firebase:firebase-messaging:21.0.0'
-    implementation 'com.google.firebase:firebase-storage-ktx:19.2.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.google.firebase:firebase-inappmessaging-ktx'
+    implementation 'com.google.firebase:firebase-inappmessaging-display-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-storage-ktx'
+    implementation 'com.google.firebase:firebase-dynamic-links-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.google.firebase:firebase-perf-ktx'
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-auth:6.3.0'
     implementation 'com.firebaseui:firebase-ui-database:4.0.0'
@@ -175,17 +203,13 @@ dependencies {
     // GSon
     implementation 'com.google.code.gson:gson:2.8.6'
 
-
-    implementation 'com.google.firebase:firebase-dynamic-links:19.1.1'
-    implementation 'com.google.firebase:firebase-firestore:22.0.0'
-    implementation 'com.google.firebase:firebase-perf:19.0.9'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
 
     // Leak Canary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
     // Google Sign In SDK (only required for Google Sign In)
-    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.google.gms:google-services:4.3.4'
@@ -226,14 +250,14 @@ dependencies {
     implementation 'com.joanzapata.iconify:android-iconify-simplelineicons:2.2.2' // (v1.0.0)
     implementation 'com.joanzapata.iconify:android-iconify-ionicons:2.2.2' // (v2.0.1)
 
-    kapt 'androidx.databinding:databinding-compiler-common:4.1.0'
+    kapt 'androidx.databinding:databinding-compiler-common:4.1.1'
     kapt 'androidx.room:room-compiler:2.2.5'
 
     // Testing dependencies
     testImplementation 'androidx.annotation:annotation:1.1.0'
     testImplementation 'androidx.test:core:1.3.0'
     testImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    testImplementation 'androidx.test.ext:junit:1.1.2'
+    testImplementation 'androidx.test.ext:junit-ktx:1.1.3-alpha02'
     testImplementation 'androidx.test:rules:1.3.0'
     testImplementation 'androidx.test:runner:1.3.0'
 

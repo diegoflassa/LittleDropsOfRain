@@ -4,13 +4,14 @@
 ext.version = [
         support     : "28.0.0-rc01",
         room        : "1.1.1",
-        work_version: "2.4.0",
 ]
 
 // Must access versions with throught "def"
 def version = ext.version
 ext.library = [
-
+        kotlin_compiler_version                : "1.4.10",
+        work_version                           : "2.4.0",
+        androidx_jetpack_compose               : "1.0.0-alpha07",
         androidx_work_work_runtime             : "",
         androidx_work_work_rxjava2             : "",
         androidx_work_work_gcm                 : "",

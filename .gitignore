@@ -107,8 +107,6 @@ twitter-api-keys.txt
 src/main/res/raw/
 /Little Drops Of Rain.zip
 app/google-services.json
-Little Drops Of Rain3.zip
-Little Drops Of Rain 4.7z
 app/src/main/res/raw/littledropsofrain_site_firebase_adminsdk_9dvd0_c718bc2981.json
 app/release/
 gradle.properties
@@ -118,3 +116,5 @@ app/src/main/res/values/api_keys.xml
 app/version.properties
 gradleErrors.txt
 gradleLogs.txt
+gradle.log
+keystore.properties

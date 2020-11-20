@@ -31,6 +31,7 @@ import app.web.diegoflassa_site.littledropsofrain.contracts.EmailLinkAuthActivit
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
+import app.web.diegoflassa_site.littledropsofrain.databinding.NavHeaderMainBinding
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.helpers.IntentHelper
 import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
@@ -53,7 +54,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.joanzapata.iconify.fonts.TypiconsIcons
-import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 
 class MainActivity : AppCompatActivity(),
@@ -72,7 +72,8 @@ class MainActivity : AppCompatActivity(),
         )
     })
     private lateinit var fab: FloatingActionButton
-    private lateinit var binding: ActivityMainBinding
+    private var binding: ActivityMainBinding? = null
+    private var bindingNavHeader: NavHeaderMainBinding? = null
     private lateinit var toggle: ActionBarDrawerToggle
     private var authenticateOnResume = false
     private var isSetUpUserInDrawer = false
@@ -82,12 +83,13 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        bindingNavHeader = NavHeaderMainBinding.inflate(layoutInflater)
         viewModel.viewState.observe(this, {
             updateUI(it)
         })
         // Initialize the singleton class
         LoggedUser.userLiveData.value = null
-        setContentView(binding.root)
+        setContentView(binding?.root)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -150,7 +152,7 @@ class MainActivity : AppCompatActivity(),
             drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        binding.navView.setupWithNavController(navController)
+        binding?.navView?.setupWithNavController(navController)
         val bnv = findViewById<BottomNavigationView>(R.id.nav_bottom)
         val menu = bnv.menu
         menu.findItem(R.id.nav_all_messages).icon = IconDrawable(
@@ -196,16 +198,17 @@ class MainActivity : AppCompatActivity(),
     private fun setUpUserInDrawer() {
         if (LoggedUser.userLiveData.value != null) {
             if (LoggedUser.userLiveData.value!!.imageUrl != null) {
-                binding.navView.nav_vw_image.load(LoggedUser.userLiveData.value!!.imageUrl) {
+                bindingNavHeader?.navVwImage?.load(LoggedUser.userLiveData.value!!.imageUrl) {
                     placeholder(R.drawable.image_placeholder)
                     error(
                         ContextCompat.getDrawable(
                             applicationContext,
                             R.mipmap.ic_launcher_round
-                        ))
+                        )
+                    )
                 }
             } else {
-                binding.navView.nav_vw_image.setImageDrawable(
+                bindingNavHeader!!.navVwImage.setImageDrawable(
                     ContextCompat.getDrawable(
                         applicationContext,
                         R.mipmap.ic_launcher_round
@@ -213,22 +216,24 @@ class MainActivity : AppCompatActivity(),
                 )
             }
             val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-            binding.navView.nav_vw_image.setOnClickListener {
+            bindingNavHeader!!.navVwImage.setOnClickListener {
                 drawerLayout.close()
                 findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalUserProfileFragment())
             }
-            binding.navView.nav_vw_name.text = LoggedUser.userLiveData.value!!.name
-            binding.navView.nav_vw_email.text = LoggedUser.userLiveData.value!!.email
+            bindingNavHeader!!.navVwName.text =
+                LoggedUser.userLiveData.value!!.name
+            bindingNavHeader!!.navVwEmail.text =
+                LoggedUser.userLiveData.value!!.email
 
         } else {
-            binding.navView.nav_vw_image.setImageDrawable(
+            bindingNavHeader!!.navVwImage.setImageDrawable(
                 ContextCompat.getDrawable(
                     applicationContext,
                     R.mipmap.ic_launcher_round
                 )
             )
-            binding.navView.nav_vw_name.text = getString(R.string.not_logged_in)
-            binding.navView.nav_vw_email.text = ""
+            bindingNavHeader!!.navVwName.text = getString(R.string.not_logged_in)
+            bindingNavHeader!!.navVwEmail.text = ""
         }
     }
 
@@ -317,6 +322,8 @@ class MainActivity : AppCompatActivity(),
 
     override fun onDestroy() {
         Log.d(TAG, "Main activity destroyed")
+        binding = null
+        bindingNavHeader = null
         super.onDestroy()
     }
 
