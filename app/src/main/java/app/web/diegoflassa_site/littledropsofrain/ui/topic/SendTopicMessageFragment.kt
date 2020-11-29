@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.ui.topic
 
 import android.net.Uri
@@ -54,8 +70,10 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
-
-class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploadedFailureListener,
+class SendTopicMessageFragment :
+    Fragment(),
+    OnFileUploadedListener,
+    OnFileUploadedFailureListener,
     ActivityResultCallback<Uri?> {
 
     private val ioScope = CoroutineScope(Dispatchers.IO)
@@ -70,22 +88,28 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
         fun newInstance() = SendTopicMessageFragment()
     }
 
-    private val viewModel: TopicMessageViewModel by viewModels(factoryProducer = {
-        SavedStateViewModelFactory(
-            this.requireActivity().application,
-            this
-        )
-    })
+    private val viewModel: TopicMessageViewModel by viewModels(
+        factoryProducer = {
+            SavedStateViewModelFactory(
+                this.requireActivity().application,
+                this
+            )
+        }
+    )
     private var binding: FragmentSendTopicMessageBinding by viewLifecycle()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSendTopicMessageBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(viewLifecycleOwner, {
-            updateUI(it)
-        })
+        viewModel.viewState.observe(
+            viewLifecycleOwner,
+            {
+                updateUI(it)
+            }
+        )
         for (topic in TopicMessage.Topic.values()) {
             if (topic != TopicMessage.Topic.UNKNOWN) {
                 val chip = Chip(requireContext())
@@ -311,10 +335,10 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
                     Response.ErrorListener {
                         var body = ""
 
-                        //get status code here
+                        // get status code here
                         val statusCode = it.networkResponse.statusCode.toString()
 
-                        //get response body and parse with appropriate encoding
+                        // get response body and parse with appropriate encoding
                         if (it.networkResponse.data != null) {
                             body = String(it.networkResponse.data, Charset.defaultCharset())
                         }
@@ -326,8 +350,8 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
                         activity?.runOnUiThread {
                             binding.fabSendTopicMessage.isEnabled = true
                         }
-
-                    }) {
+                    }
+                ) {
 
                     @Throws(AuthFailureError::class)
                     override fun getBody(): ByteArray {
@@ -359,7 +383,6 @@ class SendTopicMessageFragment : Fragment(), OnFileUploadedListener, OnFileUploa
                     }
                 }
                 Volley.newRequestQueue(activity).add(myReq)
-
             } else {
                 Log.d(TAG, "No topic selected!")
             }

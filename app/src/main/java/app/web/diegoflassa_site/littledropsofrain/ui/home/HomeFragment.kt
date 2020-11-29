@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.ui.home
 
 import android.Manifest
@@ -57,18 +73,22 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import java.lang.ref.WeakReference
 import java.util.*
 
-
-class HomeFragment : Fragment(), ActivityResultCallback<Int>,
+class HomeFragment :
+    Fragment(),
+    ActivityResultCallback<Int>,
     View.OnClickListener,
     ProductsFilterDialogFragment.FilterListener,
-    ProductAdapter.OnProductSelectedListener, DialogInterface.OnDismissListener {
+    ProductAdapter.OnProductSelectedListener,
+    DialogInterface.OnDismissListener {
 
-    private val viewModel: HomeViewModel by viewModels(factoryProducer = {
-        SavedStateViewModelFactory(
-            this.requireActivity().application,
-            this
-        )
-    })
+    private val viewModel: HomeViewModel by viewModels(
+        factoryProducer = {
+            SavedStateViewModelFactory(
+                this.requireActivity().application,
+                this
+            )
+        }
+    )
     var binding: FragmentHomeBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<ProductAdapter>
     private lateinit var mFirestore: FirebaseFirestore
@@ -98,9 +118,12 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(viewLifecycleOwner, {
-            updateUI(it)
-        })
+        viewModel.viewState.observe(
+            viewLifecycleOwner,
+            {
+                updateUI(it)
+            }
+        )
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
 
@@ -228,9 +251,9 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
                 this.requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this.requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+                    this.requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
         ) {
             mPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
             return
@@ -294,7 +317,7 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
 
     private fun isLocationInBrazil(location: Location): Boolean {
         return (location.latitude > BRAZIL_MAX_LATITUDE_SOUTH && location.latitude < BRAZIL_MIN_LATITUDE_NORTH) &&
-                (location.longitude > BRAZIL_MAX_LONGITUDE_WEST && location.longitude < BRAZIL_MIN_LONGITUDE_EAST)
+            (location.longitude > BRAZIL_MAX_LONGITUDE_WEST && location.longitude < BRAZIL_MIN_LONGITUDE_EAST)
     }
 
     private fun getShopByGeoLocation(query: Query): Query {
@@ -449,5 +472,4 @@ class HomeFragment : Fragment(), ActivityResultCallback<Int>,
     override fun onDismiss(dialog: DialogInterface?) {
         binding.filterBar.isEnabled = true
     }
-
 }

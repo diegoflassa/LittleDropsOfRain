@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.dialogs
 
 import android.app.Dialog
@@ -24,11 +40,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import com.squareup.picasso.Picasso
 import java.lang.ref.WeakReference
 
-
-class LikesDialogFragment(var product : Product?) : DialogFragment() {
+class LikesDialogFragment(var product: Product?) : DialogFragment() {
 
     constructor() : this(null)
 
@@ -63,7 +77,7 @@ class LikesDialogFragment(var product : Product?) : DialogFragment() {
             dismiss()
         }
         product = args.product
-        binding.imgVwProduct.load(product!!.imageUrl){placeholder(R.drawable.image_placeholder)}
+        binding.imgVwProduct.load(product!!.imageUrl) { placeholder(R.drawable.image_placeholder) }
         showLoadingScreen()
         initFirestore()
         initQuery()
@@ -102,27 +116,27 @@ class LikesDialogFragment(var product : Product?) : DialogFragment() {
 
         mAdapter =
             WeakReference<LikesDialogAdapter>(object :
-                LikesDialogAdapter(this@LikesDialogFragment, mQuery, product!!) {
-                override fun onDataChanged() {
-                    hideLoadingScreen()
-                    // Show/hide content if the query returns empty.
-                    if (itemCount == 0) {
-                        binding.rcVwLikes.visibility = View.GONE
-                        binding.likesDialogViewEmpty.visibility = View.VISIBLE
-                    } else {
-                        binding.rcVwLikes.visibility = View.VISIBLE
-                        binding.likesDialogViewEmpty.visibility = View.GONE
+                    LikesDialogAdapter(this@LikesDialogFragment, mQuery, product!!) {
+                    override fun onDataChanged() {
+                        hideLoadingScreen()
+                        // Show/hide content if the query returns empty.
+                        if (itemCount == 0) {
+                            binding.rcVwLikes.visibility = View.GONE
+                            binding.likesDialogViewEmpty.visibility = View.VISIBLE
+                        } else {
+                            binding.rcVwLikes.visibility = View.VISIBLE
+                            binding.likesDialogViewEmpty.visibility = View.GONE
+                        }
                     }
-                }
 
-                override fun onError(e: FirebaseFirestoreException?) {
-                    // Show a snackbar on errors
-                    activity?.findViewById<View>(android.R.id.content)?.let {
-                        Snackbar.make(it, "Error: check logs for info.", Snackbar.LENGTH_LONG)
-                            .show()
+                    override fun onError(e: FirebaseFirestoreException?) {
+                        // Show a snackbar on errors
+                        activity?.findViewById<View>(android.R.id.content)?.let {
+                            Snackbar.make(it, "Error: check logs for info.", Snackbar.LENGTH_LONG)
+                                .show()
+                        }
                     }
-                }
-            })
+                })
         binding.rcVwLikes.layoutManager = LinearLayoutManager(activity)
         binding.rcVwLikes.adapter = mAdapter.get()
     }
@@ -139,5 +153,4 @@ class LikesDialogFragment(var product : Product?) : DialogFragment() {
         mQuery = mFirestore.collection(UserDao.COLLECTION_PATH).whereIn(User.UID, userIDs)
         return mQuery
     }
-
 }

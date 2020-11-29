@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.ui
 
 import android.os.Bundle
@@ -12,7 +28,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import java.util.concurrent.TimeUnit
-
 
 class SplashActivity : AppCompatActivity() {
 
@@ -68,7 +83,7 @@ class SplashActivity : AppCompatActivity() {
                             taskFetchAndActivate.exception?.printStackTrace()
                             Log.d(
                                 TAG,
-                                "fetchRemoteConfig ${getString(R.string.configuration_fetch_failed)}. Error was ${taskFetchAndActivate.exception.toString()}"
+                                "fetchRemoteConfig ${getString(R.string.configuration_fetch_failed)}. Error was ${taskFetchAndActivate.exception}"
                             )
                             Toast.makeText(
                                 this, getString(R.string.configuration_fetch_failed),

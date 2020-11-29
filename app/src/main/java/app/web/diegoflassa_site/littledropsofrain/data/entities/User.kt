@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 @file:Suppress("unused")
 
 package app.web.diegoflassa_site.littledropsofrain.data.entities
@@ -56,9 +72,11 @@ data class User(
         if (javaClass != other.javaClass) return false
         val user: User = other as User
         // field comparison
-        return (Objects.equals(uid, user.uid)
-                && Objects.equals(name, user.name)
-                && Objects.equals(email, user.email))
+        return (
+            Objects.equals(uid, user.uid) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(email, user.email)
+            )
     }
 
     override fun hashCode(): Int {
@@ -97,5 +115,4 @@ data class User(
     override fun toString(): String {
         return "$name - $email"
     }
-
 }

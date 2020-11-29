@@ -118,3 +118,4 @@ gradleErrors.txt
 gradleLogs.txt
 gradle.log
 keystore.properties
+version.properties

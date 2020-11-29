@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.ui.instagram
 
 import android.annotation.SuppressLint
@@ -26,7 +42,6 @@ import app.web.diegoflassa_site.littledropsofrain.models.InstagramViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-
 class InstagramFragment : Fragment(), OnKeyLongPressListener {
 
     companion object {
@@ -35,12 +50,14 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
     }
 
     private var isStopped: Boolean = false
-    private val viewModel: InstagramViewModel by viewModels(factoryProducer = {
-        SavedStateViewModelFactory(
-            this.requireActivity().application,
-            this
-        )
-    })
+    private val viewModel: InstagramViewModel by viewModels(
+        factoryProducer = {
+            SavedStateViewModelFactory(
+                this.requireActivity().application,
+                this
+            )
+        }
+    )
     private var binding: FragmentInstagramBinding by viewLifecycle()
     private var url = ""
 
@@ -51,9 +68,12 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentInstagramBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(viewLifecycleOwner, {
-            updateUI(it)
-        })
+        viewModel.viewState.observe(
+            viewLifecycleOwner,
+            {
+                updateUI(it)
+            }
+        )
 
         url = getString(R.string.url_instagram)
         // set up the webview

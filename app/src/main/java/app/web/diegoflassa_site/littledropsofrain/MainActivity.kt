@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain
 
 import android.app.Activity
@@ -55,9 +71,11 @@ import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.joanzapata.iconify.fonts.TypiconsIcons
 
-
-class MainActivity : AppCompatActivity(),
-    OnUserFoundListener, ComponentCallbacks2, ActivityResultCallback<Int> {
+class MainActivity :
+    AppCompatActivity(),
+    OnUserFoundListener,
+    ComponentCallbacks2,
+    ActivityResultCallback<Int> {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -65,12 +83,14 @@ class MainActivity : AppCompatActivity(),
         private val TAG = MainActivity::class.simpleName
     }
 
-    private val viewModel: MainActivityViewModel by viewModels(factoryProducer = {
-        SavedStateViewModelFactory(
-            this.application,
-            this
-        )
-    })
+    private val viewModel: MainActivityViewModel by viewModels(
+        factoryProducer = {
+            SavedStateViewModelFactory(
+                this.application,
+                this
+            )
+        }
+    )
     private lateinit var fab: FloatingActionButton
     private var binding: ActivityMainBinding? = null
     private var bindingNavHeader: NavHeaderMainBinding? = null
@@ -84,9 +104,12 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         bindingNavHeader = NavHeaderMainBinding.inflate(layoutInflater)
-        viewModel.viewState.observe(this, {
-            updateUI(it)
-        })
+        viewModel.viewState.observe(
+            this,
+            {
+                updateUI(it)
+            }
+        )
         // Initialize the singleton class
         LoggedUser.userLiveData.value = null
         setContentView(binding?.root)
@@ -115,7 +138,7 @@ class MainActivity : AppCompatActivity(),
         toggle.syncState()
         drawerLayout.addDrawerListener(object : DrawerListener {
             override fun onDrawerStateChanged(newState: Int) {
-                //Log.i(TAG, "onDrawerStateChanged: $newState")
+                // Log.i(TAG, "onDrawerStateChanged: $newState")
             }
 
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -224,7 +247,6 @@ class MainActivity : AppCompatActivity(),
                 LoggedUser.userLiveData.value!!.name
             bindingNavHeader!!.navVwEmail.text =
                 LoggedUser.userLiveData.value!!.email
-
         } else {
             bindingNavHeader!!.navVwImage.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -476,10 +498,12 @@ class MainActivity : AppCompatActivity(),
                 Helper.requestGetCoarseLocationPermission(this)
                 LoggedUser.userLiveData.value = user
                 Toast.makeText(
-                    applicationContext, getString(
+                    applicationContext,
+                    getString(
                         R.string.user_logged_as,
                         LoggedUser.userLiveData.value!!.name
-                    ), Toast.LENGTH_LONG
+                    ),
+                    Toast.LENGTH_LONG
                 ).show()
             }
             FirebaseAuth.getInstance().currentUser != null -> {
@@ -490,10 +514,12 @@ class MainActivity : AppCompatActivity(),
                     MainActivityDirections.actionGlobalUserProfileFragment()
                 )
                 Toast.makeText(
-                    applicationContext, getString(
+                    applicationContext,
+                    getString(
                         R.string.user_logged_as,
                         LoggedUser.userLiveData.value!!.name
-                    ), Toast.LENGTH_LONG
+                    ),
+                    Toast.LENGTH_LONG
                 ).show()
             }
             else -> {
@@ -507,7 +533,7 @@ class MainActivity : AppCompatActivity(),
     override fun onActivityResult(result: Int) {
         if (result == Activity.RESULT_OK) {
             // Successfully signed in
-            //val user = FirebaseAuth.getInstance().currentUser
+            // val user = FirebaseAuth.getInstance().currentUser
             // ...
         } else {
             Log.d(TAG, "Error signing in")

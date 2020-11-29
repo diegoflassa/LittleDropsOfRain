@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.ui.user_profile
 
 import android.net.Uri
@@ -34,7 +50,9 @@ import coil.load
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class UserProfileFragment : Fragment(), OnFileUploadedListener,
+class UserProfileFragment :
+    Fragment(),
+    OnFileUploadedListener,
     OnFileUploadedFailureListener,
     ActivityResultCallback<Uri?> {
 
@@ -43,25 +61,31 @@ class UserProfileFragment : Fragment(), OnFileUploadedListener,
     }
 
     private lateinit var toggle: ActionBarDrawerToggle
-    private val viewModel: UserProfileViewModel by viewModels(factoryProducer = {
-        SavedStateViewModelFactory(
-            this.requireActivity().application,
-            this
-        )
-    })
+    private val viewModel: UserProfileViewModel by viewModels(
+        factoryProducer = {
+            SavedStateViewModelFactory(
+                this.requireActivity().application,
+                this
+            )
+        }
+    )
     private var binding: FragmentUserProfileBinding by viewLifecycle()
     private lateinit var getContentLauncher: ActivityResultLauncher<String>
     private lateinit var cropImageLauncher: ActivityResultLauncher<Pair<Uri, Pair<Float, Float>>>
     private var isStopped = false
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentUserProfileBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(viewLifecycleOwner, {
-            updateUI(it)
-        })
+        viewModel.viewState.observe(
+            viewLifecycleOwner,
+            {
+                updateUI(it)
+            }
+        )
 
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
@@ -202,5 +226,4 @@ class UserProfileFragment : Fragment(), OnFileUploadedListener,
         Toast.makeText(context, getString(R.string.file_upload_failure), Toast.LENGTH_LONG).show()
         hideLoadingScreen()
     }
-
 }

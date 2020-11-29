@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.ui.messages
 
 import android.content.DialogInterface
@@ -33,18 +49,21 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import java.lang.ref.WeakReference
 
-
-class MessagesFragment : Fragment(),
+class MessagesFragment :
+    Fragment(),
     MessageAdapter.OnMessageSelectedListener,
     MyMessagesFilterDialogFragment.FilterListener,
-    View.OnClickListener, DialogInterface.OnDismissListener {
+    View.OnClickListener,
+    DialogInterface.OnDismissListener {
 
-    private val viewModel: MessagesViewModel by viewModels(factoryProducer = {
-        SavedStateViewModelFactory(
-            this.requireActivity().application,
-            this
-        )
-    })
+    private val viewModel: MessagesViewModel by viewModels(
+        factoryProducer = {
+            SavedStateViewModelFactory(
+                this.requireActivity().application,
+                this
+            )
+        }
+    )
     private lateinit var mAdapter: WeakReference<MessageAdapter>
     var binding: FragmentMessagesBinding by viewLifecycle()
     private var mFilterDialog: MyMessagesFilterDialogFragment? = null
@@ -63,9 +82,12 @@ class MessagesFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(viewLifecycleOwner, {
-            updateUI(it)
-        })
+        viewModel.viewState.observe(
+            viewLifecycleOwner,
+            {
+                updateUI(it)
+            }
+        )
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(
             AppCompatResources.getDrawable(
@@ -156,7 +178,6 @@ class MessagesFragment : Fragment(),
             query = query.whereEqualTo(Message.READ, filters.read)
         }
 
-
         // Price (equality filter)
         // Sort by (orderBy with direction)
         if (filters.hasSortBy()) {
@@ -244,5 +265,4 @@ class MessagesFragment : Fragment(),
     override fun onDismiss(dialog: DialogInterface?) {
         binding.filterBarMyMessages.isEnabled = true
     }
-
 }

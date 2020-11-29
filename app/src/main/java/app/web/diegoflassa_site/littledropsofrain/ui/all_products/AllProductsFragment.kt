@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.ui.all_products
 
 import android.content.DialogInterface
@@ -46,14 +62,16 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import java.lang.ref.WeakReference
 
-
-class AllProductsFragment : Fragment(), ActivityResultCallback<Int>,
+class AllProductsFragment :
+    Fragment(),
+    ActivityResultCallback<Int>,
     View.OnClickListener,
     DialogInterface.OnDismissListener,
-    AllProductsAdapter.OnProductSelectedListener, AllProductsFilterDialogFragment.FilterListener,
+    AllProductsAdapter.OnProductSelectedListener,
+    AllProductsFilterDialogFragment.FilterListener,
     OnUsersLoadedListener {
 
-    private val viewModel: AllProductsViewModel by viewModels(factoryProducer ={ SavedStateViewModelFactory(this.requireActivity().application, this) })
+    private val viewModel: AllProductsViewModel by viewModels(factoryProducer = { SavedStateViewModelFactory(this.requireActivity().application, this) })
     var binding: FragmentAllProductsBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<AllProductsAdapter>
     private lateinit var mFirestore: FirebaseFirestore
@@ -74,9 +92,12 @@ class AllProductsFragment : Fragment(), ActivityResultCallback<Int>,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAllProductsBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(viewLifecycleOwner, {
-            updateUI(it)
-        })
+        viewModel.viewState.observe(
+            viewLifecycleOwner,
+            {
+                updateUI(it)
+            }
+        )
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
 
@@ -145,7 +166,6 @@ class AllProductsFragment : Fragment(), ActivityResultCallback<Int>,
         viewModel.viewState.filters = AllProductsFilters.default
         onFilter(viewModel.viewState.filters)
     }
-
 
     private fun showLoadingScreen() {
         binding.homeProgress.visibility = View.VISIBLE
@@ -231,28 +251,28 @@ class AllProductsFragment : Fragment(), ActivityResultCallback<Int>,
 
         mAdapter =
             WeakReference(object :
-                AllProductsAdapter(this@AllProductsFragment, mQuery, this@AllProductsFragment) {
-                override fun onDataChanged() {
-                    binding.filterBar.isEnabled = true
-                    hideLoadingScreen()
-                    // Show/hide content if the query returns empty.
-                    if (itemCount == 0) {
-                        binding.recyclerview.visibility = View.GONE
-                        binding.homeViewEmpty.visibility = View.VISIBLE
-                    } else {
-                        binding.recyclerview.visibility = View.VISIBLE
-                        binding.homeViewEmpty.visibility = View.GONE
+                    AllProductsAdapter(this@AllProductsFragment, mQuery, this@AllProductsFragment) {
+                    override fun onDataChanged() {
+                        binding.filterBar.isEnabled = true
+                        hideLoadingScreen()
+                        // Show/hide content if the query returns empty.
+                        if (itemCount == 0) {
+                            binding.recyclerview.visibility = View.GONE
+                            binding.homeViewEmpty.visibility = View.VISIBLE
+                        } else {
+                            binding.recyclerview.visibility = View.VISIBLE
+                            binding.homeViewEmpty.visibility = View.GONE
+                        }
                     }
-                }
 
-                override fun onError(e: FirebaseFirestoreException?) {
-                    // Show a snackbar on errors
-                    activity?.findViewById<View>(android.R.id.content)?.let {
-                        Snackbar.make(it, "Error: check logs for info.", Snackbar.LENGTH_LONG)
-                            .show()
+                    override fun onError(e: FirebaseFirestoreException?) {
+                        // Show a snackbar on errors
+                        activity?.findViewById<View>(android.R.id.content)?.let {
+                            Snackbar.make(it, "Error: check logs for info.", Snackbar.LENGTH_LONG)
+                                .show()
+                        }
                     }
-                }
-            })
+                })
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
         binding.recyclerview.adapter = mAdapter.get()
     }

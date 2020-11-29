@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.ui.all_messages
 
 import android.content.DialogInterface
@@ -17,7 +33,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.adapters.MessageAdapter
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
@@ -37,14 +52,15 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import java.lang.ref.WeakReference
 
-
-class AllMessagesFragment : Fragment(),
+class AllMessagesFragment :
+    Fragment(),
     MessageAdapter.OnMessageSelectedListener,
     AllMessagesFilterDialogFragment.FilterListener,
-    View.OnClickListener, DialogInterface.OnDismissListener {
+    View.OnClickListener,
+    DialogInterface.OnDismissListener {
 
     private var isStopped: Boolean = false
-    private val viewModel: AllMessagesViewModel by viewModels(factoryProducer ={ SavedStateViewModelFactory(this.requireActivity().application, this) })
+    private val viewModel: AllMessagesViewModel by viewModels(factoryProducer = { SavedStateViewModelFactory(this.requireActivity().application, this) })
     private lateinit var mAdapter: WeakReference<MessageAdapter>
     var binding: FragmentAllMessagesBinding by viewLifecycle()
     private var mFilterDialog: AllMessagesFilterDialogFragment? = null
@@ -65,9 +81,12 @@ class AllMessagesFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAllMessagesBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(viewLifecycleOwner, {
-            updateUI(it)
-        })
+        viewModel.viewState.observe(
+            viewLifecycleOwner,
+            {
+                updateUI(it)
+            }
+        )
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(
             AppCompatResources.getDrawable(
@@ -234,29 +253,29 @@ class AllMessagesFragment : Fragment(),
         }
 
         mAdapter = WeakReference(object :
-            MessageAdapter(requireContext(), mQuery, this@AllMessagesFragment) {
-            override fun onDataChanged() {
-                hideLoadingScreen()
-                // Show/hide content if the query returns empty.
-                if (itemCount == 0) {
-                    binding.recyclerviewAllMessages.visibility = View.GONE
-                    binding.allMessagesViewEmpty.visibility = View.VISIBLE
-                } else {
-                    binding.recyclerviewAllMessages.visibility = View.VISIBLE
-                    binding.allMessagesViewEmpty.visibility = View.GONE
+                MessageAdapter(requireContext(), mQuery, this@AllMessagesFragment) {
+                override fun onDataChanged() {
+                    hideLoadingScreen()
+                    // Show/hide content if the query returns empty.
+                    if (itemCount == 0) {
+                        binding.recyclerviewAllMessages.visibility = View.GONE
+                        binding.allMessagesViewEmpty.visibility = View.VISIBLE
+                    } else {
+                        binding.recyclerviewAllMessages.visibility = View.VISIBLE
+                        binding.allMessagesViewEmpty.visibility = View.GONE
+                    }
                 }
-            }
 
-            override fun onError(e: FirebaseFirestoreException?) {
-                // Show a snackbar on errors
-                activity?.findViewById<View>(android.R.id.content)?.let {
-                    Snackbar.make(
-                        it,
-                        "Error: check logs for info.", Snackbar.LENGTH_LONG
-                    ).show()
+                override fun onError(e: FirebaseFirestoreException?) {
+                    // Show a snackbar on errors
+                    activity?.findViewById<View>(android.R.id.content)?.let {
+                        Snackbar.make(
+                            it,
+                            "Error: check logs for info.", Snackbar.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
-        })
+            })
         binding.recyclerviewAllMessages.layoutManager = LinearLayoutManager(activity)
         binding.recyclerviewAllMessages.adapter = mAdapter.get()
     }

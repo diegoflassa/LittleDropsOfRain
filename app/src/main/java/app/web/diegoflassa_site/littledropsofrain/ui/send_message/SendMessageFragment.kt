@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.ui.send_message
 
 import android.os.Bundle
@@ -39,7 +55,8 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SendMessageFragment : Fragment(),
+class SendMessageFragment :
+    Fragment(),
     OnUsersLoadedListener {
 
     companion object {
@@ -53,25 +70,31 @@ class SendMessageFragment : Fragment(),
         var mSavedInstanceState: Bundle? = null
     }
 
-    private val viewModel: SendMessageViewModel by viewModels(factoryProducer = {
-        SavedStateViewModelFactory(
-            this.requireActivity().application,
-            this
-        )
-    })
+    private val viewModel: SendMessageViewModel by viewModels(
+        factoryProducer = {
+            SavedStateViewModelFactory(
+                this.requireActivity().application,
+                this
+            )
+        }
+    )
     private var binding: FragmentSendMessageBinding by viewLifecycle()
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private lateinit var toggle: ActionBarDrawerToggle
     private var isStopped = false
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSendMessageBinding.inflate(layoutInflater)
-        viewModel.viewState.observe(viewLifecycleOwner, {
-            updateUI(viewModel.viewState)
-        })
+        viewModel.viewState.observe(
+            viewLifecycleOwner,
+            {
+                updateUI(viewModel.viewState)
+            }
+        )
         binding.btnSend.setOnClickListener {
             val callback = Callback(this)
             // Coroutine has multiple dispatchers suited for different type of workloads
@@ -83,7 +106,7 @@ class SendMessageFragment : Fragment(),
                         message.owners.add(viewModel.viewState.sender.email.toString())
                         message.replyUid = viewModel.viewState.replyUid
                         message.message = binding.mltxtMessage.text.toString()
-                        if(!viewModel.viewState.dest.email.isNullOrEmpty()) {
+                        if (!viewModel.viewState.dest.email.isNullOrEmpty()) {
                             message.emailTo = viewModel.viewState.dest.email.toString()
                             if (viewModel.viewState.isUserAdmin) {
                                 message.owners.add(viewModel.viewState.dest.email.toString())
@@ -278,9 +301,11 @@ class SendMessageFragment : Fragment(),
 
     @Suppress("UNCHECKED_CAST")
     private fun setSelectedMessageSender() {
-        if (mSavedInstanceState != null && (mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY || mSavedInstanceState?.getString(
-                ACTION_SEND_KEY
-            ) == ACTION_SEND)
+        if (mSavedInstanceState != null && (
+            mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY || mSavedInstanceState?.getString(
+                    ACTION_SEND_KEY
+                ) == ACTION_SEND
+            )
         ) {
             val message = mSavedInstanceState?.getParcelable<Message>(KEY_MESSAGE)
             if (message != null) {
@@ -338,7 +363,7 @@ class SendMessageFragment : Fragment(),
 
     override fun onUsersLoaded(users: List<User>) {
         if (isSafeToAccessViewModel() && !isStopped) {
-            val usersWithDefault = ArrayList<User>(users.size+1)
+            val usersWithDefault = ArrayList<User>(users.size + 1)
             val user = User()
             user.name = getString(R.string.no_selection)
             user.email = getString(R.string.none)

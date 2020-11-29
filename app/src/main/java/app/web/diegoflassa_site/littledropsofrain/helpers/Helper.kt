@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.helpers
 
 import android.Manifest
@@ -68,7 +84,7 @@ class Helper {
             userFromFb.name = user.displayName
             userFromFb.email = user.email
             userFromFb.imageUrl = user.photoUrl.toString()
-            if(FirebaseAuth.getInstance().currentUser!!.providerData.size>1) {
+            if (FirebaseAuth.getInstance().currentUser!!.providerData.size> 1) {
                 userFromFb.providerId =
                     FirebaseAuth.getInstance().currentUser!!.providerData[1].providerId
             }
@@ -255,7 +271,7 @@ class Helper {
                     val job: Job = launch(context = Dispatchers.IO) {
                         val client = OkHttpClient()
                         client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
-                        client.setReadTimeout(30, TimeUnit.SECONDS)    // socket timeout
+                        client.setReadTimeout(30, TimeUnit.SECONDS) // socket timeout
                         val request = Request.Builder().url(imageUri.toString()).build()
                         val response = client.newCall(request).execute()
                         imageNotif = BitmapFactory.decodeStream(response.body().byteStream())
@@ -444,6 +460,5 @@ class Helper {
             }
             return ret
         }
-
     }
 }

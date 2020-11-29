@@ -8,10 +8,9 @@ apply plugin: 'com.google.firebase.crashlytics' // Apply the Crashlytics Gradle 
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'com.google.firebase.firebase-perf'
-apply from: "$rootProject.projectDir/buildsystem/config.gradle"
-apply from: "$rootProject.projectDir/buildsystem/library.gradle"
 
-// import app.web.diegoflassa_site.littledropsofrain.buildsrc.Libs
+import app.web.diegoflassa_site.littledropsofrain.buildsrc.Versions
+import app.web.diegoflassa_site.littledropsofrain.buildsrc.Config
 
 // Creates a variable called keystorePropertiesFile, and initializes it to the
 // keystore.properties file.
@@ -23,17 +22,15 @@ def keystoreProperties = new Properties()
 // Loads the keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
-def library = ext.library
-
 android {
-    compileSdkVersion config.compileSdkVersion
+    compileSdkVersion Config.compileSdkVersion
 
     defaultConfig {
-        applicationId config.applicationId
-        minSdkVersion config.minimumSdkVersion
-        targetSdkVersion config.targetSdkVersion
-        versionCode buildVersionCode()
-        versionName buildVersionName()
+        applicationId Config.applicationId
+        minSdkVersion Config.minimumSdkVersion
+        targetSdkVersion Config.targetSdkVersion
+        versionCode Config.versionCode
+        versionName Config.versionName
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         javaCompileOptions {
@@ -41,10 +38,6 @@ android {
                 arguments += ["room.incremental": "true"]
             }
         }
-    }
-    buildFeatures {
-        // Enables Jetpack Compose for this module
-        compose true
     }
     sourceSets {
         //DFL - Não use por enquanto
@@ -87,37 +80,38 @@ android {
         }
     }
     compileOptions {
-        // Sets Java compatibility to Java 11
-        targetCompatibility JavaVersion.VERSION_11
-        sourceCompatibility JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-        useIR = true
+        // Sets Java compatibility to Java 1.8
+		// DO NOT UPDATE or will get Class Not Found Exception
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
     buildFeatures {
         viewBinding = true
-        compose = true
+        // Enables Jetpack Compose for this module
+        compose true
     }
     lintOptions {
         abortOnError false
     }
-    buildToolsVersion config.buildToolsVersion
+
+    buildToolsVersion Config.buildToolsVersion
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
     }
     composeOptions {
-        kotlinCompilerVersion library.kotlin_compiler_version
-        kotlinCompilerExtensionVersion library.androidx_jetpack_compose
+        kotlinCompilerVersion Versions.kotlinCompilerVersion
+        kotlinCompilerExtensionVersion Versions.androidxJetpackCompose
     }
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     kotlinOptions {
+        useIR = true
         // Treat all Kotlin warnings as errors
         allWarningsAsErrors = true
         // Set the target vm version
-        jvmTarget = JavaVersion.VERSION_11.toString()
+		// DO NOT UPDATE or will get Class Not Found Exception
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
         // Use experimental APIs
         freeCompilerArgs += '-Xopt-in=kotlin.RequiresOptIn'
         freeCompilerArgs += '-Xallow-jvm-ir-dependencies'
@@ -127,11 +121,11 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 dependencies {
 
     // Kotlin + coroutines
-    implementation "androidx.work:work-runtime-ktx:$library.work_version"
+    implementation "androidx.work:work-runtime-ktx:$Versions.workVersion"
     // optional - RxJava2 support
-    implementation "androidx.work:work-rxjava2:$library.work_version"
+    implementation "androidx.work:work-rxjava2:$Versions.workVersion"
     // optional - GCMNetworkManager support
-    implementation "androidx.work:work-gcm:$library.work_version"
+    implementation "androidx.work:work-gcm:$Versions.workVersion"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
@@ -149,25 +143,25 @@ dependencies {
 
 
     // Jetpack Compose toolkit dependencies
-    implementation "androidx.compose.ui:ui:${library.androidx_jetpack_compose}"
+    implementation "androidx.compose.ui:ui:${Versions.androidxJetpackCompose}"
     // Tooling support (Previews, etc.)
-    implementation "androidx.ui:ui-tooling:${library.androidx_jetpack_compose}"
+    implementation "androidx.ui:ui-tooling:${Versions.androidxJetpackCompose}"
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation "androidx.compose.foundation:foundation:${library.androidx_jetpack_compose}"
+    implementation "androidx.compose.foundation:foundation:${Versions.androidxJetpackCompose}"
     // Material Design
-    implementation "androidx.compose.material:material:${library.androidx_jetpack_compose}"
+    implementation "androidx.compose.material:material:${Versions.androidxJetpackCompose}"
     // Material design icons
-    implementation "androidx.compose.material:material-icons-core:${library.androidx_jetpack_compose}"
-    implementation "androidx.compose.material:material-icons-extended:${library.androidx_jetpack_compose}"
+    implementation "androidx.compose.material:material-icons-core:${Versions.androidxJetpackCompose}"
+    implementation "androidx.compose.material:material-icons-extended:${Versions.androidxJetpackCompose}"
     // Integration with observables
-    implementation "androidx.compose.runtime:runtime-livedata:${library.androidx_jetpack_compose}"
-    implementation "androidx.compose.runtime:runtime-rxjava2:${library.androidx_jetpack_compose}"
+    implementation "androidx.compose.runtime:runtime-livedata:${Versions.androidxJetpackCompose}"
+    implementation "androidx.compose.runtime:runtime-rxjava2:${Versions.androidxJetpackCompose}"
     // UI Tests
-    androidTestImplementation "androidx.ui:ui-test:${library.androidx_jetpack_compose}"
+    androidTestImplementation "androidx.ui:ui-test:${Versions.androidxJetpackCompose}"
 
 
     // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    implementation platform("com.google.firebase:firebase-bom:${Versions.firebaseBOM}")
     // com.google.firebase
     implementation 'com.google.firebase:firebase-iid'
     // Add the Firebase SDK for Google Analytics
@@ -213,7 +207,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.google.gms:google-services:4.3.4'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinCompilerVersion}"
     implementation 'androidx.activity:activity-ktx:1.2.0-beta01'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -240,15 +234,15 @@ dependencies {
 
 
     // Icons
-    implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
-    implementation 'com.joanzapata.iconify:android-iconify-entypo:2.2.2' // (v3,2015)
-    implementation 'com.joanzapata.iconify:android-iconify-typicons:2.2.2' // (v2.0.7)
-    implementation 'com.joanzapata.iconify:android-iconify-material:2.2.2' // (v2.0.0)
-    implementation 'com.joanzapata.iconify:android-iconify-material-community:2.2.2' // (v1.4.57)
-    implementation 'com.joanzapata.iconify:android-iconify-meteocons:2.2.2' // (latest)
-    implementation 'com.joanzapata.iconify:android-iconify-weathericons:2.2.2' // (v2.0)
-    implementation 'com.joanzapata.iconify:android-iconify-simplelineicons:2.2.2' // (v1.0.0)
-    implementation 'com.joanzapata.iconify:android-iconify-ionicons:2.2.2' // (v2.0.1)
+    implementation "com.joanzapata.iconify:android-iconify-fontawesome:${Versions.iconify}" // (v4.5)
+    implementation "com.joanzapata.iconify:android-iconify-entypo:${Versions.iconify}" // (v3,2015)
+    implementation "com.joanzapata.iconify:android-iconify-typicons:${Versions.iconify}" // (v2.0.7)
+    implementation "com.joanzapata.iconify:android-iconify-material:${Versions.iconify}" // (v2.0.0)
+    implementation "com.joanzapata.iconify:android-iconify-material-community:${Versions.iconify}" // (v1.4.57)
+    implementation "com.joanzapata.iconify:android-iconify-meteocons:${Versions.iconify}" // (latest)
+    implementation "com.joanzapata.iconify:android-iconify-weathericons:${Versions.iconify}" // (v2.0)
+    implementation "com.joanzapata.iconify:android-iconify-simplelineicons:${Versions.iconify}" // (v1.0.0)
+    implementation "com.joanzapata.iconify:android-iconify-ionicons:${Versions.iconify}" // (v2.0.1)
 
     kapt 'androidx.databinding:databinding-compiler-common:4.1.1'
     kapt 'androidx.room:room-compiler:2.2.5'

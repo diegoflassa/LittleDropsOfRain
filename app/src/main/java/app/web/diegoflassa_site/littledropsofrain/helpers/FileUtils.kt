@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.helpers
 
 import android.content.ContentUris
@@ -87,7 +103,9 @@ object FIleUtils {
      * @return The value of the _data column, which is typically a file path.
      */
     private fun getDataColumn(
-        context: Context, uri: Uri?, selection: String?,
+        context: Context,
+        uri: Uri?,
+        selection: String?,
         selectionArgs: Array<String>?
     ): String? {
         var cursor: Cursor? = null
@@ -110,7 +128,6 @@ object FIleUtils {
         }
         return null
     }
-
 
     /**
      * @param uri The Uri to check.
@@ -143,5 +160,4 @@ object FIleUtils {
     fun isGooglePhotosUri(uri: Uri): Boolean {
         return "com.google.android.apps.photos.content" == uri.authority
     }
-
 }
