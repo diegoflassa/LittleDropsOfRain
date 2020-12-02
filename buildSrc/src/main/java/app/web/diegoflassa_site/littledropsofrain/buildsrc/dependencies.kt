@@ -3,6 +3,7 @@ package app.web.diegoflassa_site.littledropsofrain.buildsrc
 @Suppress("Unused")
 object Versions {
     const val ktlint = "0.39.0"
+	// DO NOT UPDATE or will get build errors
     const val kotlinCompilerVersion = "1.4.10"
     const val spotless = "5.8.2"
     const val workVersion = "2.4.0"
