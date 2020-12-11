@@ -17,21 +17,25 @@
 package app.web.diegoflassa_site.littledropsofrain.fragments
 
 import android.content.Context
+import android.os.Parcelable
 import android.text.TextUtils
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import com.google.firebase.firestore.Query
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Object for passing filters around.
  */
-class MyMessagesFilters {
-    var read: Boolean? = null
-    var type: MessageType? = null
-    var sortBy: String? = null
+@Parcelize
+data class MyMessagesFilters(
+    var read: Boolean? = null,
+    var type: MessageType? = null,
+    var sortBy: String? = null,
     var sortDirection: Query.Direction? = null
+) : Parcelable {
 
     fun hasRead(): Boolean {
         return (read != null)

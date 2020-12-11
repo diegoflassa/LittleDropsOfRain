@@ -17,21 +17,26 @@
 package app.web.diegoflassa_site.littledropsofrain.fragments
 
 import android.content.Context
+import android.os.Parcelable
 import android.text.TextUtils
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import com.google.firebase.firestore.Query
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Object for passing filters around.
  */
-class AllProductsFilters {
-    var categories: MutableList<String> = ArrayList()
-    var price: Pair<Int, Int>? = null
-    var sortBy: String? = null
+@Parcelize
+data class AllProductsFilters(
+    var categories: MutableList<String> = ArrayList(),
+    var price: Pair<Int, Int>? = null,
+    var sortBy: String? = null,
     var sortDirection: Query.Direction? = null
+) : Parcelable {
+
     fun hasCategory(): Boolean {
         return !categories.isNullOrEmpty()
     }

@@ -121,7 +121,7 @@ class Helper {
         /**
          * Get price represented as dollar signs.
          */
-        fun getPriceString(price: Int): String? {
+        fun getPriceString(price: Int): String {
             return when (price) {
                 in 0..5000 -> "$"
                 in 5100..10000 -> "$$"
@@ -339,7 +339,7 @@ class Helper {
             }
         }
 
-        fun rotateDrawable(d: Drawable, angle: Float): Drawable? {
+        fun rotateDrawable(d: Drawable, angle: Float): Drawable {
             // Use LayerDrawable, because it's simpler than RotateDrawable.
             val arD: Array<Drawable> = arrayOf(d)
             return object : LayerDrawable(arD) {

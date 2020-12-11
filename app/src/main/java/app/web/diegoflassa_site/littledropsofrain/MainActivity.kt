@@ -104,7 +104,7 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         bindingNavHeader = NavHeaderMainBinding.inflate(layoutInflater)
-        viewModel.viewState.observe(
+        viewModel.viewStateLiveData.observe(
             this,
             {
                 updateUI(it)

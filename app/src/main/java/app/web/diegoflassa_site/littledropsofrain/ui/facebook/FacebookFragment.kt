@@ -59,9 +59,9 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentFacebookBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(
+        viewModel.viewStateLiveData.observe(
             viewLifecycleOwner,
             {
                 updateUI(it)

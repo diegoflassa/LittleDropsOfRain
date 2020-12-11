@@ -58,7 +58,6 @@ open class UsersAdapter(
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private var mOnCheckChangeListener: ((compoundButton: CompoundButton, checked: Boolean) -> Unit)? =
         { _: CompoundButton, _: Boolean -> }
-
     interface OnUserSelectedListener {
         fun onUserSelected(user: DocumentSnapshot?)
     }
@@ -77,7 +76,7 @@ open class UsersAdapter(
         position: Int
     ) {
         holder.bind(getSnapshot(position), mListener)
-        val listener: ((compoundButton: CompoundButton, checked: Boolean) -> Unit)? =
+        val listener: ((compoundButton: CompoundButton, checked: Boolean) -> Unit) =
             { _: CompoundButton, checked: Boolean ->
                 val user = getSnapshot(holder.adapterPosition).toObject(User::class.java)
                 user?.isAdmin = checked

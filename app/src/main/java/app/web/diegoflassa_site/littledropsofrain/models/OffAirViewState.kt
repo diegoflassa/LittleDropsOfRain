@@ -16,11 +16,12 @@
 
 package app.web.diegoflassa_site.littledropsofrain.models
 
-import androidx.lifecycle.LiveData
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-class OffAirViewState : LiveData<OffAirViewState>() {
-
-    var text: String = ""
-    var messageEn: String = ""
+@Parcelize
+data class OffAirViewState(
+    var text: String = "",
+    var messageEn: String = "",
     var messagePt: String = ""
-}
+) : Parcelable

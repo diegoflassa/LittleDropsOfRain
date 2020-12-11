@@ -46,7 +46,7 @@ class PrivacyFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPrivacyBinding.inflate(inflater, container, false)
 
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)

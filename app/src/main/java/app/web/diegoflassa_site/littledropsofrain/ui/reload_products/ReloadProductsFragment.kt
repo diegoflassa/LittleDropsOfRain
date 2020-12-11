@@ -74,9 +74,9 @@ class ReloadProductsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentReloadProductsBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(
+        viewModel.viewStateLiveData.observe(
             viewLifecycleOwner,
             {
                 updateUI(it)
@@ -223,6 +223,11 @@ class ReloadProductsFragment : Fragment() {
         super.onStop()
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        updateUI(viewModel.viewState)
+    }
+
     override fun onPause() {
         super.onPause()
         isStopped = false
@@ -232,7 +237,6 @@ class ReloadProductsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         isStopped = false
-        updateUI(viewModel.viewState)
     }
 
     private fun showLoadingScreen() {

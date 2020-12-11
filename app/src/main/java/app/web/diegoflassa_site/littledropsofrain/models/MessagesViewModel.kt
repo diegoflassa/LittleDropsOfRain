@@ -32,14 +32,23 @@ class MessagesViewModel(state: SavedStateHandle) : ViewModel() {
     }
 
     private val savedStateHandle = state
-    private fun saveState() {
+    fun saveState() {
         // Sets a new value for the object associated to the key.
-        savedStateHandle.set(SAVE_STATE_KEY, mViewState)
+        savedStateHandle.set(SAVE_STATE_KEY, mViewState.value)
     }
 
-    private var mViewState = MutableLiveData(MyLikedProductsViewState()).apply {
+    fun loadState() {
+        // Sets a new value for the object associated to the key.
+        mViewState = savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    }
+
+    private var mViewState = MutableLiveData(MessagesViewState()).apply {
         value?.text = "This is ${MessagesFragment::class.simpleName} Fragment"
     }
+    val viewStateLiveData: MutableLiveData<MessagesViewState>
+        get(): MutableLiveData<MessagesViewState> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+        }
     val viewState: MessagesViewState
         get(): MessagesViewState {
             return savedStateHandle.get(SAVE_STATE_KEY)!!

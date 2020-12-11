@@ -16,9 +16,8 @@
 
 package app.web.diegoflassa_site.littledropsofrain.models
 
-import androidx.lifecycle.LiveData
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-class FacebookViewState : LiveData<FacebookViewState>() {
-
-    var text: String = ""
-}
+@Parcelize
+data class FacebookViewState(var text: String = "") : Parcelable

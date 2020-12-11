@@ -116,9 +116,9 @@ class HomeFragment :
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(
+        viewModel.viewStateLiveData.observe(
             viewLifecycleOwner,
             {
                 updateUI(it)
@@ -231,9 +231,13 @@ class HomeFragment :
         super.onSaveInstanceState(outState)
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        updateUI(viewModel.viewState)
+    }
+
     override fun onResume() {
         super.onResume()
-        updateUI(viewModel.viewState)
         if (mRequestingLocationUpdates) checkForLocationUpdatesPermissionAndStartUpdates()
     }
 

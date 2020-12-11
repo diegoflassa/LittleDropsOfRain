@@ -109,7 +109,6 @@ src/main/res/raw/
 app/google-services.json
 app/src/main/res/raw/littledropsofrain_site_firebase_adminsdk_9dvd0_c718bc2981.json
 app/release/
-gradle.properties
 deployment_cert.der
 little-drops-of-rain.2020-09-20.private-key.pem
 app/src/main/res/values/api_keys.xml

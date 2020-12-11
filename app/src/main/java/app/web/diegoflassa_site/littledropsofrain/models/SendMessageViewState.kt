@@ -16,11 +16,22 @@
 
 package app.web.diegoflassa_site.littledropsofrain.models
 
+import android.os.Parcelable
 import androidx.annotation.Keep
-import androidx.lifecycle.LiveData
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
+import kotlinx.android.parcel.Parcelize
 
-class SendMessageViewState : LiveData<SendMessageViewState>() {
+@Parcelize
+data class SendMessageViewState(
+    var title: String = "",
+    var replyUid: String = "",
+    var text: String = "",
+    var body: String = "",
+    var dest: User = User(),
+    var sender: User = User(),
+    var isUserAdmin: Boolean = false,
+    var sendMethod: SendMethod = SendMethod.MESSAGE
+) : Parcelable {
 
     @Keep
     enum class SendMethod(private val method: String) {
@@ -32,13 +43,4 @@ class SendMessageViewState : LiveData<SendMessageViewState>() {
             return method
         }
     }
-
-    var title = ""
-    var replyUid = ""
-    var text = ""
-    var body = ""
-    var dest = User()
-    var sender = User()
-    var isUserAdmin = false
-    var sendMethod = SendMethod.MESSAGE
 }

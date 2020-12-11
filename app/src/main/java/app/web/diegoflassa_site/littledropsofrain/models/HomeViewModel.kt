@@ -27,19 +27,19 @@ class HomeViewModel(state: SavedStateHandle) : ViewModel() {
         private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
     }
 
-    init {
-        saveState()
-    }
-
     private val savedStateHandle = state
-    private fun saveState() {
-        // Sets a new value for the object associated to the key.
-        savedStateHandle.set(SAVE_STATE_KEY, mViewState)
+
+    init {
+        val viewState = FacebookViewState().apply {
+            text = "This is ${HomeFragment::class.simpleName} Fragment"
+        }
+        savedStateHandle.set(SAVE_STATE_KEY, viewState)
     }
 
-    private var mViewState = MutableLiveData(MyLikedProductsViewState()).apply {
-        value?.text = "This is ${HomeFragment::class.simpleName} Fragment"
-    }
+    val viewStateLiveData: MutableLiveData<HomeViewState>
+        get(): MutableLiveData<HomeViewState> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+        }
     val viewState: HomeViewState
         get(): HomeViewState {
             return savedStateHandle.get(SAVE_STATE_KEY)!!

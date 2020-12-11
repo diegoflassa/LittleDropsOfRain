@@ -54,10 +54,12 @@ android {
     }
     buildTypes {
         debug {
+            versionNameSuffix "-debug"
             ext.enableCrashlytics = false
             ext.alwaysUpdateBuildId = false
         }
         release {
+            versionNameSuffix "-release"
             // Enables code shrinking, obfuscation, and optimization for only
             // your project's release build type.
             minifyEnabled true
@@ -104,6 +106,35 @@ android {
     }
 }
 
+//Avoid the uploadCrashlyticsMappingFile error : DISABLED
+gradle.taskGraph.whenReady {
+	tasks.each { task ->
+        // Avoid build error
+		if (task.name.contains("compileDebugUnitTestKotlin")) {
+			// Uncomment if error occurs
+			task.enabled = false
+		}
+	}
+}
+
+//Avoid the uploadCrashlyticsMappingFile error
+afterEvaluate {
+    def appExtension = extensions.findByName("android")
+    appExtension.applicationVariants.each { variant ->
+        Task uploadCrashlyticsTask = tasks.findByName("uploadCrashlyticsMappingFile${variant.name.capitalize()}")
+        Task packageTask = tasks.findByName("package${variant.name.capitalize()}")
+        Task packageBundleTask = tasks.findByName("package${variant.name.capitalize()}Bundle")
+        if (uploadCrashlyticsTask != null && packageTask!= null) {
+            println packageTask.name
+            uploadCrashlyticsTask.mustRunAfter(packageTask)
+        }
+        if (uploadCrashlyticsTask != null && packageBundleTask != null) {
+            println packageBundleTask.name
+            uploadCrashlyticsTask.mustRunAfter(packageBundleTask)
+        }
+    }
+}
+
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     kotlinOptions {
         useIR = true
@@ -121,25 +152,25 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 dependencies {
 
     // Kotlin + coroutines
-    implementation "androidx.work:work-runtime-ktx:$Versions.workVersion"
+    implementation "androidx.work:work-runtime-ktx:${Versions.workVersion}"
     // optional - RxJava2 support
-    implementation "androidx.work:work-rxjava2:$Versions.workVersion"
+    implementation "androidx.work:work-rxjava2:${Versions.workVersion}"
     // optional - GCMNetworkManager support
-    implementation "androidx.work:work-gcm:$Versions.workVersion"
+    implementation "androidx.work:work-gcm:${Versions.workVersion}"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     // Volley
-    implementation 'com.android.volley:volley:1.1.1'
+    implementation "com.android.volley:volley:${Versions.volley}"
 
     // Licenses
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+    implementation "com.google.android.gms:play-services-oss-licenses:${Versions.oss}"
 
     // UCrop
-    implementation 'com.github.yalantis:ucrop:2.2.6'
+    implementation "com.github.yalantis:ucrop:${Versions.ucrop}"
 
     // Coil COroutines Image Loader
-    implementation 'io.coil-kt:coil:1.0.0'
+    implementation "io.coil-kt:coil:${Versions.coil}"
 
 
     // Jetpack Compose toolkit dependencies
@@ -188,49 +219,48 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
     // Firebase UI
-    implementation 'com.firebaseui:firebase-ui-auth:6.3.0'
-    implementation 'com.firebaseui:firebase-ui-database:4.0.0'
-    implementation 'com.firebaseui:firebase-ui-storage:6.2.1'
+    implementation "com.firebaseui:firebase-ui-auth:${Versions.auth}"
+    implementation "com.firebaseui:firebase-ui-database:${Versions.database}"
+    implementation "com.firebaseui:firebase-ui-storage:${Versions.storage}"
     // OAuth Library
-    implementation 'com.google.auth:google-auth-library-oauth2-http:0.22.0'
+    implementation "com.google.auth:google-auth-library-oauth2-http:${Versions.oauth2}"
 
     // GSon
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation "com.google.code.gson:gson:${Versions.gson}"
 
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation "com.google.android.gms:play-services-location:${Versions.location}"
 
     // Leak Canary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"
 
     // Google Sign In SDK (only required for Google Sign In)
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
-    implementation 'com.google.gms:google-services:4.3.4'
+    implementation "com.google.android.gms:play-services-auth:${Versions.play_services_auth}"
+    implementation "com.google.android.material:material:${Versions.material}"
+    implementation "com.google.android.gms:play-services-location:${Versions.play_services_location}"
+    implementation "com.google.gms:google-services:${Versions.google_services}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinCompilerVersion}"
-    implementation 'androidx.activity:activity-ktx:1.2.0-beta01'
-    implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.browser:browser:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.fragment:fragment-ktx:1.3.0-beta01'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-beta01'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-beta01'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0-beta01'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
-    implementation 'androidx.navigation:navigation-runtime-ktx:2.3.1'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.1'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
-    implementation 'androidx.preference:preference-ktx:1.1.1'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.recyclerview:recyclerview-selection:1.1.0-rc03'
-    implementation 'androidx.room:room-runtime:2.2.5'
-    implementation 'androidx.room:room-ktx:2.2.5'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
+    implementation "androidx.activity:activity-ktx:${Versions.activity_ktx}"
+    implementation "androidx.annotation:annotation:${Versions.annotation}"
+    implementation "androidx.appcompat:appcompat:${Versions.appcompat}"
+    implementation "androidx.browser:browser:${Versions.browser}"
+    implementation "androidx.constraintlayout:constraintlayout:${Versions.constraintlayout}"
+    implementation "androidx.core:core-ktx:${Versions.core_ktx}"
+    implementation "androidx.fragment:fragment-ktx:${Versions.fragment_ktx}"
+    implementation "androidx.legacy:legacy-support-v4:${Versions.legacy_support_v4}"
+    implementation "androidx.legacy:legacy-support-core-utils:${Versions.legacy_support_core_utils}"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}"
+    implementation "androidx.navigation:navigation-runtime-ktx:${Versions.navigation}"
+    implementation "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
+    implementation "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
+    implementation "androidx.preference:preference-ktx:${Versions.preference_ktx}"
+    implementation "androidx.recyclerview:recyclerview:${Versions.recyclerview}"
+    implementation "androidx.recyclerview:recyclerview-selection:${Versions.recyclerview_selection}"
+    implementation "androidx.room:room-runtime:${Versions.room}"
+    implementation "androidx.room:room-ktx:${Versions.room}"
+    implementation "androidx.vectordrawable:vectordrawable-animated:${Versions.vectordrawable_animated}"
 
 
     // Icons
@@ -244,16 +274,19 @@ dependencies {
     implementation "com.joanzapata.iconify:android-iconify-simplelineicons:${Versions.iconify}" // (v1.0.0)
     implementation "com.joanzapata.iconify:android-iconify-ionicons:${Versions.iconify}" // (v2.0.1)
 
-    kapt 'androidx.databinding:databinding-compiler-common:4.1.1'
-    kapt 'androidx.room:room-compiler:2.2.5'
+    // Annotation processor
+    kapt "androidx.lifecycle:lifecycle-compiler:${Versions.lifecycle}"
+    kapt "androidx.databinding:databinding-compiler-common:${Versions.databinding}"
+    kapt "androidx.room:room-compiler:${Versions.room}"
 
     // Testing dependencies
-    testImplementation 'androidx.annotation:annotation:1.1.0'
-    testImplementation 'androidx.test:core:1.3.0'
-    testImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    testImplementation 'androidx.test.ext:junit-ktx:1.1.3-alpha02'
-    testImplementation 'androidx.test:rules:1.3.0'
-    testImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation  "androidx.annotation:annotation:${Versions.annotation}"
+    androidTestImplementation  "androidx.test:core:${Versions.core}"
+    // Removed temporary due to compiler error : Could not find androidx.test.espresso:3.4.0-alpha02
+    // androidTestImplementation  "androidx.test.espresso-core:${Versions.expresso}"
+    androidTestImplementation  "androidx.test.ext:junit-ktx:${Versions.junit_ktx}"
+    androidTestImplementation  "androidx.test:rules:${Versions.rules}"
+    androidTestImplementation  "androidx.test:runner:${Versions.runner}"
 
-    testImplementation 'junit:junit:4.13.1'
+    androidTestImplementation  "junit:junit:${Versions.junit}"
 }

@@ -46,7 +46,7 @@ class TosFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentTosBinding.inflate(inflater, container, false)
 
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)

@@ -80,9 +80,9 @@ class UsersFragment :
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentUsersBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(
+        viewModel.viewStateLiveData.observe(
             viewLifecycleOwner,
             {
                 updateUI(it)
@@ -135,7 +135,7 @@ class UsersFragment :
 
     override fun onResume() {
         super.onResume()
-        updateUI(viewModel.viewState.value!!)
+        updateUI(viewModel.viewState)
     }
 
     private fun updateUI(viewState: UsersViewState) {

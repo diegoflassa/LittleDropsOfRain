@@ -80,9 +80,10 @@ class MessagesFragment :
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        viewModel.saveState()
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(
+        viewModel.viewStateLiveData.observe(
             viewLifecycleOwner,
             {
                 updateUI(it)
@@ -125,14 +126,20 @@ class MessagesFragment :
         mAdapter.get()?.startListening()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.saveState()
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        viewModel.loadState()
+        updateUI(viewModel.viewState)
+    }
+
     override fun onStop() {
         super.onStop()
         mAdapter.get()?.stopListening()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        updateUI(viewModel.viewState)
     }
 
     override fun onClick(v: View) {

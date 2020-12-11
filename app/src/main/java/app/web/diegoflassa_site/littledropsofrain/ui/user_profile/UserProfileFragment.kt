@@ -78,14 +78,13 @@ class UserProfileFragment :
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentUserProfileBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(
-            viewLifecycleOwner,
-            {
-                updateUI(it)
-            }
-        )
+        viewModel.viewStateLiveData.observe(
+            viewLifecycleOwner
+        ) {
+            updateUI(it)
+        }
 
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
@@ -148,6 +147,11 @@ class UserProfileFragment :
         super.onPause()
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        updateUI(viewModel.viewState)
+    }
+
     override fun onStop() {
         isStopped = true
         super.onStop()
@@ -163,7 +167,6 @@ class UserProfileFragment :
 
     override fun onResume() {
         isStopped = false
-        updateUI(viewModel.viewState)
         super.onResume()
     }
 

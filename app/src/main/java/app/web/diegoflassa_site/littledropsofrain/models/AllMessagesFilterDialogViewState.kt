@@ -16,10 +16,8 @@
 
 package app.web.diegoflassa_site.littledropsofrain.models
 
-import androidx.lifecycle.LiveData
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-class AllMessagesFilterDialogViewState : LiveData<AllMessagesFilterDialogViewState>() {
-
-    var text: String = ""
-    var selectedUserEmail: String = ""
-}
+@Parcelize
+data class AllMessagesFilterDialogViewState(var text: String = "", var selectedUserEmail: String = "") : Parcelable

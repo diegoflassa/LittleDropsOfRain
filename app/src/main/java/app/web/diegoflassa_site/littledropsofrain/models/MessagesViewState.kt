@@ -16,11 +16,12 @@
 
 package app.web.diegoflassa_site.littledropsofrain.models
 
-import androidx.lifecycle.LiveData
+import android.os.Parcelable
 import app.web.diegoflassa_site.littledropsofrain.fragments.MyMessagesFilters
+import kotlinx.android.parcel.Parcelize
 
-class MessagesViewState : LiveData<MessagesViewState>() {
-
-    var text: String = ""
+@Parcelize
+data class MessagesViewState(
+    var text: String = "",
     var filters: MyMessagesFilters = MyMessagesFilters.default
-}
+) : Parcelable

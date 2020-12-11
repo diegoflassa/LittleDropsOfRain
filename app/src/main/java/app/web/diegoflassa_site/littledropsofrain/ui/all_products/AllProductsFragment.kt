@@ -71,7 +71,14 @@ class AllProductsFragment :
     AllProductsFilterDialogFragment.FilterListener,
     OnUsersLoadedListener {
 
-    private val viewModel: AllProductsViewModel by viewModels(factoryProducer = { SavedStateViewModelFactory(this.requireActivity().application, this) })
+    private val viewModel: AllProductsViewModel by viewModels(
+        factoryProducer = {
+            SavedStateViewModelFactory(
+                this.requireActivity().application,
+                this
+            )
+        }
+    )
     var binding: FragmentAllProductsBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<AllProductsAdapter>
     private lateinit var mFirestore: FirebaseFirestore
@@ -90,9 +97,9 @@ class AllProductsFragment :
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAllProductsBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(
+        viewModel.viewStateLiveData.observe(
             viewLifecycleOwner,
             {
                 updateUI(it)

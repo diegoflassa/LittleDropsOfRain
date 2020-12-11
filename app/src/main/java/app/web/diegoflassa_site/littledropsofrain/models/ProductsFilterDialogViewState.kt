@@ -16,10 +16,11 @@
 
 package app.web.diegoflassa_site.littledropsofrain.models
 
-import androidx.lifecycle.LiveData
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-class ProductsFilterDialogViewState : LiveData<ProductsFilterDialogViewState>() {
-
-    var text: String = ""
+@Parcelize
+data class ProductsFilterDialogViewState(
+    var text: String = "",
     var categories: LinkedHashSet<String> = LinkedHashSet()
-}
+) : Parcelable

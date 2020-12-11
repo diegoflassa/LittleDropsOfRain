@@ -17,15 +17,16 @@
 package app.web.diegoflassa_site.littledropsofrain.models
 
 import android.net.Uri
-import androidx.lifecycle.LiveData
+import android.os.Parcelable
 import app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage
+import kotlinx.android.parcel.Parcelize
 
-class TopicMessageViewState : LiveData<TopicMessageViewState>() {
-
-    var text: String = ""
-    var title: String = ""
-    var body: String = ""
-    var topics = HashSet<TopicMessage.Topic>()
-    var imageUriFirestore: Uri? = null
+@Parcelize
+data class TopicMessageViewState(
+    var text: String = "",
+    var title: String = "",
+    var body: String = "",
+    var topics: HashSet<TopicMessage.Topic> = HashSet(),
+    var imageUriFirestore: Uri? = null,
     var imageUriLocal: Uri? = null
-}
+) : Parcelable

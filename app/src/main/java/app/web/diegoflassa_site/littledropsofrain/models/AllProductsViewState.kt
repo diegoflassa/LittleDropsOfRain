@@ -16,11 +16,9 @@
 
 package app.web.diegoflassa_site.littledropsofrain.models
 
-import androidx.lifecycle.LiveData
+import android.os.Parcelable
 import app.web.diegoflassa_site.littledropsofrain.fragments.AllProductsFilters
+import kotlinx.android.parcel.Parcelize
 
-class AllProductsViewState : LiveData<AllProductsViewState>() {
-
-    var text: String = ""
-    var filters: AllProductsFilters = AllProductsFilters.default
-}
+@Parcelize
+data class AllProductsViewState(var text: String = "", var filters: AllProductsFilters = AllProductsFilters.default) : Parcelable

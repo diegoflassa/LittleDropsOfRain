@@ -85,9 +85,9 @@ class MyLikedProductsFragment :
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentMyLikedProductsBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(
+        viewModel.viewStateLiveData.observe(
             viewLifecycleOwner,
             {
                 updateUI(it)
@@ -124,6 +124,11 @@ class MyLikedProductsFragment :
 
         Log.i(TAG, "$TAG activity successfully created>")
         return binding.root
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        updateUI(viewModel.viewState)
     }
 
     override fun onDestroyView() {

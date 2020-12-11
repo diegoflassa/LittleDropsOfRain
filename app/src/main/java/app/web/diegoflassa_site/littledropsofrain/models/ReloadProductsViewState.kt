@@ -16,12 +16,13 @@
 
 package app.web.diegoflassa_site.littledropsofrain.models
 
-import androidx.lifecycle.LiveData
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-class ReloadProductsViewState : LiveData<ReloadProductsViewState>() {
-
-    var text = ""
-    var progress = StringBuilder()
-    var removeNotFoundProducts = false
-    var unpublishNotFoundProducts = true
-}
+@Parcelize
+data class ReloadProductsViewState(
+    var text: String = "",
+    var progress: StringBuilder = StringBuilder(),
+    var removeNotFoundProducts: Boolean = false,
+    var unpublishNotFoundProducts: Boolean = true
+) : Parcelable

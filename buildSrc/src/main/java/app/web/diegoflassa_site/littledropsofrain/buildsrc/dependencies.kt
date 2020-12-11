@@ -3,15 +3,60 @@ package app.web.diegoflassa_site.littledropsofrain.buildsrc
 @Suppress("Unused")
 object Versions {
     const val ktlint = "0.39.0"
-	// DO NOT UPDATE or will get build errors
+
+    // DO NOT UPDATE or will get build errors
     const val kotlinCompilerVersion = "1.4.10"
-    const val spotless = "5.8.2"
+    const val coil = "1.0.0"
+    const val volley = "1.1.1"
+    const val ucrop = "2.2.6"
+    const val oss = "17.0.0"
+    const val oauth2 = "0.22.1"
+    const val gson = "2.8.6"
+    const val location = "17.1.0"
+    const val leakcanary = "2.4"
+    const val play_services_auth = "19.0.0"
+    const val material = "1.2.1"
+    const val play_services_location = "17.1.0"
+    const val google_services = "4.3.4"
+    const val activity_ktx = "1.2.0-beta01"
+    const val annotation = "1.1.0"
+    const val appcompat = "1.2.0"
+    const val browser = "1.3.0"
+    const val constraintlayout = "2.0.4"
+    const val core_ktx = "1.3.2"
+    const val fragment_ktx = "1.3.0-beta01"
+    const val legacy_support_v4 = "1.0.0"
+    const val legacy_support_core_utils = "1.0.0"
+    const val lifecycle = "2.3.0-beta01"
+    const val navigation = "2.3.1"
+    const val preference_ktx = "1.1.1"
+    const val recyclerview = "1.1.0"
+    const val recyclerview_selection = "1.1.0-rc03"
+    const val room = "2.2.5"
+    const val vectordrawable_animated = "1.1.0"
+    const val databinding = "4.1.1"
+    const val core = "1.3.1-alpha02"
+    const val expresso = "3.4.0-alpha02"
+    const val junit_ktx = "1.1.3-alpha02"
+    const val rules = "1.3.1-alpha02"
+    const val runner = " 1.3.1-alpha02"
+    const val gradle="4.2.0-beta01"
+    const val safeargs_plugin="2.3.1"
+    const val crashlytics = "2.4.1"
+    const val perf = "1.3.4"
+    const val oss_plugin="0.10.2"
+    const val spotless="5.8.2"
+    const val junit = "4.13.1"
+    const val auth = "6.3.0"
+    const val database = "4.0.0"
+    const val storage = "6.2.1"
     const val workVersion = "2.4.0"
     const val firebaseBOM = "26.1.0"
     const val iconify = "2.2.2"
     const val androidxJetpackCompose = "1.0.0-alpha07"
 }
 
+@Suppress("Unused")
 object Libs {
     const val androidGradlePlugin = "com.android.tools.build:gradle:4.2.0-alpha15"
     const val jdkDesugar = "com.android.tools:desugar_jdk_libs:1.0.9"
@@ -26,10 +71,9 @@ object Libs {
     }
 
     object Kotlin {
-        private const val version = "1.4.10"
-        const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
-        const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
-        const val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"
+        const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinCompilerVersion}"
+        const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinCompilerVersion}"
+        const val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:${Versions.kotlinCompilerVersion}"
     }
 
     object Coroutines {
@@ -54,7 +98,7 @@ object Libs {
 
         object Compose {
             private const val snapshot = ""//"6973398"
-            const val version = "1.0.0-alpha07"
+            private const val version = "1.0.0-alpha07"
 
             @get:JvmStatic
             val snapshotUrl: String
@@ -103,7 +147,7 @@ object Libs {
 
     object Rome {
         private const val version = "1.14.1"
-        val rome = "com.rometools:rome:$version"
-        val modules = "com.rometools:rome-modules:$version"
+        const val rome = "com.rometools:rome:$version"
+        const val modules = "com.rometools:rome-modules:$version"
     }
 }

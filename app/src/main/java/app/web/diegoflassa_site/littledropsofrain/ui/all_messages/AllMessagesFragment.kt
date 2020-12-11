@@ -81,7 +81,7 @@ class AllMessagesFragment :
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAllMessagesBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(
+        viewModel.viewStateLiveData.observe(
             viewLifecycleOwner,
             {
                 updateUI(it)

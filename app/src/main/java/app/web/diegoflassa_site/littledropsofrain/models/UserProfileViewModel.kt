@@ -19,6 +19,7 @@ package app.web.diegoflassa_site.littledropsofrain.models
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import app.web.diegoflassa_site.littledropsofrain.ui.user_profile.UserProfileFragment
 
 class UserProfileViewModel(state: SavedStateHandle) : ViewModel() {
 
@@ -26,19 +27,19 @@ class UserProfileViewModel(state: SavedStateHandle) : ViewModel() {
         private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
     }
 
-    init {
-        saveState()
-    }
-
     private val savedStateHandle = state
-    private fun saveState() {
-        // Sets a new value for the object associated to the key.
-        savedStateHandle.set(SAVE_STATE_KEY, mViewState)
+
+    init {
+        val viewState = UserProfileViewState().apply {
+            text = "This is ${UserProfileFragment::class.simpleName} Fragment"
+        }
+        savedStateHandle.set(SAVE_STATE_KEY, viewState)
     }
 
-    private var mViewState = MutableLiveData(UserProfileViewState()).apply {
-        value?.text = "This is ${UserProfileViewState::class.simpleName} Fragment"
-    }
+    val viewStateLiveData: MutableLiveData<UserProfileViewState>
+        get(): MutableLiveData<UserProfileViewState> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+        }
     val viewState: UserProfileViewState
         get(): UserProfileViewState {
             return savedStateHandle.get(SAVE_STATE_KEY)!!

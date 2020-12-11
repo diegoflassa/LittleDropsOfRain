@@ -64,7 +64,7 @@ class OffAirFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentOffAirBinding.inflate(inflater, container, false)
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.activate()

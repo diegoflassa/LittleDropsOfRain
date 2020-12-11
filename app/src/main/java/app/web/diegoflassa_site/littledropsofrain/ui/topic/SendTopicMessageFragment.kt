@@ -102,9 +102,9 @@ class SendTopicMessageFragment :
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSendTopicMessageBinding.inflate(inflater, container, false)
-        viewModel.viewState.observe(
+        viewModel.viewStateLiveData.observe(
             viewLifecycleOwner,
             {
                 updateUI(it)
@@ -231,7 +231,6 @@ class SendTopicMessageFragment :
     override fun onResume() {
         super.onResume()
         isStopped = false
-        updateUI(viewModel.viewState)
     }
 
     override fun onStop() {

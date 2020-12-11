@@ -27,19 +27,19 @@ class AllMessagesFilterDialogViewModel(state: SavedStateHandle) : ViewModel() {
         private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
     }
 
-    init {
-        saveState()
-    }
-
     private val savedStateHandle = state
-    private fun saveState() {
-        // Sets a new value for the object associated to the key.
-        savedStateHandle.set(SAVE_STATE_KEY, mViewState)
+
+    init {
+        val viewState = AllMessagesFilterDialogViewState().apply {
+            text = "This is ${AllMessagesFilterDialogFragment::class.simpleName} Fragment"
+        }
+        savedStateHandle.set(SAVE_STATE_KEY, viewState)
     }
 
-    private var mViewState = MutableLiveData(MyLikedProductsViewState()).apply {
-        value?.text = "This is ${AllMessagesFilterDialogFragment::class.simpleName} Fragment"
-    }
+    val viewStateLiveData: MutableLiveData<AllMessagesFilterDialogViewState>
+        get(): MutableLiveData<AllMessagesFilterDialogViewState> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+        }
     val viewState: AllMessagesFilterDialogViewState
         get(): AllMessagesFilterDialogViewState {
             return savedStateHandle.get(SAVE_STATE_KEY)!!

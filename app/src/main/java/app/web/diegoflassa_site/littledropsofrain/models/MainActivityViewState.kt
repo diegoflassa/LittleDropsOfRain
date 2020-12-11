@@ -16,9 +16,8 @@
 
 package app.web.diegoflassa_site.littledropsofrain.models
 
-import androidx.lifecycle.LiveData
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-class MainActivityViewState : LiveData<MainActivityViewState>() {
-
-    var text: String = ""
-}
+@Parcelize
+data class MainActivityViewState(var text: String = "") : Parcelable
