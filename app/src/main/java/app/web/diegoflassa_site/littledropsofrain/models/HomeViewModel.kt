@@ -30,7 +30,7 @@ class HomeViewModel(state: SavedStateHandle) : ViewModel() {
     private val savedStateHandle = state
 
     init {
-        val viewState = FacebookViewState().apply {
+        val viewState = HomeViewState().apply {
             text = "This is ${HomeFragment::class.simpleName} Fragment"
         }
         savedStateHandle.set(SAVE_STATE_KEY, viewState)

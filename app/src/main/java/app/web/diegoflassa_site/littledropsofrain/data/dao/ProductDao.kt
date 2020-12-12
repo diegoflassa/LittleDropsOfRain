@@ -228,7 +228,10 @@ object ProductDao {
                                     ?.addOnSuccessListener {
                                         product.uid = it.id
                                         hashProducts[product.uid!!] = product
-                                        if (!product.imageUrl?.startsWith("https://firebasestorage")!!)
+                                        if (!product.imageUrl?.startsWith("https://firebasestorage")!! || !product.imageUrl?.startsWith(
+                                                "gs://littledropsofrain-site.appspot.com"
+                                            )!!
+                                        )
                                             insertBlob(product)
                                         listener?.onProductInserted(product)
                                         Log.i(
@@ -247,7 +250,10 @@ object ProductDao {
                             listTasksAll.add(taskInsert!!)
                         }
                     } else {
-                        if (!product.imageUrl?.startsWith("https://firebasestorage")!!)
+                        if (!product.imageUrl?.startsWith("https://firebasestorage")!! || !product.imageUrl?.startsWith(
+                                "gs://littledropsofrain-site.appspot.com"
+                            )!!
+                        )
                             insertBlob(product)
                         taskInsert =
                             db.get()?.collection(COLLECTION_PATH)?.document(product.uid!!)
@@ -304,7 +310,10 @@ object ProductDao {
                         if (querySnapshot.isEmpty) {
                             db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener {
                                 product.uid = it.id
-                                if (!product.imageUrl?.startsWith("https://firebasestorage")!!)
+                                if (!product.imageUrl?.startsWith("https://firebasestorage")!! || !product.imageUrl?.startsWith(
+                                        "gs://littledropsofrain-site.appspot.com"
+                                    )!!
+                                )
                                     insertBlob(product)
                                 listener?.onProductInserted(product)
                                 Log.i(TAG, "Product ${product.idSource} inserted successfully")
@@ -317,7 +326,10 @@ object ProductDao {
                         }
                     }!!
         } else {
-            if (!product.imageUrl?.startsWith("https://firebasestorage")!!)
+            if (!product.imageUrl?.startsWith("https://firebasestorage")!! || !product.imageUrl?.startsWith(
+                    "gs://littledropsofrain-site.appspot.com"
+                )!!
+            )
                 insertBlob(product)
             task = db.get()?.collection(COLLECTION_PATH)?.document(product.uid!!)?.set(data)
                 ?.addOnSuccessListener {
@@ -376,9 +388,16 @@ object ProductDao {
         val data = product.toMap()
         return db.get()?.collection(COLLECTION_PATH)?.document(product.uid.toString())?.set(data)
             ?.addOnSuccessListener {
-                if (checkForUrl && (!product.imageUrl?.startsWith("https://firebasestorage")!!))
+                if (checkForUrl && (
+                    !product.imageUrl?.startsWith("https://firebasestorage")!! || !product.imageUrl?.startsWith(
+                            "gs://littledropsofrain-site.appspot.com"
+                        )!!
+                    )
+                )
                     insertBlob(product)
-                Log.d(TAG, "[update]Product ${product.uid} updated successfully")
+                Log.d(
+                    TAG, "[update]Product ${product.uid} updated successfully"
+                )
             }?.addOnFailureListener {
             }
     }

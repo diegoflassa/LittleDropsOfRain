@@ -5,7 +5,7 @@ object Versions {
     const val ktlint = "0.39.0"
 
     // DO NOT UPDATE or will get build errors
-    const val kotlinCompilerVersion = "1.4.10"
+    const val kotlinCompilerVersion = "1.4.21"
     const val coil = "1.0.0"
     const val volley = "1.1.1"
     const val ucrop = "2.2.6"
@@ -53,7 +53,7 @@ object Versions {
     const val workVersion = "2.4.0"
     const val firebaseBOM = "26.1.0"
     const val iconify = "2.2.2"
-    const val androidxJetpackCompose = "1.0.0-alpha07"
+    const val androidxJetpackCompose = "1.0.0-alpha08"
 }
 
 @Suppress("Unused")
@@ -98,23 +98,22 @@ object Libs {
 
         object Compose {
             private const val snapshot = ""//"6973398"
-            private const val version = "1.0.0-alpha07"
 
             @get:JvmStatic
             val snapshotUrl: String
                 get() = "https://androidx.dev/snapshots/builds/$snapshot/artifacts/ui/repository/"
 
-            const val runtime = "androidx.compose.runtime:runtime:$version"
-            const val foundation = "androidx.compose.foundation:foundation:${version}"
-            const val layout = "androidx.compose.foundation:foundation-layout:${version}"
+            const val runtime = "androidx.compose.runtime:runtime:${Versions.androidxJetpackCompose}"
+            const val foundation = "androidx.compose.foundation:foundation:${Versions.androidxJetpackCompose}"
+            const val layout = "androidx.compose.foundation:foundation-layout:${Versions.androidxJetpackCompose}"
 
-            const val ui = "androidx.compose.ui:ui:${version}"
-            const val material = "androidx.compose.material:material:${version}"
+            const val ui = "androidx.compose.ui:ui:${Versions.androidxJetpackCompose}"
+            const val material = "androidx.compose.material:material:${Versions.androidxJetpackCompose}"
             const val materialIconsExtended =
-                "androidx.compose.material:material-icons-extended:${version}"
+                "androidx.compose.material:material-icons-extended:${Versions.androidxJetpackCompose}"
 
-            const val tooling = "androidx.ui:ui-tooling:${version}"
-            const val test = "androidx.ui:ui-test:${version}"
+            const val tooling = "androidx.compose.ui:ui-tooling:${Versions.androidxJetpackCompose}"
+            const val test = "androidx.compose.ui:ui-test:${Versions.androidxJetpackCompose}"
         }
 
         object Test {

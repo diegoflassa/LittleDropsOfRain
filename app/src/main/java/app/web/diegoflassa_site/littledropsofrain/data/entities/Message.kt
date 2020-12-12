@@ -22,8 +22,8 @@ import androidx.annotation.Keep
 import app.web.diegoflassa_site.littledropsofrain.helpers.LoggedUser
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Keep

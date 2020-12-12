@@ -18,7 +18,7 @@ package app.web.diegoflassa_site.littledropsofrain.data.entities
 
 import android.os.Parcelable
 import androidx.annotation.Keep
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Keep

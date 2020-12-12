@@ -21,7 +21,7 @@ package app.web.diegoflassa_site.littledropsofrain.data.entities
 import android.os.Parcelable
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 import kotlin.collections.HashMap
 

@@ -98,6 +98,7 @@ class MainActivity :
     private var authenticateOnResume = false
     private var isSetUpUserInDrawer = false
     private var lastIntent: Intent? = null
+    private var autheListener: AuthStateListener? = null
     var mOnKeyLongPressListener: OnKeyLongPressListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -207,7 +208,7 @@ class MainActivity :
             setupDrawerMenuIntems()
         }
 
-        FirebaseAuth.getInstance().addAuthStateListener { authData ->
+        autheListener = FirebaseAuth.getInstance().addAuthStateListener { authData ->
             val firebaseUser = authData.currentUser
             var emailUser = ""
             if (firebaseUser != null) {
@@ -339,6 +340,7 @@ class MainActivity :
             val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
             drawerLayout.removeDrawerListener(toggle)
         }
+        FirebaseAuth.getInstance().removeAuthStateListener(authListener)
         super.onStop()
     }
 

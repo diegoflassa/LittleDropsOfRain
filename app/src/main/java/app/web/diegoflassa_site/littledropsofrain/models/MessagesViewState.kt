@@ -18,7 +18,7 @@ package app.web.diegoflassa_site.littledropsofrain.models
 
 import android.os.Parcelable
 import app.web.diegoflassa_site.littledropsofrain.fragments.MyMessagesFilters
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MessagesViewState(

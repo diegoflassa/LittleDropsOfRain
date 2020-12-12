@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'kotlin-parcelize'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics' // Apply the Crashlytics Gradle plugin
@@ -106,13 +105,12 @@ android {
     }
 }
 
-//Avoid the uploadCrashlyticsMappingFile error : DISABLED
+// Avoid build error
 gradle.taskGraph.whenReady {
 	tasks.each { task ->
-        // Avoid build error
-		if (task.name.contains("compileDebugUnitTestKotlin")) {
+        if (task.name.contains("compileDebugUnitTestKotlin")||task.name.contains("compileReleaseUnitTestKotlin")) {
 			// Uncomment if error occurs
-			task.enabled = false
+			// task.enabled = false
 		}
 	}
 }
@@ -135,16 +133,22 @@ afterEvaluate {
     }
 }
 
+// Avoid build error
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    // Sets Java compatibility to Java 1.8
+    // DO NOT UPDATE or will get Class Not Found Exception
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
     kotlinOptions {
         useIR = true
         // Treat all Kotlin warnings as errors
         allWarningsAsErrors = true
         // Set the target vm version
-		// DO NOT UPDATE or will get Class Not Found Exception
+        // DO NOT UPDATE or will get Class Not Found Exception
         jvmTarget = JavaVersion.VERSION_1_8.toString()
         // Use experimental APIs
-        freeCompilerArgs += '-Xopt-in=kotlin.RequiresOptIn'
+        freeCompilerArgs += '-Xskip-prerelease-check'
         freeCompilerArgs += '-Xallow-jvm-ir-dependencies'
     }
 }
@@ -176,7 +180,7 @@ dependencies {
     // Jetpack Compose toolkit dependencies
     implementation "androidx.compose.ui:ui:${Versions.androidxJetpackCompose}"
     // Tooling support (Previews, etc.)
-    implementation "androidx.ui:ui-tooling:${Versions.androidxJetpackCompose}"
+    implementation "androidx.compose.ui:ui-tooling:${Versions.androidxJetpackCompose}"
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
     implementation "androidx.compose.foundation:foundation:${Versions.androidxJetpackCompose}"
     // Material Design
@@ -188,7 +192,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:${Versions.androidxJetpackCompose}"
     implementation "androidx.compose.runtime:runtime-rxjava2:${Versions.androidxJetpackCompose}"
     // UI Tests
-    androidTestImplementation "androidx.ui:ui-test:${Versions.androidxJetpackCompose}"
+    androidTestImplementation "androidx.compose.ui:ui-test:${Versions.androidxJetpackCompose}"
 
 
     // Import the BoM for the Firebase platform
