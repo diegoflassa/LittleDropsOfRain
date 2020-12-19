@@ -36,11 +36,11 @@ object Versions {
     const val vectordrawable_animated = "1.1.0"
     const val databinding = "4.1.1"
     const val core = "1.3.1-alpha02"
-    const val expresso = "3.4.0-alpha02"
+    const val expresso = "3.3.0"
     const val junit_ktx = "1.1.3-alpha02"
     const val rules = "1.3.1-alpha02"
-    const val runner = " 1.3.1-alpha02"
-    const val gradle="4.2.0-beta01"
+    const val runner = "1.3.1-alpha02"
+    const val gradle="4.2.0-beta02"
     const val safeargs_plugin="2.3.1"
     const val crashlytics = "2.4.1"
     const val perf = "1.3.4"
@@ -53,7 +53,7 @@ object Versions {
     const val workVersion = "2.4.0"
     const val firebaseBOM = "26.1.0"
     const val iconify = "2.2.2"
-    const val androidxJetpackCompose = "1.0.0-alpha08"
+    const val androidxJetpackCompose = "1.0.0-alpha09"
 }
 
 @Suppress("Unused")
@@ -90,7 +90,7 @@ object Libs {
     }
 
     object AndroidX {
-        const val appcompat = "androidx.appcompat:appcompat:1.2.0-rc01"
+        const val appcompat = "androidx.appcompat:appcompat:1.2.0"
         const val palette = "androidx.palette:palette:1.0.0"
 
         const val core = "androidx.core:core:1.5.0-alpha02"

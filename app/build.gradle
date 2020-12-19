@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics' // Apply the Crashlytics Gradle plugin
 apply plugin: 'androidx.navigation.safeargs.kotlin'
@@ -53,6 +52,7 @@ android {
     }
     buildTypes {
         debug {
+			applicationIdSuffix '.debug'
             versionNameSuffix "-debug"
             ext.enableCrashlytics = false
             ext.alwaysUpdateBuildId = false
@@ -108,9 +108,12 @@ android {
 // Avoid build error
 gradle.taskGraph.whenReady {
 	tasks.each { task ->
-        if (task.name.contains("compileDebugUnitTestKotlin")||task.name.contains("compileReleaseUnitTestKotlin")) {
+        if (task.name.contains("compileDebugUnitTestKotlin")||task.name.contains("compileReleaseUnitTestKotlin")
+		//||
+		) {
+		//task.name.contains("uploadCrashlyticsMappingFile")) {
 			// Uncomment if error occurs
-			// task.enabled = false
+			task.enabled = false
 		}
 	}
 }
