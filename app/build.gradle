@@ -2,10 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.firebase.crashlytics' // Apply the Crashlytics Gradle plugin
+// Google Services plugin
+apply plugin: 'com.google.gms.google-services'
+// Apply the Crashlytics Gradle plugin
+apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'com.google.firebase.firebase-perf'
+// Apply the App Distribution Gradle plugin
+apply plugin: 'com.google.firebase.appdistribution'
 
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Versions
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Config
@@ -52,10 +57,14 @@ android {
     }
     buildTypes {
         debug {
-			applicationIdSuffix '.debug'
+			//applicationIdSuffix '.debug'
             versionNameSuffix "-debug"
             ext.enableCrashlytics = false
             ext.alwaysUpdateBuildId = false
+            firebaseAppDistribution {
+                //releaseNotesFile="/path/to/releasenotes.txt"
+                testers="andrea.setecinco@gmail.com, diegoflassa@gmail.com"
+            }
         }
         release {
             versionNameSuffix "-release"
@@ -72,6 +81,10 @@ android {
             // R8 configuration files.
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            firebaseAppDistribution {
+                //releaseNotesFile="/path/to/releasenotes.txt"
+                testers="andrea.setecinco@gmail.com, diegoflassa@gmail.com"
+            }
         }
         android.applicationVariants.all { variant ->
             variant.outputs.all {
@@ -144,7 +157,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     targetCompatibility = JavaVersion.VERSION_1_8
 
     kotlinOptions {
-        useIR = true
+        // useIR = true
         // Treat all Kotlin warnings as errors
         allWarningsAsErrors = true
         // Set the target vm version
@@ -282,7 +295,7 @@ dependencies {
     implementation "com.joanzapata.iconify:android-iconify-ionicons:${Versions.iconify}" // (v2.0.1)
 
     // Annotation processor
-    kapt "androidx.lifecycle:lifecycle-compiler:${Versions.lifecycle}"
+    kapt "androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}"
     kapt "androidx.databinding:databinding-compiler-common:${Versions.databinding}"
     kapt "androidx.room:room-compiler:${Versions.room}"
 

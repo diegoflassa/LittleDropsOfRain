@@ -8,13 +8,16 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${Versions.gradle}"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinCompilerVersion}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.gradle_plugin}"
         classpath "com.google.gms:google-services:${Versions.google_services}"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeargs_plugin}"
 
         // Add the Crashlytics Gradle plugin.
         classpath "com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlytics}"
-        classpath "com.google.firebase:perf-plugin:${Versions.perf}"  // Performance Monitoring plugin"
+		// Performance Monitoring plugin
+        classpath "com.google.firebase:perf-plugin:${Versions.perf}"
+		// Add the App Distribution Gradle plugin
+		classpath "com.google.firebase:firebase-appdistribution-gradle:${Versions.appdistribution}"
 
         classpath "com.google.android.gms:oss-licenses-plugin:${Versions.oss_plugin}"
         // NOTE: Do not place your application dependencies here; they belong

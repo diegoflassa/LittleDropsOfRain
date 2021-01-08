@@ -1,0 +1,2 @@
+$Env:FIREBASE_TOKEN = "1//0hDNu8AHjFM8iCgYIARAAGBESNwF-L9IrDV3y6xgXflqdsEOqYOcYFuwCCaV-Siou_WD3IbeT-0g_krXO145Z5IlOHLaVmEdaj38"
+./gradlew assembleRelease appDistributionUploadRelease
