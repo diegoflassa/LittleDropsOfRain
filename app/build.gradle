@@ -62,7 +62,7 @@ android {
             ext.enableCrashlytics = false
             ext.alwaysUpdateBuildId = false
             firebaseAppDistribution {
-                //releaseNotesFile="/path/to/releasenotes.txt"
+                releaseNotesFile="${project.rootDir}/releaseNotes/releaseNotes.txt"
                 testers="andrea.setecinco@gmail.com, diegoflassa@gmail.com"
             }
         }
@@ -82,7 +82,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             firebaseAppDistribution {
-                //releaseNotesFile="/path/to/releasenotes.txt"
+                releaseNotesFile="${project.rootDir}/releaseNotes/releaseNotes.txt"
                 testers="andrea.setecinco@gmail.com, diegoflassa@gmail.com"
             }
         }
@@ -258,7 +258,7 @@ dependencies {
     implementation "com.google.android.material:material:${Versions.material}"
     implementation "com.google.android.gms:play-services-location:${Versions.play_services_location}"
     implementation "com.google.gms:google-services:${Versions.google_services}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinCompilerVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinStdlibJdk8}"
     implementation "androidx.activity:activity-ktx:${Versions.activity_ktx}"
     implementation "androidx.annotation:annotation:${Versions.annotation}"
     implementation "androidx.appcompat:appcompat:${Versions.appcompat}"

@@ -6,6 +6,7 @@ object Versions {
 
     // DO NOT UPDATE or will get build errors
     const val kotlinCompilerVersion = "1.4.21"
+    const val kotlinStdlibJdk8 = "1.4.21"
     const val coil = "1.0.0"
     const val volley = "1.1.1"
     const val ucrop = "2.2.6"
@@ -40,7 +41,7 @@ object Versions {
     const val junit_ktx = "1.1.3-alpha02"
     const val rules = "1.3.1-alpha02"
     const val runner = "1.3.1-alpha02"
-    const val gradle="7.0.0-alpha03"
+    const val gradle="7.0.0-alpha04"
     const val gradle_plugin="1.4.21"
     const val safeargs_plugin="2.3.1"
     const val crashlytics = "2.4.1"
@@ -69,7 +70,7 @@ object Libs {
 
     object Accompanist {
         private const val version = "0.3.1"
-        const val coil = "dev.chrisbanes.accompanist:accompanist-coil:$version"
+        const val coil = "dev.chrisbanes.accompanist:accompanist-coil:${version}"
     }
 
     object Kotlin {
@@ -80,15 +81,15 @@ object Libs {
 
     object Coroutines {
         private const val version = "1.3.9"
-        const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
-        const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
-        const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
+        const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${version}"
+        const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${version}"
+        const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${version}"
     }
 
     object OkHttp {
         private const val version = "4.7.2"
-        const val okhttp = "com.squareup.okhttp3:okhttp:$version"
-        const val logging = "com.squareup.okhttp3:logging-interceptor:$version"
+        const val okhttp = "com.squareup.okhttp3:okhttp:${version}"
+        const val logging = "com.squareup.okhttp3:logging-interceptor:${version}"
     }
 
     object AndroidX {
@@ -120,12 +121,12 @@ object Libs {
 
         object Test {
             private const val version = "1.2.0"
-            const val core = "androidx.test:core:$version"
-            const val rules = "androidx.test:rules:$version"
+            const val core = "androidx.test:core:${version}"
+            const val rules = "androidx.test:rules:${version}"
 
             object Ext {
                 private const val version = "1.1.2-rc01"
-                const val junit = "androidx.test.ext:junit-ktx:$version"
+                const val junit = "androidx.test.ext:junit-ktx:${version}"
             }
 
             const val espressoCore = "androidx.test.espresso:espresso-core:3.2.0"
@@ -140,15 +141,15 @@ object Libs {
 
         object Lifecycle {
             private const val version = "2.2.0"
-            const val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
-            const val livedata = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
-            const val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
+            const val extensions = "androidx.lifecycle:lifecycle-extensions:${version}"
+            const val livedata = "androidx.lifecycle:lifecycle-livedata-ktx:${version}"
+            const val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${version}"
         }
     }
 
     object Rome {
         private const val version = "1.14.1"
-        const val rome = "com.rometools:rome:$version"
-        const val modules = "com.rometools:rome-modules:$version"
+        const val rome = "com.rometools:rome:${version}"
+        const val modules = "com.rometools:rome-modules:${version}"
     }
 }
