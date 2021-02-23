@@ -16,6 +16,7 @@
 
 package app.web.diegoflassa_site.littledropsofrain.adapters
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.*
@@ -47,6 +48,7 @@ abstract class FirestoreAdapter<VH : RecyclerView.ViewHolder?>(private var mQuer
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun stopListening() {
         if (mRegistration != null) {
             mRegistration!!.remove()
@@ -76,7 +78,7 @@ abstract class FirestoreAdapter<VH : RecyclerView.ViewHolder?>(private var mQuer
         onDataChanged()
     }
 
-    protected fun onDocumentAdded(change: DocumentChange) {
+    private fun onDocumentAdded(change: DocumentChange) {
         mSnapshots.add(change.newIndex, change.document)
         notifyItemInserted(change.newIndex)
     }
@@ -99,6 +101,7 @@ abstract class FirestoreAdapter<VH : RecyclerView.ViewHolder?>(private var mQuer
         notifyItemRemoved(change.oldIndex)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setQuery(query: Query?) {
         // Stop listening
         stopListening()

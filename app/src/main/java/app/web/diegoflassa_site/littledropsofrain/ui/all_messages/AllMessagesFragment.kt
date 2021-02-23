@@ -79,7 +79,7 @@ class AllMessagesFragment :
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAllMessagesBinding.inflate(inflater, container, false)
         viewModel.viewStateLiveData.observe(
             viewLifecycleOwner,

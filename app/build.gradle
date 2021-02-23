@@ -35,12 +35,6 @@ android {
         versionCode Config.versionCode
         versionName Config.versionName
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += ["room.incremental": "true"]
-            }
-        }
     }
     sourceSets {
         //DFL - Não use por enquanto
@@ -94,10 +88,9 @@ android {
         }
     }
     compileOptions {
-        // Sets Java compatibility to Java 1.8
-		// DO NOT UPDATE or will get Class Not Found Exception
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
+        // Sets Java compatibility to Java 11
+        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_11
     }
     buildFeatures {
         viewBinding = true
@@ -113,7 +106,6 @@ android {
         exclude 'META-INF/DEPENDENCIES'
     }
     composeOptions {
-        kotlinCompilerVersion Versions.kotlinCompilerVersion
         kotlinCompilerExtensionVersion Versions.androidxJetpackCompose
     }
 }
@@ -124,7 +116,7 @@ gradle.taskGraph.whenReady {
         if (task.name.contains("compileDebugUnitTestKotlin")||task.name.contains("compileReleaseUnitTestKotlin")
 		//||
 		) {
-		//task.name.contains("uploadCrashlyticsMappingFile")) {
+        //task.name.contains("uploadCrashlyticsMappingFile")) {
 			// Uncomment if error occurs
 			task.enabled = false
 		}
@@ -151,21 +143,19 @@ afterEvaluate {
 
 // Avoid build error
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-    // Sets Java compatibility to Java 1.8
-    // DO NOT UPDATE or will get Class Not Found Exception
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    // Sets Java compatibility to Java 11
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 
     kotlinOptions {
-        // useIR = true
+        useIR = true
         // Treat all Kotlin warnings as errors
         allWarningsAsErrors = true
         // Set the target vm version
         // DO NOT UPDATE or will get Class Not Found Exception
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
         // Use experimental APIs
         freeCompilerArgs += '-Xskip-prerelease-check'
-        freeCompilerArgs += '-Xallow-jvm-ir-dependencies'
     }
 }
 
@@ -198,7 +188,7 @@ dependencies {
     // Tooling support (Previews, etc.)
     implementation "androidx.compose.ui:ui-tooling:${Versions.androidxJetpackCompose}"
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation "androidx.compose.foundation:foundation:${Versions.androidxJetpackCompose}"
+    implementation "androidx.compose.foundation:foundation:${Versions.foundation}"
     // Material Design
     implementation "androidx.compose.material:material:${Versions.androidxJetpackCompose}"
     // Material design icons
@@ -209,6 +199,8 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-rxjava2:${Versions.androidxJetpackCompose}"
     // UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test:${Versions.androidxJetpackCompose}"
+	debugImplementation "androidx.compose.ui:ui-tooling:${Versions.androidxJetpackCompose}"
+	debugImplementation "org.jetbrains.kotlin:kotlin-reflect:${Versions.reflect}" 
 
 
     // Import the BoM for the Firebase platform

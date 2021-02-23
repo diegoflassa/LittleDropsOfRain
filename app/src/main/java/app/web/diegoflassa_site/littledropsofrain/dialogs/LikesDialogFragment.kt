@@ -71,7 +71,7 @@ class LikesDialogFragment(var product: Product?) : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DialogLikesFragmentBinding.inflate(inflater, container, false)
         binding.btnClose.setOnClickListener {
             dismiss()
@@ -149,7 +149,7 @@ class LikesDialogFragment(var product: Product?) : DialogFragment() {
         binding.likesDialogProgress.visibility = View.GONE
     }
 
-    fun createQuery(userIDs: List<String>): Query? {
+    private fun createQuery(userIDs: List<String>): Query? {
         mQuery = mFirestore.collection(UserDao.COLLECTION_PATH).whereIn(User.UID, userIDs)
         return mQuery
     }
