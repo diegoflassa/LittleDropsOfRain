@@ -24,7 +24,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -96,7 +95,6 @@ class HomeFragment :
     private lateinit var toggle: ActionBarDrawerToggle
     private var mQuery: Query? = null
     private var mCurrentLocation: Location? = null
-    private lateinit var mLocationCallback: LocationCallback
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mRequestingLocationUpdates = false
     private lateinit var mPermissionLauncher: ActivityResultLauncher<String>
@@ -164,18 +162,6 @@ class HomeFragment :
             mRequestingLocationUpdates = true
             mFusedLocationClient =
                 LocationServices.getFusedLocationProviderClient(requireActivity())
-            mLocationCallback = object : LocationCallback() {
-                override fun onLocationResult(locationResult: LocationResult?) {
-                    locationResult ?: return
-                    mCurrentLocation = locationResult.lastLocation
-                    initRecyclerView()
-                    stopLocationUpdates()
-                    // Start listening for Firestore updates
-                    mAdapter.get()?.startListening()
-                    // Apply filters
-                    onFilter(viewModel.viewState.filters)
-                }
-            }
         }
         initFirestore()
         binding.filterBar.isEnabled = false
@@ -183,7 +169,7 @@ class HomeFragment :
         mPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) {
                 if (it) {
-                    startLocationUpdates()
+                    getLocation()
                 } else {
                     hideOffAirScreen()
                     showLoadingScreen()
@@ -241,15 +227,6 @@ class HomeFragment :
         if (mRequestingLocationUpdates) checkForLocationUpdatesPermissionAndStartUpdates()
     }
 
-    override fun onPause() {
-        super.onPause()
-        stopLocationUpdates()
-    }
-
-    private fun stopLocationUpdates() {
-        mFusedLocationClient.removeLocationUpdates(mLocationCallback)
-    }
-
     private fun checkForLocationUpdatesPermissionAndStartUpdates() {
         if (ActivityCompat.checkSelfPermission(
                 this.requireContext(),
@@ -262,23 +239,20 @@ class HomeFragment :
             mPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
             return
         } else {
-            startLocationUpdates()
+            getLocation()
         }
     }
 
     @SuppressLint("MissingPermission")
-    private fun startLocationUpdates() {
-        val locationRequest = LocationRequest().apply {
-            interval = 5000
-            fastestInterval = 5000
-            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+    private fun getLocation() {
+        mFusedLocationClient.lastLocation.addOnSuccessListener {
+            mCurrentLocation = it
+            initRecyclerView()
+            // Start listening for Firestore updates
+            mAdapter.get()?.startListening()
+            // Apply filters
+            onFilter(viewModel.viewState.filters)
         }
-
-        mFusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            mLocationCallback,
-            Looper.getMainLooper()
-        )
     }
 
     private fun updateUI(viewState: HomeViewState) {

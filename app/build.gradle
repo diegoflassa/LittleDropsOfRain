@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
+
 // Google Services plugin
 apply plugin: 'com.google.gms.google-services'
 // Apply the Crashlytics Gradle plugin
@@ -148,14 +149,11 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     targetCompatibility = JavaVersion.VERSION_11
 
     kotlinOptions {
-        useIR = true
         // Treat all Kotlin warnings as errors
         allWarningsAsErrors = true
         // Set the target vm version
         // DO NOT UPDATE or will get Class Not Found Exception
         jvmTarget = JavaVersion.VERSION_11.toString()
-        // Use experimental APIs
-        freeCompilerArgs += '-Xskip-prerelease-check'
     }
 }
 
@@ -181,6 +179,12 @@ dependencies {
 
     // Coil COroutines Image Loader
     implementation "io.coil-kt:coil:${Versions.coil}"
+
+    // Preferences DataStore
+    implementation "androidx.datastore:datastore-preferences:${Versions.data_store}"
+
+    // Proto DataStore
+    implementation  "androidx.datastore:datastore-core:${Versions.data_store}"
 
 
     // Jetpack Compose toolkit dependencies
@@ -239,8 +243,6 @@ dependencies {
 
     // GSon
     implementation "com.google.code.gson:gson:${Versions.gson}"
-
-    implementation "com.google.android.gms:play-services-location:${Versions.location}"
 
     // Leak Canary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"

@@ -17,8 +17,7 @@
 package app.web.diegoflassa_site.littledropsofrain.ui.instagram
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.SharedPreferences
+import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -28,6 +27,12 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateViewModelFactory
@@ -41,15 +46,32 @@ import app.web.diegoflassa_site.littledropsofrain.models.InstagramViewModel
 import app.web.diegoflassa_site.littledropsofrain.models.InstagramViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.io.IOException
 
 class InstagramFragment : Fragment(), OnKeyLongPressListener {
 
     companion object {
         fun newInstance() = InstagramFragment()
-        private const val KEY_PREF_LAST_URL = "KEY_PREF_LAST_URL_INSTAGRAM"
     }
 
     private var isStopped: Boolean = false
+    private val keyPrefsLastURL = stringPreferencesKey("KEY_PREF_LAST_URL_INSTAGRAM")
+    private val ioScope = CoroutineScope(Dispatchers.IO)
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+        name = requireContext().packageName, migrations = listOf(
+            SharedPreferencesMigration(
+                requireContext(),
+                requireContext().packageName
+            )
+        )
+    )
+
     private val viewModel: InstagramViewModel by viewModels(
         factoryProducer = {
             SavedStateViewModelFactory(
@@ -112,7 +134,9 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         fab?.visibility = View.GONE
         showProgressDialog()
         binding.webviewInstagram.loadUrl(url)
-        saveCurrentUrl()
+        runBlocking {
+            saveCurrentUrl()
+        }
         return binding.root
     }
 
@@ -140,7 +164,9 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
     @SuppressLint("ApplySharedPref")
     override fun onPause() {
         binding.webviewInstagram.pauseTimers()
-        saveCurrentUrl()
+        runBlocking {
+            saveCurrentUrl()
+        }
         super.onPause()
     }
 
@@ -175,24 +201,29 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         }
     }
 
-    private fun saveCurrentUrl() {
-        val prefs = requireContext().applicationContext.getSharedPreferences(
-            requireContext().packageName,
-            Activity.MODE_PRIVATE
-        )
-        val edit: SharedPreferences.Editor = prefs.edit()
-        edit.putString(KEY_PREF_LAST_URL, binding.webviewInstagram.url)
-        edit.apply()
+    private suspend fun saveCurrentUrl() {
+        ioScope.launch {
+            requireContext().dataStore.edit { settings ->
+                settings[keyPrefsLastURL] = binding.webviewInstagram.url.toString()
+            }
+        }
     }
 
     private fun restoreCurrentUrl() {
-        val prefs = requireContext().applicationContext.getSharedPreferences(
-            requireContext().packageName,
-            Activity.MODE_PRIVATE
-        )
-        val url = prefs.getString(KEY_PREF_LAST_URL, getString(R.string.url_instagram))
-        if (!url.isNullOrEmpty()) {
-            binding.webviewInstagram.loadUrl(url)
-        }
+        requireContext().dataStore.data
+            .catch { exception ->
+                // dataStore.data throws an IOException when an error is encountered when reading data
+                if (exception is IOException) {
+                    val url = getString(R.string.url_instagram)
+                    binding.webviewInstagram.loadUrl(url)
+                } else {
+                    throw exception
+                }
+            }
+            .map { preferences ->
+                // Get our show url value, defaulting to the resource if not set:
+                val url = preferences[keyPrefsLastURL] ?: getString(R.string.url_instagram)
+                binding.webviewInstagram.loadUrl(url)
+            }
     }
 }

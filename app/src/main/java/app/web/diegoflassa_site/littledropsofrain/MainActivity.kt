@@ -493,7 +493,7 @@ class MainActivity :
                 if (user.isAdmin) {
                     Helper.requestReadExternalStoragePermission(this)
                     SetupProductsUpdateWorkerService.setupWorker(applicationContext)
-                    NewMessagesService.setupListener(applicationContext)
+                    NewMessagesService.setupListener()
                 }
                 Helper.requestGetCoarseLocationPermission(this)
                 LoggedUser.userLiveData.value = user
