@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.text.HtmlCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -57,6 +55,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.lang.ref.WeakReference
 
 class MyLikedProductsFragment :
@@ -67,7 +66,7 @@ class MyLikedProductsFragment :
     DialogInterface.OnDismissListener,
     MyLikedProductsAdapter.OnProductSelectedListener {
 
-    private val viewModel: MyLikedProductsViewModel by viewModels(factoryProducer = { SavedStateViewModelFactory(this.requireActivity().application, this) })
+    val viewModel: MyLikedProductsViewModel by stateViewModel()
     var binding: FragmentMyLikedProductsBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<MyLikedProductsAdapter>
     private lateinit var mFirestore: FirebaseFirestore
@@ -250,28 +249,32 @@ class MyLikedProductsFragment :
         }
 
         mAdapter =
-            WeakReference(object : MyLikedProductsAdapter(this@MyLikedProductsFragment, mQuery, this@MyLikedProductsFragment) {
-                override fun onDataChanged() {
-                    binding.filterBar.isEnabled = true
-                    hideLoadingScreen()
-                    // Show/hide content if the query returns empty.
-                    if (itemCount == 0) {
-                        binding.recyclerview.visibility = View.GONE
-                        binding.homeViewEmpty.visibility = View.VISIBLE
-                    } else {
-                        binding.recyclerview.visibility = View.VISIBLE
-                        binding.homeViewEmpty.visibility = View.GONE
+            WeakReference(object : MyLikedProductsAdapter(
+                this@MyLikedProductsFragment,
+                mQuery,
+                this@MyLikedProductsFragment
+            ) {
+                    override fun onDataChanged() {
+                        binding.filterBar.isEnabled = true
+                        hideLoadingScreen()
+                        // Show/hide content if the query returns empty.
+                        if (itemCount == 0) {
+                            binding.recyclerview.visibility = View.GONE
+                            binding.homeViewEmpty.visibility = View.VISIBLE
+                        } else {
+                            binding.recyclerview.visibility = View.VISIBLE
+                            binding.homeViewEmpty.visibility = View.GONE
+                        }
                     }
-                }
 
-                override fun onError(e: FirebaseFirestoreException?) {
-                    // Show a snackbar on errors
-                    activity?.findViewById<View>(android.R.id.content)?.let {
-                        Snackbar.make(it, "Error: check logs for info.", Snackbar.LENGTH_LONG)
-                            .show()
+                    override fun onError(e: FirebaseFirestoreException?) {
+                        // Show a snackbar on errors
+                        activity?.findViewById<View>(android.R.id.content)?.let {
+                            Snackbar.make(it, "Error: check logs for info.", Snackbar.LENGTH_LONG)
+                                .show()
+                        }
                     }
-                }
-            })
+                })
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
         binding.recyclerview.adapter = mAdapter.get()
     }
@@ -285,7 +288,7 @@ class MyLikedProductsFragment :
                 userFb.uid = user.uid
                 userFb.name = user.name
                 userFb.email = user.email
-                UserDao.insert(userFb)
+                UserDao.insertOrUpdate(userFb)
             }
             Toast.makeText(
                 requireContext(),

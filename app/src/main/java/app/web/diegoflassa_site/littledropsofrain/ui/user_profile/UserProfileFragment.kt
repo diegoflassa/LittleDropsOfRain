@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -49,6 +47,7 @@ import app.web.diegoflassa_site.littledropsofrain.models.UserProfileViewState
 import coil.load
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
 class UserProfileFragment :
     Fragment(),
@@ -61,14 +60,8 @@ class UserProfileFragment :
     }
 
     private lateinit var toggle: ActionBarDrawerToggle
-    private val viewModel: UserProfileViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
-            )
-        }
-    )
+
+    val viewModel: UserProfileViewModel by stateViewModel()
     private var binding: FragmentUserProfileBinding by viewLifecycle()
     private lateinit var getContentLauncher: ActivityResultLauncher<String>
     private lateinit var cropImageLauncher: ActivityResultLauncher<Pair<Uri, Pair<Float, Float>>>
@@ -113,7 +106,7 @@ class UserProfileFragment :
             if (LoggedUser.userLiveData.value != null) {
                 LoggedUser.userLiveData.value!!.name = binding.userEdtTxtName.text.toString()
                 LoggedUser.userLiveData.value!!.email = binding.userTxtVwEmail.text.toString()
-                UserDao.update(LoggedUser.userLiveData.value!!)
+                UserDao.insertOrUpdate(LoggedUser.userLiveData.value!!)
             }
             Toast.makeText(context, getString(R.string.saved), Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()

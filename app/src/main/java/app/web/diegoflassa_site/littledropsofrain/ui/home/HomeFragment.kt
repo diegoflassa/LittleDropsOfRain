@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.text.HtmlCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -69,6 +67,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -80,14 +79,7 @@ class HomeFragment :
     ProductAdapter.OnProductSelectedListener,
     DialogInterface.OnDismissListener {
 
-    private val viewModel: HomeViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
-            )
-        }
-    )
+    val viewModel: HomeViewModel by stateViewModel()
     var binding: FragmentHomeBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<ProductAdapter>
     private lateinit var mFirestore: FirebaseFirestore
@@ -306,6 +298,8 @@ class HomeFragment :
                     (true.toString() + "_" + Source.ILURIA.toString())
                 )
             } else {
+                query.whereEqualTo(Product.IS_PUBLISHED_SOURCE,
+                    (true.toString() + "_" + Source.ETSY.toString()))
                 query.whereEqualTo(
                     Product.IS_PUBLISHED_SOURCE,
                     (true.toString() + "_" + Source.ILURIA.toString())
@@ -425,7 +419,7 @@ class HomeFragment :
                 userFb.uid = user.uid
                 userFb.name = user.name
                 userFb.email = user.email
-                UserDao.insert(userFb)
+                UserDao.insertOrUpdate(userFb)
             }
             Toast.makeText(
                 requireContext(),

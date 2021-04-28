@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="@string/action_settings" />
     <item
         android:id="@+id/action_licenses"
         android:orderInCategory="100"
-        android:title="@string/licenses"
-        app:showAsAction="never" />
+        android:title="@string/licenses" />
     <item
         android:id="@+id/action_privacy"
         android:orderInCategory="100"
-        android:title="@string/privacy"
-        app:showAsAction="never" />
+        android:title="@string/privacy" />
     <item
         android:id="@+id/action_tos"
         android:orderInCategory="100"
-        android:title="@string/tos_title"
-        app:showAsAction="never" />
+        android:title="@string/tos_title" />
 </menu>

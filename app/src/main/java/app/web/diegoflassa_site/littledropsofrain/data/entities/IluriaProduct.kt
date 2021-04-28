@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,28 @@
 
 package app.web.diegoflassa_site.littledropsofrain.data.entities
 
-import androidx.annotation.NonNull
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import android.os.Parcelable
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import kotlinx.parcelize.Parcelize
 
-@Entity(tableName = "Products")
+@Parcelize
+@JacksonXmlRootElement(localName = "produto")
 data class IluriaProduct(
-    @NonNull @PrimaryKey
+    @JacksonXmlProperty(localName = "id_produto")
     var idProduct: String = "0",
-    @field:ColumnInfo(name = "linkProduct")
+    @JacksonXmlProperty(localName = "link_produto")
     var linkProduct: String? = null,
-    @field:ColumnInfo(name = "title")
+    @JacksonXmlProperty(localName = "titulo")
     var title: String? = null,
-    @field:ColumnInfo(name = "price")
+    @JacksonXmlProperty(localName = "preco")
     var price: String? = null,
-    @field:ColumnInfo(name = "installment")
+    @JacksonXmlProperty(localName = "parcelamento")
     var installment: String? = null,
-    @field:ColumnInfo(name = "disponibility")
+    @JacksonXmlProperty(localName = "disponibilidade")
     var disponibility: String? = null,
-    @field:ColumnInfo(name = "image")
+    @JacksonXmlProperty(localName = "imagem")
     var image: String? = null,
-    @field:ColumnInfo(name = "category")
+    @JacksonXmlProperty(localName = "categoria")
     var category: String? = null
-)
+) : Parcelable

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
-import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -70,6 +68,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.joanzapata.iconify.fonts.TypiconsIcons
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
 class MainActivity :
     AppCompatActivity(),
@@ -83,14 +82,7 @@ class MainActivity :
         private val TAG = MainActivity::class.simpleName
     }
 
-    private val viewModel: MainActivityViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.application,
-                this
-            )
-        }
-    )
+    private val viewModel: MainActivityViewModel by stateViewModel()
     private lateinit var fab: FloatingActionButton
     private var binding: ActivityMainBinding? = null
     private var bindingNavHeader: NavHeaderMainBinding? = null
@@ -279,6 +271,7 @@ class MainActivity :
             ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE,
             ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
             ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL -> {
+                SetupProductsUpdateWorkerService.stopRunningWorker(this)
                 /*
                    Release any memory that your app doesn't need to run.
 
@@ -292,6 +285,7 @@ class MainActivity :
             ComponentCallbacks2.TRIM_MEMORY_BACKGROUND,
             ComponentCallbacks2.TRIM_MEMORY_MODERATE,
             ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
+                SetupProductsUpdateWorkerService.stopRunningWorker(this)
                 /*
                    Release as much memory as the process can.
 
@@ -303,6 +297,7 @@ class MainActivity :
             }
 
             else -> {
+                SetupProductsUpdateWorkerService.stopRunningWorker(this)
                 /*
                   Release any non-critical data structures.
 
@@ -371,18 +366,22 @@ class MainActivity :
                         }
                     }
                 }
-                if (AuthUI.canHandleIntent(intent)) {
-                    authenticateOnResume = false
-                    if (intent.extras == null) {
-                        return
-                    }
-                    registerForActivityResult(
-                        EmailLinkAuthActivityResultContract(),
-                        this
-                    ).launch(intent)
-                }
+                runEmailLinkAuth(intent)
             }
             lastIntent = intent
+        }
+    }
+
+    private fun runEmailLinkAuth(intent: Intent?) {
+        if (intent != null && AuthUI.canHandleIntent(intent)) {
+            authenticateOnResume = false
+            if (intent.extras == null) {
+                return
+            }
+            registerForActivityResult(
+                EmailLinkAuthActivityResultContract(),
+                this
+            ).launch(intent)
         }
     }
 
@@ -489,7 +488,7 @@ class MainActivity :
                         FirebaseAuth.getInstance().currentUser!!.providerData[1].providerId
                 }
                 user.lastSeen = Timestamp.now()
-                UserDao.update(user)
+                UserDao.insertOrUpdate(user)
                 if (user.isAdmin) {
                     Helper.requestReadExternalStoragePermission(this)
                     SetupProductsUpdateWorkerService.setupWorker(applicationContext)
@@ -508,7 +507,7 @@ class MainActivity :
             }
             FirebaseAuth.getInstance().currentUser != null -> {
                 val userFromFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
-                UserDao.insert(userFromFb)
+                UserDao.insertOrUpdate(userFromFb)
                 LoggedUser.userLiveData.value = userFromFb
                 findNavController(R.id.nav_host_fragment).navigate(
                     MainActivityDirections.actionGlobalUserProfileFragment()

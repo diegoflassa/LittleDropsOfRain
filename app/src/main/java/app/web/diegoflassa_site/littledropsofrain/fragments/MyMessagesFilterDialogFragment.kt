@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,6 @@ import android.widget.CompoundButton
 import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
@@ -36,6 +34,7 @@ import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMyMessages
 import app.web.diegoflassa_site.littledropsofrain.helpers.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.models.MyMessagesFilterDialogViewModel
 import com.google.firebase.firestore.Query
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.util.*
 
 /**
@@ -53,20 +52,14 @@ open class MyMessagesFilterDialogFragment :
         fun onFilter(filters: MyMessagesFilters)
     }
 
-    val viewModel: MyMessagesFilterDialogViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
-            )
-        }
-    )
+    val viewModel: MyMessagesFilterDialogViewModel by stateViewModel()
     private lateinit var mSpinnerSort: Spinner
     private lateinit var mSpinnerType: Spinner
     var filterListener: FilterListener? = null
     var binding: FragmentMyMessagesFiltersBinding by viewLifecycle()
     private var mRootView: View? = null
 
+    @ExperimentalStdlibApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -111,6 +104,7 @@ open class MyMessagesFilterDialogFragment :
         )
     }
 
+    @ExperimentalStdlibApi
     override fun onClick(v: View) {
         when (v.id) {
             R.id.button_search_messages -> onSearchClicked()
@@ -118,6 +112,7 @@ open class MyMessagesFilterDialogFragment :
         }
     }
 
+    @ExperimentalStdlibApi
     private fun onSearchClicked() {
         if (filterListener != null) {
             filterListener!!.onFilter(filters)
@@ -132,7 +127,7 @@ open class MyMessagesFilterDialogFragment :
     private val selectedSortBy: String?
         get() {
             if (mRootView != null && !isDetached) {
-                return when (binding.spinnerSort.selectedItem as String) {
+                return when (binding.spinnerSort.selectedItem) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
                         return Message.CREATION_DATE
@@ -149,21 +144,20 @@ open class MyMessagesFilterDialogFragment :
 
     private val selectedRead: Boolean?
         get() {
-            if (mRootView != null && !isDetached) {
-                if (binding.checkBoxMsgRead.isChecked) {
-                    return binding.switchMsgRead.isChecked
-                }
+            if (mRootView != null && !isDetached && binding.checkBoxMsgRead.isChecked) {
+                return binding.switchMsgRead.isChecked
             }
             return null
         }
 
+    @ExperimentalStdlibApi
     private val selectedType: MessageType?
         get() {
             if (mRootView != null && !isDetached) {
                 return if (binding.spinnerType.selectedItemPosition > 0) {
                     MessageType.valueOf(
                         binding.spinnerType.selectedItem.toString()
-                            .toUpperCase(Locale.ROOT)
+                            .uppercase(Locale.ROOT)
                     )
                 } else {
                     null
@@ -175,7 +169,7 @@ open class MyMessagesFilterDialogFragment :
     private val sortDirection: Query.Direction?
         get() {
             if (mRootView != null && !isDetached) {
-                return when (binding.spinnerSort.selectedItem as String) {
+                return when (binding.spinnerSort.selectedItem) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
                         return Query.Direction.DESCENDING
@@ -197,6 +191,7 @@ open class MyMessagesFilterDialogFragment :
         }
     }
 
+    @ExperimentalStdlibApi
     val filters: MyMessagesFilters
         get() {
             val filters =

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,6 @@ import android.widget.Spinner
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
@@ -41,6 +39,7 @@ import app.web.diegoflassa_site.littledropsofrain.models.ProductsFilterDialogVie
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.firebase.firestore.Query
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
 /**
  * Dialog Fragment containing filter form.
@@ -59,14 +58,7 @@ open class ProductsFilterDialogFragment :
         fun onFilter(filters: ProductsFilters)
     }
 
-    val viewModel: ProductsFilterDialogViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
-            )
-        }
-    )
+    val viewModel: ProductsFilterDialogViewModel by stateViewModel()
     var categories: LinkedHashSet<String> = LinkedHashSet()
     private lateinit var mCategoryChipGroup: ChipGroup
     private var mSortSpinner: Spinner? = null
@@ -99,7 +91,7 @@ open class ProductsFilterDialogFragment :
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onNothingSelected(parent: AdapterView<*>?) { /*Unused*/ }
         }
         binding.buttonSearch.setOnClickListener(this)
         binding.buttonCancel.setOnClickListener(this)

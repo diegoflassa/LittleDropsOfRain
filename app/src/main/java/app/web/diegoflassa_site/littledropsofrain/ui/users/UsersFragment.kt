@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -51,6 +49,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.lang.ref.WeakReference
 
 class UsersFragment :
@@ -62,14 +61,7 @@ class UsersFragment :
         fun newInstance() = UsersFragment()
     }
 
-    private val viewModel: UsersViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
-            )
-        }
-    )
+    val viewModel: UsersViewModel by stateViewModel()
     var binding: FragmentUsersBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<UsersAdapter>
     private lateinit var mFirestore: FirebaseFirestore
@@ -163,40 +155,12 @@ class UsersFragment :
         // Construct query basic query
         var query: Query = mFirestore.collection(UserDao.COLLECTION_PATH)
         query.orderBy("creationDate", Query.Direction.ASCENDING)
-        /*
-        // Category (equality filter)
-        if (filters.hasCategory()) {
-            query = query.whereEqualTo("category", filters.getCategory())
-        }
-
-        // City (equality filter)
-        if (filters.hasCity()) {
-            query = query.whereEqualTo("city", filters.getCity())
-        }
-
-        // Price (equality filter)
-        if (filters.hasPrice()) {
-            query = query.whereEqualTo("price", filters.getPrice())
-        }
-
-        // Sort by (orderBy with direction)
-        if (filters.hasSortBy()) {
-            query = query.orderBy(filters.getSortBy(), filters.getSortDirection())
-        }
-        */
         // Limit items
         query = query.limit(HomeFragment.LIMIT.toLong())
 
         // Update the query
         mQuery = query
         mAdapter.get()?.setQuery(query)
-
-        // Set header
-        // mCurrentSearchView.setText(Html.fromHtml(filters.getSearchDescription(this)))
-        // mCurrentSortByView.setText(filters.getOrderDescription(this))
-
-        // Save filters
-        // mViewModel.setFilters(filters)
     }
 
     private fun initRecyclerView() {

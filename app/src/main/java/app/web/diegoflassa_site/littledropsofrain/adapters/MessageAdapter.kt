@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,6 +69,7 @@ open class MessageAdapter(
         return ViewHolder(mContext, binding.root)
     }
 
+    @ExperimentalStdlibApi
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int
@@ -82,6 +83,7 @@ open class MessageAdapter(
         val binding = RecyclerviewItemMessageBinding.bind(itemView)
         private val ioScope = CoroutineScope(Dispatchers.IO)
 
+        @ExperimentalStdlibApi
         fun bind(
             snapshot: DocumentSnapshot,
             listener: OnMessageSelectedListener?
@@ -111,7 +113,7 @@ open class MessageAdapter(
 
             // Click listener
             itemView.setOnClickListener { listener?.onMessageSelected(snapshot) }
-            when (MessageType.valueOf(message?.type?.toUpperCase(Locale.ROOT)!!)) {
+            when (MessageType.valueOf(message?.type?.uppercase(Locale.ROOT)!!)) {
                 MessageType.MESSAGE -> {
                     when {
                         message.emailSender == LoggedUser.userLiveData.value?.email -> {

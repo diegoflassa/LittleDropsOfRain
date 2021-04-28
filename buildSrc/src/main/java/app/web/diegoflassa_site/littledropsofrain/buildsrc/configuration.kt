@@ -4,7 +4,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.util.*
 
-@Suppress("Unused")
+@Suppress("Unused", "MemberVisibilityCanBePrivate")
 object Config {
     const val ktlint = "0.39.0"
     const val applicationId = "app.web.diegoflassa_site.littledropsofrain"
@@ -12,10 +12,10 @@ object Config {
     private const val versionMinor = 0
     private const val versionPatch = 7
     private var versionClassifier = "debug"
-    private const val minimumSdkVersion = 23
+    const val minimumSdkVersion = 24
     const val compileSdkVersion = 30
     const val targetSdkVersion = 30
-    const val buildToolsVersion = "31.0.0-rc1"
+    const val buildToolsVersion = "31.0.0-rc3"
     val versionCode = buildVersionCode()
     val versionName = buildVersionName()
 
@@ -31,18 +31,21 @@ object Config {
     fun buildVersionName(): String {
         val versionProps = Properties()
         val versionPropsFile = File("version.properties")
-        if (versionPropsFile.exists()) {
-            versionProps.load(FileInputStream(versionPropsFile))
-        }
-        val code = (versionProps["VERSION_CODE"] ?: "0").toString().toInt() + 1
-        versionProps["VERSION_CODE"] = code.toString()
-        versionProps.store(versionPropsFile.writer(), null)
+        val fileInputStream = FileInputStream(versionPropsFile)
+        fileInputStream.use { fis ->
+            if (versionPropsFile.exists()) {
+                versionProps.load(fis)
+            }
+            val code = (versionProps["VERSION_CODE"] ?: "0").toString().toInt() + 1
+            versionProps["VERSION_CODE"] = code.toString()
+            versionProps.store(versionPropsFile.writer(), null)
 
-        var versionName = buildVersionNameWithoutClassifier()
-        if (versionClassifier.isNotEmpty()) {
-            versionName = versionName + "-" + versionClassifier + "-Build:${code}"
-        } else {
-            versionName += "-Build:${code}"
+            var versionName = buildVersionNameWithoutClassifier()
+            if (versionClassifier.isNotEmpty()) {
+                //versionName = versionName + "-" + versionClassifier + "-Build:${code}"
+            } else {
+                versionName += "-Build:${code}"
+            }
         }
         return versionName
     }

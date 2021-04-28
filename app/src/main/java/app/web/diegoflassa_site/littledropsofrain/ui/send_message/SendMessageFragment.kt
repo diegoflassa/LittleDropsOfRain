@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,6 @@ import androidx.core.app.NavUtils
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
@@ -52,6 +50,7 @@ import com.google.firebase.firestore.DocumentReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -70,19 +69,13 @@ class SendMessageFragment :
         var mSavedInstanceState: Bundle? = null
     }
 
-    private val viewModel: SendMessageViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
-            )
-        }
-    )
+    val viewModel: SendMessageViewModel by stateViewModel()
     private var binding: FragmentSendMessageBinding by viewLifecycle()
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private lateinit var toggle: ActionBarDrawerToggle
     private var isStopped = false
 
+    @ExperimentalStdlibApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -145,8 +138,17 @@ class SendMessageFragment :
             }
         }
         binding.mltxtMessage.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) { /*Unused*/
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) { /*Unused*/
+            }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.btnSend.isEnabled = binding.mltxtMessage.text.toString().trim().isNotEmpty()
             }
@@ -217,6 +219,7 @@ class SendMessageFragment :
         updateUI(viewModel.viewState)
     }
 
+    @ExperimentalStdlibApi
     private fun setupRadioGroupSendMethods() {
         val sendModes = activity?.resources?.getStringArray(R.array.send_modes_entries)
         val sendModesValues = activity?.resources?.getStringArray(R.array.send_modes_values)
@@ -233,14 +236,10 @@ class SendMessageFragment :
         binding.rdGrpSendMethod.setOnCheckedChangeListener { radioGroup: RadioGroup, checkedId: Int ->
             val radioButton = radioGroup.findViewById<RadioButton>(checkedId)
             val sendMethod = radioButton.tag as String
-            when (SendMessageViewState.SendMethod.valueOf(sendMethod.toUpperCase(Locale.ROOT))) {
+            when (SendMessageViewState.SendMethod.valueOf(sendMethod.uppercase(Locale.ROOT))) {
                 SendMessageViewState.SendMethod.EMAIL -> {
                     binding.spnrContacts.visibility = View.VISIBLE
                     binding.edttxtTitle.visibility = View.VISIBLE
-                }
-                SendMessageViewState.SendMethod.MESSAGE -> {
-                    binding.spnrContacts.visibility = View.GONE
-                    binding.edttxtTitle.visibility = View.GONE
                 }
                 else -> {
                     binding.spnrContacts.visibility = View.GONE
@@ -248,7 +247,7 @@ class SendMessageFragment :
                 }
             }
             viewModel.viewState.sendMethod = SendMessageViewState.SendMethod.valueOf(
-                sendMethod.toUpperCase(Locale.ROOT)
+                sendMethod.uppercase(Locale.ROOT)
             )
         }
     }
@@ -265,6 +264,13 @@ class SendMessageFragment :
         }
         binding.edttxtTitle.setText(viewState.title)
         binding.mltxtMessage.setText(viewState.body)
+        updateUIForUserAdmin(viewState)
+        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
+        bnv?.visibility = View.GONE
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun updateUIForUserAdmin(viewState: SendMessageViewState) {
         if (viewState.isUserAdmin && binding.spnrContacts.adapter != null) {
             val user = viewState.dest
             val dataAdapter: ArrayAdapter<User> =
@@ -290,22 +296,24 @@ class SendMessageFragment :
                 }
             }
         }
+        updateRadioGroupUserAdmin(viewState)
+    }
+
+    private fun updateRadioGroupUserAdmin(viewState: SendMessageViewState) {
         if (!viewState.isUserAdmin) {
             binding.rdGrpSendMethod.visibility = View.GONE
         } else {
             binding.rdGrpSendMethod.visibility = View.VISIBLE
         }
-        val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
-        bnv?.visibility = View.GONE
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun setSelectedMessageSender() {
         if (mSavedInstanceState != null && (
-            mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY || mSavedInstanceState?.getString(
-                    ACTION_SEND_KEY
-                ) == ACTION_SEND
-            )
+                    mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY || mSavedInstanceState?.getString(
+                        ACTION_SEND_KEY
+                    ) == ACTION_SEND
+                    )
         ) {
             val message = mSavedInstanceState?.getParcelable<Message>(KEY_MESSAGE)
             if (message != null) {
@@ -371,44 +379,46 @@ class SendMessageFragment :
             usersWithDefault.addAll(users)
             for (localUser in users) {
                 if (localUser.email == LoggedUser.userLiveData.value?.email) {
-                    usersWithDefault.remove(localUser)
+                    addOnItemSelectedForSpinnerContacts()
+                    checkIfSpinnerContactsIsEmpty()
                 }
-            }
-            val dataAdapter: ArrayAdapter<User> = ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_spinner_item, usersWithDefault
-            )
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.spnrContacts.adapter = dataAdapter
-            binding.spnrContacts.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>,
-                        view: View?,
-                        pos: Int,
-                        id: Long
-                    ) {
-                        viewModel.viewState.dest =
-                            (binding.spnrContacts.adapter.getItem(pos) as User)
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
-                        viewModel.viewState.dest = User()
-                    }
-                }
-            if (binding.spnrContacts.adapter.isEmpty) {
-                binding.spnrContacts.visibility = View.GONE
-                for (radio in binding.rdGrpSendMethod.children) {
-                    if (radio.tag == SendMessageViewState.SendMethod.EMAIL.toString()) {
-                        radio.isEnabled = false
-                    } else if (radio.tag == SendMessageViewState.SendMethod.MESSAGE.toString()) {
-                        viewModel.viewState.sendMethod = SendMessageViewState.SendMethod.MESSAGE
-                        (radio as RadioButton).isChecked = true
-                    }
-                }
-            } else {
-                setSelectedMessageSender()
             }
         }
+    }
+
+    private fun checkIfSpinnerContactsIsEmpty() {
+        if (binding.spnrContacts.adapter.isEmpty) {
+            binding.spnrContacts.visibility = View.GONE
+            for (radio in binding.rdGrpSendMethod.children) {
+                if (radio.tag == SendMessageViewState.SendMethod.EMAIL.toString()) {
+                    radio.isEnabled = false
+                } else if (radio.tag == SendMessageViewState.SendMethod.MESSAGE.toString()) {
+                    viewModel.viewState.sendMethod =
+                        SendMessageViewState.SendMethod.MESSAGE
+                    (radio as RadioButton).isChecked = true
+                }
+            }
+        } else {
+            setSelectedMessageSender()
+        }
+    }
+
+    private fun addOnItemSelectedForSpinnerContacts() {
+        binding.spnrContacts.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    pos: Int,
+                    id: Long
+                ) {
+                    viewModel.viewState.dest =
+                        binding.spnrContacts.adapter.getItem(pos) as User
+                }
+
+                override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
+                    viewModel.viewState.dest = User()
+                }
+            }
     }
 }

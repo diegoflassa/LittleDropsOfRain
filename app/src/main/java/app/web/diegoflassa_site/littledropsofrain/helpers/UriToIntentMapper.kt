@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,14 @@ import java.util.*
 class UriToIntentMapper(context: Context, intentHelper: IntentHelper) {
     private val mContext: Context = context
     private val mIntents: IntentHelper = intentHelper
+
+    @ExperimentalStdlibApi
     fun dispatchIntent(intent: Intent) {
         val uri: Uri? = intent.data
         var dispatchIntent: Intent? = null
         if (uri != null) {
-            val scheme: String = uri.scheme!!.toLowerCase(Locale.ROOT)
-            val host: String = uri.host!!.toLowerCase(Locale.ROOT)
+            val scheme: String = uri.scheme!!.lowercase(Locale.ROOT)
+            val host: String = uri.host!!.lowercase(Locale.ROOT)
             if ("app" == scheme) {
                 dispatchIntent = mapAppLink(uri)
             } else if (("http" == scheme || "https" == scheme) &&
@@ -50,8 +52,9 @@ class UriToIntentMapper(context: Context, intentHelper: IntentHelper) {
         mContext.startActivity(Intent(mContext, MainActivity::class.java))
     }
 
+    @ExperimentalStdlibApi
     private fun mapAppLink(uri: Uri): Intent? {
-        when (uri.host!!.toLowerCase(Locale.ROOT)) {
+        when (uri.host!!.lowercase(Locale.ROOT)) {
             "app" -> return mIntents.newMainActivityIntent(mContext)
         }
         return null
@@ -59,15 +62,7 @@ class UriToIntentMapper(context: Context, intentHelper: IntentHelper) {
 
     private fun mapWebLink(uri: Uri): Intent? {
         when (uri.path) {
-            "/privacy" -> {
-                val startWhat: String = uri.path!!.substring(1)
-                return mIntents.newMainActivityIntent(mContext, startWhat)
-            }
-            "/tos" -> {
-                val startWhat: String = uri.path!!.substring(1)
-                return mIntents.newMainActivityIntent(mContext, startWhat)
-            }
-            "/licenses" -> {
+            "/privacy", "/tos", "/licenses" -> {
                 val startWhat: String = uri.path!!.substring(1)
                 return mIntents.newMainActivityIntent(mContext, startWhat)
             }

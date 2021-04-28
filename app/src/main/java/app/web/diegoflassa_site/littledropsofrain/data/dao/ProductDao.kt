@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 package app.web.diegoflassa_site.littledropsofrain.data.dao
 
 import android.util.Log
+import app.web.diegoflassa_site.littledropsofrain.MyApplication
+import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
@@ -43,6 +45,8 @@ import java.util.concurrent.TimeUnit
 object ProductDao {
 
     private val TAG: String? = ProductDao::class.simpleName
+    private const val FIREBASE_STORAGE: String = "https://firebasestorage"
+    private const val LDOR_SITE: String = "gs://littledropsofrain-site.appspot.com"
     private val ioScope = CoroutineScope(Dispatchers.IO)
     const val COLLECTION_PATH: String = "products"
     private var db: WeakReference<FirebaseFirestore> =
@@ -72,7 +76,11 @@ object ProductDao {
                 listener.onDataChanged(mostLiked)
             }
             ?.addOnFailureListener { exception ->
-                Log.d(TAG, "Error getting documents: ", exception)
+                Log.d(
+                    TAG,
+                    MyApplication.getContext().getString(R.string.error_getting_messages),
+                    exception
+                )
             }
     }
 
@@ -97,7 +105,11 @@ object ProductDao {
                 listener.onDataChanged(products)
             }
             ?.addOnFailureListener { exception ->
-                Log.d(TAG, "Error getting documents: ", exception)
+                Log.d(
+                    TAG,
+                    MyApplication.getContext().getString(R.string.error_getting_documents),
+                    exception
+                )
             }
     }
 
@@ -119,7 +131,11 @@ object ProductDao {
                 listener.onDataChanged(products)
             }
             ?.addOnFailureListener { exception ->
-                Log.d(TAG, "Error getting documents: ", exception)
+                Log.d(
+                    TAG,
+                    MyApplication.getContext().getString(R.string.error_getting_documents),
+                    exception
+                )
             }
     }
 
@@ -203,7 +219,6 @@ object ProductDao {
     ) {
         val hashProducts: MutableMap<String, Product> = HashMap<String, Product>(products.size)
         val listTasksAll = ArrayList<Task<*>>(products.size)
-        var taskInsert: Task<*>?
         db.get()?.collection(COLLECTION_PATH)
             ?.orderBy(Product.ID_SOURCE, Query.Direction.DESCENDING)
             ?.get()
@@ -212,91 +227,147 @@ object ProductDao {
                 for (product in products) {
                     val data = product.toMap()
                     if (product.uid == null) {
-                        var found = false
-                        lateinit var productFS: Product
-                        for (document in result) {
-                            productFS = document.toObject(Product::class.java)
-                            if (product.idSource == productFS.idSource) {
-                                found = true
-                                break
-                            }
-                        }
-                        if (!found) {
-                            taskInsert =
-                                db.get()?.collection(COLLECTION_PATH)
-                                    ?.add(data)
-                                    ?.addOnSuccessListener {
-                                        product.uid = it.id
-                                        hashProducts[product.uid!!] = product
-                                        if (!product.imageUrl?.startsWith("https://firebasestorage")!! || !product.imageUrl?.startsWith(
-                                                "gs://littledropsofrain-site.appspot.com"
-                                            )!!
-                                        )
-                                            insertBlob(product)
-                                        listener?.onProductInserted(product)
-                                        Log.i(
-                                            TAG,
-                                            "Product ${product.idSource} inserted successfully"
-                                        )
-                                    }?.addOnFailureListener {
-                                        Log.i(TAG, "Error inserting product")
-                                    }
-
-                            listTasksAll.add(taskInsert!!)
-                        } else {
-                            product.uid = productFS.uid
-                            hashProducts[product.uid!!] = product
-                            taskInsert = insert(product, listener)
-                            listTasksAll.add(taskInsert!!)
-                        }
-                    } else {
-                        if (!product.imageUrl?.startsWith("https://firebasestorage")!! || !product.imageUrl?.startsWith(
-                                "gs://littledropsofrain-site.appspot.com"
-                            )!!
+                        productIdEqualsNull(
+                            product,
+                            result,
+                            data,
+                            listTasksAll,
+                            hashProducts,
+                            listener
                         )
-                            insertBlob(product)
-                        taskInsert =
-                            db.get()?.collection(COLLECTION_PATH)?.document(product.uid!!)
-                                ?.set(data)
-                                ?.addOnSuccessListener {
-                                    Log.i(
-                                        TAG,
-                                        "[insert]Product ${product.uid} updated successfully"
-                                    )
-                                    hashProducts[product.uid!!] = product
-                                    listener?.onProductInserted(product)
-                                }?.addOnFailureListener {
-                                    Log.i(TAG, "Error updating product")
-                                }
-                        listTasksAll.add(taskInsert!!)
+                    } else {
+                        productIdNotEqualsNull(
+                            product,
+                            data,
+                            listTasksAll,
+                            hashProducts,
+                            listener
+                        )
                     }
                 }
 
-                Tasks.whenAll(*listTasksAll.toTypedArray()).addOnCompleteListener {
-                    db.get()?.collection(
-                        COLLECTION_PATH
-                    )?.get()
-                        ?.addOnSuccessListener { result ->
-                            var product: Product
-                            for (document in result) {
-                                product = document.toObject(Product::class.java)
-                                if (!hashProducts.containsKey(document.id)) {
-                                    if (removeNotFoundInFirebase) {
-                                        delete(product)
-                                        removeBlob(product)
-                                    } else if (unpublishNotFoundInFirebase) {
-                                        product.isPublished = false
-                                        update(product)
-                                    }
-                                }
+                waitForAllTasksComplete(
+                    listTasksAll,
+                    hashProducts,
+                    removeNotFoundInFirebase,
+                    unpublishNotFoundInFirebase,
+                    finishListener
+                )
+            }
+    }
+
+    private fun productIdEqualsNull(
+        product: Product,
+        result: QuerySnapshot,
+        data: Map<String, Any?>,
+        listTasksAll: MutableList<Task<*>>,
+        hashProducts: MutableMap<String, Product>,
+        listener: OnProductInsertedListener?
+    ) {
+        val taskInsert: Task<*>?
+        var found = false
+        lateinit var productFS: Product
+        for (document in result) {
+            productFS = document.toObject(Product::class.java)
+            if(productFS.uid==null) {
+                productFS.uid = document.id
+            }
+            if (product.idSource == productFS.idSource) {
+                found = true
+                break
+            }
+        }
+        if (!found) {
+            taskInsert =
+                db.get()?.collection(COLLECTION_PATH)
+                    ?.add(data)
+                    ?.addOnSuccessListener {
+                        product.uid = it.id
+                        hashProducts[product.uid!!] = product
+                        if (!product.imageUrl?.startsWith(FIREBASE_STORAGE)!! || !product.imageUrl?.startsWith(
+                                LDOR_SITE
+                            )!!
+                        )
+                            insertBlob(product)
+                        listener?.onProductInserted(product)
+                        Log.i(
+                            TAG,
+                            "Product ${product.idSource} inserted successfully"
+                        )
+                    }?.addOnFailureListener {
+                        Log.i(TAG, "Error inserting product")
+                    }
+
+            listTasksAll.add(taskInsert!!)
+        } else {
+            product.uid = productFS.uid
+            hashProducts[product.uid!!] = product
+            taskInsert = insert(product, listener)
+            listTasksAll.add(taskInsert)
+        }
+    }
+
+    private fun productIdNotEqualsNull(
+        product: Product,
+        data: Map<String, Any?>,
+        listTasksAll: MutableList<Task<*>>,
+        hashProducts: MutableMap<String, Product>,
+        listener: OnProductInsertedListener?
+    ) {
+        val taskInsert: Task<*>?
+        if (!product.imageUrl?.startsWith(FIREBASE_STORAGE)!! || !product.imageUrl?.startsWith(
+                LDOR_SITE
+            )!!
+        ) {
+            insertBlob(product)
+        }
+        taskInsert =
+            db.get()?.collection(COLLECTION_PATH)?.document(product.uid!!)
+                ?.set(data)
+                ?.addOnSuccessListener {
+                    Log.i(
+                        TAG,
+                        "[insert]Product ${product.uid} updated successfully"
+                    )
+                    hashProducts[product.uid!!] = product
+                    listener?.onProductInserted(product)
+                }?.addOnFailureListener {
+                    Log.i(TAG, "Error updating product")
+                }
+        listTasksAll.add(taskInsert!!)
+    }
+
+    private fun waitForAllTasksComplete(
+        listTasksAll: List<Task<*>>,
+        hashProducts: Map<String, Product>,
+        removeNotFoundInFirebase: Boolean,
+        unpublishNotFoundInFirebase: Boolean,
+        finishListener: OnTaskFinishedListener<List<Product>>?
+    ) {
+        Tasks.whenAll(*listTasksAll.toTypedArray()).addOnCompleteListener {
+            db.get()?.collection(
+                COLLECTION_PATH
+            )?.get()
+                ?.addOnSuccessListener { result ->
+                    var product: Product
+                    for (document in result) {
+                        product = document.toObject(Product::class.java)
+                        if (!hashProducts.containsKey(document.id)) {
+                            if (removeNotFoundInFirebase) {
+                                delete(product)
+                                removeBlob(product)
+                            } else if (unpublishNotFoundInFirebase) {
+                                product.isPublished = false
+                                update(product)
                             }
                         }
-                        ?.addOnFailureListener { exception ->
-                            Log.d(TAG, "Error getting documents: ", exception)
-                        }
-                    finishListener?.onTaskFinished(ArrayList(hashProducts.values))
+                    }
                 }
-            }
+                ?.addOnFailureListener { exception ->
+                    Log.d(TAG, "Error getting documents: ", exception)
+                }
+            finishListener?.onTaskFinished(ArrayList(hashProducts.values))
+        }
     }
 
     private fun insert(product: Product, listener: OnProductInsertedListener? = null): Task<*> {
@@ -310,8 +381,8 @@ object ProductDao {
                         if (querySnapshot.isEmpty) {
                             db.get()?.collection(COLLECTION_PATH)?.add(data)?.addOnSuccessListener {
                                 product.uid = it.id
-                                if (!product.imageUrl?.startsWith("https://firebasestorage")!! || !product.imageUrl?.startsWith(
-                                        "gs://littledropsofrain-site.appspot.com"
+                                if (!product.imageUrl?.startsWith(FIREBASE_STORAGE)!! || !product.imageUrl?.startsWith(
+                                        LDOR_SITE
                                     )!!
                                 )
                                     insertBlob(product)
@@ -326,8 +397,8 @@ object ProductDao {
                         }
                     }!!
         } else {
-            if (!product.imageUrl?.startsWith("https://firebasestorage")!! || !product.imageUrl?.startsWith(
-                    "gs://littledropsofrain-site.appspot.com"
+            if (!product.imageUrl?.startsWith(FIREBASE_STORAGE)!! || !product.imageUrl?.startsWith(
+                    LDOR_SITE
                 )!!
             )
                 insertBlob(product)
@@ -389,10 +460,10 @@ object ProductDao {
         return db.get()?.collection(COLLECTION_PATH)?.document(product.uid.toString())?.set(data)
             ?.addOnSuccessListener {
                 if (checkForUrl && (
-                    !product.imageUrl?.startsWith("https://firebasestorage")!! || !product.imageUrl?.startsWith(
-                            "gs://littledropsofrain-site.appspot.com"
-                        )!!
-                    )
+                            !product.imageUrl?.startsWith(FIREBASE_STORAGE)!! || !product.imageUrl?.startsWith(
+                                LDOR_SITE
+                            )!!
+                            )
                 )
                     insertBlob(product)
                 Log.d(

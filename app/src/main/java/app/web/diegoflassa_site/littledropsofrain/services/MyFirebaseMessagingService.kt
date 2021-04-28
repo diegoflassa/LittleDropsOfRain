@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notification.body?.let { handleNotification(remoteMessage) }
         }
 
-        // TODO(developer): Handle FCM messages here.
+        // (developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: $from")
 

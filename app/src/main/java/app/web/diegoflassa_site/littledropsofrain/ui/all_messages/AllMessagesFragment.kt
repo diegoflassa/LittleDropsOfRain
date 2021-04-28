@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,6 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -50,6 +48,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.lang.ref.WeakReference
 
 class AllMessagesFragment :
@@ -60,7 +59,8 @@ class AllMessagesFragment :
     DialogInterface.OnDismissListener {
 
     private var isStopped: Boolean = false
-    private val viewModel: AllMessagesViewModel by viewModels(factoryProducer = { SavedStateViewModelFactory(this.requireActivity().application, this) })
+
+    private val viewModel: AllMessagesViewModel by stateViewModel()
     private lateinit var mAdapter: WeakReference<MessageAdapter>
     var binding: FragmentAllMessagesBinding by viewLifecycle()
     private var mFilterDialog: AllMessagesFilterDialogFragment? = null

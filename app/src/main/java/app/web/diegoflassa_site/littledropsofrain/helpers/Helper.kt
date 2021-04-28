@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package app.web.diegoflassa_site.littledropsofrain.helpers
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -83,8 +84,8 @@ class Helper {
             userFromFb.uid = user.uid
             userFromFb.name = user.displayName
             userFromFb.email = user.email
-            userFromFb.imageUrl = user.photoUrl.toString()
-            if (FirebaseAuth.getInstance().currentUser!!.providerData.size> 1) {
+            userFromFb.imageUrl = user.photoUrl?.toString()
+            if (FirebaseAuth.getInstance().currentUser!!.providerData.size > 1) {
                 userFromFb.providerId =
                     FirebaseAuth.getInstance().currentUser!!.providerData[1].providerId
             }
@@ -107,7 +108,8 @@ class Helper {
             }
             product.idIluria = iluriaProduct.idProduct
             product.idSource = iluriaProduct.idProduct
-            val price = iluriaProduct.price!!.replace(',', '.')
+            var price = iluriaProduct.price!!.replace(".", "")
+            price = price.replace(',', '.')
             product.price = (price.toFloat() * 100).toInt()
             product.disponibility = iluriaProduct.disponibility
             product.imageUrl = iluriaProduct.image
@@ -191,6 +193,7 @@ class Helper {
             showNotification(context, null, imageUri, title, body, canSave)
         }
 
+        @SuppressLint("UnspecifiedImmutableFlag")
         fun showNotification(
             context: Context,
             notificationId: Int? = null,
@@ -362,11 +365,8 @@ class Helper {
 
         @Suppress("DEPRECATION")
         fun getTopicNewsForCurrentLanguage(context: Context): String {
-            val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val current =
                 context.resources.configuration.locales.get(0)
-            } else {
-                context.resources.configuration.locale
-            }
             return if (current.language == "pt") {
                 context.getString(R.string.topic_news_pt)
             } else {
@@ -384,11 +384,8 @@ class Helper {
 
         @Suppress("DEPRECATION")
         fun getTopicPromosForCurrentLanguage(context: Context): String {
-            val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val current =
                 context.resources.configuration.locales.get(0)
-            } else {
-                context.resources.configuration.locale
-            }
             return if (current.language == "pt") {
                 context.getString(R.string.topic_promo_pt)
             } else {

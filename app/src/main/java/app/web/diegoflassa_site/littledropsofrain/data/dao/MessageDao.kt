@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 package app.web.diegoflassa_site.littledropsofrain.data.dao
 
 import android.util.Log
+import app.web.diegoflassa_site.littledropsofrain.MyApplication
+import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataFailureListener
@@ -100,7 +102,7 @@ object MessageDao {
                 listener.onDataChanged(messages)
             }
             ?.addOnFailureListener { exception ->
-                Log.d(TAG, "Error getting messages: ", exception)
+                Log.d(TAG, MyApplication.getContext().getString(R.string.error_getting_messages), exception)
             }
     }
 

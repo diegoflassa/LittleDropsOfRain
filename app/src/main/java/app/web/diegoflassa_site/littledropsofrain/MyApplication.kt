@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ package app.web.diegoflassa_site.littledropsofrain
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.preference.PreferenceManager
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.models.*
 import app.web.diegoflassa_site.littledropsofrain.preferences.MyOnSharedPreferenceChangeListener
 import app.web.diegoflassa_site.littledropsofrain.ui.SettingsFragment
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,6 +34,13 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.*
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
+import org.koin.core.module.Module
+import org.koin.dsl.module
 import java.lang.ref.WeakReference
 
 class MyApplication : Application() {
@@ -54,6 +61,7 @@ class MyApplication : Application() {
             .with(IoniconsModule())
 
         setup()
+        setupKoin()
         setupCacheSize()
 
         subscribeToNews()
@@ -64,11 +72,8 @@ class MyApplication : Application() {
 
     @Suppress("DEPRECATION")
     private fun updateSubscribedLanguage() {
-        val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        val current =
             resources.configuration.locales.get(0)
-        } else {
-            resources.configuration.locale
-        }
         PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
             SettingsFragment.SUBSCRIBED_LANGUAGE_KEY, current.language
         ).apply()
@@ -121,6 +126,35 @@ class MyApplication : Application() {
         }
         db.firestoreSettings = settings
         // [END set_firestore_settings]
+    }
+
+    private fun setupKoin() {
+        val myModules: Module = module {
+            viewModel { UsersViewModel(get()) }
+            viewModel { UserProfileViewModel(get()) }
+            viewModel { TopicMessageViewModel(get()) }
+            viewModel { ReloadProductsViewModel(get()) }
+            viewModel { ProductsFilterDialogViewModel(get()) }
+            viewModel { SendMessageViewModel(get()) }
+            viewModel { OffAirViewModel(get()) }
+            viewModel { MyMessagesFilterDialogViewModel(get()) }
+            viewModel { MyLikedProductsViewModel(get()) }
+            viewModel { AllProductsFilterDialogViewModel(get()) }
+            viewModel { MessagesViewModel(get()) }
+            viewModel { MainActivityViewModel(get()) }
+            viewModel { InstagramViewModel(get()) }
+            viewModel { HomeViewModel(get()) }
+            viewModel { FacebookViewModel(get()) }
+            viewModel { AllProductsViewModel(get()) }
+            viewModel { AllMessagesFilterDialogViewModel(get()) }
+            viewModel { AllMessagesViewModel(get()) }
+        }
+        startKoin {
+            // Fix bug of koin initialization
+            androidLogger(Level.NONE)
+            androidContext(this@MyApplication)
+            modules(myModules)
+        }
     }
 
     private fun setupCacheSize() {

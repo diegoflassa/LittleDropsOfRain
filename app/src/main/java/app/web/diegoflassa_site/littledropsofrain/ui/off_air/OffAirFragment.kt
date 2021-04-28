@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentOffAirBinding
@@ -38,6 +36,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
 class OffAirFragment : Fragment() {
 
@@ -50,14 +49,8 @@ class OffAirFragment : Fragment() {
 
     private var toggle: ActionBarDrawerToggle? = null
     private var isStopped: Boolean = false
-    private val viewModel: OffAirViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
-            )
-        }
-    )
+
+    val viewModel: OffAirViewModel by stateViewModel()
     private var binding: FragmentOffAirBinding by viewLifecycle()
 
     override fun onCreateView(

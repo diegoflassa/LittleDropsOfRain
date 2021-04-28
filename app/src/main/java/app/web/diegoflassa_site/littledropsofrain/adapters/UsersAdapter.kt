@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,12 +78,12 @@ open class UsersAdapter(
         holder.bind(getSnapshot(position), mListener)
         val listener: ((compoundButton: CompoundButton, checked: Boolean) -> Unit) =
             { _: CompoundButton, checked: Boolean ->
-                val user = getSnapshot(holder.adapterPosition).toObject(User::class.java)
+                val user = getSnapshot(holder.bindingAdapterPosition).toObject(User::class.java)
                 user?.isAdmin = checked
                 mUsersFragment.showLoadingScreen()
                 mUsersFragment.binding.recyclerview.isEnabled = false
                 ioScope.launch {
-                    UserDao.update(user!!, this@UsersAdapter, this@UsersAdapter)
+                    UserDao.insertOrUpdate(user!!, this@UsersAdapter, this@UsersAdapter)
                 }
             }
         mOnCheckChangeListener = listener

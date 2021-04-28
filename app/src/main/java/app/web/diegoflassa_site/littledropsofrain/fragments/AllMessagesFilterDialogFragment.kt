@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
@@ -40,6 +38,7 @@ import app.web.diegoflassa_site.littledropsofrain.models.AllMessagesFilterDialog
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -63,18 +62,13 @@ open class AllMessagesFilterDialogFragment :
     private lateinit var mSpinnerSort: Spinner
     private lateinit var mSpinnerType: Spinner
     var filterListener: FilterListener? = null
-    val viewModel: AllMessagesFilterDialogViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
-            )
-        }
-    )
+
+    val viewModel: AllMessagesFilterDialogViewModel by stateViewModel()
     var binding: FragmentAllMessagesFiltersBinding by viewLifecycle()
     private var mSavedInstanceState: Bundle? = null
     private var mRootView: View? = null
 
+    @ExperimentalStdlibApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -128,6 +122,7 @@ open class AllMessagesFilterDialogFragment :
         )
     }
 
+    @ExperimentalStdlibApi
     override fun onClick(v: View) {
         when (v.id) {
             R.id.button_search_messages -> onSearchClicked()
@@ -135,6 +130,7 @@ open class AllMessagesFilterDialogFragment :
         }
     }
 
+    @ExperimentalStdlibApi
     private fun onSearchClicked() {
         if (filterListener != null) {
             filterListener!!.onFilter(filters)
@@ -149,7 +145,7 @@ open class AllMessagesFilterDialogFragment :
     private val selectedSortBy: String?
         get() {
             if (mRootView != null && !isDetached) {
-                return when (binding.spinnerSort.selectedItem as String) {
+                return when (binding.spinnerSort.selectedItem) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
                         return Message.CREATION_DATE
@@ -164,13 +160,14 @@ open class AllMessagesFilterDialogFragment :
             return null
         }
 
+    @ExperimentalStdlibApi
     private val selectedType: MessageType?
         get() {
             if (mRootView != null && !isDetached) {
                 return if (binding.spinnerType.selectedItemPosition > 0) {
                     MessageType.valueOf(
                         binding.spinnerType.selectedItem.toString()
-                            .toUpperCase(Locale.ROOT)
+                            .uppercase(Locale.ROOT)
                     )
                 } else {
                     null
@@ -181,10 +178,8 @@ open class AllMessagesFilterDialogFragment :
 
     private val selectedRead: Boolean?
         get() {
-            if (mRootView != null && !isDetached) {
-                if (binding.checkBoxMsgRead.isChecked) {
-                    return binding.switchMsgRead.isChecked
-                }
+            if (mRootView != null && !isDetached && binding.checkBoxMsgRead.isChecked) {
+                return binding.switchMsgRead.isChecked
             }
             return null
         }
@@ -202,7 +197,7 @@ open class AllMessagesFilterDialogFragment :
     private val sortDirection: Query.Direction?
         get() {
             if (mRootView != null && !isDetached) {
-                return when (binding.spinnerSort.selectedItem as String) {
+                return when (binding.spinnerSort.selectedItem) {
                     MyApplication.getContext()
                         .getString(R.string.sort_by_creation_date) -> {
                         return Query.Direction.DESCENDING
@@ -225,6 +220,7 @@ open class AllMessagesFilterDialogFragment :
         }
     }
 
+    @ExperimentalStdlibApi
     val filters: AllMessagesFilters
         get() {
             val filters =
@@ -237,6 +233,7 @@ open class AllMessagesFilterDialogFragment :
             return filters
         }
 
+    @ExperimentalStdlibApi
     override fun onUsersLoaded(users: List<User>) {
         val usersWithDefault = ArrayList<User>(users.size + 1)
         val user = User()

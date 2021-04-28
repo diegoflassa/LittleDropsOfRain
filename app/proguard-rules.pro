@@ -2,7 +2,7 @@
 # By default, the flags in this file are appended to flags specified
 # in D:\Users\Diego\Programming\SDKs\android-sdk/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
+# directive in build.gradle.kts.
 #
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
@@ -30,3 +30,17 @@
 -dontwarn com.yalantis.ucrop**
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
+-keepattributes SourceFile,LineNumberTable        # Keep file names and line numbers.
+-keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.
+
+-keep class com.tickaroo.tikxml.** { *; }
+-keep @com.tickaroo.tikxml.annotation.Xml public class *
+-keep class **$$TypeAdapter { *; }
+
+-keepclasseswithmembernames class * {
+    @com.tickaroo.tikxml.* <fields>;
+}
+
+-keepclasseswithmembernames class * {
+    @com.tickaroo.tikxml.* <methods>;
+}

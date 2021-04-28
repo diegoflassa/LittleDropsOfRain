@@ -162,7 +162,6 @@
     <string name="liked">Liked</string>
     <string name="label_my_liked_products">My Likes</string>
     <string name="unpublish_not_found_products">Unpublish not found products</string>
-    <string name="likes">Likes</string>
     <string name="menu_all_products">All Products</string>
     <string name="label_all_products">All Products</string>
     <string name="close">Close</string>
@@ -188,4 +187,7 @@
     <string name="new_message">New Message</string>
     <string name="no_selection">No selection</string>
     <string name="none">None</string>
+    <string name="error_getting_messages" translatable="false">Error getting messages: </string>
+    <string name="error_getting_documents" translatable="false">Error getting documents: </string>
+    <string name="error_getting_users" translatable="false">Error getting users: </string>
 </resources>

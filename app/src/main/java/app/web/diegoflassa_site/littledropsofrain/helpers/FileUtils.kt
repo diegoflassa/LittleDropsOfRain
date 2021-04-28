@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ object FIleUtils {
                     return context.getExternalFilesDir(null).toString() + "/" + split[1]
                 }
 
-                // TODO handle non-primary volumes
+                // Handle non-primary volumes
             } else if (isDownloadsDocument(uri)) {
                 val id = DocumentsContract.getDocumentId(uri)
                 val contentUri: Uri = ContentUris.withAppendedId(

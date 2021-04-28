@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,6 @@ import androidx.core.net.toFile
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.contracts.CropImageResultContract
@@ -64,6 +62,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.nio.charset.Charset
 import java.util.*
 import kotlin.collections.ArrayList
@@ -88,16 +87,10 @@ class SendTopicMessageFragment :
         fun newInstance() = SendTopicMessageFragment()
     }
 
-    private val viewModel: TopicMessageViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
-            )
-        }
-    )
+    val viewModel: TopicMessageViewModel by stateViewModel()
     private var binding: FragmentSendTopicMessageBinding by viewLifecycle()
 
+    @ExperimentalStdlibApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -110,25 +103,7 @@ class SendTopicMessageFragment :
                 updateUI(it)
             }
         )
-        for (topic in TopicMessage.Topic.values()) {
-            if (topic != TopicMessage.Topic.UNKNOWN) {
-                val chip = Chip(requireContext())
-                chip.text = topic.toTitle()
-                chip.isCheckable = true
-                chip.setOnCheckedChangeListener { compoundButton: CompoundButton, state: Boolean ->
-                    if (state) {
-                        viewModel.viewState.topics.add(
-                            TopicMessage.Topic.fromTitle(compoundButton.text.toString())
-                        )
-                    } else {
-                        viewModel.viewState.topics.remove(
-                            TopicMessage.Topic.fromTitle(compoundButton.text.toString())
-                        )
-                    }
-                }
-                binding.cpGrpTopics.addView(chip)
-            }
-        }
+        getTopics()
         binding.imgVwNotificationImage.visibility = View.GONE
         cropImageLauncher = registerForActivityResult(CropImageResultContract(), this)
         getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
@@ -262,6 +237,28 @@ class SendTopicMessageFragment :
         updateUI(viewModel.viewState)
     }
 
+    private fun getTopics() {
+        for (topic in TopicMessage.Topic.values()) {
+            if (topic != TopicMessage.Topic.UNKNOWN) {
+                val chip = Chip(requireContext())
+                chip.text = topic.toTitle()
+                chip.isCheckable = true
+                chip.setOnCheckedChangeListener { compoundButton: CompoundButton, state: Boolean ->
+                    if (state) {
+                        viewModel.viewState.topics.add(
+                            TopicMessage.Topic.fromTitle(compoundButton.text.toString())
+                        )
+                    } else {
+                        viewModel.viewState.topics.remove(
+                            TopicMessage.Topic.fromTitle(compoundButton.text.toString())
+                        )
+                    }
+                }
+                binding.cpGrpTopics.addView(chip)
+            }
+        }
+    }
+
     private fun updateUI(viewState: TopicMessageViewState?) {
         // Update the UI
         for (chip in binding.cpGrpTopics.children) {
@@ -299,6 +296,7 @@ class SendTopicMessageFragment :
         return ret
     }
 
+    @ExperimentalStdlibApi
     private fun sendMessage(
         topics: Set<TopicMessage.Topic>,
         imageUri: Uri?,
@@ -316,7 +314,7 @@ class SendTopicMessageFragment :
                 for (topic in topics) {
                     if (condition.isNotEmpty())
                         condition += " || "
-                    condition += "'${topic.toString().toLowerCase(Locale.ROOT)}' in topics"
+                    condition += "'${topic.toString().lowercase(Locale.ROOT)}' in topics"
                 }
                 val url = getString(R.string.url_push_message)
                 val myReq: StringRequest = object : StringRequest(

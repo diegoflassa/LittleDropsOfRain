@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 package app.web.diegoflassa_site.littledropsofrain.data.dao
 
 import android.util.Log
+import app.web.diegoflassa_site.littledropsofrain.MyApplication
+import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnDataFailureListener
@@ -50,7 +52,7 @@ object UserDao {
                 listener.onUsersLoaded(users)
             }
             ?.addOnFailureListener { exception ->
-                Log.d(TAG, "Error getting users: ", exception)
+                Log.d(TAG, MyApplication.getContext().getString(R.string.error_getting_users), exception)
             }
     }
 
@@ -115,26 +117,12 @@ object UserDao {
     ): ArrayList<Task<Void>?> {
         val tasks = ArrayList<Task<Void>?>()
         for (user in users) {
-            tasks.add(insert(user, onSuccessListener, onFailureListener))
+            tasks.add(insertOrUpdate(user, onSuccessListener, onFailureListener))
         }
         return tasks
     }
 
-    fun insert(
-        user: User,
-        onSuccessListener: OnDataChangeListener<Void?>? = null,
-        onFailureListener: OnDataFailureListener<Exception>? = null
-    ): Task<Void>? {
-        val data = user.toMap()
-        return db.get()?.collection(COLLECTION_PATH)?.document(user.uid.toString())
-            ?.set(data, SetOptions.merge())?.addOnSuccessListener {
-                onSuccessListener?.onDataChanged(it)
-            }?.addOnFailureListener {
-                onFailureListener?.onDataFailure(it)
-            }
-    }
-
-    fun update(
+    fun insertOrUpdate(
         user: User,
         onSuccessListener: OnDataChangeListener<Void?>? = null,
         onFailureListener: OnDataFailureListener<Exception>? = null

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
     private fun logout() {
         Log.d(TAG, "logout: ${LoggedUser.userLiveData.value!!.email}")
         LoggedUser.userLiveData.value!!.lastSeen = Timestamp.now()
-        UserDao.update(LoggedUser.userLiveData.value!!)
+        UserDao.insertOrUpdate(LoggedUser.userLiveData.value!!)
         AuthUI.getInstance().signOut(requireContext())
         PreferenceManager.getDefaultSharedPreferences(requireContext()).edit().putString(
             SettingsFragment.LOGGED_USER_EMAIL_KEY, ""

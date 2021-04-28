@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ class SplashActivity : AppCompatActivity() {
         var TAG = SplashActivity::class.simpleName
     }
 
+    @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         // Make sure this is before calling super.onCreate
         setTheme(R.style.AppTheme_Launcher)

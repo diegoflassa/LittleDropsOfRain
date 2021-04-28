@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.xml
+package app.web.diegoflassa_site.littledropsofrain.parser
 
 import android.util.Log
 import app.web.diegoflassa_site.littledropsofrain.data.entities.IluriaProduct

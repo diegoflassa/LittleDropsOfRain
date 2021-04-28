@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package app.web.diegoflassa_site.littledropsofrain.workers
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -23,6 +24,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
@@ -32,10 +34,11 @@ import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
+import app.web.diegoflassa_site.littledropsofrain.data.repository.IluriaProductsRepository
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnProductInsertedListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnTaskFinishedListener
-import app.web.diegoflassa_site.littledropsofrain.xml.ProductParser
+import app.web.diegoflassa_site.littledropsofrain.parser.ProductParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -61,11 +64,14 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
         const val KEY_PRODUCTS = "products"
     }
 
+    private val maxRetries: Int = 5
+    private var currentTry: Int = 0
     private val appContext: Context = context
 
     // Notification manager.
     private var mNotifyManager: NotificationManagerCompat? = null
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
 
         // Create the notification channel.
@@ -99,8 +105,8 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
 
         var result = Result.success()
         try {
-            val productParser = ProductParser(this@UpdateProductsWork)
-            val products = productParser.parse()
+            val ipr = IluriaProductsRepository()
+            val products = ipr.getAll().blockingFirst().products
             ProductDao.insertAll(
                 Helper.iluriaProductToProduct(products),
                 removeNotFound,
@@ -109,7 +115,14 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
                 this@UpdateProductsWork
             )
         } catch (ex: Exception) {
-            result = Result.retry()
+            if (currentTry < maxRetries) {
+                currentTry++
+                Log.e(TAG, ex.toString())
+                result = Result.retry()
+            } else {
+                currentTry = 0
+                result = Result.failure()
+            }
         }
         mNotifyManager!!.cancel(NOTIFICATION_ID)
         result

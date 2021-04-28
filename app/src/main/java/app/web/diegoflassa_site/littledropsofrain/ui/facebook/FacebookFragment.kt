@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentFacebookBinding
@@ -49,6 +47,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.io.IOException
 
 class FacebookFragment : Fragment(), OnKeyLongPressListener {
@@ -61,19 +60,18 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
     private val keyPrefsLastURL = stringPreferencesKey("KEY_PREF_LAST_URL_FACEBOOK")
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-        name = requireContext().packageName, migrations = listOf(
-            SharedPreferencesMigration(
-                requireContext(),
-                requireContext().packageName
+        name = requireContext().packageName,
+        produceMigrations = {
+            listOf(
+                SharedPreferencesMigration(
+                    requireContext(),
+                    requireContext().packageName
+                )
             )
-        )
+        }
     )
-    private val viewModel: FacebookViewModel by viewModels(factoryProducer = {
-        SavedStateViewModelFactory(
-            this.requireActivity().application,
-            this
-        )
-    })
+
+    val viewModel: FacebookViewModel by stateViewModel()
     private var binding: FragmentFacebookBinding by viewLifecycle()
     private var url = ""
 

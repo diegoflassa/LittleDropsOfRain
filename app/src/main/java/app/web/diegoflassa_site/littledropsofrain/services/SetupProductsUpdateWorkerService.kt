@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,10 @@ class SetupProductsUpdateWorkerService : JobIntentService() {
                 )
             intent.component = comp
             enqueueWork(context, comp, JOB_ID, intent)
+        }
+
+        fun stopRunningWorker(context: Context) {
+            WorkManager.getInstance(context).cancelAllWorkByTag(UpdateProductsWork.TAG)
         }
     }
 

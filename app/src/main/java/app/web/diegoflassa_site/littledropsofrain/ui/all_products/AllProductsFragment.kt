@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.text.HtmlCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -60,6 +58,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.lang.ref.WeakReference
 
 class AllProductsFragment :
@@ -71,14 +70,7 @@ class AllProductsFragment :
     AllProductsFilterDialogFragment.FilterListener,
     OnUsersLoadedListener {
 
-    private val viewModel: AllProductsViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
-            )
-        }
-    )
+    val viewModel: AllProductsViewModel by stateViewModel()
     var binding: FragmentAllProductsBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<AllProductsAdapter>
     private lateinit var mFirestore: FirebaseFirestore
@@ -293,7 +285,7 @@ class AllProductsFragment :
                 userFb.uid = user.uid
                 userFb.name = user.name
                 userFb.email = user.email
-                UserDao.insert(userFb)
+                UserDao.insertOrUpdate(userFb)
             }
             Toast.makeText(
                 requireContext(),

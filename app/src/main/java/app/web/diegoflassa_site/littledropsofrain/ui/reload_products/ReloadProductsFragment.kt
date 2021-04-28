@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.findNavController
 import androidx.work.*
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -46,6 +44,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.util.concurrent.TimeUnit
 
 class ReloadProductsFragment : Fragment() {
@@ -53,14 +52,8 @@ class ReloadProductsFragment : Fragment() {
     private var wasShowed: Boolean = false
     private lateinit var observer: Observer<WorkInfo>
     private var isStopped: Boolean = false
-    private val viewModel: ReloadProductsViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
-            )
-        }
-    )
+
+    val viewModel: ReloadProductsViewModel by stateViewModel()
     var binding: FragmentReloadProductsBinding by viewLifecycle()
     private lateinit var toggle: ActionBarDrawerToggle
 
@@ -113,49 +106,7 @@ class ReloadProductsFragment : Fragment() {
                 toggle.syncState()
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
-        observer = Observer<WorkInfo> {
-            if (it != null) {
-                when (it.state) {
-                    WorkInfo.State.SUCCEEDED -> {
-                        viewModel.viewState.progress.append("Writing values to Firestore. Please wait" + System.lineSeparator())
-                        updateUI(viewModel.viewState)
-                        Handler(Looper.getMainLooper()).postDelayed(
-                            {
-                                Toast.makeText(
-                                    requireContext(),
-                                    getString(R.string.finished),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                                cancel()
-                            },
-                            DELAY_JOB_COMPLETED
-                        )
-                    }
-
-                    WorkInfo.State.RUNNING -> {
-                        val progress = it.progress
-                        val value = progress.getString(UpdateProductsWork.KEY_PROGRESS)
-                        if (value != null) {
-                            viewModel.viewState.progress.append(value + System.lineSeparator())
-                        }
-                        val productId = progress.getString(UpdateProductsWork.KEY_PRODUCT)
-                        if (productId != null) {
-                            viewModel.viewState.progress.append("Inserting product $productId" + System.lineSeparator())
-                        }
-                        val products = progress.getString(UpdateProductsWork.KEY_PRODUCTS)
-                        if (products != null) {
-                            viewModel.viewState.progress.append("Successfully inserted all $products products" + System.lineSeparator())
-                            hideLoadingScreen()
-                        }
-                        updateUI(viewModel.viewState)
-                    }
-
-                    else -> {
-                        // Do nothing
-                    }
-                }
-            }
-        }
+        addObserver()
         if (worker != null) {
             WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(worker!!.id)
                 .observe(viewLifecycleOwner, observer)
@@ -179,6 +130,60 @@ class ReloadProductsFragment : Fragment() {
             drawerLayout.removeDrawerListener(toggle)
         }
         super.onDestroyView()
+    }
+
+    private fun addObserver() {
+        observer = Observer<WorkInfo> {
+            if (it != null) {
+                when (it.state) {
+                    WorkInfo.State.SUCCEEDED -> {
+                        workStateSucceed()
+                    }
+
+                    WorkInfo.State.RUNNING -> {
+                        workStateRunning(it)
+                    }
+
+                    else -> {
+                        // Do nothing
+                    }
+                }
+            }
+        }
+    }
+
+    private fun workStateSucceed() {
+        viewModel.viewState.progress.append("Writing values to Firestore. Please wait" + System.lineSeparator())
+        updateUI(viewModel.viewState)
+        Handler(Looper.getMainLooper()).postDelayed(
+            {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.finished),
+                    Toast.LENGTH_LONG
+                ).show()
+                cancel()
+            },
+            DELAY_JOB_COMPLETED
+        )
+    }
+
+    private fun workStateRunning(workInfo: WorkInfo) {
+        val progress = workInfo.progress
+        val value = progress.getString(UpdateProductsWork.KEY_PROGRESS)
+        if (value != null) {
+            viewModel.viewState.progress.append(value + System.lineSeparator())
+        }
+        val productId = progress.getString(UpdateProductsWork.KEY_PRODUCT)
+        if (productId != null) {
+            viewModel.viewState.progress.append("Inserting product $productId" + System.lineSeparator())
+        }
+        val products = progress.getString(UpdateProductsWork.KEY_PRODUCTS)
+        if (products != null) {
+            viewModel.viewState.progress.append("Successfully inserted all $products products" + System.lineSeparator())
+            hideLoadingScreen()
+        }
+        updateUI(viewModel.viewState)
     }
 
     private fun reloadProducts(executeFetch: Boolean = true) {

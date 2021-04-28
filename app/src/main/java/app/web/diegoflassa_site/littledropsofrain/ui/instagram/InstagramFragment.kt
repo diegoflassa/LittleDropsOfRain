@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Little Drops of Rain Project
+ * Copyright 2021 The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import app.web.diegoflassa_site.littledropsofrain.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentInstagramBinding
@@ -52,6 +50,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.io.IOException
 
 class InstagramFragment : Fragment(), OnKeyLongPressListener {
@@ -64,22 +63,18 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
     private val keyPrefsLastURL = stringPreferencesKey("KEY_PREF_LAST_URL_INSTAGRAM")
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-        name = requireContext().packageName, migrations = listOf(
-            SharedPreferencesMigration(
-                requireContext(),
-                requireContext().packageName
-            )
-        )
-    )
-
-    private val viewModel: InstagramViewModel by viewModels(
-        factoryProducer = {
-            SavedStateViewModelFactory(
-                this.requireActivity().application,
-                this
+        name = requireContext().packageName,
+        produceMigrations = {
+            listOf(
+                SharedPreferencesMigration(
+                    requireContext(),
+                    requireContext().packageName
+                )
             )
         }
     )
+
+    val viewModel: InstagramViewModel by stateViewModel()
     private var binding: FragmentInstagramBinding by viewLifecycle()
     private var url = ""
 
