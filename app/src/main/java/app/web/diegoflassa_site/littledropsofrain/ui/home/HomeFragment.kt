@@ -298,8 +298,10 @@ class HomeFragment :
                     (true.toString() + "_" + Source.ILURIA.toString())
                 )
             } else {
-                query.whereEqualTo(Product.IS_PUBLISHED_SOURCE,
-                    (true.toString() + "_" + Source.ETSY.toString()))
+                query.whereEqualTo(
+                    Product.IS_PUBLISHED_SOURCE,
+                    (true.toString() + "_" + Source.ETSY.toString())
+                )
                 query.whereEqualTo(
                     Product.IS_PUBLISHED_SOURCE,
                     (true.toString() + "_" + Source.ILURIA.toString())

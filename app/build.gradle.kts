@@ -226,7 +226,6 @@ afterEvaluate {
 		//Retrofix 2
 		implementation("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
 		implementation("com.squareup.retrofit2:adapter-rxjava3:${Versions.retrofit_adapter}")
-		implementation("com.squareup.retrofit2:converter-simplexml:${Versions.converter_simplexml}")
         implementation("com.squareup.retrofit2:converter-jackson:${Versions.converter_jackson}")
         implementation("com.squareup.retrofit2:converter-gson:${Versions.converter}")
 

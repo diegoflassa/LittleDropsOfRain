@@ -269,7 +269,7 @@ object ProductDao {
         lateinit var productFS: Product
         for (document in result) {
             productFS = document.toObject(Product::class.java)
-            if(productFS.uid==null) {
+            if (productFS.uid == null) {
                 productFS.uid = document.id
             }
             if (product.idSource == productFS.idSource) {
@@ -460,10 +460,10 @@ object ProductDao {
         return db.get()?.collection(COLLECTION_PATH)?.document(product.uid.toString())?.set(data)
             ?.addOnSuccessListener {
                 if (checkForUrl && (
-                            !product.imageUrl?.startsWith(FIREBASE_STORAGE)!! || !product.imageUrl?.startsWith(
-                                LDOR_SITE
-                            )!!
-                            )
+                    !product.imageUrl?.startsWith(FIREBASE_STORAGE)!! || !product.imageUrl?.startsWith(
+                            LDOR_SITE
+                        )!!
+                    )
                 )
                     insertBlob(product)
                 Log.d(
