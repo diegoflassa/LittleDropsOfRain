@@ -33,7 +33,8 @@ import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.joanzapata.iconify.Iconify
-import com.joanzapata.iconify.fonts.*
+import com.joanzapata.iconify.fonts.SimpleLineIconsModule
+import com.joanzapata.iconify.fonts.TypiconsModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -50,15 +51,15 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Iconify
-            .with(FontAwesomeModule())
-            .with(EntypoModule())
+            //.with(FontAwesomeModule())
+            //.with(EntypoModule())
             .with(TypiconsModule())
-            .with(MaterialModule())
-            .with(MaterialCommunityModule())
-            .with(MeteoconsModule())
-            .with(WeathericonsModule())
+            //.with(MaterialModule())
+            //.with(MaterialCommunityModule())
+            //.with(MeteoconsModule())
+            //.with(WeathericonsModule())
             .with(SimpleLineIconsModule())
-            .with(IoniconsModule())
+            //.with(IoniconsModule())
 
         setup()
         setupKoin()

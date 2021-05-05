@@ -14,7 +14,9 @@ object Config {
     private var versionClassifier = "debug"
     const val minimumSdkVersion = 24
     const val compileSdkVersion = 30
+    const val compileSdkPreviewVersion = "S"
     const val targetSdkVersion = 30
+    const val targetSdkPreviewVersion = "S"
     const val buildToolsVersion = "31.0.0-rc3"
     val versionCode = buildVersionCode()
     val versionName = buildVersionName()

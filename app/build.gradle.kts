@@ -1,6 +1,5 @@
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Versions
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Config
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import com.android.build.gradle.AppExtension
 import java.util.Properties
 import java.io.FileInputStream
@@ -33,13 +32,15 @@ keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
 
-    compileSdkVersion(Config.compileSdkVersion)
+    compileSdk = Config.compileSdkVersion
+    //compileSdkPreview = Config.compileSdkPreviewVersion
     buildToolsVersion = Config.buildToolsVersion
 
     defaultConfig {
         applicationId = Config.applicationId
-        minSdkVersion(Config.minimumSdkVersion)
-        targetSdkVersion(Config.targetSdkVersion)
+        minSdk = Config.minimumSdkVersion
+        targetSdk = Config.targetSdkVersion
+        //targetSdkPreview = Config.targetSdkPreviewVersion
         versionCode = Config.versionCode
         versionName = Config.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -76,10 +77,6 @@ android {
             // your project's release build type.
             isMinifyEnabled = true
 
-            // Enables resource shrinking, which is performed by the
-            // Android Gradle plugin.
-            isShrinkResources = true
-
             // Includes the default ProGuard rules files that are packaged with
             // the Android Gradle plugin. To learn more, go to the section about
             // R8 configuration files.
@@ -98,16 +95,19 @@ android {
 			  mappingFileUploadEnabled = true
 			}
         }
-        android.applicationVariants.all { variant ->
-            variant.outputs.all {
-                val bvoi = this as BaseVariantOutputImpl
-                val appName = "littledropsofrain"
-				if(variant.buildType.name == "release"){
-					bvoi.outputFileName = "${appName}-${this.outputFile.name}-release"
-				}else if(variant.buildType.name == "debug"){
-					bvoi.outputFileName = "${appName}-${this.outputFile.name}-debug"
+        //android.applicationVariants.all { variant ->
+        android.buildTypes.all { variant ->
+            //variant.outputs.all {
+                //val bvoi = this as BaseVariantOutputImpl
+                //val appName = "littledropsofrain"
+				if(variant.name == "release"){
+					//bvoi.outputFileName = "${appName}-${this.outputFile.name}-release"
+				    println("release")
+				}else if(variant.name == "debug"){
+					//bvoi.outputFileName = "${appName}-${this.outputFile.name}-debug"
+                    println("debug")
 				}
-            }
+            //}
             return@buildTypes
         }
     }
@@ -241,7 +241,7 @@ afterEvaluate {
 		// RX Java 3
 		implementation("io.reactivex.rxjava3:rxjava:${Versions.rxjava}")
 		implementation("io.reactivex.rxjava3:rxandroid:${Versions.rxandroid}")
-		
+
 		// Koin main features for Android (Scope,ViewModel ... )
 		implementation("io.insert-koin:koin-core:${Versions.koin}")
         // Koin main features for Android (Scope,ViewModel ...)
@@ -342,15 +342,15 @@ afterEvaluate {
 
 
         // Icons
-        implementation("com.joanzapata.iconify:android-iconify-fontawesome:${Versions.iconify}") // (v4.5)
-        implementation("com.joanzapata.iconify:android-iconify-entypo:${Versions.iconify}") // (v3,2015)
+        //implementation("com.joanzapata.iconify:android-iconify-fontawesome:${Versions.iconify}") // (v4.5)
+        //implementation("com.joanzapata.iconify:android-iconify-entypo:${Versions.iconify}") // (v3,2015)
         implementation("com.joanzapata.iconify:android-iconify-typicons:${Versions.iconify}") // (v2.0.7)
-        implementation("com.joanzapata.iconify:android-iconify-material:${Versions.iconify}") // (v2.0.0)
-        implementation("com.joanzapata.iconify:android-iconify-material-community:${Versions.iconify}") // (v1.4.57)
-        implementation("com.joanzapata.iconify:android-iconify-meteocons:${Versions.iconify}") // (latest)
-        implementation("com.joanzapata.iconify:android-iconify-weathericons:${Versions.iconify}") // (v2.0)
+        //implementation("com.joanzapata.iconify:android-iconify-material:${Versions.iconify}") // (v2.0.0)
+        //implementation("com.joanzapata.iconify:android-iconify-material-community:${Versions.iconify}") // (v1.4.57)
+        //implementation("com.joanzapata.iconify:android-iconify-meteocons:${Versions.iconify}") // (latest)
+        //implementation("com.joanzapata.iconify:android-iconify-weathericons:${Versions.iconify}") // (v2.0)
         implementation("com.joanzapata.iconify:android-iconify-simplelineicons:${Versions.iconify}") // (v1.0.0)
-        implementation("com.joanzapata.iconify:android-iconify-ionicons:${Versions.iconify}") // (v2.0.1)
+        //implementation("com.joanzapata.iconify:android-iconify-ionicons:${Versions.iconify}") // (v2.0.1)
 
         // Annotation processor
         kapt("androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}")
