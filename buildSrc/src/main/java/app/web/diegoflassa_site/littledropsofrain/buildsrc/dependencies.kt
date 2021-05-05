@@ -4,7 +4,7 @@ package app.web.diegoflassa_site.littledropsofrain.buildsrc
 object Versions {
     const val ktlint = "0.41.0"
     const val kotlinCompilerVersion = "1.4.32"
-    const val gradle="7.0.0-alpha14"
+    const val gradle="7.0.0-alpha15"
     const val coil = "1.0.0"
     const val data_store = "1.0.0-alpha08"
 	const val gson = "2.8.6"
@@ -57,6 +57,7 @@ object Versions {
     const val spotless="5.8.2"
     const val junit = "4.13.2"
     const val auth = "6.3.0"
+	
     const val database = "4.0.0"
     const val storage = "6.2.1"
     const val workVersion = "2.7.0-alpha01"
