@@ -1,8 +1,10 @@
-import app.web.diegoflassa_site.littledropsofrain.buildsrc.Versions
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Config
+import app.web.diegoflassa_site.littledropsofrain.buildsrc.Versions
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.android.build.gradle.AppExtension
-import java.util.Properties
 import java.io.FileInputStream
+import java.util.*
 
 plugins {
     id("com.android.application")
@@ -67,10 +69,10 @@ android {
                 testers = "andrea.setecinco@gmail.com, diegoflassa@gmail.com"
             }
             resValue("string", "version_name", "${defaultConfig.versionName}")
-			//versionNameSuffix = "-debug"
-			firebaseCrashlytics {
-			  mappingFileUploadEnabled = false
-			}
+            //versionNameSuffix = "-debug"
+            firebaseCrashlytics {
+                mappingFileUploadEnabled = false
+            }
         }
         release {
             // Enables code shrinking, obfuscation, and optimization for only
@@ -90,26 +92,28 @@ android {
                 testers = "andrea.setecinco@gmail.com, diegoflassa@gmail.com"
             }
             resValue("string", "version_name", "${defaultConfig.versionName}")
-			//versionNameSuffix = "-release"
-			firebaseCrashlytics {
-			  mappingFileUploadEnabled = true
-			}
+            //versionNameSuffix = "-release"
+            firebaseCrashlytics {
+                mappingFileUploadEnabled = true
+            }
         }
-        //android.applicationVariants.all { variant ->
-        android.buildTypes.all { variant ->
-            //variant.outputs.all {
-                //val bvoi = this as BaseVariantOutputImpl
-                //val appName = "littledropsofrain"
-				if(variant.name == "release"){
-					//bvoi.outputFileName = "${appName}-${this.outputFile.name}-release"
-				    println("release")
-				}else if(variant.name == "debug"){
-					//bvoi.outputFileName = "${appName}-${this.outputFile.name}-debug"
+        /*
+        val extension = project.extensions.getByType(BaseAppModuleExtension::class.java)
+        extension.all { variant ->
+            variant.outputs.all {
+                val bvoi = this as BaseVariantOutputImpl
+                val appName = "littledropsofrain"
+                if (variant.name == "release") {
+                    bvoi.outputFileName = "${appName}-${this.outputFile.name}-release"
+                    println("release")
+                } else if (variant.name == "debug") {
+                    bvoi.outputFileName = "${appName}-${this.outputFile.name}-debug"
                     println("debug")
-				}
-            //}
+                }
+            }
             return@buildTypes
         }
+         */
     }
     compileOptions {
         // Sets Java compatibility to Java 11
@@ -179,7 +183,7 @@ afterEvaluate {
         }
     }
 
-	// Avoid build error
+    // Avoid build error
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         // Sets Java compatibility to Java 11
         sourceCompatibility = JavaVersion.VERSION_11.toString()
@@ -223,9 +227,9 @@ afterEvaluate {
         // Proto DataStore
         implementation("androidx.datastore:datastore-core:${Versions.data_store}")
 
-		//Retrofix 2
-		implementation("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
-		implementation("com.squareup.retrofit2:adapter-rxjava3:${Versions.retrofit_adapter}")
+        //Retrofix 2
+        implementation("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
+        implementation("com.squareup.retrofit2:adapter-rxjava3:${Versions.retrofit_adapter}")
         implementation("com.squareup.retrofit2:converter-jackson:${Versions.converter_jackson}")
         implementation("com.squareup.retrofit2:converter-gson:${Versions.converter}")
 
@@ -238,18 +242,18 @@ afterEvaluate {
         //GSON
         implementation("com.google.code.gson:gson:${Versions.gson}")
 
-		// RX Java 3
-		implementation("io.reactivex.rxjava3:rxjava:${Versions.rxjava}")
-		implementation("io.reactivex.rxjava3:rxandroid:${Versions.rxandroid}")
+        // RX Java 3
+        implementation("io.reactivex.rxjava3:rxjava:${Versions.rxjava}")
+        implementation("io.reactivex.rxjava3:rxandroid:${Versions.rxandroid}")
 
-		// Koin main features for Android (Scope,ViewModel ... )
-		implementation("io.insert-koin:koin-core:${Versions.koin}")
+        // Koin main features for Android (Scope,ViewModel ... )
+        implementation("io.insert-koin:koin-core:${Versions.koin}")
         // Koin main features for Android (Scope,ViewModel ...)
-		implementation("io.insert-koin:koin-android:${Versions.koin}")
-		// Koin Android - experimental builder extensions
-		implementation("io.insert-koin:koin-android-ext:${Versions.koin}")
-		// Koin for Jetpack WorkManager
-		implementation("io.insert-koin:koin-androidx-workmanager:${Versions.koin}")
+        implementation("io.insert-koin:koin-android:${Versions.koin}")
+        // Koin Android - experimental builder extensions
+        implementation("io.insert-koin:koin-android-ext:${Versions.koin}")
+        // Koin for Jetpack WorkManager
+        implementation("io.insert-koin:koin-androidx-workmanager:${Versions.koin}")
         // Koin for Jetpack Compose (unstable version)
         implementation("io.insert-koin:koin-androidx-compose:${Versions.koin}")
 

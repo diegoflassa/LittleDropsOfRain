@@ -51,15 +51,15 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Iconify
-            //.with(FontAwesomeModule())
-            //.with(EntypoModule())
+            // .with(FontAwesomeModule())
+            // .with(EntypoModule())
             .with(TypiconsModule())
-            //.with(MaterialModule())
-            //.with(MaterialCommunityModule())
-            //.with(MeteoconsModule())
-            //.with(WeathericonsModule())
+            // .with(MaterialModule())
+            // .with(MaterialCommunityModule())
+            // .with(MeteoconsModule())
+            // .with(WeathericonsModule())
             .with(SimpleLineIconsModule())
-            //.with(IoniconsModule())
+        // .with(IoniconsModule())
 
         setup()
         setupKoin()
