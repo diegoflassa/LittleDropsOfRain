@@ -34,11 +34,10 @@ fun <T> Fragment.viewLifecycle(): ReadWriteProperty<Fragment, T> =
             this@viewLifecycle
                 .viewLifecycleOwnerLiveData
                 .observe(
-                    this@viewLifecycle,
-                    { owner: LifecycleOwner? ->
-                        owner?.lifecycle?.addObserver(this)
-                    }
-                )
+                    this@viewLifecycle
+                ) { owner: LifecycleOwner? ->
+                    owner?.lifecycle?.addObserver(this)
+                }
         }
 
         override fun onDestroy(owner: LifecycleOwner) {

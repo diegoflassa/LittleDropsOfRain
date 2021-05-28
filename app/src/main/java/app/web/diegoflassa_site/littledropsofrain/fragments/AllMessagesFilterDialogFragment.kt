@@ -106,7 +106,7 @@ open class AllMessagesFilterDialogFragment :
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        val fragment: Fragment? = parentFragmentManager.fragments[0]
+        val fragment: Fragment = parentFragmentManager.fragments[0]
         if (fragment is DialogInterface.OnDismissListener) {
             (fragment as DialogInterface.OnDismissListener).onDismiss(dialog)
         }

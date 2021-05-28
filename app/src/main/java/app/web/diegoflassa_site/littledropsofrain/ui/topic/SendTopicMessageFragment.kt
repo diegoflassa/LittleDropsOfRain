@@ -98,11 +98,10 @@ class SendTopicMessageFragment :
     ): View {
         binding = FragmentSendTopicMessageBinding.inflate(inflater, container, false)
         viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner,
-            {
-                updateUI(it)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            updateUI(it)
+        }
         getTopics()
         binding.imgVwNotificationImage.visibility = View.GONE
         cropImageLauncher = registerForActivityResult(CropImageResultContract(), this)
@@ -308,7 +307,7 @@ class SendTopicMessageFragment :
                 activity?.runOnUiThread {
                     binding.fabSendTopicMessage.isEnabled = false
                 }
-                val tokenValue = getAccessToken()?.tokenValue
+                val tokenValue = getAccessToken().tokenValue
                 Log.d(TAG, "Got access token : $tokenValue")
                 var condition = ""
                 for (topic in topics) {
@@ -402,7 +401,7 @@ class SendTopicMessageFragment :
         }
     }
 
-    private fun getAccessToken(): AccessToken? {
+    private fun getAccessToken(): AccessToken {
         val resource =
             resources.openRawResource(R.raw.littledropsofrain_site_firebase_adminsdk_9dvd0_c718bc2981)
         val scopes: MutableList<String> = ArrayList()

@@ -76,45 +76,47 @@ open class LikesDialogAdapter(
             snapshot: DocumentSnapshot,
         ) {
             val user: User? = snapshot.toObject(User::class.java)
-            user?.uid = snapshot.id
-            val resources = itemView.resources
+            if (user != null) {
+                user.uid = snapshot.id
+                val resources = itemView.resources
 
-            binding.imgVwUser.load(user!!.imageUrl) { placeholder(R.drawable.image_placeholder) }
+                binding.imgVwUser.load(user.imageUrl) { placeholder(R.drawable.image_placeholder) }
 
-            binding.userName.text = resources.getString(R.string.rv_user_name, user.name)
-            binding.userEmail.text = resources.getString(R.string.rv_user_email, user.email)
-            val iconHeart = IconDrawable(itemView.context, SimpleLineIconsIcons.icon_heart)
-            if (product.likes.contains(user.uid)) {
-                iconHeart.color(Color.RED)
-            }
-            binding.imgVwLiked.setImageDrawable(iconHeart)
-            binding.imgVwLiked.setOnClickListener {
+                binding.userName.text = resources.getString(R.string.rv_user_name, user.name)
+                binding.userEmail.text = resources.getString(R.string.rv_user_email, user.email)
+                val iconHeart = IconDrawable(itemView.context, SimpleLineIconsIcons.icon_heart)
                 if (product.likes.contains(user.uid)) {
-                    val builder = AlertDialog.Builder(itemView.context)
-                    builder.setMessage(
-                        itemView.context.getString(
-                            R.string.remove_like_from_user,
-                            user.name
-                        )
-                    )
-                        .setCancelable(false)
-                        .setPositiveButton(itemView.context.getString(R.string.yes)) { _, _ ->
-                            product.likes.remove(user.uid)
-                            ioScope.launch {
-                                ProductDao.update(product)
-                            }
-                        }
-                        .setNegativeButton(itemView.context.getString(R.string.no)) { dialog, _ ->
-                            // Dismiss the dialog
-                            dialog.dismiss()
-                        }
-                    val alert = builder.create()
-                    alert.show()
-                } else {
-                    product.likes.add(user.uid!!)
+                    iconHeart.color(Color.RED)
                 }
-                ioScope.launch {
-                    ProductDao.update(product)
+                binding.imgVwLiked.setImageDrawable(iconHeart)
+                binding.imgVwLiked.setOnClickListener {
+                    if (product.likes.contains(user.uid)) {
+                        val builder = AlertDialog.Builder(itemView.context)
+                        builder.setMessage(
+                            itemView.context.getString(
+                                R.string.remove_like_from_user,
+                                user.name
+                            )
+                        )
+                            .setCancelable(false)
+                            .setPositiveButton(itemView.context.getString(R.string.yes)) { _, _ ->
+                                product.likes.remove(user.uid)
+                                ioScope.launch {
+                                    ProductDao.update(product)
+                                }
+                            }
+                            .setNegativeButton(itemView.context.getString(R.string.no)) { dialog, _ ->
+                                // Dismiss the dialog
+                                dialog.dismiss()
+                            }
+                        val alert = builder.create()
+                        alert.show()
+                    } else {
+                        product.likes.add(user.uid!!)
+                    }
+                    ioScope.launch {
+                        ProductDao.update(product)
+                    }
                 }
             }
         }

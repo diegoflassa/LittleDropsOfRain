@@ -75,11 +75,10 @@ class UsersFragment :
     ): View {
         binding = FragmentUsersBinding.inflate(inflater, container, false)
         viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner,
-            {
-                updateUI(it)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            updateUI(it)
+        }
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)

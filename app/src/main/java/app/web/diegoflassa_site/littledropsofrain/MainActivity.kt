@@ -96,12 +96,9 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         bindingNavHeader = NavHeaderMainBinding.inflate(layoutInflater)
-        viewModel.viewStateLiveData.observe(
-            this,
-            {
-                updateUI(it)
-            }
-        )
+        viewModel.viewStateLiveData.observe(this) {
+            updateUI(it)
+        }
         // Initialize the singleton class
         LoggedUser.userLiveData.value = null
         setContentView(binding?.root)

@@ -26,7 +26,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NavUtils
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
@@ -83,11 +82,11 @@ class SendMessageFragment :
     ): View {
         binding = FragmentSendMessageBinding.inflate(layoutInflater)
         viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner,
-            {
-                updateUI(viewModel.viewState)
-            }
-        )
+            viewLifecycleOwner
+
+        ) {
+            updateUI(viewModel.viewState)
+        }
         binding.btnSend.setOnClickListener {
             val callback = Callback(this)
             // Coroutine has multiple dispatchers suited for different type of workloads
@@ -158,7 +157,7 @@ class SendMessageFragment :
         UserDao.loadAll(this)
         mSavedInstanceState = savedInstanceState
         handleBundle()
-        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar) as androidx.appcompat.widget.Toolbar?
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
             toggle = ActionBarDrawerToggle(

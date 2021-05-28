@@ -102,7 +102,11 @@ object MessageDao {
                 listener.onDataChanged(messages)
             }
             ?.addOnFailureListener { exception ->
-                Log.d(TAG, MyApplication.getContext().getString(R.string.error_getting_messages), exception)
+                Log.d(
+                    TAG,
+                    MyApplication.getContext().getString(R.string.error_getting_messages),
+                    exception
+                )
             }
     }
 

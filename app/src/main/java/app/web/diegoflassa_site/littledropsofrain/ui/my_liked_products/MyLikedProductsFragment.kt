@@ -87,11 +87,10 @@ class MyLikedProductsFragment :
     ): View {
         binding = FragmentMyLikedProductsBinding.inflate(inflater, container, false)
         viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner,
-            {
-                updateUI(it)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            updateUI(it)
+        }
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
 
@@ -307,8 +306,10 @@ class MyLikedProductsFragment :
     override fun onProductSelected(product: DocumentSnapshot?) {
         val i = Intent(Intent.ACTION_VIEW)
         val productParsed: Product? = product?.toObject(Product::class.java)
-        i.data = Uri.parse(productParsed?.linkProduct)
-        startActivity(i)
+        if (productParsed != null) {
+            i.data = Uri.parse(productParsed.linkProduct)
+            startActivity(i)
+        }
     }
 
     override fun onDismiss(dialog: DialogInterface?) {

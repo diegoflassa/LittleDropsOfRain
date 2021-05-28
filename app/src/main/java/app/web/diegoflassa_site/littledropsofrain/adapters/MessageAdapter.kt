@@ -89,117 +89,120 @@ open class MessageAdapter(
             listener: OnMessageSelectedListener?
         ) {
             val message: Message? = snapshot.toObject(Message::class.java)
-            message?.uid = snapshot.id
+            if (message != null) {
+                message.uid = snapshot.id
 
-            if (message?.creationDate != null) {
-                binding.msgCreationDate.text = Helper.getDateTime(message.creationDate!!.toDate())
-            }
-            binding.msgSender.text = message?.emailSender
-            binding.msgTo.text = message?.emailTo
-            binding.msgMessage.setText(message?.message)
-            if (message?.read != null)
-                binding.msgRead.isChecked = message.read!!
-            binding.msgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
-                ioScope.launch {
-                    message?.read = checked
-                    MessageDao.update(message!!)
+                if (message.creationDate != null) {
+                    binding.msgCreationDate.text =
+                        Helper.getDateTime(message.creationDate!!.toDate())
                 }
-            }
-            itemView.setOnClickListener {
-                replyMessage(it, message!!)
-            }
-            binding.msgImage.visibility = View.GONE
-            binding.btnViewAsNotification.visibility = View.GONE
-
-            // Click listener
-            itemView.setOnClickListener { listener?.onMessageSelected(snapshot) }
-            when (MessageType.valueOf(message?.type?.uppercase(Locale.ROOT)!!)) {
-                MessageType.MESSAGE -> {
-                    when {
-                        message.emailSender == LoggedUser.userLiveData.value?.email -> {
-                            itemView.background = ContextCompat.getDrawable(
-                                MyApplication.getContext(),
-                                android.R.color.white
-                            )
-                        }
-                        message.emailTo == LoggedUser.userLiveData.value?.email -> {
-                            itemView.background = ContextCompat.getDrawable(
-                                MyApplication.getContext(),
-                                R.color.colorMessageMine
-                            )
-                        }
+                binding.msgSender.text = message.emailSender
+                binding.msgTo.text = message.emailTo
+                binding.msgMessage.setText(message.message)
+                if (message.read != null)
+                    binding.msgRead.isChecked = message.read!!
+                binding.msgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
+                    ioScope.launch {
+                        message.read = checked
+                        MessageDao.update(message)
                     }
                 }
-                MessageType.NOTIFICATION -> {
-                    if (message.imageUrl != null) {
-                        binding.msgImage.visibility = View.VISIBLE
-                        binding.msgImage.load(message.imageUrl) {
-                            placeholder(R.drawable.image_placeholder)
-                            error(R.drawable.image_placeholder)
+                itemView.setOnClickListener {
+                    replyMessage(it, message)
+                }
+                binding.msgImage.visibility = View.GONE
+                binding.btnViewAsNotification.visibility = View.GONE
+
+                // Click listener
+                itemView.setOnClickListener { listener?.onMessageSelected(snapshot) }
+                when (MessageType.valueOf(message.type?.uppercase(Locale.ROOT)!!)) {
+                    MessageType.MESSAGE -> {
+                        when {
+                            message.emailSender == LoggedUser.userLiveData.value?.email -> {
+                                itemView.background = ContextCompat.getDrawable(
+                                    MyApplication.getContext(),
+                                    android.R.color.white
+                                )
+                            }
+                            message.emailTo == LoggedUser.userLiveData.value?.email -> {
+                                itemView.background = ContextCompat.getDrawable(
+                                    MyApplication.getContext(),
+                                    R.color.colorMessageMine
+                                )
+                            }
                         }
-                    } else {
-                        binding.msgImage.visibility = View.GONE
                     }
-                    binding.btnViewAsNotification.visibility = View.VISIBLE
-                    itemView.background = ContextCompat.getDrawable(
+                    MessageType.NOTIFICATION -> {
+                        if (message.imageUrl != null) {
+                            binding.msgImage.visibility = View.VISIBLE
+                            binding.msgImage.load(message.imageUrl) {
+                                placeholder(R.drawable.image_placeholder)
+                                error(R.drawable.image_placeholder)
+                            }
+                        } else {
+                            binding.msgImage.visibility = View.GONE
+                        }
+                        binding.btnViewAsNotification.visibility = View.VISIBLE
+                        itemView.background = ContextCompat.getDrawable(
+                            MyApplication.getContext(),
+                            R.color.colorMessageNotification
+                        )
+                    }
+                    MessageType.UNKNOWN -> {
+                        // Do nothing
+                    }
+                }
+
+                binding.btnViewAsNotification.setImageDrawable(
+                    IconDrawable(
                         MyApplication.getContext(),
-                        R.color.colorMessageNotification
+                        SimpleLineIconsIcons.icon_envelope_letter
+                    )
+                )
+                binding.btnViewAsNotification.setOnClickListener {
+                    Helper.showNotification(
+                        mContext,
+                        message.getImageUrlAsUri(),
+                        "",
+                        message.message!!,
+                        false
                     )
                 }
-                MessageType.UNKNOWN -> {
-                    // Do nothing
+
+                binding.btnReply.isEnabled =
+                    (message.emailSender != LoggedUser.userLiveData.value?.email)
+                binding.btnReply.setImageDrawable(
+                    IconDrawable(
+                        MyApplication.getContext(),
+                        SimpleLineIconsIcons.icon_action_undo
+                    )
+                )
+                binding.btnReply.setOnClickListener {
+                    replyMessage(it, message)
                 }
-            }
 
-            binding.btnViewAsNotification.setImageDrawable(
-                IconDrawable(
-                    MyApplication.getContext(),
-                    SimpleLineIconsIcons.icon_envelope_letter
+                binding.btnDelete.setImageDrawable(
+                    IconDrawable(
+                        MyApplication.getContext(),
+                        SimpleLineIconsIcons.icon_trash
+                    )
                 )
-            )
-            binding.btnViewAsNotification.setOnClickListener {
-                Helper.showNotification(
-                    mContext,
-                    message.getImageUrlAsUri(),
-                    "",
-                    message.message!!,
-                    false
-                )
-            }
-
-            binding.btnReply.isEnabled =
-                (message.emailSender != LoggedUser.userLiveData.value?.email)
-            binding.btnReply.setImageDrawable(
-                IconDrawable(
-                    MyApplication.getContext(),
-                    SimpleLineIconsIcons.icon_action_undo
-                )
-            )
-            binding.btnReply.setOnClickListener {
-                replyMessage(it, message)
-            }
-
-            binding.btnDelete.setImageDrawable(
-                IconDrawable(
-                    MyApplication.getContext(),
-                    SimpleLineIconsIcons.icon_trash
-                )
-            )
-            binding.btnDelete.setOnClickListener {
-                val builder = AlertDialog.Builder(mContext)
-                builder.setMessage(mContext.getString(R.string.remove_message_confirmation))
-                    .setCancelable(false)
-                    .setPositiveButton(mContext.getString(R.string.yes)) { _, _ ->
-                        ioScope.launch {
-                            MessageDao.delete(message)
+                binding.btnDelete.setOnClickListener {
+                    val builder = AlertDialog.Builder(mContext)
+                    builder.setMessage(mContext.getString(R.string.remove_message_confirmation))
+                        .setCancelable(false)
+                        .setPositiveButton(mContext.getString(R.string.yes)) { _, _ ->
+                            ioScope.launch {
+                                MessageDao.delete(message)
+                            }
                         }
-                    }
-                    .setNegativeButton(mContext.getString(R.string.no)) { dialog, _ ->
-                        // Dismiss the dialog
-                        dialog.dismiss()
-                    }
-                val alert = builder.create()
-                alert.show()
+                        .setNegativeButton(mContext.getString(R.string.no)) { dialog, _ ->
+                            // Dismiss the dialog
+                            dialog.dismiss()
+                        }
+                    val alert = builder.create()
+                    alert.show()
+                }
             }
         }
 

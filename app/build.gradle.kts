@@ -1,7 +1,5 @@
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Config
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Versions
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.android.build.gradle.AppExtension
 import java.io.FileInputStream
 import java.util.*
@@ -62,7 +60,7 @@ android {
     buildTypes {
         debug {
             //applicationIdSuffix '.debug'
-            //ext.enableCrashlytics = false
+            //ext.enlableCrashlytics = false
             //ext.alwaysUpdateBuildId = false
             firebaseAppDistribution {
                 releaseNotesFile = "${project.rootDir}/releaseNotes/releaseNotes.txt"
@@ -70,9 +68,9 @@ android {
             }
             resValue("string", "version_name", "${defaultConfig.versionName}")
             //versionNameSuffix = "-debug"
-            firebaseCrashlytics {
-                mappingFileUploadEnabled = false
-            }
+            // firebaseCrashlytics {
+            //   mappingFileUploadEnabled = false
+            //}
         }
         release {
             // Enables code shrinking, obfuscation, and optimization for only
@@ -93,9 +91,9 @@ android {
             }
             resValue("string", "version_name", "${defaultConfig.versionName}")
             //versionNameSuffix = "-release"
-            firebaseCrashlytics {
-                mappingFileUploadEnabled = true
-            }
+            // firebaseCrashlytics {
+            //     mappingFileUploadEnabled = true
+            // }
         }
         /*
         val extension = project.extensions.getByType(BaseAppModuleExtension::class.java)
@@ -145,9 +143,6 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.androidxJetpackCompose
     }
-}
-dependencies {
-    implementation("androidx.annotation:annotation:1.2.0")
 }
 
 // Avoid build error
@@ -199,7 +194,6 @@ afterEvaluate {
     }
 
     dependencies {
-
         // Kotlin + coroutines
         implementation("androidx.work:work-runtime-ktx:${Versions.workVersion}")
         // optional - RxJava2 support
@@ -334,6 +328,7 @@ afterEvaluate {
         implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}")
         implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.lifecycle}")
         implementation("androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}")
+		implementation("androidx.lifecycle:lifecycle-common:${Versions.lifecycle}")
         implementation("androidx.navigation:navigation-runtime-ktx:${Versions.navigation}")
         implementation("androidx.navigation:navigation-fragment-ktx:${Versions.navigation}")
         implementation("androidx.navigation:navigation-ui-ktx:${Versions.navigation}")

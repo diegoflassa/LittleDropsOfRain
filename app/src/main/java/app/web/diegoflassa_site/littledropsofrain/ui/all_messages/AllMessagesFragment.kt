@@ -82,11 +82,10 @@ class AllMessagesFragment :
     ): View {
         binding = FragmentAllMessagesBinding.inflate(inflater, container, false)
         viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner,
-            {
-                updateUI(it)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            updateUI(it)
+        }
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(
             AppCompatResources.getDrawable(

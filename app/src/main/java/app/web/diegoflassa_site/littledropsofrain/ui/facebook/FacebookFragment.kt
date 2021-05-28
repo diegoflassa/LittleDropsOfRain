@@ -83,11 +83,10 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
     ): View {
         binding = FragmentFacebookBinding.inflate(inflater, container, false)
         viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner,
-            {
-                updateUI(it)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            updateUI(it)
+        }
 
         url = getString(R.string.url_facebook)
         // set up the webview

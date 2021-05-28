@@ -34,13 +34,12 @@ object LoggedUser : OnUserFoundListener, LifecycleOwner {
     init {
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
         firebaseUserLiveData.observe(
-            this,
-            { firebaseUser ->
-                if (firebaseUser != null) {
-                    UserDao.findByEMail(firebaseUser.email, this)
-                }
+            this
+        ) { firebaseUser ->
+            if (firebaseUser != null) {
+                UserDao.findByEMail(firebaseUser.email, this)
             }
-        )
+        }
         lifecycleRegistry.currentState = Lifecycle.State.STARTED
         lifecycleRegistry.currentState = Lifecycle.State.RESUMED
     }

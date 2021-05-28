@@ -78,74 +78,77 @@ open class MyLikedProductsAdapter(
             listener: OnProductSelectedListener?
         ) {
             val product: Product? = snapshot.toObject(Product::class.java)
-            product?.uid = snapshot.id
-            val resources = itemView.resources
+            if (product != null) {
+                product.uid = snapshot.id
+                val resources = itemView.resources
 
-            // Load image
-            binding.picture.load(product?.imageUrl) { placeholder(R.drawable.image_placeholder) }
-            binding.title.text = resources.getString(R.string.rv_title, product?.title)
-            var chipCategory: Chip
-            binding.chipCategories.removeAllViews()
-            for (category in product?.categories!!) {
-                if (category.isNotEmpty()) {
-                    chipCategory = Chip(itemView.context)
-                    chipCategory.isCheckable = true
-                    chipCategory.isChecked =
-                        myLikedProductsFragment.mFilterDialog?.categories!!.contains(category)
-                    chipCategory.text = category
-                    chipCategory.setOnCheckedChangeListener(this)
-                    binding.chipCategories.addView(chipCategory)
+                // Load image
+                binding.picture.load(product.imageUrl) { placeholder(R.drawable.image_placeholder) }
+                binding.title.text = resources.getString(R.string.rv_title, product.title)
+                var chipCategory: Chip
+                binding.chipCategories.removeAllViews()
+                for (category in product.categories) {
+                    if (category.isNotEmpty()) {
+                        chipCategory = Chip(itemView.context)
+                        chipCategory.isCheckable = true
+                        chipCategory.isChecked =
+                            myLikedProductsFragment.mFilterDialog?.categories!!.contains(category)
+                        chipCategory.text = category
+                        chipCategory.setOnCheckedChangeListener(this)
+                        binding.chipCategories.addView(chipCategory)
+                    }
                 }
-            }
-            binding.disponibility.text =
-                resources.getString(R.string.rv_disponibility, product.disponibility)
-            var priceStr = (product.price?.div(100)).toString()
-            priceStr += DecimalFormatSymbols.getInstance().decimalSeparator + "00"
-            binding.price.text = resources.getString(R.string.rv_price, priceStr)
-            val heartIcon = IconDrawable(
-                myLikedProductsFragment.requireContext(),
-                SimpleLineIconsIcons.icon_heart
-            )
-            if (product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
-                heartIcon.color(Color.RED)
-            }
-            binding.imgVwLike.setImageDrawable(heartIcon)
-            binding.imgVwLike.setOnClickListener {
+                binding.disponibility.text =
+                    resources.getString(R.string.rv_disponibility, product.disponibility)
+                var priceStr = (product.price?.div(100)).toString()
+                priceStr += DecimalFormatSymbols.getInstance().decimalSeparator + "00"
+                binding.price.text = resources.getString(R.string.rv_price, priceStr)
+                val heartIcon = IconDrawable(
+                    myLikedProductsFragment.requireContext(),
+                    SimpleLineIconsIcons.icon_heart
+                )
                 if (product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
-                    if (!product.isPublished) {
-                        val builder = AlertDialog.Builder(myLikedProductsFragment.requireContext())
-                        builder.setMessage(myLikedProductsFragment.getString(R.string.remove_like_from_unpublished_product))
-                            .setCancelable(false)
-                            .setPositiveButton(myLikedProductsFragment.getString(R.string.yes)) { _, _ ->
-                                product.likes.remove(LoggedUser.userLiveData.value?.uid!!)
-                                ioScope.launch {
-                                    ProductDao.update(product)
+                    heartIcon.color(Color.RED)
+                }
+                binding.imgVwLike.setImageDrawable(heartIcon)
+                binding.imgVwLike.setOnClickListener {
+                    if (product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
+                        if (!product.isPublished) {
+                            val builder =
+                                AlertDialog.Builder(myLikedProductsFragment.requireContext())
+                            builder.setMessage(myLikedProductsFragment.getString(R.string.remove_like_from_unpublished_product))
+                                .setCancelable(false)
+                                .setPositiveButton(myLikedProductsFragment.getString(R.string.yes)) { _, _ ->
+                                    product.likes.remove(LoggedUser.userLiveData.value?.uid!!)
+                                    ioScope.launch {
+                                        ProductDao.update(product)
+                                    }
                                 }
+                                .setNegativeButton(myLikedProductsFragment.getString(R.string.no)) { dialog, _ ->
+                                    // Dismiss the dialog
+                                    dialog.dismiss()
+                                }
+                            val alert = builder.create()
+                            alert.show()
+                        } else {
+                            product.likes.remove(LoggedUser.userLiveData.value?.uid!!)
+                            ioScope.launch {
+                                ProductDao.update(product)
                             }
-                            .setNegativeButton(myLikedProductsFragment.getString(R.string.no)) { dialog, _ ->
-                                // Dismiss the dialog
-                                dialog.dismiss()
-                            }
-                        val alert = builder.create()
-                        alert.show()
+                        }
                     } else {
-                        product.likes.remove(LoggedUser.userLiveData.value?.uid!!)
+                        product.likes.add(LoggedUser.userLiveData.value?.uid!!)
                         ioScope.launch {
                             ProductDao.update(product)
                         }
                     }
-                } else {
-                    product.likes.add(LoggedUser.userLiveData.value?.uid!!)
-                    ioScope.launch {
-                        ProductDao.update(product)
-                    }
                 }
-            }
-            binding.likesCount.text = product.likes.size.toString()
-            binding.switchIsPublished.visibility = View.GONE
+                binding.likesCount.text = product.likes.size.toString()
+                binding.switchIsPublished.visibility = View.GONE
 
-            // Click listener
-            itemView.setOnClickListener { listener?.onProductSelected(snapshot) }
+                // Click listener
+                itemView.setOnClickListener { listener?.onProductSelected(snapshot) }
+            }
         }
 
         override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {

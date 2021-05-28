@@ -78,60 +78,65 @@ open class AllProductsAdapter(
             listener: OnProductSelectedListener?
         ) {
             val product: Product? = snapshot.toObject(Product::class.java)
-            product?.uid = snapshot.id
-            val resources = itemView.resources
+            if (product != null) {
+                product.uid = snapshot.id
+                val resources = itemView.resources
 
-            // Load image
-            binding.picture.load(product?.imageUrl) { placeholder(R.drawable.image_placeholder) }
-            binding.title.text = resources.getString(R.string.rv_title, product?.title)
-            var chipCategory: Chip
-            binding.chipCategories.removeAllViews()
-            for (category in product?.categories!!) {
-                if (category.isNotEmpty()) {
-                    chipCategory = Chip(itemView.context)
-                    chipCategory.isCheckable = true
-                    chipCategory.isChecked =
-                        allProductsFragment.mFilterDialog?.categories!!.contains(category)
-                    chipCategory.text = category
-                    chipCategory.setOnCheckedChangeListener(this)
-                    binding.chipCategories.addView(chipCategory)
+                // Load image
+                binding.picture.load(product.imageUrl) { placeholder(R.drawable.image_placeholder) }
+                binding.title.text = resources.getString(R.string.rv_title, product.title)
+                var chipCategory: Chip
+                binding.chipCategories.removeAllViews()
+                for (category in product.categories) {
+                    if (category.isNotEmpty()) {
+                        chipCategory = Chip(itemView.context)
+                        chipCategory.isCheckable = true
+                        chipCategory.isChecked =
+                            allProductsFragment.mFilterDialog?.categories!!.contains(category)
+                        chipCategory.text = category
+                        chipCategory.setOnCheckedChangeListener(this)
+                        binding.chipCategories.addView(chipCategory)
+                    }
                 }
-            }
-            binding.disponibility.text =
-                resources.getString(R.string.rv_disponibility, product.disponibility)
-            var priceStr = (product.price?.div(100)).toString()
-            priceStr += DecimalFormatSymbols.getInstance().decimalSeparator + "00"
-            binding.price.text = resources.getString(R.string.rv_price, priceStr)
-            val heartIcon =
-                IconDrawable(allProductsFragment.requireContext(), SimpleLineIconsIcons.icon_heart)
-            if (product.likes.size > 0) {
-                heartIcon.color(Color.RED)
-                binding.imgVwLike.setOnClickListener {
-                    allProductsFragment.findNavController().navigate(
-                        AllProductsFragmentDirections.actionNavAllProductsToLikesDialogFragment(
-                            product
-                        )
+                binding.disponibility.text =
+                    resources.getString(R.string.rv_disponibility, product.disponibility)
+                var priceStr = (product.price?.div(100)).toString()
+                priceStr += DecimalFormatSymbols.getInstance().decimalSeparator + "00"
+                binding.price.text = resources.getString(R.string.rv_price, priceStr)
+                val heartIcon =
+                    IconDrawable(
+                        allProductsFragment.requireContext(),
+                        SimpleLineIconsIcons.icon_heart
                     )
-                    /*
+                if (product.likes.size > 0) {
+                    heartIcon.color(Color.RED)
+                    binding.imgVwLike.setOnClickListener {
+                        allProductsFragment.findNavController().navigate(
+                            AllProductsFragmentDirections.actionNavAllProductsToLikesDialogFragment(
+                                product
+                            )
+                        )
+                        /*
                 LikesDialogFragment(product).show(
                     allProductsFragment.requireActivity().supportFragmentManager,
                     LikesDialogFragment.TAG
                 )
                 */
+                    }
                 }
-            }
-            binding.imgVwLike.setImageDrawable(heartIcon)
-            binding.switchIsPublished.isChecked = product.isPublished
-            binding.switchIsPublished.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
-                product.isPublished = checked
-                ioScope.launch {
-                    ProductDao.update(product)
+                binding.imgVwLike.setImageDrawable(heartIcon)
+                binding.switchIsPublished.isChecked = product.isPublished
+                binding.switchIsPublished.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
+                    product.isPublished = checked
+                    ioScope.launch {
+                        ProductDao.update(product)
+                    }
                 }
-            }
-            binding.likesCount.text = product.likes.size.toString()
+                binding.likesCount.text = product.likes.size.toString()
 
-            // Click listener
-            itemView.setOnClickListener { listener?.onProductSelected(snapshot) }
+                // Click listener
+                itemView.setOnClickListener { listener?.onProductSelected(snapshot) }
+            }
         }
 
         override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {

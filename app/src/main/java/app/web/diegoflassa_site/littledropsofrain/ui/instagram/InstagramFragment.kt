@@ -86,11 +86,10 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
     ): View {
         binding = FragmentInstagramBinding.inflate(inflater, container, false)
         viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner,
-            {
-                updateUI(it)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            updateUI(it)
+        }
 
         url = getString(R.string.url_instagram)
         // set up the webview
@@ -196,7 +195,7 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         }
     }
 
-    private suspend fun saveCurrentUrl() {
+    private fun saveCurrentUrl() {
         ioScope.launch {
             requireContext().dataStore.edit { settings ->
                 settings[keyPrefsLastURL] = binding.webviewInstagram.url.toString()
