@@ -29,6 +29,7 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -48,9 +49,10 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.lang.ref.WeakReference
 
+@AndroidEntryPoint
 class AllMessagesFragment :
     Fragment(),
     MessageAdapter.OnMessageSelectedListener,
@@ -60,7 +62,7 @@ class AllMessagesFragment :
 
     private var isStopped: Boolean = false
 
-    private val viewModel: AllMessagesViewModel by stateViewModel()
+    private lateinit var viewModel: AllMessagesViewModel // by stateViewModel()
     private lateinit var mAdapter: WeakReference<MessageAdapter>
     var binding: FragmentAllMessagesBinding by viewLifecycle()
     private var mFilterDialog: AllMessagesFilterDialogFragment? = null
@@ -80,6 +82,7 @@ class AllMessagesFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModel = ViewModelProvider(this).get(AllMessagesViewModel::class.java)
         binding = FragmentAllMessagesBinding.inflate(inflater, container, false)
         viewModel.viewStateLiveData.observe(
             viewLifecycleOwner
