@@ -44,6 +44,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import java.lang.ref.WeakReference
 
+// @HiltAndroidApp
 class MyApplication : Application() {
 
     private lateinit var db: FirebaseFirestore
