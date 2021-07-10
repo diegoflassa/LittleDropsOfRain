@@ -12,7 +12,7 @@ buildscript {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
         classpath("com.android.tools.build:gradle:7.1.0-alpha02")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinCompilerVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
         classpath("com.google.gms:google-services:4.3.8")
         //classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeargs_plugin}")
@@ -39,7 +39,7 @@ buildscript {
 }
 
 plugins {         
-    id("com.diffplug.spotless") version "5.14.0" apply true
+    id("com.diffplug.spotless") version "5.14.1" apply true
 	id("com.github.ben-manes.versions") version "0.39.0" apply true
 }
 
