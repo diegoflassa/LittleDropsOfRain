@@ -10,7 +10,7 @@ buildscript {
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
-        classpath("com.android.tools.build:gradle:7.1.0-alpha02")
+        classpath("com.android.tools.build:gradle:7.1.0-alpha03")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinCompilerVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
@@ -32,7 +32,7 @@ buildscript {
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.4")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-		classpath("com.github.ben-manes:gradle-versions-plugin:0.39.0")
+		classpath("com.github.ben-manes:gradle-versions-plugin:0.38.0")
         //classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.version_hilt}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.37")
     }
@@ -40,7 +40,7 @@ buildscript {
 
 plugins {         
     id("com.diffplug.spotless") version "5.14.1" apply true
-	id("com.github.ben-manes.versions") version "0.39.0" apply true
+	id("com.github.ben-manes.versions") version "0.38.0" apply true
 }
 
 subprojects {

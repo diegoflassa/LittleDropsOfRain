@@ -136,7 +136,7 @@ android {
     buildFeatures {
         viewBinding = true
         // Enables Jetpack Compose for this module
-        //compose = true
+        compose = true
     }
     lint {
         isAbortOnError = false

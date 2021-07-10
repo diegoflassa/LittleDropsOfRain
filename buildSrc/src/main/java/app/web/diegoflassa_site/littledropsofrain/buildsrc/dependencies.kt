@@ -3,7 +3,7 @@ package app.web.diegoflassa_site.littledropsofrain.buildsrc
 @Suppress("Unused")
 object Versions {
     const val ktlint = "0.41.0"
-    const val kotlinCompilerVersion = "1.5.10"
+    const val kotlinCompilerVersion = "1.5.20"
     const val gradle="7.1.0-alpha03"
     const val coil = "1.2.2"
     const val data_store = "1.0.0-rc01"
@@ -65,4 +65,5 @@ object Versions {
     const val iconify = "2.2.2"
     const val androidxJetpackCompose = "1.0.0-rc01"
     const val foundation = "1.0.0-alpha11"
+	const val braintree = "4.2.0"
 }
