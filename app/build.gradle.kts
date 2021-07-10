@@ -18,6 +18,7 @@ plugins {
     id("com.google.firebase.firebase-perf")
     // Apply the App Distribution Gradle plugin
     id("com.google.firebase.appdistribution")
+    //id("dagger.hilt.android.plugin")
 }
 
 // Creates a variable called keystorePropertiesFile, and initializes it to the
@@ -60,7 +61,7 @@ android {
     buildTypes {
         debug {
             //applicationIdSuffix '.debug'
-            //ext.enlableCrashlytics = false
+            //ext.ennableCrashlytics = false
             //ext.alwaysUpdateBuildId = false
             firebaseAppDistribution {
                 releaseNotesFile = "${project.rootDir}/releaseNotes/releaseNotes.txt"
@@ -130,11 +131,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
+        // freeCompilerArgs = freeCompilerArgs + "-Xallow-jvm-ir-dependencies"
     }
     buildFeatures {
         viewBinding = true
         // Enables Jetpack Compose for this module
-        compose = true
+        //compose = true
     }
     lint {
         isAbortOnError = false
@@ -148,14 +150,26 @@ android {
         kotlinCompilerExtensionVersion = Versions.androidxJetpackCompose
     }
 }
+kapt {
+	correctErrorTypes = true
+    javacOptions {
+        // These options are normally set automatically via the Hilt Gradle plugin, but we
+        // set them manually to workaround a bug in the Kotlin 1.5.20
+        option("-Adagger.fastInit=ENABLED")
+        option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation=true")
+    }
+}
+//hilt {
+//    enableAggregatingTask = true
+//}
 
 // Avoid build error
 gradle.taskGraph.whenReady {
     tasks.forEach { task ->
         if (task.name.contains("compileDebugUnitTestKotlin") || task.name.contains("compileReleaseUnitTestKotlin")
-        //||
+        // ||
         ) {
-            //task.name.contains("uploadCrashlyticsMappingFile")) {
+            // task.name.contains("uploadCrashlyticsMappingFile")) {
             // Uncomment if error occurs
             task.enabled = false
         }
@@ -240,6 +254,19 @@ afterEvaluate {
         //GSON
         implementation("com.google.code.gson:gson:${Versions.gson}")
 
+        // Dagger Core
+        implementation("com.google.dagger:dagger:${Versions.dagger}")
+        kapt("com.google.dagger:dagger-compiler:${Versions.dagger}")
+
+        // Dagger Android
+        api("com.google.dagger:dagger-android:${Versions.dagger}")
+        api("com.google.dagger:dagger-android-support:${Versions.dagger}")
+        kapt("com.google.dagger:dagger-android-processor:${Versions.dagger}")
+
+        //Hilt
+        implementation("com.google.dagger:hilt-android:${Versions.hilt}")
+        kapt("com.google.dagger:hilt-android-compiler:${Versions.hilt}")
+
         // RX Java 3
         implementation("io.reactivex.rxjava3:rxjava:${Versions.rxjava}")
         implementation("io.reactivex.rxjava3:rxandroid:${Versions.rxandroid}")
@@ -249,11 +276,11 @@ afterEvaluate {
         // Koin main features for Android (Scope,ViewModel ...)
         implementation("io.insert-koin:koin-android:${Versions.koin}")
         // Koin Android - experimental builder extensions
-        implementation("io.insert-koin:koin-android-ext:${Versions.koin}")
+        implementation("io.insert-koin:koin-android-ext:${Versions.koin_ext}")
         // Koin for Jetpack WorkManager
         implementation("io.insert-koin:koin-androidx-workmanager:${Versions.koin}")
         // Koin for Jetpack Compose (unstable version)
-        implementation("io.insert-koin:koin-androidx-compose:${Versions.koin}")
+        implementation("io.insert-koin:koin-androidx-compose:${Versions.koin_compose}")
 
 
         // Jetpack Compose toolkit dependencies

@@ -32,3 +32,22 @@
 -keep interface com.yalantis.ucrop** { *; }
 -keepattributes SourceFile,LineNumberTable        # Keep file names and line numbers.
 -keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.
+
+# For supressing the warnings
+-dontwarn com.sun.activation.registries.LogSupport
+-dontwarn com.sun.activation.registries.MailcapFile
+-dontwarn java.awt.datatransfer.DataFlavor
+-dontwarn java.awt.datatransfer.Transferable
+-dontwarn java.beans.ConstructorProperties
+-dontwarn java.beans.Transient
+-dontwarn javax.xml.stream.Location
+-dontwarn javax.xml.stream.XMLEventFactory
+-dontwarn javax.xml.stream.XMLInputFactory
+-dontwarn javax.xml.stream.XMLOutputFactory
+-dontwarn javax.xml.stream.XMLResolver
+-dontwarn javax.xml.stream.XMLStreamConstants
+-dontwarn javax.xml.stream.XMLStreamException
+-dontwarn javax.xml.stream.XMLStreamReader
+-dontwarn javax.xml.stream.XMLStreamWriter
+-dontwarn javax.xml.stream.util.StreamReaderDelegate
+-dontwarn javax.xml.stream.util.XMLEventAllocator

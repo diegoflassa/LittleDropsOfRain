@@ -17,7 +17,11 @@
 package app.web.diegoflassa_site.littledropsofrain
 
 import android.app.Activity
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.content.ComponentCallbacks2
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -70,6 +74,7 @@ import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.joanzapata.iconify.fonts.TypiconsIcons
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
+// @AndroidEntryPoint
 class MainActivity :
     AppCompatActivity(),
     OnUserFoundListener,
@@ -268,7 +273,6 @@ class MainActivity :
             ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE,
             ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
             ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL -> {
-                SetupProductsUpdateWorkerService.stopRunningWorker(this)
                 /*
                    Release any memory that your app doesn't need to run.
 
@@ -282,7 +286,6 @@ class MainActivity :
             ComponentCallbacks2.TRIM_MEMORY_BACKGROUND,
             ComponentCallbacks2.TRIM_MEMORY_MODERATE,
             ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
-                SetupProductsUpdateWorkerService.stopRunningWorker(this)
                 /*
                    Release as much memory as the process can.
 
@@ -294,7 +297,6 @@ class MainActivity :
             }
 
             else -> {
-                SetupProductsUpdateWorkerService.stopRunningWorker(this)
                 /*
                   Release any non-critical data structures.
 
@@ -488,8 +490,34 @@ class MainActivity :
                 UserDao.insertOrUpdate(user)
                 if (user.isAdmin) {
                     Helper.requestReadExternalStoragePermission(this)
-                    SetupProductsUpdateWorkerService.setupWorker(applicationContext)
-                    NewMessagesService.setupListener()
+                    val jobScheduler =
+                        getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+                    val jobInfoProductsWorker = JobInfo.Builder(
+                        SetupProductsUpdateWorkerService.JOB_ID,
+                        ComponentName(this, SetupProductsUpdateWorkerService::class.java)
+                    )
+                    val jobInfoNewMessages = JobInfo.Builder(
+                        NewMessagesService.JOB_ID,
+                        ComponentName(
+                            this,
+                            NewMessagesService::class.java
+                        )
+                    )
+                    var job = jobInfoProductsWorker.setRequiresCharging(false)
+                        .setMinimumLatency(1)
+                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+                        // .setPeriodic(86400000)
+                        .setOverrideDeadline(3 * 60 * 1000)
+                        .build()
+
+                    jobScheduler.schedule(job)
+                    job = jobInfoNewMessages.setRequiresCharging(false)
+                        // .setMinimumLatency(1)
+                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                        .setPeriodic(30000)
+                        // .setOverrideDeadline(3 * 60 * 1000)
+                        .build()
+                    jobScheduler.schedule(job)
                 }
                 Helper.requestGetCoarseLocationPermission(this)
                 LoggedUser.userLiveData.value = user

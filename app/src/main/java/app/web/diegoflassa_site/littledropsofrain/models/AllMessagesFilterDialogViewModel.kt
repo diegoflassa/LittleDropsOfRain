@@ -20,8 +20,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.fragments.AllMessagesFilterDialogFragment
+import javax.inject.Inject
 
-class AllMessagesFilterDialogViewModel(state: SavedStateHandle) : ViewModel() {
+// @HiltViewModel
+class AllMessagesFilterDialogViewModel @Inject constructor(state: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"

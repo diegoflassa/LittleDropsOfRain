@@ -39,10 +39,7 @@ import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnProductInsertedListener
 import app.web.diegoflassa_site.littledropsofrain.interfaces.OnTaskFinishedListener
 import app.web.diegoflassa_site.littledropsofrain.parser.ProductParser
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 @Suppress("DeferredResultUnused")
 class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
@@ -157,16 +154,19 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
         }
     }
 
+    @DelicateCoroutinesApi
     override fun onParseProgressChange(progress: String) {
         val update = workDataOf(KEY_PROGRESS to progress)
         GlobalScope.async(Dispatchers.Default) { setProgress(update) }
     }
 
+    @DelicateCoroutinesApi
     override fun onProductInserted(product: Product) {
         val update = workDataOf(KEY_PRODUCT to product.uid)
         GlobalScope.async(Dispatchers.Default) { setProgress(update) }
     }
 
+    @DelicateCoroutinesApi
     override fun onTaskFinished(param: List<Product>) {
         val update = workDataOf(KEY_PRODUCTS to param.size)
         GlobalScope.async(Dispatchers.Default) { setProgress(update) }

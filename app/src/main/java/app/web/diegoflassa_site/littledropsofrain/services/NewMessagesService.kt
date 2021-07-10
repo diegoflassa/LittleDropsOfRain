@@ -16,10 +16,8 @@
 
 package app.web.diegoflassa_site.littledropsofrain.services
 
-import android.app.Service
-import android.content.ComponentName
-import android.content.Intent
-import androidx.core.app.JobIntentService
+import android.app.job.JobParameters
+import android.app.job.JobService
 import app.web.diegoflassa_site.littledropsofrain.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
@@ -28,40 +26,23 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.helpers.Helper
 import com.google.firebase.firestore.*
 
-class NewMessagesService : JobIntentService(), EventListener<QuerySnapshot> {
+class NewMessagesService : JobService(), EventListener<QuerySnapshot> {
+
+    companion object {
+        const val JOB_ID = 456
+    }
 
     private lateinit var mFirestore: FirebaseFirestore
     private lateinit var mQuery: Query
 
-    companion object {
-        const val ACTION_SETUP_LISTENER = "ACTION_SETUP_LISTENER"
-        private const val JOB_ID = 0
-
-        fun setupListener() {
-            val intent = Intent(MyApplication.getContext(), NewMessagesService::class.java)
-            intent.action = ACTION_SETUP_LISTENER
-            val comp =
-                ComponentName(MyApplication.getContext().packageName, NewMessagesService::class.java.name)
-            intent.component = comp
-            enqueueWork(MyApplication.getContext(), comp, JOB_ID, intent)
-        }
+    override fun onStartJob(params: JobParameters?): Boolean {
+        initFirestore()
+        setupListener()
+        return true
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        super.onStartCommand(intent, flags, startId)
-        // Define service as sticky so that it stays in background
-        return Service.START_STICKY
-    }
-
-    override fun onHandleWork(intent: Intent) {
-        intent.apply {
-            when (intent.action) {
-                ACTION_SETUP_LISTENER -> {
-                    initFirestore()
-                    setupListener()
-                }
-            }
-        }
+    override fun onStopJob(params: JobParameters?): Boolean {
+        return true
     }
 
     private fun initFirestore() {

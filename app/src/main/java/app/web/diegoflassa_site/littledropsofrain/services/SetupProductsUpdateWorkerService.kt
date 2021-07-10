@@ -16,52 +16,25 @@
 
 package app.web.diegoflassa_site.littledropsofrain.services
 
-import android.app.Service
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import androidx.core.app.JobIntentService
+import android.app.job.JobParameters
+import android.app.job.JobService
 import androidx.work.*
 import app.web.diegoflassa_site.littledropsofrain.workers.UpdateProductsWork
 import java.util.concurrent.TimeUnit
 
-class SetupProductsUpdateWorkerService : JobIntentService() {
+class SetupProductsUpdateWorkerService : JobService() {
 
     companion object {
-        const val ACTION_SETUP_WORKER = "ACTION_SETUP_WORKER"
-        private const val JOB_ID = 0
-
-        fun setupWorker(context: Context) {
-            val intent = Intent(context, SetupProductsUpdateWorkerService::class.java)
-            intent.action = ACTION_SETUP_WORKER
-            val comp =
-                ComponentName(
-                    context.packageName,
-                    SetupProductsUpdateWorkerService::class.java.name
-                )
-            intent.component = comp
-            enqueueWork(context, comp, JOB_ID, intent)
-        }
-
-        fun stopRunningWorker(context: Context) {
-            WorkManager.getInstance(context).cancelAllWorkByTag(UpdateProductsWork.TAG)
-        }
+        const val JOB_ID = 123
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        super.onStartCommand(intent, flags, startId)
-        // Define service as sticky so that it stays in background
-        return Service.START_STICKY
+    override fun onStartJob(params: JobParameters?): Boolean {
+        setupWorker()
+        return true
     }
 
-    override fun onHandleWork(intent: Intent) {
-        intent.apply {
-            when (intent.action) {
-                ACTION_SETUP_WORKER -> {
-                    setupWorker()
-                }
-            }
-        }
+    override fun onStopJob(params: JobParameters?): Boolean {
+        return true
     }
 
     private fun setupWorker() {
