@@ -147,7 +147,7 @@ android {
         resources.excludes.add("META-INF/NOTICE.md")
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.androidxJetpackCompose
+        kotlinCompilerExtensionVersion = Versions.androidx_jetpack_compose
     }
 }
 kapt {
@@ -284,23 +284,23 @@ afterEvaluate {
 
 
         // Jetpack Compose toolkit dependencies
-        implementation("androidx.compose.ui:ui:${Versions.androidxJetpackCompose}")
+        implementation("androidx.compose.ui:ui:${Versions.androidx_jetpack_compose}")
         // Tooling support (Previews, etc.)
-        implementation("androidx.compose.ui:ui-tooling:${Versions.androidxJetpackCompose}")
+        implementation("androidx.compose.ui:ui-tooling:${Versions.androidx_jetpack_compose}")
         // Foundation(Border, Background, Box, Image, Scroll, shapes, animations, etc.)
         implementation("androidx.compose.foundation:foundation:${Versions.foundation}")
         // Material Design
-        implementation("androidx.compose.material:material:${Versions.androidxJetpackCompose}")
+        implementation("androidx.compose.material:material:${Versions.androidx_jetpack_compose}")
         // Material design icons
-        implementation("androidx.compose.material:material-icons-core:${Versions.androidxJetpackCompose}")
-        implementation("androidx.compose.material:material-icons-extended:${Versions.androidxJetpackCompose}")
+        implementation("androidx.compose.material:material-icons-core:${Versions.androidx_jetpack_compose}")
+        implementation("androidx.compose.material:material-icons-extended:${Versions.androidx_jetpack_compose}")
         // Integration with observables
-        implementation("androidx.compose.runtime:runtime-livedata:${Versions.androidxJetpackCompose}")
-        implementation("androidx.compose.runtime:runtime-rxjava2:${Versions.androidxJetpackCompose}")
+        implementation("androidx.compose.runtime:runtime-livedata:${Versions.androidx_jetpack_compose}")
+        implementation("androidx.compose.runtime:runtime-rxjava2:${Versions.androidx_jetpack_compose}")
         // UI Tests
-        androidTestImplementation("androidx.compose.ui:ui-test:${Versions.androidxJetpackCompose}")
-        debugImplementation("androidx.compose.ui:ui-tooling:${Versions.androidxJetpackCompose}")
-        debugImplementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlinCompilerVersion}")
+        androidTestImplementation("androidx.compose.ui:ui-test:${Versions.androidx_jetpack_compose}")
+        debugImplementation("androidx.compose.ui:ui-tooling:${Versions.androidx_jetpack_compose}")
+        debugImplementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin_compiler_version}")
 
 
         // Import the BoM for the Firebase platform
@@ -345,7 +345,7 @@ afterEvaluate {
         implementation("com.google.android.material:material:${Versions.material}")
         implementation("com.google.android.gms:play-services-location:${Versions.play_services_location}")
         implementation("com.google.gms:google-services:${Versions.google_services}")
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinCompilerVersion}")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin_compiler_version}")
         implementation("androidx.activity:activity-ktx:${Versions.activity_ktx}")
         implementation("androidx.annotation:annotation:${Versions.annotation}")
         implementation("androidx.appcompat:appcompat:${Versions.appcompat}")
