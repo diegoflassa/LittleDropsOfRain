@@ -7,6 +7,13 @@ buildscript {
         maven(url = "https://jitpack.io")
         jcenter() // Warning: this repository is going to shut down soon
 		gradlePluginPortal()
+		maven {
+			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
+			credentials {
+				username = "braintree_team_sdk"
+				password = "AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp"
+			}
+		}
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
@@ -62,5 +69,12 @@ allprojects {
         mavenCentral()
         maven(url = "https://jitpack.io")
         jcenter() // Warning: this repository is going to shut down soon
+		maven {
+			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
+			credentials {
+				username = "braintree_team_sdk"
+				password = "AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp"
+			}
+		}
     }
 }
