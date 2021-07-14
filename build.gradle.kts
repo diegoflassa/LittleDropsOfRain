@@ -7,11 +7,18 @@ buildscript {
         maven(url = "https://jitpack.io")
         jcenter() // Warning: this repository is going to shut down soon
 		gradlePluginPortal()
+		maven {
+			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
+			credentials {
+				username = "braintree_team_sdk"
+				password = "AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp"
+			}
+		}
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
-        classpath("com.android.tools.build:gradle:7.1.0-alpha02")
-        //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinCompilerVersion}")
+        classpath("com.android.tools.build:gradle:7.1.0-alpha03")
+        //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
         classpath("com.google.gms:google-services:4.3.8")
@@ -32,15 +39,15 @@ buildscript {
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.4")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-		classpath("com.github.ben-manes:gradle-versions-plugin:0.39.0")
+		classpath("com.github.ben-manes:gradle-versions-plugin:0.38.0")
         //classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.version_hilt}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.37")
     }
 }
 
 plugins {         
-    id("com.diffplug.spotless") version "5.14.0" apply true
-	id("com.github.ben-manes.versions") version "0.39.0" apply true
+    id("com.diffplug.spotless") version "5.14.1" apply true
+	id("com.github.ben-manes.versions") version "0.38.0" apply true
 }
 
 subprojects {
@@ -62,5 +69,12 @@ allprojects {
         mavenCentral()
         maven(url = "https://jitpack.io")
         jcenter() // Warning: this repository is going to shut down soon
+		maven {
+			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
+			credentials {
+				username = "braintree_team_sdk"
+				password = "AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp"
+			}
+		}
     }
 }

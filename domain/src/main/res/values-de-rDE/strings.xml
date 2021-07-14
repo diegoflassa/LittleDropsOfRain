@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="new_message">Neue Nachricht</string>
+    <string name="worker_running">Arbeiter läuft</string>
+    <string name="worker_scheduled">Produktaktualisierung</string>
+    <string name="woker_notification">Benachrichtigung des Arbeitnehmers</string>
+    <string name="notification_worker_channel_description">Benachrichtigungen von Update Products Worker</string>
+    <string name="email_no_clients_installed">Es sind keine E-Mail-Clients installiert.</string>
+    <string name="email_send">EMail senden…</string>
+    <string name="new_notification">Neue Nachricht von Little Drops of Rain</string>
+    <string name="save">SPAREN</string>
+    <string name="saved">GERETTET</string>
+    <string name="name_notification_channel">Little Drops Of Rain Benachrichtigungskanal</string>
+    <string name="msg_unsubscribed">Abgemeldet</string>
+    <string name="msg_subscribed">Gezeichnet</string>
+    <string name="msg_subscribe_failed">Abonnement fehlgeschlagen</string>
+</resources>
