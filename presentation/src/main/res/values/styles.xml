@@ -1,0 +1,61 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorAccent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:buttonTint">@drawable/default_text_color_primary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@drawable/default_text_color_primary</item>
+        <item name="android:editTextColor">@drawable/default_text_color_primary</item>
+        <item name="android:textColorPrimary">@drawable/default_text_color_primary</item>
+        <item name="android:textColorSecondary">@drawable/default_text_color_primary</item>
+        <item name="android:textColorPrimaryInverse">@drawable/default_text_color_primary</item>
+        <item name="android:textColorSecondaryInverse">@drawable/default_text_color_primary</item>
+    </style>
+
+    <!-- SwitchButton -->
+    <style name="ColorSwitchStyle" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@android:color/darker_gray</item>
+    </style>
+
+    <!-- ToolBar -->
+    <style name="AppTheme.ActionBar" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/primaryDarkGreyTextColor</item>
+        <item name="android:textColorSecondary">@color/primaryDarkGreyTextColor</item>
+        <item name="titleTextColor">@color/primaryDarkGreyTextColor</item>
+        <item name="actionMenuTextColor">@color/primaryDarkGreyTextColor</item>
+        <!-- Icons color -->
+        <item name="colorControlNormal">@color/primaryDarkGreyTextColor</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <style name="MyMaterialButtonTheme" parent="Widget.MaterialComponents.Button">
+        <item name="materialThemeOverlay">@style/ButtonStyleTextColor</item>
+    </style>
+
+    <style name="ButtonStyleTextColor">
+        <item name="colorOnPrimary">@color/primaryTextColor</item>
+        <item name="colorOnSecondary">@color/primaryTextColor</item>
+        <item name="android:buttonTint">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.Launcher">
+        <item name="colorPrimaryDark">@android:color/black</item>
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+</resources>
