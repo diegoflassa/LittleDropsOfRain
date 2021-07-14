@@ -33,6 +33,7 @@ data class TopicMessage(
         NEWS_EN("News_EN", R.string.news_en),
         PROMOS_PT("Promos_PT", R.string.promos_pt),
         PROMOS_EN("Promos_EN", R.string.promos_en),
+        ADMINS("Admins", R.string.admins),
         UNKNOWN("Unknown", R.string.unknown);
 
         override fun toString(): String {
@@ -54,6 +55,7 @@ data class TopicMessage(
                     context.getString(NEWS_EN.getStringId()) -> NEWS_EN
                     context.getString(PROMOS_PT.getStringId()) -> PROMOS_PT
                     context.getString(PROMOS_EN.getStringId()) -> PROMOS_EN
+                    context.getString(ADMINS.getStringId()) -> ADMINS
                     else -> UNKNOWN
                 }
             }

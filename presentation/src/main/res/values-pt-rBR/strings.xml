@@ -32,10 +32,12 @@
     <string name="navigation_drawer_close">Fechar gaveta de navegação</string>
     <string name="msg_subscribed">Inscrito</string>
     <string name="msg_subscribe_failed">Erro na Inscrição</string>
-    <string name="msg_subscribed_to_news">Inscreva-se para Notícias</string>
-    <string name="msg_subscribed_to_promos">Inscreva-se para Promoções</string>
+    <string name="msg_subscribed_to_news">Inscrito para Notícias</string>
+    <string name="msg_subscribed_to_promos">Inscrito para Promoções</string>
+    <string name="msg_subscribed_to_admins">Inscreito para Admins</string>
     <string name="msg_subscribe_promos_failed">Não foi possível inscrever-se para promoções</string>
     <string name="msg_subscribe_news_failed">Não foi possível inscrever-se para notícias</string>
+    <string name="msg_subscribe_admins_failed">Não foi possível inscrever-se para admins</string>
     <string name="message_body">Corpo da Mensagem</string>
     <string name="not_logged_in">Não logado</string>
     <string name="label_topic">Mensagens de Tópico</string>

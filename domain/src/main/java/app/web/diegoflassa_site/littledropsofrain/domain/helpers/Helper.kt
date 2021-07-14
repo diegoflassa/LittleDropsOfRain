@@ -381,6 +381,10 @@ class Helper {
             }
         }
 
+        fun getTopicAdminMessages(context: Context): String {
+            return context.getString(R.string.topic_admin_messages)
+        }
+
         @Suppress("DEPRECATION")
         fun getTopicPromosForCurrentLanguage(context: Context): String {
             val current =
@@ -422,6 +426,31 @@ class Helper {
         }
 
         private fun unsubscribeToNews(context: Context, topic: String) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
+                .addOnCompleteListener { task ->
+                    var msg = context.getString(R.string.msg_unsubscribed)
+                    if (!task.isSuccessful) {
+                        msg = context.getString(R.string.msg_subscribe_failed)
+                    }
+                    Log.d(MyOnSharedPreferenceChangeListener.TAG, msg)
+                }
+        }
+
+        fun subscribeToAdminMessages(context: Context) {
+            val topic = getTopicAdminMessages(context)
+            FirebaseMessaging.getInstance().subscribeToTopic(topic)
+                .addOnCompleteListener { task ->
+                    var msg = context.getString(R.string.msg_subscribed)
+                    if (!task.isSuccessful) {
+                        msg = context.getString(R.string.msg_subscribe_failed)
+                    }
+                    Log.d(MyOnSharedPreferenceChangeListener.TAG, msg)
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                }
+        }
+
+        fun unsubscribeToAdminMessages(context: Context) {
+            val topic = getTopicAdminMessages(context)
             FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
                 .addOnCompleteListener { task ->
                     var msg = context.getString(R.string.msg_unsubscribed)

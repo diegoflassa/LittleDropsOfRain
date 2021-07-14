@@ -14,4 +14,5 @@
     <string name="msg_unsubscribed">Unsubscribed</string>
     <string name="msg_subscribed">Subscribed</string>
     <string name="msg_subscribe_failed">Subscription failed</string>
+    <string name="topic_admin_messages" translatable="false">admins</string>
 </resources>

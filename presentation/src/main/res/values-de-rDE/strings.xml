@@ -35,8 +35,10 @@
     <string name="msg_subscribe_failed">Abonnement fehlgeschlagen</string>
     <string name="msg_subscribed_to_news">News abonniert!</string>
     <string name="msg_subscribed_to_promos">Promotions abonniert!</string>
+    <string name="msg_subscribed_to_admins">Admins abonniert!</string>
     <string name="msg_subscribe_promos_failed">Werbeaktionen können nicht abonniert werden</string>
     <string name="msg_subscribe_news_failed">News kann nicht abonniert werden</string>
+    <string name="msg_subscribe_admins_failed">Admins kann nicht abonniert werden</string>
     <string name="message_title">Titel</string>
     <string name="message_body">Nachrichtentext</string>
     <string name="not_logged_in">Nicht eingeloggt</string>

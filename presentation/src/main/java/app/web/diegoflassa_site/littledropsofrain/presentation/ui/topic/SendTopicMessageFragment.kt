@@ -434,5 +434,8 @@ class SendTopicMessageFragment :
                 activity?.theme
             )
         )
+        binding.imgVwNotificationImage.load(viewModel.viewState.imageUriLocal) {
+            placeholder(R.drawable.image_placeholder)
+        }
     }
 }
