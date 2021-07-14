@@ -41,11 +41,33 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":data")))
 
+    // Misc
+    // Kotlin + coroutines
+    implementation("androidx.work:work-runtime-ktx:${Versions.workVersion}")
     implementation("androidx.core:core-ktx:${Versions.core_ktx}")
     implementation("androidx.appcompat:appcompat:${Versions.appcompat}")
     implementation("com.google.android.material:material:${Versions.material}")
     testImplementation("junit:junit:${Versions.junit}")
     androidTestImplementation("androidx.test.ext:junit:${Versions.junit_ktx}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
+
+    // RX Java 3
+    implementation("io.reactivex.rxjava3:rxjava:${Versions.rxjava}")
+
+    // Android X
+    implementation("androidx.navigation:navigation-runtime-ktx:${Versions.navigation}")
+    implementation("androidx.navigation:navigation-fragment-ktx:${Versions.navigation}")
+    implementation("androidx.navigation:navigation-ui-ktx:${Versions.navigation}")
+
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:${Versions.firebaseBOM}"))
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    // Firebase Authentication(Kotlin)
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Add the SDK for Firebase Cloud Messaging
+    implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation("com.google.firebase:firebase-inappmessaging-ktx")
 }

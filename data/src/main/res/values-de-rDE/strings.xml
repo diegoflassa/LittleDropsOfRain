@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="news_pt">News auf Portugiesisch</string>
+    <string name="news_en">News auf Englisch</string>
+    <string name="promos_pt">Promos auf Portugiesisch</string>
+    <string name="promos_en">Promos auf Englisch</string>
+    <string name="unknown">Unbekannt</string>
+</resources>

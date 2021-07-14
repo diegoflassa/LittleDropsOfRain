@@ -119,3 +119,6 @@ gradleLogs.txt
 gradle.log
 keystore.properties
 version.properties
+presentation/google-services.json
+presentation/src/main/res/raw/littledropsofrain_site_firebase_adminsdk_9dvd0_c718bc2981.json
+presentation/src/main/res/values/api_keys.xml
