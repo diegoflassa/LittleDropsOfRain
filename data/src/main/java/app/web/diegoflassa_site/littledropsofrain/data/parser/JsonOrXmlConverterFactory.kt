@@ -26,7 +26,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 import java.lang.reflect.Type
 
 class JsonOrXmlConverterFactory : Converter.Factory() {
-                                              private val xmlFactory: Converter.Factory = JacksonConverterFactory.create(XmlMapper())
+    private val xmlFactory: Converter.Factory = JacksonConverterFactory.create(XmlMapper())
     private val jsonFactory: Converter.Factory = GsonConverterFactory.create()
 
     @Nullable

@@ -14,6 +14,10 @@ buildscript {
 				password = "AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp"
 			}
 		}
+        maven {
+            // CUTR Releases
+            url  = uri("https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/releases")
+        }
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
@@ -76,5 +80,9 @@ allprojects {
 				password = "AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp"
 			}
 		}
+        maven {
+            // CUTR Releases
+            url  = uri("https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/releases")
+        }
     }
 }
