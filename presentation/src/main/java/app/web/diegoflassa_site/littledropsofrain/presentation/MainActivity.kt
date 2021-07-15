@@ -450,12 +450,8 @@ class MainActivity :
         navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
         val navAuthentication = navView.menu.findItem(R.id.nav_authentication)
         val navMyLikedProducts = navView.menu.findItem(R.id.nav_my_liked_products)
-        navMyLikedProducts.isVisible = false
-        navMyLikedProducts.isEnabled = false
         navMyLikedProducts.icon = IconDrawable(this, SimpleLineIconsIcons.icon_heart)
         val navAllProductsProducts = navView.menu.findItem(R.id.nav_all_products)
-        navAllProductsProducts.isVisible = false
-        navAllProductsProducts.isEnabled = false
         navAllProductsProducts.icon = IconDrawable(this, SimpleLineIconsIcons.icon_present)
         if (LoggedUser.userLiveData.value != null) {
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_logout)
@@ -464,7 +460,7 @@ class MainActivity :
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_login)
             navAuthentication.title = getString(R.string.login)
         }
-        if (LoggedUser.userLiveData.value != null) {
+        if (false && LoggedUser.userLiveData.value != null) {
             navMessages.isEnabled = true
             navMessages.isVisible = true
             navMyLikedProducts.isEnabled = true
@@ -472,10 +468,8 @@ class MainActivity :
         } else {
             navMessages.isEnabled = false
             navMessages.isVisible = false
-            navMyLikedProducts.isEnabled = false
-            navMyLikedProducts.isVisible = false
         }
-        if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
+        if (false && LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
             subscribeToAdminMessages()
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
@@ -487,6 +481,19 @@ class MainActivity :
             navAllProductsProducts.isEnabled = false
             navAllProductsProducts.isVisible = false
         }
+        // TODO Remove after returning menu options
+        if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
+            subscribeToAdminMessages()
+            navAdmin.isEnabled = true
+            navAdmin.isVisible = true
+        }else{
+            navAdmin.isEnabled = false
+            navAdmin.isVisible = false
+        }
+        navMyLikedProducts.isEnabled = false
+        navMyLikedProducts.isVisible = false
+        navAllProductsProducts.isEnabled = false
+        navAllProductsProducts.isVisible = false
         navHome.isChecked = true
     }
 
