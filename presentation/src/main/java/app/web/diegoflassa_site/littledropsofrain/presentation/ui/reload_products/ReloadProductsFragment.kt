@@ -39,7 +39,6 @@ import app.web.diegoflassa_site.littledropsofrain.domain.helpers.runOnUiThread
 import app.web.diegoflassa_site.littledropsofrain.domain.workers.UpdateProductsWork
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.reload_products.model.ReloadProductsViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.reload_products.model.ReloadProductsViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.joanzapata.iconify.IconDrawable
@@ -69,19 +68,19 @@ class ReloadProductsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentReloadProductsBinding.inflate(inflater, container, false)
-        viewModel.viewStateLiveData.observe(
+        viewModel.progressLiveData.observe(
             viewLifecycleOwner
         ) {
-            updateUI(it)
+            updateUI(viewModel)
         }
         binding.mlTxtVwProgress.movementMethod = ScrollingMovementMethod()
         binding.chkbxRemoveNotFoundProducts.isChecked = false
         binding.chkbxRemoveNotFoundProducts.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
-            viewModel.viewState.unpublishNotFoundProducts = checked
+            viewModel.unpublishNotFoundProducts = checked
         }
         binding.chkbxUnpublishNotFoundProducts.isChecked = true
         binding.chkbxRemoveNotFoundProducts.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
-            viewModel.viewState.removeNotFoundProducts = checked
+            viewModel.removeNotFoundProducts = checked
         }
         binding.fabReloadProducts.setOnClickListener {
             if (worker == null) {
@@ -152,8 +151,8 @@ class ReloadProductsFragment : Fragment() {
     }
 
     private fun workStateSucceed() {
-        viewModel.viewState.progress.append("Writing values to Firestore. Please wait" + System.lineSeparator())
-        updateUI(viewModel.viewState)
+        viewModel.progress.append("Writing values to Firestore. Please wait" + System.lineSeparator())
+        updateUI(viewModel)
         Handler(Looper.getMainLooper()).postDelayed(
             {
                 Toast.makeText(
@@ -171,18 +170,18 @@ class ReloadProductsFragment : Fragment() {
         val progress = workInfo.progress
         val value = progress.getString(UpdateProductsWork.KEY_PROGRESS)
         if (value != null) {
-            viewModel.viewState.progress.append(value + System.lineSeparator())
+            viewModel.progress.append(value + System.lineSeparator())
         }
         val productId = progress.getString(UpdateProductsWork.KEY_PRODUCT)
         if (productId != null) {
-            viewModel.viewState.progress.append("Inserting product $productId" + System.lineSeparator())
+            viewModel.progress.append("Inserting product $productId" + System.lineSeparator())
         }
         val products = progress.getString(UpdateProductsWork.KEY_PRODUCTS)
         if (products != null) {
-            viewModel.viewState.progress.append("Successfully inserted all $products products" + System.lineSeparator())
+            viewModel.progress.append("Successfully inserted all $products products" + System.lineSeparator())
             hideLoadingScreen()
         }
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     private fun reloadProducts(executeFetch: Boolean = true) {
@@ -206,7 +205,7 @@ class ReloadProductsFragment : Fragment() {
             WorkManager.getInstance(requireContext()).cancelWorkById(worker!!.id)
             worker = null
         }
-        viewModel.viewState.progress.clear()
+        viewModel.progress.clear()
         binding.fabReloadProducts.setImageDrawable(
             IconDrawable(
                 requireContext(),
@@ -214,7 +213,7 @@ class ReloadProductsFragment : Fragment() {
             )
         )
         hideLoadingScreen()
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     override fun onStop() {
@@ -229,13 +228,13 @@ class ReloadProductsFragment : Fragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     override fun onPause() {
         super.onPause()
         isStopped = false
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     override fun onResume() {
@@ -252,11 +251,11 @@ class ReloadProductsFragment : Fragment() {
         binding.reloadProgress.invalidate()
     }
 
-    private fun updateUI(viewState: ReloadProductsViewState) {
+    private fun updateUI(viewState: ReloadProductsViewModel) {
         if (isSafeToAccessViewModel() && !isStopped) {
             runOnUiThread {
                 // Update the UI
-                binding.mlTxtVwProgress.text = viewModel.viewState.progress.toString()
+                binding.mlTxtVwProgress.text = viewModel.progress.toString()
                 binding.mlTxtVwProgress.invalidate()
                 binding.chkbxRemoveNotFoundProducts.isChecked = viewState.removeNotFoundProducts
                 binding.chkbxUnpublishNotFoundProducts.isChecked =
@@ -289,8 +288,8 @@ class ReloadProductsFragment : Fragment() {
             .build()
         val removeNotFound =
             workDataOf(
-                UpdateProductsWork.KEY_IN_REMOVE_NOT_FOUND to viewModel.viewState.removeNotFoundProducts,
-                UpdateProductsWork.KEY_IN_UNPUBLISH_NOT_FOUND to viewModel.viewState.unpublishNotFoundProducts
+                UpdateProductsWork.KEY_IN_REMOVE_NOT_FOUND to viewModel.removeNotFoundProducts,
+                UpdateProductsWork.KEY_IN_UNPUBLISH_NOT_FOUND to viewModel.unpublishNotFoundProducts
             )
         return OneTimeWorkRequest.Builder(UpdateProductsWork::class.java)
             .setConstraints(constraints)

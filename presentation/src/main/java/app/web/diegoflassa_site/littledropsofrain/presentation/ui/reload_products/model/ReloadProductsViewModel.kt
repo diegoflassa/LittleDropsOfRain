@@ -19,28 +19,60 @@ package app.web.diegoflassa_site.littledropsofrain.presentation.ui.reload_produc
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.reload_products.ReloadProductsFragment
 
 class ReloadProductsViewModel(state: SavedStateHandle) : ViewModel() {
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_PROGRESS = "RELOAD_PRODUCTS_SAVE_STATE_KEY_PROGRESS"
+        private const val SAVE_STATE_KEY_REMOVE_NOT_FOUND =
+            "RELOAD_PRODUCTS_SAVE_STATE_KEY_REMOVE_NOT_FOUND"
+        private const val SAVE_STATE_KEY_UNPUBLISH_NOT_FOUND =
+            "RELOAD_PRODUCTS_SAVE_STATE_KEY_UNPUBLISH_NOT_FOUND"
     }
 
     private val savedStateHandle = state
+    private var mProgress: StringBuilder = StringBuilder()
+    private var mRemoveNotFoundProducts: Boolean = false
+    private var mUnpublishNotFoundProducts: Boolean = true
 
     init {
-        val viewState = ReloadProductsViewState().apply {
-            text = "This is ${ReloadProductsFragment::class.simpleName} Fragment"
-        }
-        savedStateHandle.set(SAVE_STATE_KEY, viewState)
+        savedStateHandle.set(SAVE_STATE_KEY_PROGRESS, mProgress)
+        savedStateHandle.set(SAVE_STATE_KEY_REMOVE_NOT_FOUND, mRemoveNotFoundProducts)
+        savedStateHandle.set(SAVE_STATE_KEY_UNPUBLISH_NOT_FOUND, mUnpublishNotFoundProducts)
     }
 
-    val viewStateLiveData: MutableLiveData<ReloadProductsViewState>
-        get(): MutableLiveData<ReloadProductsViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    val progressLiveData: MutableLiveData<StringBuilder>
+        get(): MutableLiveData<StringBuilder> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY_PROGRESS)
         }
-    val viewState: ReloadProductsViewState
-        get(): ReloadProductsViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+    var progress: StringBuilder
+        get(): StringBuilder {
+            return savedStateHandle.get(SAVE_STATE_KEY_PROGRESS)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_PROGRESS, value)
+        }
+
+    val removeNotFoundProductsLiveData: MutableLiveData<Boolean>
+        get(): MutableLiveData<Boolean> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY_REMOVE_NOT_FOUND)
+        }
+    var removeNotFoundProducts: Boolean
+        get(): Boolean {
+            return savedStateHandle.get(SAVE_STATE_KEY_REMOVE_NOT_FOUND)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_REMOVE_NOT_FOUND, value)
+        }
+
+    val unpublishNotFoundProductsLiveData: MutableLiveData<Boolean>
+        get(): MutableLiveData<Boolean> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY_UNPUBLISH_NOT_FOUND)
+        }
+    var unpublishNotFoundProducts: Boolean
+        get(): Boolean {
+            return savedStateHandle.get(SAVE_STATE_KEY_UNPUBLISH_NOT_FOUND)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_UNPUBLISH_NOT_FOUND, value)
         }
 }

@@ -19,12 +19,13 @@ package app.web.diegoflassa_site.littledropsofrain.presentation.ui.messages.mode
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilters
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.messages.MessagesFragment
 
 class MessagesViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_FILTERS = "MESSAGES_SAVE_STATE_KEY_FILTERS"
     }
 
     init {
@@ -32,25 +33,19 @@ class MessagesViewModel(state: SavedStateHandle) : ViewModel() {
     }
 
     private val savedStateHandle = state
+    private var mFilters: MyMessagesFilters = MyMessagesFilters.default
+
     fun saveState() {
         // Sets a new value for the object associated to the key.
-        savedStateHandle.set(SAVE_STATE_KEY, mViewState.value)
+        savedStateHandle.set(SAVE_STATE_KEY_FILTERS, mFilters)
     }
 
-    fun loadState() {
-        // Sets a new value for the object associated to the key.
-        mViewState = savedStateHandle.getLiveData(SAVE_STATE_KEY)
-    }
-
-    private var mViewState = MutableLiveData(MessagesViewState()).apply {
-        value?.text = "This is ${MessagesFragment::class.simpleName} Fragment"
-    }
-    val viewStateLiveData: MutableLiveData<MessagesViewState>
-        get(): MutableLiveData<MessagesViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    val filtersLiveData: MutableLiveData<MyMessagesFilters>
+        get(): MutableLiveData<MyMessagesFilters> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY_FILTERS)
         }
-    val viewState: MessagesViewState
-        get(): MessagesViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+    val filters: MyMessagesFilters
+        get(): MyMessagesFilters {
+            return savedStateHandle.get(SAVE_STATE_KEY_FILTERS)!!
         }
 }

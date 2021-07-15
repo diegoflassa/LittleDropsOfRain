@@ -31,7 +31,6 @@ import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentOffAirBind
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.isSafeToAccessViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.model.OffAirViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.model.OffAirViewState
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
@@ -61,6 +60,12 @@ class OffAirFragment : Fragment() {
         binding = FragmentOffAirBinding.inflate(inflater, container, false)
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.activate()
+        viewModel.msgEnLiveData.observe(viewLifecycleOwner) {
+            updateUI(viewModel)
+        }
+        viewModel.msgPtLiveData.observe(viewLifecycleOwner) {
+            updateUI(viewModel)
+        }
         binding.edtTxtMlOffAirMessageEn.setText(
             remoteConfig.getString(
                 REMOTE_CONFIG_OFF_AIR_MESSAGE_EN
@@ -124,20 +129,20 @@ class OffAirFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (isSafeToAccessViewModel() && !isStopped) {
-            viewModel.viewState.messageEn = binding.edtTxtMlOffAirMessageEn.text.toString()
-            viewModel.viewState.messagePt = binding.edtTxtMlOffAirMessagePt.text.toString()
+            viewModel.msgEnLiveData.postValue(binding.edtTxtMlOffAirMessageEn.text.toString())
+            viewModel.msgPtLiveData.postValue(binding.edtTxtMlOffAirMessagePt.text.toString())
         }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     override fun onResume() {
         super.onResume()
         isStopped = false
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     private fun removeToogleListener() {
@@ -148,10 +153,9 @@ class OffAirFragment : Fragment() {
         }
     }
 
-    private fun updateUI(viewState: OffAirViewState) {
+    private fun updateUI(viewState: OffAirViewModel) {
         // Update the UI
-        viewState.text = ""
-        binding.edtTxtMlOffAirMessageEn.setText(viewState.messageEn)
-        binding.edtTxtMlOffAirMessagePt.setText(viewState.messagePt)
+        binding.edtTxtMlOffAirMessageEn.setText(viewState.msgEn)
+        binding.edtTxtMlOffAirMessagePt.setText(viewState.msgPt)
     }
 }

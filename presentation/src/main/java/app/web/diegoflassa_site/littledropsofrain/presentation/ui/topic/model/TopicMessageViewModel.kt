@@ -16,32 +16,36 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.topic.model
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.topic.SendTopicMessageFragment
 
 class TopicMessageViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_TITLE = "TOPIC_SAVE_STATE_KEY_TITLE"
     }
 
     private val savedStateHandle = state
+    private var mTitle: String = ""
+    private var mBody: String = ""
+    private var mTopics: HashSet<TopicMessage.Topic> = HashSet()
+    private var mImageUriFirestore: Uri? = null
+    private var mImageUriLocal: Uri? = null
 
     init {
-        val viewState = TopicMessageViewState().apply {
-            text = "This is ${SendTopicMessageFragment::class.simpleName} Fragment"
-        }
-        savedStateHandle.set(SAVE_STATE_KEY, viewState)
+        savedStateHandle.set(SAVE_STATE_KEY_TITLE, mTitle)
     }
 
-    val viewStateLiveData: MutableLiveData<TopicMessageViewState>
-        get(): MutableLiveData<TopicMessageViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    val titleLiveData: MutableLiveData<String>
+        get(): MutableLiveData<String> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY_TITLE)
         }
-    val viewState: TopicMessageViewState
-        get(): TopicMessageViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+    val title: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_TITLE)!!
         }
 }

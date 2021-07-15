@@ -38,7 +38,6 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessa
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilters
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.messages.model.MessagesViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.messages.model.MessagesViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -82,10 +81,10 @@ class MessagesFragment :
     ): View {
         viewModel.saveState()
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
-        viewModel.viewStateLiveData.observe(
+        viewModel.filtersLiveData.observe(
             viewLifecycleOwner
         ) {
-            updateUI(it)
+            updateUI(viewModel)
         }
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(
@@ -118,7 +117,7 @@ class MessagesFragment :
         super.onStart()
 
         // Apply filters
-        onFilter(viewModel.viewState.filters)
+        onFilter(viewModel.filters)
 
         // Start listening for Firestore updates
         mAdapter.get()?.startListening()
@@ -131,8 +130,7 @@ class MessagesFragment :
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        viewModel.loadState()
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     override fun onStop() {
@@ -147,9 +145,8 @@ class MessagesFragment :
         }
     }
 
-    private fun updateUI(viewState: MessagesViewState) {
+    private fun updateUI(viewState: MessagesViewModel) {
         // Update the UI
-        viewState.text = ""
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
@@ -202,7 +199,7 @@ class MessagesFragment :
         binding.textCurrentSortByMyMessages.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        viewModel.viewState.filters = filters
+        viewModel.filtersLiveData.postValue(filters)
     }
 
     private fun initFirestore() {
@@ -259,8 +256,8 @@ class MessagesFragment :
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.viewState.filters = MyMessagesFilters.default
-        onFilter(viewModel.viewState.filters)
+        viewModel.filtersLiveData.postValue(MyMessagesFilters.default)
+        onFilter(viewModel.filters)
     }
 
     override fun onMessageSelected(message: DocumentSnapshot?) {

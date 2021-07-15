@@ -49,7 +49,6 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllProd
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products.model.AllProductsViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products.model.AllProductsViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -90,10 +89,10 @@ class AllProductsFragment :
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAllProductsBinding.inflate(inflater, container, false)
-        viewModel.viewStateLiveData.observe(
+        viewModel.filtersLiveData.observe(
             viewLifecycleOwner
         ) {
-            updateUI(it)
+            updateUI(viewModel)
         }
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
@@ -140,12 +139,11 @@ class AllProductsFragment :
 
     override fun onResume() {
         super.onResume()
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
-    private fun updateUI(viewState: AllProductsViewState) {
+    private fun updateUI(viewState: AllProductsViewModel) {
         // Update the UI
-        viewState.text = ""
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
@@ -160,8 +158,8 @@ class AllProductsFragment :
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.viewState.filters = AllProductsFilters.default
-        onFilter(viewModel.viewState.filters)
+        viewModel.filtersLiveData.postValue(AllProductsFilters.default)
+        onFilter(viewModel.filters)
     }
 
     private fun showLoadingScreen() {
@@ -208,7 +206,7 @@ class AllProductsFragment :
         binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        viewModel.viewState.filters = filters
+        viewModel.filtersLiveData.postValue(filters)
     }
 
     override fun onClick(v: View) {
@@ -222,7 +220,7 @@ class AllProductsFragment :
         super.onStart()
 
         // Apply filters
-        onFilter(viewModel.viewState.filters)
+        onFilter(viewModel.filters)
 
         // Start listening for Firestore updates
         mAdapter.get()?.startListening()

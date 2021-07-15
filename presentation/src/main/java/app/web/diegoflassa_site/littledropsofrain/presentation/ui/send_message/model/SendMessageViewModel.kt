@@ -16,31 +16,49 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.model
 
+import androidx.annotation.Keep
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.SendMessageFragment
 
 class SendMessageViewModel(state: SavedStateHandle) : ViewModel() {
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_TITLE = "SEND_MESSAGE_SAVE_STATE_KEY_TITLE"
     }
 
     private val savedStateHandle = state
+    private var mTitle: String = ""
+    private var mReplyUid: String = ""
+    private var mText: String = ""
+    private var mBody: String = ""
+    private var mDest: User = User()
+    private var mSender: User = User()
+    private var mIsUserAdmin: Boolean = false
+    private var mSendMethod: SendMethod = SendMethod.MESSAGE
 
     init {
-        val viewState = SendMessageViewState().apply {
-            text = "This is ${SendMessageFragment::class.simpleName} Fragment"
-        }
-        savedStateHandle.set(SAVE_STATE_KEY, viewState)
+        savedStateHandle.set(SAVE_STATE_KEY_TITLE, mTitle)
     }
 
-    val viewStateLiveData: MutableLiveData<SendMessageViewState>
-        get(): MutableLiveData<SendMessageViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    val titleLiveData: MutableLiveData<String>
+        get(): MutableLiveData<String> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY_TITLE)
         }
-    val viewState: SendMessageViewState
-        get(): SendMessageViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+    val title: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_TITLE)!!
         }
+}
+
+@Keep
+enum class SendMethod(private val method: String) {
+    MESSAGE("message"),
+    EMAIL("email"),
+    UNKNOWN("unknown");
+
+    override fun toString(): String {
+        return method
+    }
 }

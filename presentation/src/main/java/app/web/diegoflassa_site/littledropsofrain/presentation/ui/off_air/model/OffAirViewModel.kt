@@ -24,24 +24,34 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.OffAir
 class OffAirViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_MSG_EN = "OFF_AIR_SAVE_STATE_KEY_MSG_EN"
+        private const val SAVE_STATE_KEY_MSG_PT = "OFF_AIR_SAVE_STATE_KEY_MSG_PT"
     }
 
     private val savedStateHandle = state
+    private var mMessageEn: String = ""
+    private var mMessagePt: String = ""
 
     init {
-        val viewState = OffAirViewState().apply {
-            text = "This is ${OffAirFragment::class.simpleName} Fragment"
-        }
-        savedStateHandle.set(SAVE_STATE_KEY, viewState)
+        savedStateHandle.set(SAVE_STATE_KEY_MSG_EN, mMessageEn)
+        savedStateHandle.set(SAVE_STATE_KEY_MSG_PT, mMessagePt)
     }
 
-    val viewStateLiveData: MutableLiveData<OffAirViewState>
-        get(): MutableLiveData<OffAirViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    val msgEnLiveData: MutableLiveData<String>
+        get(): MutableLiveData<String> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY_MSG_EN)
         }
-    val viewState: OffAirViewState
-        get(): OffAirViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+    val msgEn: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_MSG_EN)!!
+        }
+
+    val msgPtLiveData: MutableLiveData<String>
+        get(): MutableLiveData<String> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY_MSG_PT)
+        }
+    val msgPt: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_MSG_PT)!!
         }
 }

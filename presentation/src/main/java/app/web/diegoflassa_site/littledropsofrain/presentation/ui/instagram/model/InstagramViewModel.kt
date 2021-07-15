@@ -19,29 +19,29 @@ package app.web.diegoflassa_site.littledropsofrain.presentation.ui.instagram.mod
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.instagram.InstagramFragment
 
 class InstagramViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_URL = "INSTAGRAM_SAVE_STATE_KEY_URL"
     }
 
     private val savedStateHandle = state
+    private var mUrl = MyApplication.getContext().getString(R.string.url_instagram)
 
     init {
-        val viewState = InstagramViewState().apply {
-            text = "This is ${InstagramFragment::class.simpleName} Fragment"
-        }
-        savedStateHandle.set(SAVE_STATE_KEY, viewState)
+        savedStateHandle.set(SAVE_STATE_KEY_URL, mUrl)
     }
 
-    val viewStateLiveData: MutableLiveData<InstagramViewState>
-        get(): MutableLiveData<InstagramViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    val urlLiveData: MutableLiveData<String>
+        get(): MutableLiveData<String> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY_URL)
         }
-    val viewState: InstagramViewState
-        get(): InstagramViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+    val url: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_URL)!!
         }
 }

@@ -43,7 +43,6 @@ import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendMessag
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.*
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.model.SendMessageViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.model.SendMessageViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.DocumentReference
@@ -161,7 +160,8 @@ class SendMessageFragment :
         UserDao.loadAll(this)
         mSavedInstanceState = savedInstanceState
         handleBundle()
-        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar) as androidx.appcompat.widget.Toolbar?
+        val toolbar =
+            activity?.findViewById<Toolbar>(R.id.toolbar) as androidx.appcompat.widget.Toolbar?
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
             toggle = ActionBarDrawerToggle(
@@ -313,10 +313,10 @@ class SendMessageFragment :
     @Suppress("UNCHECKED_CAST")
     private fun setSelectedMessageSender() {
         if (mSavedInstanceState != null && (
-            mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY || mSavedInstanceState?.getString(
-                    ACTION_SEND_KEY
-                ) == ACTION_SEND
-            )
+                    mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY || mSavedInstanceState?.getString(
+                        ACTION_SEND_KEY
+                    ) == ACTION_SEND
+                    )
         ) {
             val message = mSavedInstanceState?.getParcelable<Message>(KEY_MESSAGE)
             if (message != null) {

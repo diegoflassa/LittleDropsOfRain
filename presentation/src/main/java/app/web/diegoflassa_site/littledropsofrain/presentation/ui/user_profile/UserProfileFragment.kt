@@ -37,12 +37,12 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnFileUploadedFailureListener
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnFileUploadedListener
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentUserProfileBinding
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.isSafeToAccessViewModel
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.runOnUiThread
 import app.web.diegoflassa_site.littledropsofrain.presentation.contracts.CropImageResultContract
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.user_profile.model.UserProfileViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.user_profile.model.UserProfileViewState
 import coil.load
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -72,10 +72,15 @@ class UserProfileFragment :
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentUserProfileBinding.inflate(inflater, container, false)
-        viewModel.viewStateLiveData.observe(
+        viewModel.nameLiveData.observe(
             viewLifecycleOwner
         ) {
-            updateUI(it)
+            updateUI(viewModel)
+        }
+        viewModel.emailLiveData.observe(
+            viewLifecycleOwner
+        ) {
+            updateUI(viewModel)
         }
 
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
@@ -102,10 +107,10 @@ class UserProfileFragment :
             getContentLauncher.launch("image/*")
         }
         binding.userBtnUpdate.setOnClickListener {
-            if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value != null) {
-                app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.name = binding.userEdtTxtName.text.toString()
-                app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.email = binding.userTxtVwEmail.text.toString()
-                UserDao.insertOrUpdate(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!)
+            if (LoggedUser.userLiveData.value != null) {
+                LoggedUser.userLiveData.value!!.name = binding.userEdtTxtName.text.toString()
+                LoggedUser.userLiveData.value!!.email = binding.userTxtVwEmail.text.toString()
+                UserDao.insertOrUpdate(LoggedUser.userLiveData.value!!)
             }
             Toast.makeText(context, getString(R.string.saved), Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
@@ -117,11 +122,11 @@ class UserProfileFragment :
         cropImageLauncher = registerForActivityResult(CropImageResultContract(), this)
         getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
             if (it == null) {
-                if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value != null) {
-                    if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.imageUrl != null) {
-                        FilesDao.remove(Uri.parse(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.imageUrl))
+                if (LoggedUser.userLiveData.value != null) {
+                    if (LoggedUser.userLiveData.value!!.imageUrl != null) {
+                        FilesDao.remove(Uri.parse(LoggedUser.userLiveData.value!!.imageUrl))
                     }
-                    app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.imageUrl = null
+                    LoggedUser.userLiveData.value!!.imageUrl = null
                 }
                 binding.userPicture.setImageDrawable(null)
             } else {
@@ -134,14 +139,14 @@ class UserProfileFragment :
     }
 
     override fun onPause() {
-        viewModel.viewState.name = binding.userEdtTxtName.text.toString()
-        viewModel.viewState.email = binding.userTxtVwEmail.text.toString()
+        viewModel.name = binding.userEdtTxtName.text.toString()
+        viewModel.email = binding.userTxtVwEmail.text.toString()
         super.onPause()
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     override fun onStop() {
@@ -162,7 +167,7 @@ class UserProfileFragment :
         super.onResume()
     }
 
-    private fun updateUI(viewState: UserProfileViewState) {
+    private fun updateUI(viewState: UserProfileViewModel) {
         binding.userEdtTxtName.setText(viewState.name)
         binding.userTxtVwEmail.text = viewState.email
         // Update the UI
@@ -183,15 +188,15 @@ class UserProfileFragment :
     }
 
     private fun setCurrentUserToUI() {
-        val user = app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value
-        app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value = user
-        if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value != null) {
-            viewModel.viewState.name = app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.name!!
-            viewModel.viewState.email = app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.email!!
+        val user = LoggedUser.userLiveData.value
+        LoggedUser.userLiveData.value = user
+        if (LoggedUser.userLiveData.value != null) {
+            viewModel.nameLiveData.postValue(LoggedUser.userLiveData.value?.name!!)
+            viewModel.emailLiveData.postValue(LoggedUser.userLiveData.value?.email!!)
 
-            binding.userEdtTxtName.setText(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.name)
-            binding.userTxtVwEmail.text = app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.email
-            binding.userPicture.load(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.imageUrl) {
+            binding.userEdtTxtName.setText(LoggedUser.userLiveData.value!!.name)
+            binding.userTxtVwEmail.text = LoggedUser.userLiveData.value!!.email
+            binding.userPicture.load(LoggedUser.userLiveData.value!!.imageUrl) {
                 placeholder(R.drawable.image_placeholder)
             }
             binding.userBtnChangeImage.isEnabled = true
@@ -205,12 +210,12 @@ class UserProfileFragment :
     }
 
     override fun onFileUploaded(local: Uri, remote: Uri) {
-        if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value != null) {
-            if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.imageUrl != null) {
-                FilesDao.remove(Uri.parse(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.imageUrl))
+        if (LoggedUser.userLiveData.value != null) {
+            if (LoggedUser.userLiveData.value!!.imageUrl != null) {
+                FilesDao.remove(Uri.parse(LoggedUser.userLiveData.value!!.imageUrl))
             }
-            app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.imageUrl = remote.toString()
-            binding.userPicture.load(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.imageUrl) {
+            LoggedUser.userLiveData.value!!.imageUrl = remote.toString()
+            binding.userPicture.load(LoggedUser.userLiveData.value!!.imageUrl) {
                 placeholder(R.drawable.image_placeholder)
             }
         }

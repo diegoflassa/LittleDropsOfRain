@@ -30,7 +30,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.net.toFile
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -47,7 +46,6 @@ import app.web.diegoflassa_site.littledropsofrain.domain.helpers.runOnUiThread
 import app.web.diegoflassa_site.littledropsofrain.presentation.contracts.CropImageResultContract
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.topic.model.TopicMessageViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.topic.model.TopicMessageViewState
 import coil.load
 import com.android.volley.AuthFailureError
 import com.android.volley.Response

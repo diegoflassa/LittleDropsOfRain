@@ -19,29 +19,27 @@ package app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_messages.
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_messages.AllMessagesFragment
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.AllMessagesFilters
 
 class AllMessagesViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_FILTERS = "ALL_MESSAGES_SAVE_STATE_KEY_FILTERS"
     }
 
     private val savedStateHandle = state
+    private var mFilters: AllMessagesFilters = AllMessagesFilters.default
 
     init {
-        val viewState = AllMessagesViewState().apply {
-            text = "This is ${AllMessagesFragment::class.simpleName} Fragment"
-        }
-        savedStateHandle.set(SAVE_STATE_KEY, viewState)
+        savedStateHandle.set(SAVE_STATE_KEY_FILTERS, mFilters)
     }
 
-    val viewStateLiveData: MutableLiveData<AllMessagesViewState>
-        get(): MutableLiveData<AllMessagesViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    val filtersLiveData: MutableLiveData<AllMessagesFilters>
+        get(): MutableLiveData<AllMessagesFilters> {
+            return savedStateHandle.getLiveData(SAVE_STATE_KEY_FILTERS)
         }
-    val viewState: AllMessagesViewState
-        get(): AllMessagesViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+    val filters: AllMessagesFilters
+        get(): AllMessagesFilters {
+            return savedStateHandle.get(SAVE_STATE_KEY_FILTERS)!!
         }
 }

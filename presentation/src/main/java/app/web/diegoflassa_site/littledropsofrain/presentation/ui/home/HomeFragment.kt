@@ -54,7 +54,6 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.Product
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.model.HomeViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.model.HomeViewState
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.OffAirFragment
 import com.google.android.gms.location.*
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -108,10 +107,10 @@ class HomeFragment :
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        viewModel.viewStateLiveData.observe(
+        viewModel.filtersLiveData.observe(
             viewLifecycleOwner
         ) {
-            updateUI(it)
+            updateUI(viewModel)
         }
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
@@ -168,7 +167,7 @@ class HomeFragment :
                     // Start listening for Firestore updates
                     mAdapter.get()?.startListening()
                     // Apply filters
-                    onFilter(viewModel.viewState.filters)
+                    onFilter(viewModel.filters)
                 }
             }
         Log.i(TAG, "$TAG activity successfully created>")
@@ -191,7 +190,7 @@ class HomeFragment :
         }
 
         // Update UI to match restored state
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     override fun onDestroyView() {
@@ -210,7 +209,7 @@ class HomeFragment :
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     override fun onResume() {
@@ -242,13 +241,12 @@ class HomeFragment :
             // Start listening for Firestore updates
             mAdapter.get()?.startListening()
             // Apply filters
-            onFilter(viewModel.viewState.filters)
+            onFilter(viewModel.filters)
         }
     }
 
-    private fun updateUI(viewState: HomeViewState) {
+    private fun updateUI(viewState: HomeViewModel) {
         // Update the UI
-        viewState.text = ""
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
@@ -263,8 +261,8 @@ class HomeFragment :
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.viewState.filters = ProductsFilters.default
-        onFilter(viewModel.viewState.filters)
+        viewModel.filtersLiveData.postValue( ProductsFilters.default)
+        onFilter(viewModel.filters)
     }
 
     private fun showOffAirScreen(message: String) {
@@ -354,7 +352,7 @@ class HomeFragment :
         binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        viewModel.viewState.filters = filters
+        viewModel.filtersLiveData.postValue(filters)
     }
 
     override fun onClick(v: View) {
