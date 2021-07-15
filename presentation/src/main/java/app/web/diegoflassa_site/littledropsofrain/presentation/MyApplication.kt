@@ -160,6 +160,7 @@ class MyApplication : Application() {
             viewModel { MyMessagesFilterDialogViewModel(get()) }
             viewModel { MyLikedProductsViewModel(get()) }
             viewModel { AllProductsFilterDialogViewModel(get()) }
+            viewModel { CartViewModel(get()) }
             viewModel { MessagesViewModel(get()) }
             viewModel { MainActivityViewModel(get()) }
             viewModel { InstagramViewModel(get()) }
