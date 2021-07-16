@@ -26,6 +26,8 @@ import android.widget.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
+import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUsersLoadedListener
@@ -247,17 +249,17 @@ open class AllMessagesFilterDialogFragment :
         binding.spinnerUsers.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
                 filters.emailSender = (binding.spinnerUsers.adapter.getItem(pos) as User).email
-                viewModel.viewState.selectedUserEmail = filters.emailSender.toString()
+                viewModel.selectedUserEmail = filters.emailSender.toString()
             }
 
             override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
                 filters.emailSender = null
             }
         }
-        if (viewModel.viewState.selectedUserEmail.isNotEmpty()) {
+        if (viewModel.selectedUserEmail.isNotEmpty()) {
             for (index in 0 until binding.spinnerUsers.adapter.count) {
                 val userAdapter = binding.spinnerUsers.adapter.getItem(index) as User
-                if (userAdapter.email == viewModel.viewState.selectedUserEmail) {
+                if (userAdapter.email == viewModel.selectedUserEmail) {
                     binding.spinnerUsers.setSelection(index)
                     break
                 }

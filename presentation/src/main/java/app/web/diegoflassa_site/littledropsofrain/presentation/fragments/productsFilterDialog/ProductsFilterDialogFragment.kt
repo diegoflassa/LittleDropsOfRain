@@ -29,6 +29,7 @@ import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentProductsFiltersBinding
@@ -108,7 +109,7 @@ open class ProductsFilterDialogFragment :
     }
 
     override fun onStop() {
-        viewModel.viewState.categories = categories
+        viewModel.categories = categories
         super.onStop()
     }
 
@@ -118,7 +119,7 @@ open class ProductsFilterDialogFragment :
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        categories = viewModel.viewState.categories
+        categories = viewModel.categories
     }
 
     override fun onClick(v: View) {
@@ -213,7 +214,7 @@ open class ProductsFilterDialogFragment :
             for (chip in mCategoryChipGroup.children) {
                 chip.isSelected = false
             }
-            viewModel.viewState.categories.clear()
+            viewModel.categories.clear()
             categories.clear()
             mPriceSpinner!!.setSelection(0)
             mSortSpinner!!.setSelection(0)

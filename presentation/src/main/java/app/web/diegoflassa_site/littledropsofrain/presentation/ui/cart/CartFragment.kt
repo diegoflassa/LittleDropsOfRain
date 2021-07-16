@@ -36,10 +36,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
+import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUsersLoadedListener
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentCartBinding
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.presentation.adapters.CartAdapter
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allProductsFilterDialog.AllProductsFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allProductsFilterDialog.AllProductsFilters
