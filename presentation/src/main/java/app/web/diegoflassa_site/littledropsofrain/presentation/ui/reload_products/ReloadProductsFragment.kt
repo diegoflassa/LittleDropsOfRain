@@ -68,11 +68,6 @@ class ReloadProductsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentReloadProductsBinding.inflate(inflater, container, false)
-        viewModel.progressLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(viewModel)
-        }
         binding.mlTxtVwProgress.movementMethod = ScrollingMovementMethod()
         binding.chkbxRemoveNotFoundProducts.isChecked = false
         binding.chkbxRemoveNotFoundProducts.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->

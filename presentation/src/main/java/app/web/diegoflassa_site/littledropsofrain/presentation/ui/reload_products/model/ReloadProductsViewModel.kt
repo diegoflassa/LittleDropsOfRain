@@ -16,7 +16,6 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.reload_products.model
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
@@ -40,10 +39,6 @@ class ReloadProductsViewModel(state: SavedStateHandle) : ViewModel() {
         savedStateHandle.set(SAVE_STATE_KEY_UNPUBLISH_NOT_FOUND, mUnpublishNotFoundProducts)
     }
 
-    val progressLiveData: MutableLiveData<StringBuilder>
-        get(): MutableLiveData<StringBuilder> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY_PROGRESS)
-        }
     var progress: StringBuilder
         get(): StringBuilder {
             return savedStateHandle.get(SAVE_STATE_KEY_PROGRESS)!!
@@ -52,10 +47,6 @@ class ReloadProductsViewModel(state: SavedStateHandle) : ViewModel() {
             savedStateHandle.set(SAVE_STATE_KEY_PROGRESS, value)
         }
 
-    val removeNotFoundProductsLiveData: MutableLiveData<Boolean>
-        get(): MutableLiveData<Boolean> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY_REMOVE_NOT_FOUND)
-        }
     var removeNotFoundProducts: Boolean
         get(): Boolean {
             return savedStateHandle.get(SAVE_STATE_KEY_REMOVE_NOT_FOUND)!!
@@ -64,10 +55,6 @@ class ReloadProductsViewModel(state: SavedStateHandle) : ViewModel() {
             savedStateHandle.set(SAVE_STATE_KEY_REMOVE_NOT_FOUND, value)
         }
 
-    val unpublishNotFoundProductsLiveData: MutableLiveData<Boolean>
-        get(): MutableLiveData<Boolean> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY_UNPUBLISH_NOT_FOUND)
-        }
     var unpublishNotFoundProducts: Boolean
         get(): Boolean {
             return savedStateHandle.get(SAVE_STATE_KEY_UNPUBLISH_NOT_FOUND)!!

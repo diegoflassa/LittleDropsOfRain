@@ -20,7 +20,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.HomeFragment
 
 class HomeViewModel(state: SavedStateHandle) : ViewModel() {
 
@@ -29,7 +28,7 @@ class HomeViewModel(state: SavedStateHandle) : ViewModel() {
     }
 
     private val savedStateHandle = state
-    var mFilters: ProductsFilters = ProductsFilters.default
+    private var mFilters: ProductsFilters = ProductsFilters.default
 
     init {
         savedStateHandle.set(SAVE_STATE_KEY_FILTERS, mFilters)
@@ -39,8 +38,11 @@ class HomeViewModel(state: SavedStateHandle) : ViewModel() {
         get(): MutableLiveData<ProductsFilters> {
             return savedStateHandle.getLiveData(SAVE_STATE_KEY_FILTERS)
         }
-    val filters: ProductsFilters
+    var filters: ProductsFilters
         get(): ProductsFilters {
             return savedStateHandle.get(SAVE_STATE_KEY_FILTERS)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_FILTERS, value)
         }
 }

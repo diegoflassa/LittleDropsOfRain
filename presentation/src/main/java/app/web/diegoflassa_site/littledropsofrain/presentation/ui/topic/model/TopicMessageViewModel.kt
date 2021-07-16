@@ -17,16 +17,18 @@
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.topic.model
 
 import android.net.Uri
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.topic.SendTopicMessageFragment
 
 class TopicMessageViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY_TITLE = "TOPIC_SAVE_STATE_KEY_TITLE"
+        private const val SAVE_STATE_KEY_BODY = "TOPIC_SAVE_STATE_KEY_BODY"
+        private const val SAVE_STATE_KEY_TOPICS = "TOPIC_SAVE_STATE_KEY_TOPICS"
+        private const val SAVE_STATE_KEY_IMAGE_URI_FIRESTORE = "TOPIC_SAVE_STATE_KEY_IMAGE_URI_FIRESTORE"
+        private const val SAVE_STATE_KEY_IMAGE_URI_LOCAL = "TOPIC_SAVE_STATE_KEY_URI_LOCAL"
     }
 
     private val savedStateHandle = state
@@ -38,14 +40,49 @@ class TopicMessageViewModel(state: SavedStateHandle) : ViewModel() {
 
     init {
         savedStateHandle.set(SAVE_STATE_KEY_TITLE, mTitle)
+        savedStateHandle.set(SAVE_STATE_KEY_BODY, mBody)
+        savedStateHandle.set(SAVE_STATE_KEY_TOPICS, mTopics)
+        savedStateHandle.set(SAVE_STATE_KEY_IMAGE_URI_FIRESTORE, mImageUriFirestore)
+        savedStateHandle.set(SAVE_STATE_KEY_IMAGE_URI_LOCAL, mImageUriLocal)
     }
 
-    val titleLiveData: MutableLiveData<String>
-        get(): MutableLiveData<String> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY_TITLE)
-        }
-    val title: String
+    var title: String
         get(): String {
             return savedStateHandle.get(SAVE_STATE_KEY_TITLE)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_TITLE, value)
+        }
+
+    var body: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_BODY)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_BODY, value)
+        }
+
+    var topics: HashSet<TopicMessage.Topic>
+        get(): HashSet<TopicMessage.Topic> {
+            return savedStateHandle.get(SAVE_STATE_KEY_TOPICS)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_TOPICS, value)
+        }
+
+    var imageUriFirestore: Uri?
+        get(): Uri? {
+            return savedStateHandle.get(SAVE_STATE_KEY_IMAGE_URI_FIRESTORE)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_IMAGE_URI_FIRESTORE, value)
+        }
+
+    var imageUriLocal: Uri?
+        get(): Uri? {
+            return savedStateHandle.get(SAVE_STATE_KEY_IMAGE_URI_LOCAL)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_IMAGE_URI_LOCAL, value)
         }
 }

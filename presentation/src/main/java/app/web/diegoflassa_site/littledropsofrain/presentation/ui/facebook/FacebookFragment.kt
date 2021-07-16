@@ -80,11 +80,6 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFacebookBinding.inflate(inflater, container, false)
-        viewModel.urlLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(viewModel)
-        }
 
         // set up the webview
         binding.webviewFacebook.settings.javaScriptEnabled = true

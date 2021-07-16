@@ -16,7 +16,6 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.model
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilterDialogFragment
@@ -36,10 +35,6 @@ class ProductsFilterDialogViewModel(state: SavedStateHandle) : ViewModel() {
         savedStateHandle.set(SAVE_STATE_KEY, viewState)
     }
 
-    val viewStateLiveData: MutableLiveData<ProductsFilterDialogViewState>
-        get(): MutableLiveData<ProductsFilterDialogViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
-        }
     val viewState: ProductsFilterDialogViewState
         get(): ProductsFilterDialogViewState {
             return savedStateHandle.get(SAVE_STATE_KEY)!!

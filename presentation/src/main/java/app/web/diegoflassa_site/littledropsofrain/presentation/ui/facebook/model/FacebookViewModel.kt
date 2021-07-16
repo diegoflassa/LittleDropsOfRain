@@ -16,12 +16,10 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.facebook.model
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.facebook.FacebookFragment
 
 class FacebookViewModel(state: SavedStateHandle) : ViewModel() {
 
@@ -36,12 +34,11 @@ class FacebookViewModel(state: SavedStateHandle) : ViewModel() {
         savedStateHandle.set(SAVE_STATE_KEY_URL, mUrl)
     }
 
-    val urlLiveData: MutableLiveData<String>
-        get(): MutableLiveData<String> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY_URL)
-        }
-    val url: String
+    var url: String
         get(): String {
             return savedStateHandle.get(SAVE_STATE_KEY_URL)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_URL, value)
         }
 }

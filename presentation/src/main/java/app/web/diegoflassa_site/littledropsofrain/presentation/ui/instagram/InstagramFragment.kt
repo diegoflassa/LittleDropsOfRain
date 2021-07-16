@@ -83,11 +83,6 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentInstagramBinding.inflate(inflater, container, false)
-        viewModel.urlLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(viewModel)
-        }
 
         // set up the webview
         binding.webviewInstagram.settings.javaScriptEnabled = true

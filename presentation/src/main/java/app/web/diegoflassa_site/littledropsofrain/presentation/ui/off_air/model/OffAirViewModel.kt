@@ -16,10 +16,8 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.model
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.OffAirFragment
 
 class OffAirViewModel(state: SavedStateHandle) : ViewModel() {
 
@@ -37,21 +35,19 @@ class OffAirViewModel(state: SavedStateHandle) : ViewModel() {
         savedStateHandle.set(SAVE_STATE_KEY_MSG_PT, mMessagePt)
     }
 
-    val msgEnLiveData: MutableLiveData<String>
-        get(): MutableLiveData<String> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY_MSG_EN)
-        }
-    val msgEn: String
+    var msgEn: String
         get(): String {
             return savedStateHandle.get(SAVE_STATE_KEY_MSG_EN)!!
         }
-
-    val msgPtLiveData: MutableLiveData<String>
-        get(): MutableLiveData<String> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY_MSG_PT)
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_MSG_EN, value)
         }
-    val msgPt: String
+
+    var msgPt: String
         get(): String {
             return savedStateHandle.get(SAVE_STATE_KEY_MSG_PT)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_MSG_PT, value)
         }
 }

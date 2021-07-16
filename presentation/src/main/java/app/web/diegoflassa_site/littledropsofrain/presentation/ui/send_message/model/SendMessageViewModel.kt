@@ -17,15 +17,20 @@
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.model
 
 import androidx.annotation.Keep
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.SendMessageFragment
 
 class SendMessageViewModel(state: SavedStateHandle) : ViewModel() {
     companion object {
         private const val SAVE_STATE_KEY_TITLE = "SEND_MESSAGE_SAVE_STATE_KEY_TITLE"
+        private const val SAVE_STATE_KEY_REPLY_UID = "SEND_MESSAGE_SAVE_STATE_KEY_REPLY_UID"
+        private const val SAVE_STATE_KEY_TEXT = "SEND_MESSAGE_SAVE_STATE_KEY_TEXT"
+        private const val SAVE_STATE_KEY_BODY = "SEND_MESSAGE_SAVE_STATE_KEY_BODY"
+        private const val SAVE_STATE_KEY_DEST = "SEND_MESSAGE_SAVE_STATE_KEY_DEST"
+        private const val SAVE_STATE_KEY_SENDER = "SEND_MESSAGE_SAVE_STATE_KEY_SENDER"
+        private const val SAVE_STATE_KEY_IS_USER_ADMIN = "SEND_MESSAGE_SAVE_STATE_KEY_IS_USER_ADMIN"
+        private const val SAVE_STATE_KEY_SEND_METHOD = "SEND_MESSAGE_SAVE_STATE_KEY_SEND_METHOD"
     }
 
     private val savedStateHandle = state
@@ -40,25 +45,87 @@ class SendMessageViewModel(state: SavedStateHandle) : ViewModel() {
 
     init {
         savedStateHandle.set(SAVE_STATE_KEY_TITLE, mTitle)
+        savedStateHandle.set(SAVE_STATE_KEY_REPLY_UID, mReplyUid)
+        savedStateHandle.set(SAVE_STATE_KEY_TEXT, mText)
+        savedStateHandle.set(SAVE_STATE_KEY_BODY, mBody)
+        savedStateHandle.set(SAVE_STATE_KEY_DEST, mDest)
+        savedStateHandle.set(SAVE_STATE_KEY_SENDER, mSender)
+        savedStateHandle.set(SAVE_STATE_KEY_IS_USER_ADMIN, mIsUserAdmin)
+        savedStateHandle.set(SAVE_STATE_KEY_SEND_METHOD, mSendMethod)
     }
 
-    val titleLiveData: MutableLiveData<String>
-        get(): MutableLiveData<String> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY_TITLE)
-        }
-    val title: String
+    var title: String
         get(): String {
             return savedStateHandle.get(SAVE_STATE_KEY_TITLE)!!
         }
-}
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_TITLE, value)
+        }
 
-@Keep
-enum class SendMethod(private val method: String) {
-    MESSAGE("message"),
-    EMAIL("email"),
-    UNKNOWN("unknown");
+    var replyUid: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_REPLY_UID)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_REPLY_UID, value)
+        }
 
-    override fun toString(): String {
-        return method
+    var text: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_TEXT)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_TEXT, value)
+        }
+
+    var body: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_BODY)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_BODY, value)
+        }
+
+    var dest: User
+        get(): User {
+            return savedStateHandle.get(SAVE_STATE_KEY_DEST)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_DEST, value)
+        }
+
+    var sender: User
+        get(): User {
+            return savedStateHandle.get(SAVE_STATE_KEY_SENDER)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_SENDER, value)
+        }
+
+    var isUserAdmin: Boolean
+        get(): Boolean {
+            return savedStateHandle.get(SAVE_STATE_KEY_IS_USER_ADMIN)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_IS_USER_ADMIN, value)
+        }
+
+    var sendMethod: SendMethod
+        get(): SendMethod {
+            return savedStateHandle.get(SAVE_STATE_KEY_SEND_METHOD)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_SEND_METHOD, value)
+        }
+
+    @Keep
+    enum class SendMethod(private val method: String) {
+        MESSAGE("message"),
+        EMAIL("email"),
+        UNKNOWN("unknown");
+
+        override fun toString(): String {
+            return method
+        }
     }
 }

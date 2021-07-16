@@ -84,11 +84,6 @@ class MyLikedProductsFragment :
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMyLikedProductsBinding.inflate(inflater, container, false)
-        viewModel.filtersLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(viewModel)
-        }
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
 
@@ -157,7 +152,7 @@ class MyLikedProductsFragment :
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.filtersLiveData.postValue(ProductsFilters.default)
+        viewModel.filters = ProductsFilters.default
         onFilter(viewModel.filters)
     }
 
@@ -209,7 +204,7 @@ class MyLikedProductsFragment :
         binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        viewModel.filtersLiveData.postValue(filters)
+        viewModel.filters = filters
     }
 
     override fun onClick(v: View) {

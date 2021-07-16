@@ -81,11 +81,6 @@ class MessagesFragment :
     ): View {
         viewModel.saveState()
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
-        viewModel.filtersLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(viewModel)
-        }
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(
             AppCompatResources.getDrawable(
@@ -199,7 +194,7 @@ class MessagesFragment :
         binding.textCurrentSortByMyMessages.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        viewModel.filtersLiveData.postValue(filters)
+        viewModel.filters = filters
     }
 
     private fun initFirestore() {
@@ -256,7 +251,7 @@ class MessagesFragment :
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.filtersLiveData.postValue(MyMessagesFilters.default)
+        viewModel.filters = MyMessagesFilters.default
         onFilter(viewModel.filters)
     }
 

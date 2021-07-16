@@ -16,11 +16,9 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.my_liked_products.model
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.my_liked_products.MyLikedProductsFragment
 
 class MyLikedProductsViewModel(state: SavedStateHandle) : ViewModel() {
 
@@ -35,12 +33,11 @@ class MyLikedProductsViewModel(state: SavedStateHandle) : ViewModel() {
         savedStateHandle.set(SAVE_STATE_KEY_FILTERS, mFilters)
     }
 
-    val filtersLiveData: MutableLiveData<ProductsFilters>
-        get(): MutableLiveData<ProductsFilters> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY_FILTERS)
-        }
-    val filters: ProductsFilters
+    var filters: ProductsFilters
         get(): ProductsFilters {
             return savedStateHandle.get(SAVE_STATE_KEY_FILTERS)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_FILTERS, value)
         }
 }

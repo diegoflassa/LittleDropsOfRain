@@ -89,11 +89,6 @@ class AllProductsFragment :
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAllProductsBinding.inflate(inflater, container, false)
-        viewModel.filtersLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(viewModel)
-        }
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
 
@@ -158,7 +153,7 @@ class AllProductsFragment :
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.filtersLiveData.postValue(AllProductsFilters.default)
+        viewModel.filters = AllProductsFilters.default
         onFilter(viewModel.filters)
     }
 
@@ -206,7 +201,7 @@ class AllProductsFragment :
         binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        viewModel.filtersLiveData.postValue(filters)
+        viewModel.filters = filters
     }
 
     override fun onClick(v: View) {

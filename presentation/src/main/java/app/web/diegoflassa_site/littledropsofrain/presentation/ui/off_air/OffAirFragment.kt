@@ -60,12 +60,6 @@ class OffAirFragment : Fragment() {
         binding = FragmentOffAirBinding.inflate(inflater, container, false)
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.activate()
-        viewModel.msgEnLiveData.observe(viewLifecycleOwner) {
-            updateUI(viewModel)
-        }
-        viewModel.msgPtLiveData.observe(viewLifecycleOwner) {
-            updateUI(viewModel)
-        }
         binding.edtTxtMlOffAirMessageEn.setText(
             remoteConfig.getString(
                 REMOTE_CONFIG_OFF_AIR_MESSAGE_EN
@@ -129,8 +123,9 @@ class OffAirFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (isSafeToAccessViewModel() && !isStopped) {
-            viewModel.msgEnLiveData.postValue(binding.edtTxtMlOffAirMessageEn.text.toString())
-            viewModel.msgPtLiveData.postValue(binding.edtTxtMlOffAirMessagePt.text.toString())
+            viewModel.msgEn = binding.edtTxtMlOffAirMessageEn.text.toString()
+            viewModel.msgPt = binding.edtTxtMlOffAirMessagePt.text.toString()
+            updateUI(viewModel)
         }
     }
 

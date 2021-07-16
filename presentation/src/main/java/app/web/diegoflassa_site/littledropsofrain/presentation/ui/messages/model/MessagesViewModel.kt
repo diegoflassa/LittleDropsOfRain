@@ -16,11 +16,9 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.messages.model
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilters
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.messages.MessagesFragment
 
 class MessagesViewModel(state: SavedStateHandle) : ViewModel() {
 
@@ -40,12 +38,11 @@ class MessagesViewModel(state: SavedStateHandle) : ViewModel() {
         savedStateHandle.set(SAVE_STATE_KEY_FILTERS, mFilters)
     }
 
-    val filtersLiveData: MutableLiveData<MyMessagesFilters>
-        get(): MutableLiveData<MyMessagesFilters> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY_FILTERS)
-        }
-    val filters: MyMessagesFilters
+    var filters: MyMessagesFilters
         get(): MyMessagesFilters {
             return savedStateHandle.get(SAVE_STATE_KEY_FILTERS)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_FILTERS, value)
         }
 }

@@ -30,6 +30,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.net.toFile
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -95,11 +96,6 @@ class SendTopicMessageFragment :
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSendTopicMessageBinding.inflate(inflater, container, false)
-        viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(it)
-        }
         getTopics()
         binding.imgVwNotificationImage.visibility = View.GONE
         cropImageLauncher = registerForActivityResult(CropImageResultContract(), this)
@@ -139,10 +135,10 @@ class SendTopicMessageFragment :
                 )
                 binding.imgVwNotificationImage.visibility = View.GONE
                 binding.imgVwNotificationImage.setImageDrawable(null)
-                viewModel.viewState.imageUriFirestore = null
-                if (viewModel.viewState.imageUriLocal != null) {
-                    viewModel.viewState.imageUriLocal!!.toFile().delete()
-                    viewModel.viewState.imageUriLocal = null
+                viewModel.imageUriFirestore = null
+                if (viewModel.imageUriLocal != null) {
+                    viewModel.imageUriLocal!!.toFile().delete()
+                    viewModel.imageUriLocal = null
                 }
             }
         }
@@ -150,7 +146,7 @@ class SendTopicMessageFragment :
             if (getSelectedTopics().isNotEmpty()) {
                 sendMessage(
                     getSelectedTopics(),
-                    viewModel.viewState.imageUriFirestore,
+                    viewModel.imageUriFirestore,
                     binding.edtTxtTitle.text.toString(),
                     binding.edtTxtMlMessage.text.toString()
                 )
@@ -166,7 +162,7 @@ class SendTopicMessageFragment :
         binding.fabPreviewTopicMessage.setOnClickListener {
             Helper.showNotification(
                 requireContext(),
-                viewModel.viewState.imageUriFirestore,
+                viewModel.imageUriFirestore,
                 binding.edtTxtTitle.text.toString(),
                 binding.edtTxtMlMessage.text.toString()
             )
@@ -195,8 +191,8 @@ class SendTopicMessageFragment :
         super.onPause()
         isStopped = false
         if (isSafeToAccessViewModel() && !isStopped) {
-            viewModel.viewState.title = binding.edtTxtTitle.text.toString()
-            viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
+            viewModel.title = binding.edtTxtTitle.text.toString()
+            viewModel.body = binding.edtTxtMlMessage.text.toString()
         }
     }
 
@@ -206,8 +202,8 @@ class SendTopicMessageFragment :
     }
 
     override fun onStop() {
-        if (!messageSent && viewModel.viewState.imageUriFirestore != null) {
-            FilesDao.remove(viewModel.viewState.imageUriFirestore)
+        if (!messageSent && viewModel.imageUriFirestore != null) {
+            FilesDao.remove(viewModel.imageUriFirestore)
         }
         isStopped = true
         super.onStop()
@@ -224,14 +220,14 @@ class SendTopicMessageFragment :
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (isSafeToAccessViewModel() && !isStopped) {
-            viewModel.viewState.title = binding.edtTxtTitle.text.toString()
-            viewModel.viewState.body = binding.edtTxtMlMessage.text.toString()
+            viewModel.title = binding.edtTxtTitle.text.toString()
+            viewModel.body = binding.edtTxtMlMessage.text.toString()
         }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     private fun getTopics() {
@@ -242,11 +238,11 @@ class SendTopicMessageFragment :
                 chip.isCheckable = true
                 chip.setOnCheckedChangeListener { compoundButton: CompoundButton, state: Boolean ->
                     if (state) {
-                        viewModel.viewState.topics.add(
+                        viewModel.topics.add(
                             TopicMessage.Topic.fromTitle(requireContext(), compoundButton.text.toString())
                         )
                     } else {
-                        viewModel.viewState.topics.remove(
+                        viewModel.topics.remove(
                             TopicMessage.Topic.fromTitle(requireContext(), compoundButton.text.toString())
                         )
                     }
@@ -256,7 +252,7 @@ class SendTopicMessageFragment :
         }
     }
 
-    private fun updateUI(viewState: TopicMessageViewState?) {
+    private fun updateUI(viewState: TopicMessageViewModel?) {
         // Update the UI
         for (chip in binding.cpGrpTopics.children) {
             if (viewState?.topics?.contains(
@@ -266,16 +262,16 @@ class SendTopicMessageFragment :
                 (chip as Chip).isChecked = true
             }
         }
-        binding.imgVwNotificationImage.load(viewModel.viewState.imageUriLocal) {
+        binding.imgVwNotificationImage.load(viewModel.imageUriLocal) {
             placeholder(R.drawable.image_placeholder)
         }
-        if (viewModel.viewState.imageUriLocal != null) {
+        if (viewModel.imageUriLocal != null) {
             binding.imgVwNotificationImage.visibility = View.VISIBLE
         } else {
             binding.imgVwNotificationImage.visibility = View.GONE
         }
-        binding.edtTxtTitle.setText(viewModel.viewState.title)
-        binding.edtTxtMlMessage.setText(viewModel.viewState.body)
+        binding.edtTxtTitle.setText(viewModel.title)
+        binding.edtTxtMlMessage.setText(viewModel.body)
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.VISIBLE
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
@@ -409,8 +405,8 @@ class SendTopicMessageFragment :
     }
 
     override fun onFileUploaded(local: Uri, remote: Uri) {
-        FilesDao.remove(viewModel.viewState.imageUriFirestore)
-        viewModel.viewState.imageUriFirestore = remote
+        FilesDao.remove(viewModel.imageUriFirestore)
+        viewModel.imageUriFirestore = remote
         hideLoadingScreen()
         Toast.makeText(context, getString(R.string.file_upload_success), Toast.LENGTH_LONG).show()
     }
@@ -424,7 +420,7 @@ class SendTopicMessageFragment :
         binding.imgVwNotificationImage.visibility = View.VISIBLE
         showLoadingScreen()
         FilesDao.insert(uri!!, this, this)
-        viewModel.viewState.imageUriLocal = uri
+        viewModel.imageUriLocal = uri
         binding.fabSelectImage.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -432,7 +428,7 @@ class SendTopicMessageFragment :
                 activity?.theme
             )
         )
-        binding.imgVwNotificationImage.load(viewModel.viewState.imageUriLocal) {
+        binding.imgVwNotificationImage.load(viewModel.imageUriLocal) {
             placeholder(R.drawable.image_placeholder)
         }
     }
