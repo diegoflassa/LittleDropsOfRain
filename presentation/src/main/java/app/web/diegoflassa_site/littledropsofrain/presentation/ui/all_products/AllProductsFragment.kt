@@ -48,7 +48,6 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllProd
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllProductsFilterDialog.AllProductsFilters
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products.model.AllProductsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar

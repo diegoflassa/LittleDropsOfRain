@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message
 
 import androidx.annotation.Keep
 import androidx.lifecycle.SavedStateHandle

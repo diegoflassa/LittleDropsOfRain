@@ -42,7 +42,6 @@ import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUsersLoadedL
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendMessageBinding
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.*
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.model.SendMessageViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.DocumentReference

@@ -14,27 +14,32 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.messages
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllProductsFilterDialog.AllProductsFilters
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilters
 
-class AllProductsViewModel(state: SavedStateHandle) : ViewModel() {
+class MessagesViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY_FILTERS = "ALL_PRODUCTS_SAVE_STATE_KEY_FILTERS"
+        private const val SAVE_STATE_KEY_FILTERS = "MESSAGES_SAVE_STATE_KEY_FILTERS"
+    }
+
+    init {
+        saveState()
     }
 
     private val savedStateHandle = state
-    private var mFilters: AllProductsFilters = AllProductsFilters.default
+    private var mFilters: MyMessagesFilters = MyMessagesFilters.default
 
-    init {
+    fun saveState() {
+        // Sets a new value for the object associated to the key.
         savedStateHandle.set(SAVE_STATE_KEY_FILTERS, mFilters)
     }
 
-    var filters: AllProductsFilters
-        get(): AllProductsFilters {
+    var filters: MyMessagesFilters
+        get(): MyMessagesFilters {
             return savedStateHandle.get(SAVE_STATE_KEY_FILTERS)!!
         }
         set(value) {

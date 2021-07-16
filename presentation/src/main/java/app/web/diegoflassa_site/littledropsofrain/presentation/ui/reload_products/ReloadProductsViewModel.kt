@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.reload_products.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.reload_products
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

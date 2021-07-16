@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

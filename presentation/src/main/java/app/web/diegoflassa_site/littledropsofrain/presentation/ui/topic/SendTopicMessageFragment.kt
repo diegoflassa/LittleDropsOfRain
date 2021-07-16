@@ -46,7 +46,6 @@ import app.web.diegoflassa_site.littledropsofrain.domain.helpers.isSafeToAccessV
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.runOnUiThread
 import app.web.diegoflassa_site.littledropsofrain.presentation.contracts.CropImageResultContract
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.topic.model.TopicMessageViewModel
 import coil.load
 import com.android.volley.AuthFailureError
 import com.android.volley.Response

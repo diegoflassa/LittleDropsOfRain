@@ -42,7 +42,6 @@ import app.web.diegoflassa_site.littledropsofrain.domain.helpers.isSafeToAccessV
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.runOnUiThread
 import app.web.diegoflassa_site.littledropsofrain.presentation.contracts.CropImageResultContract
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.user_profile.model.UserProfileViewModel
 import coil.load
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -72,17 +71,6 @@ class UserProfileFragment :
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentUserProfileBinding.inflate(inflater, container, false)
-        viewModel.nameLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(viewModel)
-        }
-        viewModel.emailLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(viewModel)
-        }
-
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -191,8 +179,9 @@ class UserProfileFragment :
         val user = LoggedUser.userLiveData.value
         LoggedUser.userLiveData.value = user
         if (LoggedUser.userLiveData.value != null) {
-            viewModel.nameLiveData.postValue(LoggedUser.userLiveData.value?.name!!)
-            viewModel.emailLiveData.postValue(LoggedUser.userLiveData.value?.email!!)
+            viewModel.name = LoggedUser.userLiveData.value?.name!!
+            viewModel.email = LoggedUser.userLiveData.value?.email!!
+            updateUI(viewModel)
 
             binding.userEdtTxtName.setText(LoggedUser.userLiveData.value!!.name)
             binding.userTxtVwEmail.text = LoggedUser.userLiveData.value!!.email

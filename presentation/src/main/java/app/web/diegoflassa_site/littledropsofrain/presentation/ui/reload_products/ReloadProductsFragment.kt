@@ -38,7 +38,6 @@ import app.web.diegoflassa_site.littledropsofrain.domain.helpers.isSafeToAccessV
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.runOnUiThread
 import app.web.diegoflassa_site.littledropsofrain.domain.workers.UpdateProductsWork
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.reload_products.model.ReloadProductsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.joanzapata.iconify.IconDrawable

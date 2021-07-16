@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.facebook.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.home
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
 
-class FacebookViewModel(state: SavedStateHandle) : ViewModel() {
+class HomeViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY_URL = "FACEBOOK_SAVE_STATE_KEY_URL"
+        private const val SAVE_STATE_KEY_FILTERS = "HOME_SAVE_STATE_KEY_FILTERS"
     }
 
     private val savedStateHandle = state
-    private var mUrl = MyApplication.getContext().getString(R.string.url_facebook)
+    private var mFilters: ProductsFilters = ProductsFilters.default
 
     init {
-        savedStateHandle.set(SAVE_STATE_KEY_URL, mUrl)
+        savedStateHandle.set(SAVE_STATE_KEY_FILTERS, mFilters)
     }
 
-    var url: String
-        get(): String {
-            return savedStateHandle.get(SAVE_STATE_KEY_URL)!!
+    var filters: ProductsFilters
+        get(): ProductsFilters {
+            return savedStateHandle.get(SAVE_STATE_KEY_FILTERS)!!
         }
         set(value) {
-            savedStateHandle.set(SAVE_STATE_KEY_URL, value)
+            savedStateHandle.set(SAVE_STATE_KEY_FILTERS, value)
         }
 }

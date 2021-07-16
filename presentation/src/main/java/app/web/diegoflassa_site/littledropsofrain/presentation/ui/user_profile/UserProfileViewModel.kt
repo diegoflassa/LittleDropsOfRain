@@ -14,31 +14,40 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.instagram.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.user_profile
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 
-class InstagramViewModel(state: SavedStateHandle) : ViewModel() {
+class UserProfileViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY_URL = "INSTAGRAM_SAVE_STATE_KEY_URL"
+        private const val SAVE_STATE_KEY_NAME = "USER_SAVE_STATE_KEY_NAME"
+        private const val SAVE_STATE_KEY_EMAIL = "USER_SAVE_STATE_KEY_EMAIL"
     }
 
     private val savedStateHandle = state
-    private var mUrl = MyApplication.getContext().getString(R.string.url_instagram)
+    private var mName = ""
+    private var mEmail = ""
 
     init {
-        savedStateHandle.set(SAVE_STATE_KEY_URL, mUrl)
+        savedStateHandle.set(SAVE_STATE_KEY_NAME, mName)
+        savedStateHandle.set(SAVE_STATE_KEY_EMAIL, mEmail)
     }
 
-    var url: String
+    var name: String
         get(): String {
-            return savedStateHandle.get(SAVE_STATE_KEY_URL)!!
+            return savedStateHandle.get(SAVE_STATE_KEY_NAME)!!
         }
         set(value) {
-            savedStateHandle.set(SAVE_STATE_KEY_URL, value)
+            savedStateHandle.set(SAVE_STATE_KEY_NAME, value)
+        }
+
+    var email: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_EMAIL)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_EMAIL, value)
         }
 }

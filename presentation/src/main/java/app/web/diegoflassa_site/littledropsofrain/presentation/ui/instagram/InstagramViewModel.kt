@@ -14,30 +14,31 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.my_liked_products.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.instagram
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
+import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 
-class MyLikedProductsViewModel(state: SavedStateHandle) : ViewModel() {
+class InstagramViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY_FILTERS = "MY_LIKED_PRODUCTS_SAVE_STATE_KEY_FILTERS"
+        private const val SAVE_STATE_KEY_URL = "INSTAGRAM_SAVE_STATE_KEY_URL"
     }
 
     private val savedStateHandle = state
-    private var mFilters: ProductsFilters = ProductsFilters.default
+    private var mUrl = MyApplication.getContext().getString(R.string.url_instagram)
 
     init {
-        savedStateHandle.set(SAVE_STATE_KEY_FILTERS, mFilters)
+        savedStateHandle.set(SAVE_STATE_KEY_URL, mUrl)
     }
 
-    var filters: ProductsFilters
-        get(): ProductsFilters {
-            return savedStateHandle.get(SAVE_STATE_KEY_FILTERS)!!
+    var url: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_URL)!!
         }
         set(value) {
-            savedStateHandle.set(SAVE_STATE_KEY_FILTERS, value)
+            savedStateHandle.set(SAVE_STATE_KEY_URL, value)
         }
 }

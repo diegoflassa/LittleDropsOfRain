@@ -53,7 +53,6 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.adapters.ProductA
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.model.HomeViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.OffAirFragment
 import com.google.android.gms.location.*
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -107,11 +106,6 @@ class HomeFragment :
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        viewModel.filtersLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI()
-        }
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
 
@@ -222,9 +216,9 @@ class HomeFragment :
                 this.requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    this.requireContext(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
+                this.requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
             mPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
             return
@@ -261,7 +255,7 @@ class HomeFragment :
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.filtersLiveData.postValue( ProductsFilters.default)
+        viewModel.filters = ProductsFilters.default
         onFilter(viewModel.filters)
     }
 
@@ -284,7 +278,7 @@ class HomeFragment :
 
     private fun isLocationInBrazil(location: Location): Boolean {
         return (location.latitude > BRAZIL_MAX_LATITUDE_SOUTH && location.latitude < BRAZIL_MIN_LATITUDE_NORTH) &&
-            (location.longitude > BRAZIL_MAX_LONGITUDE_WEST && location.longitude < BRAZIL_MIN_LONGITUDE_EAST)
+                (location.longitude > BRAZIL_MAX_LONGITUDE_WEST && location.longitude < BRAZIL_MIN_LONGITUDE_EAST)
     }
 
     private fun getShopByGeoLocation(query: Query): Query {
@@ -352,7 +346,7 @@ class HomeFragment :
         binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        viewModel.filtersLiveData.postValue(filters)
+        viewModel.filters = filters
     }
 
     override fun onClick(v: View) {
@@ -412,7 +406,8 @@ class HomeFragment :
     override fun onActivityResult(result: Int) {
         if (result == AppCompatActivity.RESULT_OK) {
             // Successfully signed in
-            val user = app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value
+            val user =
+                app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value
             if (user != null) {
                 val userFb = User()
                 userFb.uid = user.uid

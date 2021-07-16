@@ -6,16 +6,15 @@ import java.util.*
 
 @Suppress("Unused", "MemberVisibilityCanBePrivate")
 object Config {
-    const val ktlint = "0.39.0"
     const val applicationId = "app.web.diegoflassa_site.littledropsofrain"
     private const val versionMajor = 1
     private const val versionMinor = 0
     private const val versionPatch = 7
     private var versionClassifier = "debug"
     const val minimumSdkVersion = 24
-    const val compileSdkVersion = 30
+    const val compileSdkVersion = 31
     const val compileSdkPreviewVersion = "S"
-    const val targetSdkVersion = 30
+    const val targetSdkVersion = 31
     const val targetSdkPreviewVersion = "S"
     const val buildToolsVersion = "31.0.0"
     val versionCode = buildVersionCode()

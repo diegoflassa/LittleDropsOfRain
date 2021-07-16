@@ -40,7 +40,6 @@ import app.web.diegoflassa_site.littledropsofrain.domain.helpers.isSafeToAccessV
 import app.web.diegoflassa_site.littledropsofrain.presentation.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.interfaces.OnKeyLongPressListener
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.facebook.model.FacebookViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.*

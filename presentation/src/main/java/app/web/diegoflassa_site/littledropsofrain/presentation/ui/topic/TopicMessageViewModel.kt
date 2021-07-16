@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.topic.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.topic
 
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
@@ -72,7 +72,7 @@ class TopicMessageViewModel(state: SavedStateHandle) : ViewModel() {
 
     var imageUriFirestore: Uri?
         get(): Uri? {
-            return savedStateHandle.get(SAVE_STATE_KEY_IMAGE_URI_FIRESTORE)!!
+            return savedStateHandle.get(SAVE_STATE_KEY_IMAGE_URI_FIRESTORE)
         }
         set(value) {
             savedStateHandle.set(SAVE_STATE_KEY_IMAGE_URI_FIRESTORE, value)
@@ -80,7 +80,7 @@ class TopicMessageViewModel(state: SavedStateHandle) : ViewModel() {
 
     var imageUriLocal: Uri?
         get(): Uri? {
-            return savedStateHandle.get(SAVE_STATE_KEY_IMAGE_URI_LOCAL)!!
+            return savedStateHandle.get(SAVE_STATE_KEY_IMAGE_URI_LOCAL)
         }
         set(value) {
             savedStateHandle.set(SAVE_STATE_KEY_IMAGE_URI_LOCAL, value)
