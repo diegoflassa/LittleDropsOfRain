@@ -119,7 +119,7 @@ class MyLikedProductsFragment :
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        updateUI(viewModel)
+        updateUI()
     }
 
     override fun onDestroyView() {
@@ -133,10 +133,10 @@ class MyLikedProductsFragment :
 
     override fun onResume() {
         super.onResume()
-        updateUI(viewModel)
+        updateUI()
     }
 
-    private fun updateUI(viewState: MyLikedProductsViewModel) {
+    private fun updateUI() {
         // Update the UI
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE

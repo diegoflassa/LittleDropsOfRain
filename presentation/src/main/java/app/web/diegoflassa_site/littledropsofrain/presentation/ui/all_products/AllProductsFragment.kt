@@ -134,10 +134,10 @@ class AllProductsFragment :
 
     override fun onResume() {
         super.onResume()
-        updateUI(viewModel)
+        updateUI()
     }
 
-    private fun updateUI(viewState: AllProductsViewModel) {
+    private fun updateUI() {
         // Update the UI
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE

@@ -110,7 +110,7 @@ class HomeFragment :
         viewModel.filtersLiveData.observe(
             viewLifecycleOwner
         ) {
-            updateUI(viewModel)
+            updateUI()
         }
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
@@ -190,7 +190,7 @@ class HomeFragment :
         }
 
         // Update UI to match restored state
-        updateUI(viewModel)
+        updateUI()
     }
 
     override fun onDestroyView() {
@@ -209,7 +209,7 @@ class HomeFragment :
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        updateUI(viewModel)
+        updateUI()
     }
 
     override fun onResume() {
@@ -245,7 +245,7 @@ class HomeFragment :
         }
     }
 
-    private fun updateUI(viewState: HomeViewModel) {
+    private fun updateUI() {
         // Update the UI
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE

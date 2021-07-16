@@ -154,10 +154,10 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
         isStopped = false
         binding.webviewFacebook.resumeTimers()
         restoreCurrentUrl()
-        updateUI(viewModel)
+        updateUI()
     }
 
-    private fun updateUI(viewState: FacebookViewModel) {
+    private fun updateUI() {
         // Update the UI
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE

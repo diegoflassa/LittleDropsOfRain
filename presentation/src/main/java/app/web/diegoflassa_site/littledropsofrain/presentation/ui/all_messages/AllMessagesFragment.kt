@@ -160,7 +160,7 @@ class AllMessagesFragment :
     override fun onResume() {
         super.onResume()
         isStopped = false
-        updateUI(viewModel)
+        updateUI()
     }
 
     override fun onClick(v: View) {
@@ -170,7 +170,7 @@ class AllMessagesFragment :
         }
     }
 
-    private fun updateUI(viewState: AllMessagesViewModel) {
+    private fun updateUI() {
         // Update the UI
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.VISIBLE

@@ -125,7 +125,7 @@ class MessagesFragment :
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        updateUI(viewModel)
+        updateUI()
     }
 
     override fun onStop() {
@@ -140,7 +140,7 @@ class MessagesFragment :
         }
     }
 
-    private fun updateUI(viewState: MessagesViewModel) {
+    private fun updateUI() {
         // Update the UI
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE

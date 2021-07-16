@@ -161,10 +161,10 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         isStopped = false
         binding.webviewInstagram.resumeTimers()
         restoreCurrentUrl()
-        updateUI(viewModel)
+        updateUI()
     }
 
-    private fun updateUI(viewState: InstagramViewModel) {
+    private fun updateUI() {
         // Update the UI
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE
