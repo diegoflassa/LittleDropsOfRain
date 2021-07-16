@@ -40,8 +40,6 @@ import app.web.diegoflassa_site.littledropsofrain.domain.helpers.isSafeToAccessV
 import app.web.diegoflassa_site.littledropsofrain.presentation.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.interfaces.OnKeyLongPressListener
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.instagram.model.InstagramViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.instagram.model.InstagramViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
@@ -76,7 +74,6 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
 
     val viewModel: InstagramViewModel by stateViewModel()
     private var binding: FragmentInstagramBinding by viewLifecycle()
-    private var url = ""
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
@@ -85,13 +82,7 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentInstagramBinding.inflate(inflater, container, false)
-        viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(it)
-        }
 
-        url = getString(R.string.url_instagram)
         // set up the webview
         binding.webviewInstagram.settings.javaScriptEnabled = true
         binding.webviewInstagram.settings.domStorageEnabled = true
@@ -127,7 +118,7 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         showProgressDialog()
-        binding.webviewInstagram.loadUrl(url)
+        binding.webviewInstagram.loadUrl(viewModel.url)
         runBlocking {
             saveCurrentUrl()
         }
@@ -169,12 +160,11 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
         isStopped = false
         binding.webviewInstagram.resumeTimers()
         restoreCurrentUrl()
-        updateUI(viewModel.viewState)
+        updateUI()
     }
 
-    private fun updateUI(viewState: InstagramViewState) {
+    private fun updateUI() {
         // Update the UI
-        viewState.text = ""
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE
     }

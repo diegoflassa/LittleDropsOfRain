@@ -14,34 +14,30 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.home
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.HomeFragment
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
 
 class HomeViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_FILTERS = "HOME_SAVE_STATE_KEY_FILTERS"
     }
 
     private val savedStateHandle = state
+    private var mFilters: ProductsFilters = ProductsFilters.default
 
     init {
-        val viewState = HomeViewState().apply {
-            text = "This is ${HomeFragment::class.simpleName} Fragment"
-        }
-        savedStateHandle.set(SAVE_STATE_KEY, viewState)
+        savedStateHandle.set(SAVE_STATE_KEY_FILTERS, mFilters)
     }
 
-    val viewStateLiveData: MutableLiveData<HomeViewState>
-        get(): MutableLiveData<HomeViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    var filters: ProductsFilters
+        get(): ProductsFilters {
+            return savedStateHandle.get(SAVE_STATE_KEY_FILTERS)!!
         }
-    val viewState: HomeViewState
-        get(): HomeViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_FILTERS, value)
         }
 }

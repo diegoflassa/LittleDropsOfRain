@@ -14,34 +14,40 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.user_profile.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.user_profile
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.user_profile.UserProfileFragment
 
 class UserProfileViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_NAME = "USER_SAVE_STATE_KEY_NAME"
+        private const val SAVE_STATE_KEY_EMAIL = "USER_SAVE_STATE_KEY_EMAIL"
     }
 
     private val savedStateHandle = state
+    private var mName = ""
+    private var mEmail = ""
 
     init {
-        val viewState = UserProfileViewState().apply {
-            text = "This is ${UserProfileFragment::class.simpleName} Fragment"
-        }
-        savedStateHandle.set(SAVE_STATE_KEY, viewState)
+        savedStateHandle.set(SAVE_STATE_KEY_NAME, mName)
+        savedStateHandle.set(SAVE_STATE_KEY_EMAIL, mEmail)
     }
 
-    val viewStateLiveData: MutableLiveData<UserProfileViewState>
-        get(): MutableLiveData<UserProfileViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    var name: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_NAME)!!
         }
-    val viewState: UserProfileViewState
-        get(): UserProfileViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_NAME, value)
+        }
+
+    var email: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_EMAIL)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_EMAIL, value)
         }
 }

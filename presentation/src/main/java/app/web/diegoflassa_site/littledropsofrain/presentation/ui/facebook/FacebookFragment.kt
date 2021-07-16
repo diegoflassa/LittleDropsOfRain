@@ -40,8 +40,6 @@ import app.web.diegoflassa_site.littledropsofrain.domain.helpers.isSafeToAccessV
 import app.web.diegoflassa_site.littledropsofrain.presentation.MainActivity
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.interfaces.OnKeyLongPressListener
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.facebook.model.FacebookViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.facebook.model.FacebookViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.*
@@ -73,7 +71,6 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
 
     val viewModel: FacebookViewModel by stateViewModel()
     private var binding: FragmentFacebookBinding by viewLifecycle()
-    private var url = ""
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
@@ -82,13 +79,7 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFacebookBinding.inflate(inflater, container, false)
-        viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(it)
-        }
 
-        url = getString(R.string.url_facebook)
         // set up the webview
         binding.webviewFacebook.settings.javaScriptEnabled = true
         binding.webviewFacebook.settings.domStorageEnabled = true
@@ -124,7 +115,7 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
         showProgressDialog()
-        binding.webviewFacebook.loadUrl(url)
+        binding.webviewFacebook.loadUrl(viewModel.url)
         saveCurrentUrl()
         return binding.root
     }
@@ -162,12 +153,11 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
         isStopped = false
         binding.webviewFacebook.resumeTimers()
         restoreCurrentUrl()
-        updateUI(viewModel.viewState)
+        updateUI()
     }
 
-    private fun updateUI(viewState: FacebookViewState) {
+    private fun updateUI() {
         // Update the UI
-        viewState.text = ""
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)

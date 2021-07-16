@@ -14,34 +14,30 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.my_liked_products.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.my_liked_products
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.my_liked_products.MyLikedProductsFragment
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
 
 class MyLikedProductsViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_FILTERS = "MY_LIKED_PRODUCTS_SAVE_STATE_KEY_FILTERS"
     }
 
     private val savedStateHandle = state
+    private var mFilters: ProductsFilters = ProductsFilters.default
 
     init {
-        val viewState = MyLikedProductsViewState().apply {
-            text = "This is ${MyLikedProductsFragment::class.simpleName} Fragment"
-        }
-        savedStateHandle.set(SAVE_STATE_KEY, viewState)
+        savedStateHandle.set(SAVE_STATE_KEY_FILTERS, mFilters)
     }
 
-    val viewStateLiveData: MutableLiveData<MyLikedProductsViewState>
-        get(): MutableLiveData<MyLikedProductsViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    var filters: ProductsFilters
+        get(): ProductsFilters {
+            return savedStateHandle.get(SAVE_STATE_KEY_FILTERS)!!
         }
-    val viewState: MyLikedProductsViewState
-        get(): MyLikedProductsViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_FILTERS, value)
         }
 }

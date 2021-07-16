@@ -35,7 +35,7 @@ buildscript {
         // Performance Monitoring plugin
         //classpath("com.google.firebase:perf-plugin:${Versions.perf}")
         classpath("com.google.firebase:perf-plugin:1.4.0")
-        // Add the App Distributi3 rtffggon Gradle plugin
+        // Add the App Distribution Gradle plugin
         //classpath("com.google.firebase:firebase-appdistribution-gradle:${Versions.app_distribution}")
         classpath("com.google.firebase:firebase-appdistribution-gradle:2.1.3")
 

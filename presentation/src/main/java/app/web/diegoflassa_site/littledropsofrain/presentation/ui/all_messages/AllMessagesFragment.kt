@@ -40,8 +40,6 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.adapters.MessageA
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.AllMessagesFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.AllMessagesFilters
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_messages.model.AllMessagesViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_messages.model.AllMessagesViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -83,11 +81,6 @@ class AllMessagesFragment :
     ): View {
         viewModel = ViewModelProvider(this).get(AllMessagesViewModel::class.java)
         binding = FragmentAllMessagesBinding.inflate(inflater, container, false)
-        viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(it)
-        }
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(
             AppCompatResources.getDrawable(
@@ -142,8 +135,8 @@ class AllMessagesFragment :
         if (AllMessagesFragmentArgs.fromBundle(requireArguments()).who != KEY_ALL_MESSAGES) {
             val filter = AllMessagesFilters.default
             filter.emailSender = AllMessagesFragmentArgs.fromBundle(requireArguments()).who
-            viewModel.viewState.filters = filter
-            onFilter(viewModel.viewState.filters)
+            viewModel.filters = filter
+            onFilter(viewModel.filters)
         }
     }
 
@@ -151,7 +144,7 @@ class AllMessagesFragment :
         super.onStart()
 
         // Apply filters
-        onFilter(viewModel.viewState.filters)
+        onFilter(viewModel.filters)
 
         // Start listening for Firestore updates
         mAdapter.get()?.startListening()
@@ -166,7 +159,7 @@ class AllMessagesFragment :
     override fun onResume() {
         super.onResume()
         isStopped = false
-        updateUI(viewModel.viewState)
+        updateUI()
     }
 
     override fun onClick(v: View) {
@@ -176,9 +169,8 @@ class AllMessagesFragment :
         }
     }
 
-    private fun updateUI(viewState: AllMessagesViewState) {
+    private fun updateUI() {
         // Update the UI
-        viewState.text = ""
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.VISIBLE
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
@@ -232,7 +224,7 @@ class AllMessagesFragment :
         binding.textCurrentSortByAllMessages.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        viewModel.viewState.filters = filters
+        viewModel.filters = filters
     }
 
     private fun initFirestore() {
@@ -254,29 +246,29 @@ class AllMessagesFragment :
         }
 
         mAdapter = WeakReference(object :
-                MessageAdapter(requireContext(), mQuery, this@AllMessagesFragment) {
-                override fun onDataChanged() {
-                    hideLoadingScreen()
-                    // Show/hide content if the query returns empty.
-                    if (itemCount == 0) {
-                        binding.recyclerviewAllMessages.visibility = View.GONE
-                        binding.allMessagesViewEmpty.visibility = View.VISIBLE
-                    } else {
-                        binding.recyclerviewAllMessages.visibility = View.VISIBLE
-                        binding.allMessagesViewEmpty.visibility = View.GONE
-                    }
+            MessageAdapter(requireContext(), mQuery, this@AllMessagesFragment) {
+            override fun onDataChanged() {
+                hideLoadingScreen()
+                // Show/hide content if the query returns empty.
+                if (itemCount == 0) {
+                    binding.recyclerviewAllMessages.visibility = View.GONE
+                    binding.allMessagesViewEmpty.visibility = View.VISIBLE
+                } else {
+                    binding.recyclerviewAllMessages.visibility = View.VISIBLE
+                    binding.allMessagesViewEmpty.visibility = View.GONE
                 }
+            }
 
-                override fun onError(e: FirebaseFirestoreException?) {
-                    // Show a snackbar on errors
-                    activity?.findViewById<View>(android.R.id.content)?.let {
-                        Snackbar.make(
-                            it,
-                            "Error: check logs for info.", Snackbar.LENGTH_LONG
-                        ).show()
-                    }
+            override fun onError(e: FirebaseFirestoreException?) {
+                // Show a snackbar on errors
+                activity?.findViewById<View>(android.R.id.content)?.let {
+                    Snackbar.make(
+                        it,
+                        "Error: check logs for info.", Snackbar.LENGTH_LONG
+                    ).show()
                 }
-            })
+            }
+        })
         binding.recyclerviewAllMessages.layoutManager = LinearLayoutManager(activity)
         binding.recyclerviewAllMessages.adapter = mAdapter.get()
     }
@@ -289,8 +281,8 @@ class AllMessagesFragment :
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.viewState.filters = AllMessagesFilters.default
-        onFilter(viewModel.viewState.filters)
+        viewModel.filters = AllMessagesFilters.default
+        onFilter(viewModel.filters)
     }
 
     override fun onMessageSelected(message: DocumentSnapshot?) {

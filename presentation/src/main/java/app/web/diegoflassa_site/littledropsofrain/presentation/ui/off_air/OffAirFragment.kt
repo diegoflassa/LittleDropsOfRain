@@ -30,8 +30,6 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentOffAirBinding
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.isSafeToAccessViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.model.OffAirViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.model.OffAirViewState
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
@@ -124,20 +122,21 @@ class OffAirFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (isSafeToAccessViewModel() && !isStopped) {
-            viewModel.viewState.messageEn = binding.edtTxtMlOffAirMessageEn.text.toString()
-            viewModel.viewState.messagePt = binding.edtTxtMlOffAirMessagePt.text.toString()
+            viewModel.msgEn = binding.edtTxtMlOffAirMessageEn.text.toString()
+            viewModel.msgPt = binding.edtTxtMlOffAirMessagePt.text.toString()
+            updateUI(viewModel)
         }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     override fun onResume() {
         super.onResume()
         isStopped = false
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     private fun removeToogleListener() {
@@ -148,10 +147,9 @@ class OffAirFragment : Fragment() {
         }
     }
 
-    private fun updateUI(viewState: OffAirViewState) {
+    private fun updateUI(viewState: OffAirViewModel) {
         // Update the UI
-        viewState.text = ""
-        binding.edtTxtMlOffAirMessageEn.setText(viewState.messageEn)
-        binding.edtTxtMlOffAirMessagePt.setText(viewState.messagePt)
+        binding.edtTxtMlOffAirMessageEn.setText(viewState.msgEn)
+        binding.edtTxtMlOffAirMessagePt.setText(viewState.msgPt)
     }
 }
