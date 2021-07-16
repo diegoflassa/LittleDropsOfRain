@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.myMessagesFilterDialog
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -22,50 +22,39 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.CompoundButton
+import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
-import app.web.diegoflassa_site.littledropsofrain.data.entities.User
-import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUsersLoadedListener
-import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAllMessagesFiltersBinding
+import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMyMessagesFiltersBinding
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.model.AllMessagesFilterDialogViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import com.google.firebase.firestore.Query
-import com.joanzapata.iconify.IconDrawable
-import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Dialog Fragment containing filter form.
  */
-open class AllMessagesFilterDialogFragment :
+open class MyMessagesFilterDialogFragment :
     DialogFragment(),
-    View.OnClickListener,
-    OnUsersLoadedListener {
+    View.OnClickListener {
 
     companion object {
-        val TAG = AllMessagesFilterDialogFragment::class.simpleName
+        val TAG = MyMessagesFilterDialogFragment::class.simpleName
     }
 
     interface FilterListener {
-        fun onFilter(filters: AllMessagesFilters)
+        fun onFilter(filters: MyMessagesFilters)
     }
 
-    private lateinit var mSpinnerUsers: Spinner
+    val viewModel: MyMessagesFilterDialogViewModel by stateViewModel()
     private lateinit var mSpinnerSort: Spinner
     private lateinit var mSpinnerType: Spinner
     var filterListener: FilterListener? = null
-
-    val viewModel: AllMessagesFilterDialogViewModel by stateViewModel()
-    var binding: FragmentAllMessagesFiltersBinding by viewLifecycle()
-    private var mSavedInstanceState: Bundle? = null
+    var binding: FragmentMyMessagesFiltersBinding by viewLifecycle()
     private var mRootView: View? = null
 
     @ExperimentalStdlibApi
@@ -74,17 +63,7 @@ open class AllMessagesFilterDialogFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mSavedInstanceState = savedInstanceState
-        binding = FragmentAllMessagesFiltersBinding.inflate(inflater, container, false)
-        binding.iconUsers.setImageDrawable(
-            IconDrawable(
-                requireContext(),
-                SimpleLineIconsIcons.icon_users
-            ).colorRes(R.color.colorAccent)
-        )
-        mSpinnerUsers = binding.spinnerUsers
-        mSpinnerSort = binding.spinnerSort
-        mSpinnerType = binding.spinnerType
+        binding = FragmentMyMessagesFiltersBinding.inflate(inflater, container, false)
         binding.buttonSearchMessages.setOnClickListener(this)
         binding.buttonCancelMessages.setOnClickListener(this)
         binding.checkBoxMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
@@ -96,11 +75,12 @@ open class AllMessagesFilterDialogFragment :
             }
             binding.spinnerSort.isEnabled = !checked
         }
+        mSpinnerSort = binding.spinnerSort
+        mSpinnerType = binding.spinnerType
         binding.switchMsgRead.isEnabled = false
         binding.switchMsgRead.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             filters.read = checked
         }
-        UserDao.loadAll(this)
         mRootView = binding.root
         return binding.root
     }
@@ -160,6 +140,14 @@ open class AllMessagesFilterDialogFragment :
             return null
         }
 
+    private val selectedRead: Boolean?
+        get() {
+            if (mRootView != null && !isDetached && binding.checkBoxMsgRead.isChecked) {
+                return binding.switchMsgRead.isChecked
+            }
+            return null
+        }
+
     @ExperimentalStdlibApi
     private val selectedType: MessageType?
         get() {
@@ -172,24 +160,6 @@ open class AllMessagesFilterDialogFragment :
                 } else {
                     null
                 }
-            }
-            return null
-        }
-
-    private val selectedRead: Boolean?
-        get() {
-            if (mRootView != null && !isDetached && binding.checkBoxMsgRead.isChecked) {
-                return binding.switchMsgRead.isChecked
-            }
-            return null
-        }
-
-    private val selectedEmailSender: String?
-        get() {
-            if (mRootView != null && !isDetached) {
-                return if (binding.spinnerUsers.selectedItemPosition > 0) {
-                    return (binding.spinnerUsers.selectedItem as User).email
-                } else null
             }
             return null
         }
@@ -214,57 +184,20 @@ open class AllMessagesFilterDialogFragment :
 
     fun resetFilters() {
         if (mRootView != null && !isDetached) {
-            mSpinnerUsers.setSelection(0)
             mSpinnerSort.setSelection(0)
             mSpinnerType.setSelection(0)
         }
     }
 
     @ExperimentalStdlibApi
-    val filters: AllMessagesFilters
+    val filters: MyMessagesFilters
         get() {
             val filters =
-                AllMessagesFilters()
+                MyMessagesFilters()
             filters.read = selectedRead
-            filters.emailSender = selectedEmailSender
             filters.type = selectedType
             filters.sortBy = selectedSortBy
             filters.sortDirection = sortDirection
             return filters
         }
-
-    @ExperimentalStdlibApi
-    override fun onUsersLoaded(users: List<User>) {
-        val usersWithDefault = ArrayList<User>(users.size + 1)
-        val user = User()
-        user.name = getString(R.string.no_selection)
-        user.email = getString(R.string.none)
-        usersWithDefault.add(user)
-        usersWithDefault.addAll(users)
-        val dataAdapter: ArrayAdapter<User> = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item, usersWithDefault
-        )
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerUsers.adapter = dataAdapter
-        binding.spinnerUsers.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                filters.emailSender = (binding.spinnerUsers.adapter.getItem(pos) as User).email
-                viewModel.viewState.selectedUserEmail = filters.emailSender.toString()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
-                filters.emailSender = null
-            }
-        }
-        if (viewModel.viewState.selectedUserEmail.isNotEmpty()) {
-            for (index in 0 until binding.spinnerUsers.adapter.count) {
-                val userAdapter = binding.spinnerUsers.adapter.getItem(index) as User
-                if (userAdapter.email == viewModel.viewState.selectedUserEmail) {
-                    binding.spinnerUsers.setSelection(index)
-                    break
-                }
-            }
-        }
-    }
 }

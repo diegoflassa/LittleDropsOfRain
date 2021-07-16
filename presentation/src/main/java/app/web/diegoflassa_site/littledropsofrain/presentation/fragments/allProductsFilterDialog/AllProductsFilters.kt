@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allProductsFilterDialog
 
 import android.content.Context
 import android.os.Parcelable
 import android.text.TextUtils
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
-import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 import com.google.firebase.firestore.Query
 import kotlinx.parcelize.Parcelize
@@ -30,7 +28,7 @@ import kotlinx.parcelize.Parcelize
  * Object for passing filters around.
  */
 @Parcelize
-data class ProductsFilters(
+data class AllProductsFilters(
     var categories: MutableList<String> = ArrayList(),
     var price: Pair<Int, Int>? = null,
     var sortBy: String? = null,
@@ -63,6 +61,7 @@ data class ProductsFilters(
             )
             desc.append("</b>")
         }
+
         if (price != null) {
             desc.append(MyApplication.getContext().getString(R.string.for_filter))
             desc.append("<b>")
@@ -87,10 +86,10 @@ data class ProductsFilters(
     }
 
     companion object {
-        val default: ProductsFilters
+        val default: AllProductsFilters
             get() {
                 val filters =
-                    ProductsFilters()
+                    AllProductsFilters()
                 filters.categories.clear()
                 filters.sortBy = Product.PRICE
                 filters.sortDirection = Query.Direction.DESCENDING

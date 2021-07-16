@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="@dimen/paddingSmall"
     android:tag="AllMessagesFilterDialogFragment"
-    tools:context=".presentation.fragments.AllMessagesFilterDialog.AllMessagesFilterDialogFragment">
+    tools:context=".presentation.fragments.allMessagesFilterDialog.AllMessagesFilterDialogFragment">
 
     <TextView
         android:layout_width="wrap_content"

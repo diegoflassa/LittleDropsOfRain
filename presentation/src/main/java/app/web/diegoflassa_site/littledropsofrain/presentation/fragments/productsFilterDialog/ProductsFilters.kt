@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.productsFilterDialog
 
 import android.content.Context
 import android.os.Parcelable
 import android.text.TextUtils
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
-import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
+import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 import com.google.firebase.firestore.Query
 import kotlinx.parcelize.Parcelize
@@ -30,19 +30,19 @@ import kotlinx.parcelize.Parcelize
  * Object for passing filters around.
  */
 @Parcelize
-data class MyMessagesFilters(
-    var read: Boolean? = null,
-    var type: MessageType? = null,
+data class ProductsFilters(
+    var categories: MutableList<String> = ArrayList(),
+    var price: Pair<Int, Int>? = null,
     var sortBy: String? = null,
     var sortDirection: Query.Direction? = null
 ) : Parcelable {
 
-    fun hasRead(): Boolean {
-        return (read != null)
+    fun hasCategory(): Boolean {
+        return !categories.isNullOrEmpty()
     }
 
-    fun hasMessageType(): Boolean {
-        return ((type != null) && (type != MessageType.UNKNOWN))
+    fun hasPrice(): Boolean {
+        return price != null
     }
 
     fun hasSortBy(): Boolean {
@@ -51,9 +51,9 @@ data class MyMessagesFilters(
 
     fun getSearchDescription(): String {
         val desc = StringBuilder()
-        if (hasMessageType()) {
+        if (categories.isNotEmpty()) {
             desc.append("<b>")
-            desc.append(type.toString())
+            desc.append(categories)
             desc.append("</b>")
         } else {
             desc.append("<b>")
@@ -63,45 +63,36 @@ data class MyMessagesFilters(
             )
             desc.append("</b>")
         }
-
-        if (hasRead()) {
+        if (price != null) {
             desc.append(MyApplication.getContext().getString(R.string.for_filter))
             desc.append("<b>")
-            var yesNoRead = MyApplication.getContext().getString(R.string.no)
-            if (read != null && read!!)
-                yesNoRead = MyApplication.getContext().getString(R.string.yes)
-            desc.append(
-                MyApplication.getContext()
-                    .getString(R.string.msg_read_filter, yesNoRead)
-            )
+            desc.append(Helper.getPriceString(price!!.first))
             desc.append("</b>")
         }
-
         return desc.toString()
     }
 
     fun getOrderDescription(context: Context): String {
         return when (sortBy) {
-            Message.READ -> {
-                context.getString(R.string.sorted_by_read)
+            Product.PRICE -> {
+                context.getString(R.string.sorted_by_price)
             }
-            Message.CREATION_DATE -> {
-                context.getString(R.string.sorted_by_creation_date)
+            Product.LIKES -> {
+                context.getString(R.string.sorted_by_likes)
             }
             else -> {
-                context.getString(R.string.sorted_by_creation_date)
+                context.getString(R.string.sorted_by_categories)
             }
         }
     }
 
     companion object {
-        val default: MyMessagesFilters
+        val default: ProductsFilters
             get() {
                 val filters =
-                    MyMessagesFilters()
-                filters.read = null
-                filters.type = MessageType.UNKNOWN
-                filters.sortBy = Message.CREATION_DATE
+                    ProductsFilters()
+                filters.categories.clear()
+                filters.sortBy = Product.PRICE
                 filters.sortDirection = Query.Direction.DESCENDING
                 return filters
             }

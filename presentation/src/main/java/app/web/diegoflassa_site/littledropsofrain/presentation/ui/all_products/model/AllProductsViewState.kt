@@ -17,7 +17,7 @@
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products.model
 
 import android.os.Parcelable
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllProductsFilterDialog.AllProductsFilters
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allProductsFilterDialog.AllProductsFilters
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

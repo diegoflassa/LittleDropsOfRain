@@ -14,36 +14,33 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allMessagesFilterDialog
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.AllMessagesFilterDialogFragment
 import javax.inject.Inject
 
 // @HiltViewModel
 class AllMessagesFilterDialogViewModel @Inject constructor(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_SELECTED_USER_EMAIL =
+            "ALL_MESSAGES_SAVE_STATE_KEY_SELECTED_USER_EMAIL"
     }
 
     private val savedStateHandle = state
 
+    private var mSelectedUserEmail: String = ""
+
     init {
-        val viewState = AllMessagesFilterDialogViewState().apply {
-            text = "This is ${AllMessagesFilterDialogFragment::class.simpleName} Fragment"
-        }
-        savedStateHandle.set(SAVE_STATE_KEY, viewState)
+        savedStateHandle.set(SAVE_STATE_KEY_SELECTED_USER_EMAIL, mSelectedUserEmail)
     }
 
-    val viewStateLiveData: MutableLiveData<AllMessagesFilterDialogViewState>
-        get(): MutableLiveData<AllMessagesFilterDialogViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    var selectedUserEmail: String
+        get(): String {
+            return savedStateHandle.get(SAVE_STATE_KEY_SELECTED_USER_EMAIL)!!
         }
-    val viewState: AllMessagesFilterDialogViewState
-        get(): AllMessagesFilterDialogViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_SELECTED_USER_EMAIL, value)
         }
 }

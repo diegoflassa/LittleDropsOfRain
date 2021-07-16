@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allProductsFilterDialog
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -29,12 +29,10 @@ import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataChangeListener
-import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentProductsFiltersBinding
+import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAllProductsFiltersBinding
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.model.ProductsFilterDialogViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -44,27 +42,27 @@ import org.koin.androidx.viewmodel.ext.android.stateViewModel
 /**
  * Dialog Fragment containing filter form.
  */
-open class ProductsFilterDialogFragment :
+open class AllProductsFilterDialogFragment :
     DialogFragment(),
     View.OnClickListener,
     OnDataChangeListener<List<Product>>,
     CompoundButton.OnCheckedChangeListener {
 
     companion object {
-        val TAG = ProductsFilterDialogFragment::class.simpleName
+        private val TAG = AllProductsFilterDialogFragment::class.simpleName
     }
 
     interface FilterListener {
-        fun onFilter(filters: ProductsFilters)
+        fun onFilter(filters: AllProductsFilters)
     }
 
-    val viewModel: ProductsFilterDialogViewModel by stateViewModel()
+    val viewModel: AllProductsFilterDialogViewModel by stateViewModel()
     var categories: LinkedHashSet<String> = LinkedHashSet()
     private lateinit var mCategoryChipGroup: ChipGroup
     private var mSortSpinner: Spinner? = null
     private var mPriceSpinner: Spinner? = null
     var filterListener: FilterListener? = null
-    private var binding: FragmentProductsFiltersBinding by viewLifecycle()
+    private var binding: FragmentAllProductsFiltersBinding by viewLifecycle()
     private var mRootView: View? = null
 
     override fun onCreateView(
@@ -72,7 +70,7 @@ open class ProductsFilterDialogFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentProductsFiltersBinding.inflate(inflater, container, false)
+        binding = FragmentAllProductsFiltersBinding.inflate(inflater, container, false)
         mCategoryChipGroup = binding.categoryChipGroup
         mSortSpinner = binding.spinnerSort
         mPriceSpinner = binding.spinnerPrice
@@ -95,7 +93,7 @@ open class ProductsFilterDialogFragment :
         }
         binding.buttonSearch.setOnClickListener(this)
         binding.buttonCancel.setOnClickListener(this)
-        ProductDao.loadAllPublished(this)
+        ProductDao.loadAll(this)
         mRootView = binding.root
         return binding.root
     }
@@ -222,10 +220,10 @@ open class ProductsFilterDialogFragment :
         }
     }
 
-    val filters: ProductsFilters
+    val filters: AllProductsFilters
         get() {
             val filters =
-                ProductsFilters()
+                AllProductsFilters()
             filters.categories.addAll(this.selectedCategories)
             filters.price = if (selectedPrice == null) {
                 null

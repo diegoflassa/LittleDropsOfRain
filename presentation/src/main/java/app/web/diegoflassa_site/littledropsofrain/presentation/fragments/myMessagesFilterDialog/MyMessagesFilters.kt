@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllProductsFilterDialog
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.myMessagesFilterDialog
 
 import android.content.Context
 import android.os.Parcelable
 import android.text.TextUtils
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
-import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 import com.google.firebase.firestore.Query
 import kotlinx.parcelize.Parcelize
@@ -30,19 +29,19 @@ import kotlinx.parcelize.Parcelize
  * Object for passing filters around.
  */
 @Parcelize
-data class AllProductsFilters(
-    var categories: MutableList<String> = ArrayList(),
-    var price: Pair<Int, Int>? = null,
+data class MyMessagesFilters(
+    var read: Boolean? = null,
+    var type: MessageType? = null,
     var sortBy: String? = null,
     var sortDirection: Query.Direction? = null
 ) : Parcelable {
 
-    fun hasCategory(): Boolean {
-        return !categories.isNullOrEmpty()
+    fun hasRead(): Boolean {
+        return (read != null)
     }
 
-    fun hasPrice(): Boolean {
-        return price != null
+    fun hasMessageType(): Boolean {
+        return ((type != null) && (type != MessageType.UNKNOWN))
     }
 
     fun hasSortBy(): Boolean {
@@ -51,9 +50,9 @@ data class AllProductsFilters(
 
     fun getSearchDescription(): String {
         val desc = StringBuilder()
-        if (categories.isNotEmpty()) {
+        if (hasMessageType()) {
             desc.append("<b>")
-            desc.append(categories)
+            desc.append(type.toString())
             desc.append("</b>")
         } else {
             desc.append("<b>")
@@ -64,36 +63,44 @@ data class AllProductsFilters(
             desc.append("</b>")
         }
 
-        if (price != null) {
+        if (hasRead()) {
             desc.append(MyApplication.getContext().getString(R.string.for_filter))
             desc.append("<b>")
-            desc.append(Helper.getPriceString(price!!.first))
+            var yesNoRead = MyApplication.getContext().getString(R.string.no)
+            if (read != null && read!!)
+                yesNoRead = MyApplication.getContext().getString(R.string.yes)
+            desc.append(
+                MyApplication.getContext()
+                    .getString(R.string.msg_read_filter, yesNoRead)
+            )
             desc.append("</b>")
         }
+
         return desc.toString()
     }
 
     fun getOrderDescription(context: Context): String {
         return when (sortBy) {
-            Product.PRICE -> {
-                context.getString(R.string.sorted_by_price)
+            Message.READ -> {
+                context.getString(R.string.sorted_by_read)
             }
-            Product.LIKES -> {
-                context.getString(R.string.sorted_by_likes)
+            Message.CREATION_DATE -> {
+                context.getString(R.string.sorted_by_creation_date)
             }
             else -> {
-                context.getString(R.string.sorted_by_categories)
+                context.getString(R.string.sorted_by_creation_date)
             }
         }
     }
 
     companion object {
-        val default: AllProductsFilters
+        val default: MyMessagesFilters
             get() {
                 val filters =
-                    AllProductsFilters()
-                filters.categories.clear()
-                filters.sortBy = Product.PRICE
+                    MyMessagesFilters()
+                filters.read = null
+                filters.type = MessageType.UNKNOWN
+                filters.sortBy = Message.CREATION_DATE
                 filters.sortDirection = Query.Direction.DESCENDING
                 return filters
             }

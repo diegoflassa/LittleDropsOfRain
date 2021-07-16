@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.myMessagesFilterDialog
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 
-@Parcelize
-data class ProductsFilterDialogViewState(
-    var text: String = "",
-    var categories: LinkedHashSet<String> = LinkedHashSet()
-) : Parcelable
+class MyMessagesFilterDialogViewModel(state: SavedStateHandle) : ViewModel() {
+
+    companion object {
+        private const val SAVE_STATE_KEY = "MY_MESSAGES_FILTER_SAVE_STATE_KEY"
+    }
+
+    private val savedStateHandle = state
+
+    init {
+        savedStateHandle.set(SAVE_STATE_KEY, "")
+    }
+}

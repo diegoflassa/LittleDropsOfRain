@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.cart.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.cart
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.data.entities.CartItem
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllProductsFilterDialog.AllProductsFilters
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allProductsFilterDialog.AllProductsFilters
 
 class CartViewModel(state: SavedStateHandle) : ViewModel() {
 
@@ -39,13 +39,12 @@ class CartViewModel(state: SavedStateHandle) : ViewModel() {
         savedStateHandle.set(SAVE_STATE_KEY_CART, mCart)
     }
 
-    val filtersLiveData: MutableLiveData<AllProductsFilters>
-        get(): MutableLiveData<AllProductsFilters> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY_FILTER)
-        }
-    var filters: AllProductsFilters = AllProductsFilters.default
+    var filters: AllProductsFilters
         get(): AllProductsFilters {
             return savedStateHandle.get(SAVE_STATE_KEY_FILTER)!!
+        }
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_FILTER, value)
         }
 
     val cartLiveData: MutableLiveData<MutableList<CartItem>>

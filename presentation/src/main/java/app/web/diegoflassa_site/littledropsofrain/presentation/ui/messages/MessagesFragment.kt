@@ -30,12 +30,10 @@ import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMessagesBinding
 import app.web.diegoflassa_site.littledropsofrain.presentation.adapters.MessageAdapter
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilterDialogFragment
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilters
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.myMessagesFilterDialog.MyMessagesFilterDialogFragment
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.myMessagesFilterDialog.MyMessagesFilters
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.messages.model.MessagesViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.messages.model.MessagesViewState

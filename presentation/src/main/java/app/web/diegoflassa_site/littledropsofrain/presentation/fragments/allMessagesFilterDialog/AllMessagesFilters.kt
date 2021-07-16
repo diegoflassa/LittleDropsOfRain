@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allMessagesFilterDialog
 
 import android.content.Context
 import android.os.Parcelable
 import android.text.TextUtils
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 import com.google.firebase.firestore.Query

@@ -17,7 +17,7 @@
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_messages.model
 
 import android.os.Parcelable
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.AllMessagesFilters
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allMessagesFilterDialog.AllMessagesFilters
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
