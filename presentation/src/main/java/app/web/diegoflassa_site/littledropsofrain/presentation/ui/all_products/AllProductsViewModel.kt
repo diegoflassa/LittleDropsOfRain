@@ -14,34 +14,30 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products.AllProductsFragment
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllProductsFilterDialog.AllProductsFilters
 
 class AllProductsViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
+        private const val SAVE_STATE_KEY_FILTERS = "ALL_PRODUCTS_SAVE_STATE_KEY_FILTERS"
     }
 
     private val savedStateHandle = state
+    private var mFilters: AllProductsFilters = AllProductsFilters.default
 
     init {
-        val viewState = AllProductsViewState().apply {
-            text = "This is ${AllProductsFragment::class.simpleName} Fragment"
-        }
-        savedStateHandle.set(SAVE_STATE_KEY, viewState)
+        savedStateHandle.set(SAVE_STATE_KEY_FILTERS, mFilters)
     }
 
-    val viewStateLiveData: MutableLiveData<AllProductsViewState>
-        get(): MutableLiveData<AllProductsViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
+    var filters: AllProductsFilters
+        get(): AllProductsFilters {
+            return savedStateHandle.get(SAVE_STATE_KEY_FILTERS)!!
         }
-    val viewState: AllProductsViewState
-        get(): AllProductsViewState {
-            return savedStateHandle.get(SAVE_STATE_KEY)!!
+        set(value) {
+            savedStateHandle.set(SAVE_STATE_KEY_FILTERS, value)
         }
 }

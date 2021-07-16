@@ -26,6 +26,7 @@ class MyOnSharedPreferenceChangeListener(var context: Context) :
         var TAG = MyOnSharedPreferenceChangeListener::class.simpleName
         const val SP_KEY_SUBSCRIBE_TO_NEWS = "subs_news"
         const val SP_KEY_SUBSCRIBE_TO_PROMOS = "subs_promos"
+        const val SP_KEY_SUBSCRIBE_ADMIN_MESSAGES = "subs_admins"
     }
 
     override fun onSharedPreferenceChanged(prefs: SharedPreferences?, key: String?) {
@@ -40,6 +41,12 @@ class MyOnSharedPreferenceChangeListener(var context: Context) :
                 Helper.subscribeToPromos(context)
             } else {
                 Helper.unsubscribeToPromos(context)
+            }
+        } else if (key.equals(SP_KEY_SUBSCRIBE_ADMIN_MESSAGES)) {
+            if (prefs?.getBoolean(key, true)!!) {
+                Helper.subscribeToAdminMessages(context)
+            } else {
+                Helper.unsubscribeToAdminMessages(context)
             }
         }
     }

@@ -16,7 +16,6 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.model
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.AllMessagesFilterDialogFragment
@@ -38,10 +37,6 @@ class AllMessagesFilterDialogViewModel @Inject constructor(state: SavedStateHand
         savedStateHandle.set(SAVE_STATE_KEY, viewState)
     }
 
-    val viewStateLiveData: MutableLiveData<AllMessagesFilterDialogViewState>
-        get(): MutableLiveData<AllMessagesFilterDialogViewState> {
-            return savedStateHandle.getLiveData(SAVE_STATE_KEY)
-        }
     val viewState: AllMessagesFilterDialogViewState
         get(): AllMessagesFilterDialogViewState {
             return savedStateHandle.get(SAVE_STATE_KEY)!!

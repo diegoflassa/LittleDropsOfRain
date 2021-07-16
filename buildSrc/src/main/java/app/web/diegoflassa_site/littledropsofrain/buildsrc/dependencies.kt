@@ -13,6 +13,7 @@ object Versions {
     const val converter = "2.9.0"
     const val converter_jackson = "2.9.0"
     const val jackson = "2.12.4"
+    const val stax_api = "1.0-2"
     const val dagger = "2.37"
     const val hilt = "2.37"
     const val rxjava = "3.0.13"

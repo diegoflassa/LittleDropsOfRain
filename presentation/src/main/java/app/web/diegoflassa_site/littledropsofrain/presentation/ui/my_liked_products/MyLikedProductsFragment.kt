@@ -45,8 +45,6 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.adapters.MyLikedP
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.my_liked_products.model.MyLikedProductsViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.my_liked_products.model.MyLikedProductsViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -85,11 +83,6 @@ class MyLikedProductsFragment :
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMyLikedProductsBinding.inflate(inflater, container, false)
-        viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            updateUI(it)
-        }
         binding.filterBar.setOnClickListener(this)
         binding.buttonClearFilter.setOnClickListener(this)
 
@@ -114,7 +107,7 @@ class MyLikedProductsFragment :
         showLoadingScreen()
         initFirestore()
         initRecyclerView()
-        onFilter(viewModel.viewState.filters)
+        onFilter(viewModel.filters)
         mAdapter.get()!!.startListening()
 
         binding.filterBar.isEnabled = false
@@ -125,7 +118,7 @@ class MyLikedProductsFragment :
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        updateUI(viewModel.viewState)
+        updateUI()
     }
 
     override fun onDestroyView() {
@@ -139,12 +132,11 @@ class MyLikedProductsFragment :
 
     override fun onResume() {
         super.onResume()
-        updateUI(viewModel.viewState)
+        updateUI()
     }
 
-    private fun updateUI(viewState: MyLikedProductsViewState) {
+    private fun updateUI() {
         // Update the UI
-        viewState.text = ""
         val bnv = activity?.findViewById<BottomNavigationView>(R.id.nav_bottom)
         bnv?.visibility = View.GONE
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
@@ -159,8 +151,8 @@ class MyLikedProductsFragment :
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.viewState.filters = ProductsFilters.default
-        onFilter(viewModel.viewState.filters)
+        viewModel.filters = ProductsFilters.default
+        onFilter(viewModel.filters)
     }
 
     private fun showLoadingScreen() {
@@ -175,7 +167,10 @@ class MyLikedProductsFragment :
 
         // Construct query basic query
         var query: Query = mFirestore.collection(ProductDao.COLLECTION_PATH)
-        query.whereArrayContainsAny(Product.LIKES, listOf(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.uid!!))
+        query.whereArrayContainsAny(
+            Product.LIKES,
+            listOf(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.uid!!)
+        )
 
         // Category (equality filter)
         if (filters.hasCategory()) {
@@ -208,7 +203,7 @@ class MyLikedProductsFragment :
         binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        viewModel.viewState.filters = filters
+        viewModel.filters = filters
     }
 
     override fun onClick(v: View) {
@@ -222,7 +217,7 @@ class MyLikedProductsFragment :
         super.onStart()
 
         // Apply filters
-        onFilter(viewModel.viewState.filters)
+        onFilter(viewModel.filters)
 
         // Start listening for Firestore updates
         mAdapter.get()?.startListening()
@@ -252,27 +247,27 @@ class MyLikedProductsFragment :
                 mQuery,
                 this@MyLikedProductsFragment
             ) {
-                    override fun onDataChanged() {
-                        binding.filterBar.isEnabled = true
-                        hideLoadingScreen()
-                        // Show/hide content if the query returns empty.
-                        if (itemCount == 0) {
-                            binding.recyclerview.visibility = View.GONE
-                            binding.homeViewEmpty.visibility = View.VISIBLE
-                        } else {
-                            binding.recyclerview.visibility = View.VISIBLE
-                            binding.homeViewEmpty.visibility = View.GONE
-                        }
+                override fun onDataChanged() {
+                    binding.filterBar.isEnabled = true
+                    hideLoadingScreen()
+                    // Show/hide content if the query returns empty.
+                    if (itemCount == 0) {
+                        binding.recyclerview.visibility = View.GONE
+                        binding.homeViewEmpty.visibility = View.VISIBLE
+                    } else {
+                        binding.recyclerview.visibility = View.VISIBLE
+                        binding.homeViewEmpty.visibility = View.GONE
                     }
+                }
 
-                    override fun onError(e: FirebaseFirestoreException?) {
-                        // Show a snackbar on errors
-                        activity?.findViewById<View>(android.R.id.content)?.let {
-                            Snackbar.make(it, "Error: check logs for info.", Snackbar.LENGTH_LONG)
-                                .show()
-                        }
+                override fun onError(e: FirebaseFirestoreException?) {
+                    // Show a snackbar on errors
+                    activity?.findViewById<View>(android.R.id.content)?.let {
+                        Snackbar.make(it, "Error: check logs for info.", Snackbar.LENGTH_LONG)
+                            .show()
                     }
-                })
+                }
+            })
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
         binding.recyclerview.adapter = mAdapter.get()
     }
@@ -280,7 +275,8 @@ class MyLikedProductsFragment :
     override fun onActivityResult(result: Int) {
         if (result == AppCompatActivity.RESULT_OK) {
             // Successfully signed in
-            val user = app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value
+            val user =
+                app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value
             if (user != null) {
                 val userFb = User()
                 userFb.uid = user.uid

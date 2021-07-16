@@ -256,6 +256,8 @@ afterEvaluate {
         implementation("com.fasterxml.jackson.core:jackson-annotations:${Versions.jackson}")
         implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}")
         implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${Versions.jackson}")
+        // Fix bug of XMLInputFactory not found
+        implementation("javax.xml.stream:stax-api:${Versions.stax_api}")
 
         //GSON
         implementation("com.google.code.gson:gson:${Versions.gson}")

@@ -19,10 +19,7 @@ package app.web.diegoflassa_site.littledropsofrain.presentation
 import android.app.Activity
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
-import android.content.ComponentCallbacks2
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -53,7 +50,9 @@ import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUserFoundLis
 import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
 import app.web.diegoflassa_site.littledropsofrain.databinding.NavHeaderMainBinding
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.MainActivityHolder
+import app.web.diegoflassa_site.littledropsofrain.domain.preferences.MyOnSharedPreferenceChangeListener
 import app.web.diegoflassa_site.littledropsofrain.domain.services.NewMessagesService
 import app.web.diegoflassa_site.littledropsofrain.domain.services.SetupProductsUpdateWorkerService
 import app.web.diegoflassa_site.littledropsofrain.presentation.contracts.EmailLinkAuthActivityResultContract
@@ -71,6 +70,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.joanzapata.iconify.fonts.TypiconsIcons
@@ -111,7 +111,7 @@ class MainActivity :
             updateUI(it)
         }
         // Initialize the singleton class
-        app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value = null
+        LoggedUser.userLiveData.value = null
         setContentView(binding?.root)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -196,7 +196,7 @@ class MainActivity :
         bnv.setupWithNavController(navController)
         bnv.visibility = View.GONE
 
-        app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.observe(this) {
+        LoggedUser.userLiveData.observe(this) {
             if (it != null) {
                 PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
                     SettingsFragment.LOGGED_USER_EMAIL_KEY, it.email
@@ -219,9 +219,9 @@ class MainActivity :
     }
 
     private fun setUpUserInDrawer() {
-        if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value != null) {
-            if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.imageUrl != null) {
-                bindingNavHeader?.navVwImage?.load(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.imageUrl) {
+        if (LoggedUser.userLiveData.value != null) {
+            if (LoggedUser.userLiveData.value!!.imageUrl != null) {
+                bindingNavHeader?.navVwImage?.load(LoggedUser.userLiveData.value!!.imageUrl) {
                     placeholder(R.drawable.image_placeholder)
                     error(
                         ContextCompat.getDrawable(
@@ -244,9 +244,9 @@ class MainActivity :
                 findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalUserProfileFragment())
             }
             bindingNavHeader!!.navVwName.text =
-                app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.name
+                LoggedUser.userLiveData.value!!.name
             bindingNavHeader!!.navVwEmail.text =
-                app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.email
+                LoggedUser.userLiveData.value!!.email
         } else {
             bindingNavHeader!!.navVwImage.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -453,14 +453,14 @@ class MainActivity :
         navMyLikedProducts.icon = IconDrawable(this, SimpleLineIconsIcons.icon_heart)
         val navAllProductsProducts = navView.menu.findItem(R.id.nav_all_products)
         navAllProductsProducts.icon = IconDrawable(this, SimpleLineIconsIcons.icon_present)
-        if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value != null) {
+        if (LoggedUser.userLiveData.value != null) {
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_logout)
             navAuthentication.title = getString(R.string.logout)
         } else {
             navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_login)
             navAuthentication.title = getString(R.string.login)
         }
-        if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value != null) {
+        if (false && LoggedUser.userLiveData.value != null) {
             navMessages.isEnabled = true
             navMessages.isVisible = true
             navMyLikedProducts.isEnabled = true
@@ -468,10 +468,9 @@ class MainActivity :
         } else {
             navMessages.isEnabled = false
             navMessages.isVisible = false
-            navMyLikedProducts.isEnabled = false
-            navMyLikedProducts.isVisible = false
         }
-        if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value != null && app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.isAdmin) {
+        if (false && LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
+            subscribeToAdminMessages()
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
             navAllProductsProducts.isEnabled = true
@@ -482,7 +481,38 @@ class MainActivity :
             navAllProductsProducts.isEnabled = false
             navAllProductsProducts.isVisible = false
         }
+        // TODO Remove after returning menu options
+        if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
+            subscribeToAdminMessages()
+            navAdmin.isEnabled = true
+            navAdmin.isVisible = true
+        }else{
+            navAdmin.isEnabled = false
+            navAdmin.isVisible = false
+        }
+        navMyLikedProducts.isEnabled = false
+        navMyLikedProducts.isVisible = false
+        navAllProductsProducts.isEnabled = false
+        navAllProductsProducts.isVisible = false
         navHome.isChecked = true
+    }
+
+    private fun subscribeToAdminMessages() {
+        val sp: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        if (sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_ADMIN_MESSAGES, true)) {
+            val topic = Helper.getTopicAdminMessages(this)
+            FirebaseMessaging.getInstance().subscribeToTopic(topic)
+                .addOnCompleteListener { task ->
+                    var msg = getString(R.string.msg_subscribed_to_admins)
+                    if (!task.isSuccessful) {
+                        msg = getString(R.string.msg_subscribe_admins_failed)
+                    }
+                    Log.d(TAG, msg)
+                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            Log.d(TAG, "Not registered to receive promos")
+        }
     }
 
     override fun onUserFound(user: User?) {
@@ -526,12 +556,12 @@ class MainActivity :
                     jobScheduler.schedule(job)
                 }
                 Helper.requestGetCoarseLocationPermission(this)
-                app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value = user
+                LoggedUser.userLiveData.value = user
                 Toast.makeText(
                     applicationContext,
                     getString(
                         R.string.user_logged_as,
-                        app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.name
+                        LoggedUser.userLiveData.value!!.name
                     ),
                     Toast.LENGTH_LONG
                 ).show()
@@ -539,7 +569,7 @@ class MainActivity :
             FirebaseAuth.getInstance().currentUser != null -> {
                 val userFromFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
                 UserDao.insertOrUpdate(userFromFb)
-                app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value = userFromFb
+                LoggedUser.userLiveData.value = userFromFb
                 findNavController(R.id.nav_host_fragment).navigate(
                     MainActivityDirections.actionGlobalUserProfileFragment()
                 )
@@ -547,7 +577,7 @@ class MainActivity :
                     applicationContext,
                     getString(
                         R.string.user_logged_as,
-                        app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.name
+                        LoggedUser.userLiveData.value!!.name
                     ),
                     Toast.LENGTH_LONG
                 ).show()

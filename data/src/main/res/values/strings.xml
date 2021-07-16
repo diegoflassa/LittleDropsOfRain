@@ -8,4 +8,5 @@
     <string name="promos_pt">Promos in Portuguese</string>
     <string name="promos_en">Promos in English</string>
     <string name="unknown">Unknown</string>
+    <string name="admins">Message for Administrators</string>
 </resources>

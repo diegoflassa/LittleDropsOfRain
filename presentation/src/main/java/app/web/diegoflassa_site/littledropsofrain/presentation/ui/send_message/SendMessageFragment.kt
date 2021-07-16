@@ -42,8 +42,6 @@ import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUsersLoadedL
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentSendMessageBinding
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.*
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.model.SendMessageViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.model.SendMessageViewState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.DocumentReference
@@ -82,39 +80,33 @@ class SendMessageFragment :
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSendMessageBinding.inflate(layoutInflater)
-        viewModel.viewStateLiveData.observe(
-            viewLifecycleOwner
-
-        ) {
-            updateUI(viewModel.viewState)
-        }
         binding.btnSend.setOnClickListener {
             val callback = Callback(this)
             // Coroutine has multiple dispatchers suited for different type of workloads
             ioScope.launch {
-                when (viewModel.viewState.sendMethod) {
-                    SendMessageViewState.SendMethod.MESSAGE -> {
+                when (viewModel.sendMethod) {
+                    SendMessageViewModel.SendMethod.MESSAGE -> {
                         val message = Message()
                         message.emailSender = LoggedUser.userLiveData.value!!.email
                         message.sender = LoggedUser.userLiveData.value!!.name
                         message.senderId = LoggedUser.userLiveData.value!!.uid
-                        message.replyUid = viewModel.viewState.replyUid
-                        message.owners.add(viewModel.viewState.sender.email.toString())
-                        message.replyUid = viewModel.viewState.replyUid
+                        message.replyUid = viewModel.replyUid
+                        message.owners.add(viewModel.sender.email.toString())
+                        message.replyUid = viewModel.replyUid
                         message.message = binding.mltxtMessage.text.toString()
-                        if (!viewModel.viewState.dest.email.isNullOrEmpty()) {
-                            message.emailTo = viewModel.viewState.dest.email.toString()
-                            if (viewModel.viewState.isUserAdmin) {
-                                message.owners.add(viewModel.viewState.dest.email.toString())
+                        if (!viewModel.dest.email.isNullOrEmpty()) {
+                            message.emailTo = viewModel.dest.email.toString()
+                            if (viewModel.isUserAdmin) {
+                                message.owners.add(viewModel.dest.email.toString())
                             }
                         }
                         message.type = MessageType.MESSAGE.toString()
-                        message.senderId = viewModel.viewState.sender.uid
-                        message.sender = viewModel.viewState.sender.email
+                        message.senderId = viewModel.sender.uid
+                        message.sender = viewModel.sender.email
                         message.read = false
                         MessageDao.insert(message, callback)
                     }
-                    SendMessageViewState.SendMethod.EMAIL -> {
+                    SendMessageViewModel.SendMethod.EMAIL -> {
                         val sendTos = ArrayList<String>()
                         sendTos.add(binding.spnrContacts.selectedItem.toString())
                         Helper.sendEmail(
@@ -124,7 +116,7 @@ class SendMessageFragment :
                             binding.mltxtMessage.text.toString()
                         )
                     }
-                    SendMessageViewState.SendMethod.UNKNOWN -> {
+                    SendMessageViewModel.SendMethod.UNKNOWN -> {
                         activity?.runOnUiThread {
                             Toast.makeText(
                                 requireContext(),
@@ -161,7 +153,8 @@ class SendMessageFragment :
         UserDao.loadAll(this)
         mSavedInstanceState = savedInstanceState
         handleBundle()
-        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar) as androidx.appcompat.widget.Toolbar?
+        val toolbar =
+            activity?.findViewById<Toolbar>(R.id.toolbar) as androidx.appcompat.widget.Toolbar?
         toolbar?.setNavigationOnClickListener {
             val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
             toggle = ActionBarDrawerToggle(
@@ -204,22 +197,22 @@ class SendMessageFragment :
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (isSafeToAccessViewModel() && !isStopped) {
-            viewModel.viewState.title = binding.edttxtTitle.text.toString()
-            viewModel.viewState.body = binding.mltxtMessage.text.toString()
+            viewModel.title = binding.edttxtTitle.text.toString()
+            viewModel.body = binding.mltxtMessage.text.toString()
         }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     private fun setupViewForUser() {
-        viewModel.viewState.sender = LoggedUser.userLiveData.value ?: User()
-        viewModel.viewState.isUserAdmin =
+        viewModel.sender = LoggedUser.userLiveData.value ?: User()
+        viewModel.isUserAdmin =
             !(LoggedUser.userLiveData.value == null || !LoggedUser.userLiveData.value!!.isAdmin)
         binding.btnSend.isEnabled = true
-        updateUI(viewModel.viewState)
+        updateUI(viewModel)
     }
 
     @ExperimentalStdlibApi
@@ -229,7 +222,7 @@ class SendMessageFragment :
         if (sendModes != null) {
             for ((index, sendMode) in sendModes.withIndex()) {
                 val rdMode = RadioButton(requireContext())
-                if (sendModesValues!![index] == SendMessageViewState.SendMethod.MESSAGE.toString())
+                if (sendModesValues!![index] == SendMessageViewModel.SendMethod.MESSAGE.toString())
                     rdMode.isSelected = true
                 rdMode.text = sendMode
                 rdMode.tag = sendModesValues[index]
@@ -239,8 +232,8 @@ class SendMessageFragment :
         binding.rdGrpSendMethod.setOnCheckedChangeListener { radioGroup: RadioGroup, checkedId: Int ->
             val radioButton = radioGroup.findViewById<RadioButton>(checkedId)
             val sendMethod = radioButton.tag as String
-            when (SendMessageViewState.SendMethod.valueOf(sendMethod.uppercase(Locale.ROOT))) {
-                SendMessageViewState.SendMethod.EMAIL -> {
+            when (SendMessageViewModel.SendMethod.valueOf(sendMethod.uppercase(Locale.ROOT))) {
+                SendMessageViewModel.SendMethod.EMAIL -> {
                     binding.spnrContacts.visibility = View.VISIBLE
                     binding.edttxtTitle.visibility = View.VISIBLE
                 }
@@ -249,16 +242,16 @@ class SendMessageFragment :
                     binding.edttxtTitle.visibility = View.GONE
                 }
             }
-            viewModel.viewState.sendMethod = SendMessageViewState.SendMethod.valueOf(
+            viewModel.sendMethod = SendMessageViewModel.SendMethod.valueOf(
                 sendMethod.uppercase(Locale.ROOT)
             )
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun updateUI(viewState: SendMessageViewState) {
+    private fun updateUI(viewState: SendMessageViewModel) {
         // Update the UI
-        if (viewState.sendMethod == SendMessageViewState.SendMethod.EMAIL) {
+        if (viewState.sendMethod == SendMessageViewModel.SendMethod.EMAIL) {
             binding.spnrContacts.visibility = View.VISIBLE
             binding.edttxtTitle.visibility = View.VISIBLE
         } else {
@@ -273,7 +266,7 @@ class SendMessageFragment :
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun updateUIForUserAdmin(viewState: SendMessageViewState) {
+    private fun updateUIForUserAdmin(viewState: SendMessageViewModel) {
         if (viewState.isUserAdmin && binding.spnrContacts.adapter != null) {
             val user = viewState.dest
             val dataAdapter: ArrayAdapter<User> =
@@ -293,7 +286,7 @@ class SendMessageFragment :
         } else {
             for (view in binding.rdGrpSendMethod.children) {
                 val radioButton = view as RadioButton
-                if (radioButton.text == SendMessageViewState.SendMethod.MESSAGE.toString()) {
+                if (radioButton.text == SendMessageViewModel.SendMethod.MESSAGE.toString()) {
                     radioButton.isChecked = true
                     break
                 }
@@ -302,7 +295,7 @@ class SendMessageFragment :
         updateRadioGroupUserAdmin(viewState)
     }
 
-    private fun updateRadioGroupUserAdmin(viewState: SendMessageViewState) {
+    private fun updateRadioGroupUserAdmin(viewState: SendMessageViewModel) {
         if (!viewState.isUserAdmin) {
             binding.rdGrpSendMethod.visibility = View.GONE
         } else {
@@ -313,10 +306,10 @@ class SendMessageFragment :
     @Suppress("UNCHECKED_CAST")
     private fun setSelectedMessageSender() {
         if (mSavedInstanceState != null && (
-            mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY || mSavedInstanceState?.getString(
-                    ACTION_SEND_KEY
-                ) == ACTION_SEND
-            )
+                    mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY || mSavedInstanceState?.getString(
+                        ACTION_SEND_KEY
+                    ) == ACTION_SEND
+                    )
         ) {
             val message = mSavedInstanceState?.getParcelable<Message>(KEY_MESSAGE)
             if (message != null) {
@@ -343,8 +336,8 @@ class SendMessageFragment :
             } else if (mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY) {
                 val message = mSavedInstanceState?.getParcelable<Message>(KEY_MESSAGE)
                 if (message != null) {
-                    viewModel.viewState.replyUid = message.uid.toString()
-                    viewModel.viewState.body = message.message.toString()
+                    viewModel.replyUid = message.uid.toString()
+                    viewModel.body = message.message.toString()
                     binding.mltxtMessage.setText(message.message)
                 }
             }
@@ -393,11 +386,11 @@ class SendMessageFragment :
         if (binding.spnrContacts.adapter.isEmpty) {
             binding.spnrContacts.visibility = View.GONE
             for (radio in binding.rdGrpSendMethod.children) {
-                if (radio.tag == SendMessageViewState.SendMethod.EMAIL.toString()) {
+                if (radio.tag == SendMessageViewModel.SendMethod.EMAIL.toString()) {
                     radio.isEnabled = false
-                } else if (radio.tag == SendMessageViewState.SendMethod.MESSAGE.toString()) {
-                    viewModel.viewState.sendMethod =
-                        SendMessageViewState.SendMethod.MESSAGE
+                } else if (radio.tag == SendMessageViewModel.SendMethod.MESSAGE.toString()) {
+                    viewModel.sendMethod =
+                        SendMessageViewModel.SendMethod.MESSAGE
                     (radio as RadioButton).isChecked = true
                 }
             }
@@ -415,12 +408,12 @@ class SendMessageFragment :
                     pos: Int,
                     id: Long
                 ) {
-                    viewModel.viewState.dest =
+                    viewModel.dest =
                         binding.spnrContacts.adapter.getItem(pos) as User
                 }
 
                 override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
-                    viewModel.viewState.dest = User()
+                    viewModel.dest = User()
                 }
             }
     }
