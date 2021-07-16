@@ -20,6 +20,8 @@ import android.content.Context
 import android.os.Parcelable
 import android.text.TextUtils
 import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 import com.google.firebase.firestore.Query
 import kotlinx.parcelize.Parcelize
