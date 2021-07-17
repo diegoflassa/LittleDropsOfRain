@@ -175,4 +175,5 @@
     <string name="remove_like_from_user">You are going to remove the Like from the user: %1$s. Are you sure that you want to remove it?</string>
     <string name="no_selection">No selection</string>
     <string name="none">None</string>
+    <string name="shopping_cart">Shopping Cart</string>
 </resources>

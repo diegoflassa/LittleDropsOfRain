@@ -140,4 +140,5 @@
     <string name="remove_like_from_user">Sie werden das Like vom Benutzer entfernen: %1$s. Sind Sie sicher, dass Sie es entfernen möchten?</string>
     <string name="no_selection">Keine Auswahl</string>
     <string name="none">Keiner</string>
+    <string name="shopping_cart">Einkaufswagen</string>
 </resources>

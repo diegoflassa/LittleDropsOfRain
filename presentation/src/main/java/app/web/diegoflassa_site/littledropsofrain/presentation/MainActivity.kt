@@ -486,6 +486,8 @@ class MainActivity :
             navAllProductsProducts.isVisible = false
         }
         // TODO Remove after returning menu options
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        val shoppingCart = toolbar.menu.findItem(R.id.action_shopping_cart)
         if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
             subscribeToAdminMessages()
             if(shoppingCart!=null) {
