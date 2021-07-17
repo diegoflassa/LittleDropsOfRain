@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/app_bar_main.xml" value="0.1" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_all_products.xml" value="0.1" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_all_products_filters.xml" value="0.1" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_instagram.xml" value="0.1" />
@@ -10,6 +11,7 @@
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_send_message.xml" value="0.1" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_tos.xml" value="0.1" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/menu/activity_main_drawer.xml" value="0.23809523809523808" />
+        <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/menu/main.xml" value="0.16203703703703703" />
       </map>
     </option>
   </component>

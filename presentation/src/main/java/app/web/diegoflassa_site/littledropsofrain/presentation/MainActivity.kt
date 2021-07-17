@@ -115,6 +115,10 @@ class MainActivity :
         setContentView(binding?.root)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
+        val shoppingCart = toolbar.menu.findItem(R.id.action_shopping_cart)
+        shoppingCart.icon = IconDrawable(this, SimpleLineIconsIcons.icon_bag)
+        shoppingCart.isVisible = false
+        //shoppingCart.icon.setTint(Color.BLACK)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -416,6 +420,10 @@ class MainActivity :
                 onBackPressed()
                 ret = true
             }
+            R.id.action_shopping_cart -> {
+                findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalShoppingCartFragment())
+                ret = true
+            }
             R.id.action_settings -> {
                 findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalSettingsFragment())
                 ret = true
@@ -482,18 +490,26 @@ class MainActivity :
             navAllProductsProducts.isVisible = false
         }
         // TODO Remove after returning menu options
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        val shoppingCart = toolbar.menu.findItem(R.id.action_shopping_cart)
         if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
             subscribeToAdminMessages()
+            shoppingCart.isVisible = true
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
+            navMyLikedProducts.isEnabled = true
+            navMyLikedProducts.isVisible = true
+            navAllProductsProducts.isEnabled = true
+            navAllProductsProducts.isVisible = true
         }else{
+            shoppingCart.isVisible = false
             navAdmin.isEnabled = false
             navAdmin.isVisible = false
+            navMyLikedProducts.isEnabled = false
+            navMyLikedProducts.isVisible = false
+            navAllProductsProducts.isEnabled = false
+            navAllProductsProducts.isVisible = false
         }
-        navMyLikedProducts.isEnabled = false
-        navMyLikedProducts.isVisible = false
-        navAllProductsProducts.isEnabled = false
-        navAllProductsProducts.isVisible = false
         navHome.isChecked = true
     }
 

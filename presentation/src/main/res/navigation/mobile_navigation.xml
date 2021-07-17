@@ -91,6 +91,10 @@
         tools:layout="@layout/app_bar_main" />
 
     <action
+        android:id="@+id/action_global_shopping_cart_fragment"
+        app:destination="@id/shopping_cart_fragment" />
+
+    <action
         android:id="@+id/action_global_settings_fragment"
         app:destination="@id/settings_fragment" />
 
@@ -185,5 +189,10 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+    <fragment
+        android:id="@+id/shopping_cart_fragment"
+        android:name="app.web.diegoflassa_site.littledropsofrain.presentation.ui.shopping_cart.ShoppingCartFragment"
+        android:label="@string/label_shopping_cart"
+        tools:layout="@layout/fragment_shopping_cart"/>
 
 </navigation>

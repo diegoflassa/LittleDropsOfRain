@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.cart
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.shopping_cart
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -41,7 +41,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUsersLoadedListener
-import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentCartBinding
+import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentShoppingCartBinding
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.presentation.adapters.CartAdapter
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allProductsFilterDialog.AllProductsFilterDialogFragment
@@ -58,7 +58,7 @@ import com.google.firebase.firestore.Query
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.lang.ref.WeakReference
 
-class CartFragment :
+class ShoppingCartFragment :
     Fragment(),
     ActivityResultCallback<Int>,
     View.OnClickListener,
@@ -67,8 +67,8 @@ class CartFragment :
     AllProductsFilterDialogFragment.FilterListener,
     OnUsersLoadedListener {
 
-    val viewModel: CartViewModel by stateViewModel()
-    var binding: FragmentCartBinding by viewLifecycle()
+    private val viewModelShopping: ShoppingCartViewModel by stateViewModel()
+    var binding: FragmentShoppingCartBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<CartAdapter>
     private lateinit var mFirestore: FirebaseFirestore
     var mFilterDialog: AllProductsFilterDialogFragment? = null
@@ -77,9 +77,9 @@ class CartFragment :
     private var mUsersIds = ArrayList<String>()
 
     companion object {
-        private val TAG = CartFragment::class.simpleName
+        private val TAG = ShoppingCartFragment::class.simpleName
         const val LIMIT = 10000
-        fun newInstance() = CartFragment()
+        fun newInstance() = ShoppingCartFragment()
     }
 
     override fun onCreateView(
@@ -87,8 +87,8 @@ class CartFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCartBinding.inflate(inflater, container, false)
-        viewModel.cartLiveData.observe(
+        binding = FragmentShoppingCartBinding.inflate(inflater, container, false)
+        viewModelShopping.cartLiveData.observe(
             viewLifecycleOwner
         ) {
             updateUI()
@@ -158,8 +158,8 @@ class CartFragment :
 
     private fun onClearFilterClicked() {
         mFilterDialog?.resetFilters()
-        viewModel.filters = AllProductsFilters.default
-        onFilter(viewModel.filters)
+        viewModelShopping.filters = AllProductsFilters.default
+        onFilter(viewModelShopping.filters)
     }
 
     private fun showLoadingScreen() {
@@ -206,7 +206,7 @@ class CartFragment :
         binding.textCurrentSortBy.text = filters.getOrderDescription(requireContext())
 
         // Save filters
-        viewModel.filters = filters
+        viewModelShopping.filters = filters
     }
 
     override fun onClick(v: View) {
@@ -220,7 +220,7 @@ class CartFragment :
         super.onStart()
 
         // Apply filters
-        onFilter(viewModel.filters)
+        onFilter(viewModelShopping.filters)
 
         // Start listening for Firestore updates
         mAdapter.get()?.startListening()
@@ -246,7 +246,7 @@ class CartFragment :
 
         mAdapter =
             WeakReference(object :
-                    CartAdapter(this@CartFragment, mQuery, this@CartFragment) {
+                    CartAdapter(this@ShoppingCartFragment, mQuery, this@ShoppingCartFragment) {
                     override fun onDataChanged() {
                         binding.filterBar.isEnabled = true
                         hideLoadingScreen()

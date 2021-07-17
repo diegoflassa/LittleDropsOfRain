@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.ui.cart
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.shopping_cart
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.data.entities.CartItem
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allProductsFilterDialog.AllProductsFilters
 
-class CartViewModel(state: SavedStateHandle) : ViewModel() {
+class ShoppingCartViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY_FILTER = "SAVE_STATE_KEY_FILTERS"

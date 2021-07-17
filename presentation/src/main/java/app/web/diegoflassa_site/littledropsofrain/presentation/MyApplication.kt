@@ -33,7 +33,7 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.ui.MainActivityVi
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.SettingsFragment
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_messages.model.AllMessagesViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products.model.AllProductsViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.cart.CartViewModel
+import app.web.diegoflassa_site.littledropsofrain.presentation.ui.shopping_cart.ShoppingCartViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.facebook.model.FacebookViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.model.HomeViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.instagram.model.InstagramViewModel
@@ -161,7 +161,7 @@ class MyApplication : Application() {
             viewModel { MyMessagesFilterDialogViewModel(get()) }
             viewModel { MyLikedProductsViewModel(get()) }
             viewModel { AllProductsFilterDialogViewModel(get()) }
-            viewModel { CartViewModel(get()) }
+            viewModel { ShoppingCartViewModel(get()) }
             viewModel { MessagesViewModel(get()) }
             viewModel { MainActivityViewModel(get()) }
             viewModel { InstagramViewModel(get()) }

@@ -27,8 +27,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemProductBinding
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.cart.CartFragment
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.HomeFragment
+import app.web.diegoflassa_site.littledropsofrain.presentation.ui.shopping_cart.ShoppingCartFragment
 import coil.load
 import com.google.android.material.chip.Chip
 import com.google.firebase.firestore.DocumentSnapshot
@@ -41,7 +40,7 @@ import kotlinx.coroutines.launch
 import java.text.DecimalFormatSymbols
 
 open class CartAdapter(
-    private var cartFragment: CartFragment,
+    private var cartFragment: ShoppingCartFragment,
     query: Query?,
     private val mListener: OnProductSelectedListener
 ) : FirestoreAdapter<CartAdapter.ViewHolder?>(query) {
@@ -69,7 +68,7 @@ open class CartAdapter(
         holder.bind(getSnapshot(position), mListener)
     }
 
-    class ViewHolder(private var cartFragment: CartFragment, itemView: View) :
+    class ViewHolder(private var cartFragment: ShoppingCartFragment, itemView: View) :
         RecyclerView.ViewHolder(itemView), CompoundButton.OnCheckedChangeListener {
         val binding = RecyclerviewItemProductBinding.bind(itemView)
         private val ioScope = CoroutineScope(Dispatchers.IO)
