@@ -152,6 +152,7 @@ android {
         kotlinCompilerExtensionVersion = Versions.androidx_jetpack_compose
     }
 }
+
 kapt {
 	correctErrorTypes = true
     javacOptions {
@@ -226,6 +227,9 @@ afterEvaluate {
         implementation("androidx.work:work-gcm:${Versions.workVersion}")
 
         implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
+        //SafetyNet
+        implementation("com.google.firebase:firebase-appcheck-safetynet:${Versions.safetynet}")
 
         // Volley
         implementation("com.android.volley:volley:${Versions.volley}")
