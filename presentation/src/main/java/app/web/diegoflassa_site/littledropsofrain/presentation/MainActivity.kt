@@ -400,6 +400,10 @@ class MainActivity :
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
+        val shoppingCart = menu.findItem(R.id.action_shopping_cart)
+        shoppingCart.icon = IconDrawable(this, SimpleLineIconsIcons.icon_bag)
+        shoppingCart.isVisible = false
+        //shoppingCart.icon.setTint(Color.BLACK)
         return true
     }
 
@@ -484,9 +488,15 @@ class MainActivity :
         // TODO Remove after returning menu options
         if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
             subscribeToAdminMessages()
+            if(shoppingCart!=null) {
+                shoppingCart.isVisible = true
+            }
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
         }else{
+            if(shoppingCart!=null) {
+                shoppingCart.isVisible = false
+            }
             navAdmin.isEnabled = false
             navAdmin.isVisible = false
         }
