@@ -72,6 +72,7 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        initializeSafetyNet()
         Iconify
             // .with(FontAwesomeModule())
             // .with(EntypoModule())
@@ -90,15 +91,15 @@ class MyApplication : Application() {
         subscribeToNews()
         subscribeToPromotions()
         updateSubscribedLanguage()
-        initializeSafetyNet()
         context = WeakReference(this)
     }
 
-    private fun initializeSafetyNet(){
+    private fun initializeSafetyNet() {
         FirebaseApp.initializeApp(/*context=*/ this)
         val firebaseAppCheck = FirebaseAppCheck.getInstance()
         firebaseAppCheck.installAppCheckProviderFactory(
-            SafetyNetAppCheckProviderFactory.getInstance())
+            SafetyNetAppCheckProviderFactory.getInstance()
+        )
     }
 
     @Suppress("DEPRECATION")
