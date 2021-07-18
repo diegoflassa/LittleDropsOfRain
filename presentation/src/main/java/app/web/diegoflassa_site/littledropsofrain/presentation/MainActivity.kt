@@ -490,13 +490,13 @@ class MainActivity :
         val shoppingCart = toolbar.menu.findItem(R.id.action_shopping_cart)
         if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
             subscribeToAdminMessages()
-            if(shoppingCart!=null) {
+            if (shoppingCart != null) {
                 shoppingCart.isVisible = true
             }
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
-        }else{
-            if(shoppingCart!=null) {
+        } else {
+            if (shoppingCart != null) {
                 shoppingCart.isVisible = false
             }
             navAdmin.isEnabled = false
@@ -511,7 +511,11 @@ class MainActivity :
 
     private fun subscribeToAdminMessages() {
         val sp: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        if (sp.getBoolean(MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_ADMIN_MESSAGES, true)) {
+        if (sp.getBoolean(
+                MyOnSharedPreferenceChangeListener.SP_KEY_SUBSCRIBE_ADMIN_MESSAGES,
+                true
+            )
+        ) {
             val topic = Helper.getTopicAdminMessages(this)
             FirebaseMessaging.getInstance().subscribeToTopic(topic)
                 .addOnCompleteListener { task ->
