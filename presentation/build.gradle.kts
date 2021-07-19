@@ -151,6 +151,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.androidx_jetpack_compose
     }
+    dynamicFeatures = mutableSetOf(":admin")
 }
 
 kapt {
@@ -357,6 +358,7 @@ afterEvaluate {
         implementation("com.google.android.material:material:${Versions.material}")
         implementation("com.google.android.gms:play-services-location:${Versions.play_services_location}")
         implementation("com.google.gms:google-services:${Versions.google_services}")
+        implementation("com.google.android.play:core-ktx:${Versions.play_core}")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin_compiler_version}")
         implementation("androidx.activity:activity-ktx:${Versions.activity_ktx}")
         implementation("androidx.annotation:annotation:${Versions.annotation}")

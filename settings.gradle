@@ -2,3 +2,4 @@ rootProject.name = "Little Drops Of Rain"
 include ':presentation'
 include ':domain'
 include ':data'
+include ':admin'

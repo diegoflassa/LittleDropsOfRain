@@ -68,6 +68,7 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
@@ -101,6 +102,8 @@ class MainActivity :
     private var authenticateOnResume = false
     private var isSetUpUserInDrawer = false
     private var lastIntent: Intent? = null
+    private var splitManager = SplitInstallManagerFactory.create(this)
+    private val moduleAdmin by lazy { getString(R.string.module_admin) }
     var mOnKeyLongPressListener: OnKeyLongPressListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
