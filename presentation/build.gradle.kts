@@ -33,6 +33,7 @@ val keystoreProperties = Properties()
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
+    lintOptions.isAbortOnError = false
 
     compileSdk = Config.compileSdkVersion
     //compileSdkPreview = Config.compileSdkPreviewVersion
@@ -139,9 +140,6 @@ android {
         dataBinding = true
         // Enables Jetpack Compose for this module
         //compose = true
-    }
-    lint {
-        isAbortOnError = false
     }
     packagingOptions {
         resources.excludes.add("META-INF/DEPENDENCIES")

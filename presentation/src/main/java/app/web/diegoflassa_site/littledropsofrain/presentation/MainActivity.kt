@@ -17,6 +17,7 @@
 package app.web.diegoflassa_site.littledropsofrain.presentation
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.*
@@ -68,6 +69,11 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
+import com.google.android.play.core.splitinstall.SplitInstallRequest
+import com.google.android.play.core.splitinstall.SplitInstallSessionState
+import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
+import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
@@ -495,18 +501,85 @@ class MainActivity :
             }
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
+            navMyLikedProducts.isEnabled = true
+            navMyLikedProducts.isVisible = true
+            navAllProductsProducts.isEnabled = true
+            navAllProductsProducts.isVisible = true
         } else {
             if (shoppingCart != null) {
                 shoppingCart.isVisible = false
             }
             navAdmin.isEnabled = false
             navAdmin.isVisible = false
+            navMyLikedProducts.isEnabled = false
+            navMyLikedProducts.isVisible = false
+            navAllProductsProducts.isEnabled = false
+            navAllProductsProducts.isVisible = false
         }
         navMyLikedProducts.isEnabled = false
         navMyLikedProducts.isVisible = false
         navAllProductsProducts.isEnabled = false
         navAllProductsProducts.isVisible = false
         navHome.isChecked = true
+    }
+
+    private fun updateProgressMessage(message: String) {
+        if (binding!!.progress.visibility != View.VISIBLE) showProgress()
+        binding!!.progressText.text = message
+    }
+
+    /** Display progress bar and text. */
+    private fun showProgress() {
+        binding!!.progress.visibility = View.VISIBLE
+    }
+
+    /** Display buttons to accept user input. */
+    private fun hideProgress() {
+        binding!!.progress.visibility = View.GONE
+    }
+
+    /**
+     * Load a feature by module name.
+     * @param name The name of the feature module to load.
+     */
+    private fun loadAndLaunchModule(name: String) {
+        updateProgressMessage("Loading module $name")
+        // Skip loading if the module already is installed. Perform success action directly.
+        if (splitManager.installedModules.contains(name)) {
+            updateProgressMessage("Already installed")
+            // onSuccessfulLoad(name, launch = true)
+            return
+        }
+
+        // Create request to install a feature module by name.
+        val request = SplitInstallRequest.newBuilder()
+            .addModule(name)
+            .build()
+
+        // Load and install the requested feature module.
+        splitManager.startInstall(request)
+
+        updateProgressMessage("Starting install for $name")
+    }
+
+    /** Request uninstall of all features. */
+    private fun requestUninstall() {
+
+        toastAndLog(
+            "Requesting uninstall of all modules." +
+                    "This will happen at some point in the future."
+        )
+
+        val installedModules = splitManager.installedModules.toList()
+        splitManager.deferredUninstall(installedModules).addOnSuccessListener {
+            toastAndLog("Uninstalling $installedModules")
+        }
+    }
+
+    private fun showAdminOptions() {
+    }
+
+    private fun hideAdminOptions() {
     }
 
     private fun subscribeToAdminMessages() {
@@ -583,7 +656,8 @@ class MainActivity :
                 ).show()
             }
             FirebaseAuth.getInstance().currentUser != null -> {
-                val userFromFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
+                val userFromFb =
+                    Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
                 UserDao.insertOrUpdate(userFromFb)
                 LoggedUser.userLiveData.value = userFromFb
                 findNavController(R.id.nav_host_fragment).navigate(

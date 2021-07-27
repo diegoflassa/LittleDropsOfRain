@@ -104,7 +104,7 @@ open class ProductAdapter(
                 binding.price.text = resources.getString(R.string.rv_price, priceStr)
                 val heartIcon =
                     IconDrawable(homeFragment.requireContext(), SimpleLineIconsIcons.icon_heart)
-                if (LoggedUser.userLiveData.value != null) {
+                if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value?.uid != null) {
                     if (product.likes.contains(LoggedUser.userLiveData.value?.uid!!)) {
                         heartIcon.color(Color.RED)
                     }
