@@ -246,29 +246,29 @@ class AllMessagesFragment :
         }
 
         mAdapter = WeakReference(object :
-            MessageAdapter(requireContext(), mQuery, this@AllMessagesFragment) {
-            override fun onDataChanged() {
-                hideLoadingScreen()
-                // Show/hide content if the query returns empty.
-                if (itemCount == 0) {
-                    binding.recyclerviewAllMessages.visibility = View.GONE
-                    binding.allMessagesViewEmpty.visibility = View.VISIBLE
-                } else {
-                    binding.recyclerviewAllMessages.visibility = View.VISIBLE
-                    binding.allMessagesViewEmpty.visibility = View.GONE
+                MessageAdapter(requireContext(), mQuery, this@AllMessagesFragment) {
+                override fun onDataChanged() {
+                    hideLoadingScreen()
+                    // Show/hide content if the query returns empty.
+                    if (itemCount == 0) {
+                        binding.recyclerviewAllMessages.visibility = View.GONE
+                        binding.allMessagesViewEmpty.visibility = View.VISIBLE
+                    } else {
+                        binding.recyclerviewAllMessages.visibility = View.VISIBLE
+                        binding.allMessagesViewEmpty.visibility = View.GONE
+                    }
                 }
-            }
 
-            override fun onError(e: FirebaseFirestoreException?) {
-                // Show a snackbar on errors
-                activity?.findViewById<View>(android.R.id.content)?.let {
-                    Snackbar.make(
-                        it,
-                        "Error: check logs for info.", Snackbar.LENGTH_LONG
-                    ).show()
+                override fun onError(e: FirebaseFirestoreException?) {
+                    // Show a snackbar on errors
+                    activity?.findViewById<View>(android.R.id.content)?.let {
+                        Snackbar.make(
+                            it,
+                            "Error: check logs for info.", Snackbar.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
-        })
+            })
         binding.recyclerviewAllMessages.layoutManager = LinearLayoutManager(activity)
         binding.recyclerviewAllMessages.adapter = mAdapter.get()
     }

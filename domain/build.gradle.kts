@@ -7,6 +7,8 @@ plugins {
 }
 
 android {
+	lintOptions.isAbortOnError = false
+
     compileSdk = Config.compileSdkVersion
     //compileSdkPreview = Config.compileSdkPreviewVersion
     buildToolsVersion = Config.buildToolsVersion
@@ -24,7 +26,10 @@ android {
 
     buildTypes {
         release {
+            // Enables code shrinking, obfuscation, and optimization for only
+            // your project's release build type.
             isMinifyEnabled = true
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

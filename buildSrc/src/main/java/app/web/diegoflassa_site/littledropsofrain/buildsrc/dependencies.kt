@@ -30,6 +30,7 @@ object Versions {
     const val play_services_auth = "19.0.0"
     const val material = "1.5.0-alpha01"
     const val play_services_location = "18.0.0"
+	const val play_core = "1.8.1"
     const val google_services = "4.3.8"
     const val activity_ktx = "1.3.0-rc02"
     const val annotation = "1.3.0-alpha01"
