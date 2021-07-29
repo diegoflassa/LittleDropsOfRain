@@ -247,27 +247,27 @@ class MyLikedProductsFragment :
                 mQuery,
                 this@MyLikedProductsFragment
             ) {
-                override fun onDataChanged() {
-                    binding.filterBar.isEnabled = true
-                    hideLoadingScreen()
-                    // Show/hide content if the query returns empty.
-                    if (itemCount == 0) {
-                        binding.recyclerview.visibility = View.GONE
-                        binding.homeViewEmpty.visibility = View.VISIBLE
-                    } else {
-                        binding.recyclerview.visibility = View.VISIBLE
-                        binding.homeViewEmpty.visibility = View.GONE
+                    override fun onDataChanged() {
+                        binding.filterBar.isEnabled = true
+                        hideLoadingScreen()
+                        // Show/hide content if the query returns empty.
+                        if (itemCount == 0) {
+                            binding.recyclerview.visibility = View.GONE
+                            binding.homeViewEmpty.visibility = View.VISIBLE
+                        } else {
+                            binding.recyclerview.visibility = View.VISIBLE
+                            binding.homeViewEmpty.visibility = View.GONE
+                        }
                     }
-                }
 
-                override fun onError(e: FirebaseFirestoreException?) {
-                    // Show a snackbar on errors
-                    activity?.findViewById<View>(android.R.id.content)?.let {
-                        Snackbar.make(it, "Error: check logs for info.", Snackbar.LENGTH_LONG)
-                            .show()
+                    override fun onError(e: FirebaseFirestoreException?) {
+                        // Show a snackbar on errors
+                        activity?.findViewById<View>(android.R.id.content)?.let {
+                            Snackbar.make(it, "Error: check logs for info.", Snackbar.LENGTH_LONG)
+                                .show()
+                        }
                     }
-                }
-            })
+                })
         binding.recyclerview.layoutManager = LinearLayoutManager(activity)
         binding.recyclerview.adapter = mAdapter.get()
     }

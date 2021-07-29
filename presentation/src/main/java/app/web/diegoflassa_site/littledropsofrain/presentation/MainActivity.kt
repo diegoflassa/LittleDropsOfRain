@@ -166,6 +166,7 @@ class MainActivity :
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
+
                 R.id.nav_home,
                 R.id.nav_facebook,
                 R.id.nav_instagram,
@@ -403,7 +404,7 @@ class MainActivity :
         val shoppingCart = menu.findItem(R.id.action_shopping_cart)
         shoppingCart.icon = IconDrawable(this, SimpleLineIconsIcons.icon_bag)
         shoppingCart.isVisible = false
-        //shoppingCart.icon.setTint(Color.BLACK)
+        // shoppingCart.icon.setTint(Color.BLACK)
         return true
     }
 
@@ -495,18 +496,32 @@ class MainActivity :
             }
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
+            navMyLikedProducts.isEnabled = true
+            navMyLikedProducts.isVisible = true
+            navAllProductsProducts.isEnabled = true
+            navAllProductsProducts.isVisible = true
         } else {
             if (shoppingCart != null) {
                 shoppingCart.isVisible = false
             }
             navAdmin.isEnabled = false
             navAdmin.isVisible = false
+            navMyLikedProducts.isEnabled = false
+            navMyLikedProducts.isVisible = false
+            navAllProductsProducts.isEnabled = false
+            navAllProductsProducts.isVisible = false
         }
         navMyLikedProducts.isEnabled = false
         navMyLikedProducts.isVisible = false
         navAllProductsProducts.isEnabled = false
         navAllProductsProducts.isVisible = false
         navHome.isChecked = true
+    }
+
+    private fun showAdminOptions() {
+    }
+
+    private fun hideAdminOptions() {
     }
 
     private fun subscribeToAdminMessages() {
@@ -583,7 +598,8 @@ class MainActivity :
                 ).show()
             }
             FirebaseAuth.getInstance().currentUser != null -> {
-                val userFromFb = Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
+                val userFromFb =
+                    Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
                 UserDao.insertOrUpdate(userFromFb)
                 LoggedUser.userLiveData.value = userFromFb
                 findNavController(R.id.nav_host_fragment).navigate(
