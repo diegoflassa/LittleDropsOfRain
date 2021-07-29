@@ -306,10 +306,10 @@ class SendMessageFragment :
     @Suppress("UNCHECKED_CAST")
     private fun setSelectedMessageSender() {
         if (mSavedInstanceState != null && (
-                    mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY || mSavedInstanceState?.getString(
-                        ACTION_SEND_KEY
-                    ) == ACTION_SEND
-                    )
+            mSavedInstanceState?.getString(ACTION_REPLY_KEY) == ACTION_REPLY || mSavedInstanceState?.getString(
+                    ACTION_SEND_KEY
+                ) == ACTION_SEND
+            )
         ) {
             val message = mSavedInstanceState?.getParcelable<Message>(KEY_MESSAGE)
             if (message != null) {

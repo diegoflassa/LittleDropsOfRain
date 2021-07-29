@@ -216,9 +216,9 @@ class HomeFragment :
                 this.requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this.requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+                    this.requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
         ) {
             mPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
             return
@@ -278,7 +278,7 @@ class HomeFragment :
 
     private fun isLocationInBrazil(location: Location): Boolean {
         return (location.latitude > BRAZIL_MAX_LATITUDE_SOUTH && location.latitude < BRAZIL_MIN_LATITUDE_NORTH) &&
-                (location.longitude > BRAZIL_MAX_LONGITUDE_WEST && location.longitude < BRAZIL_MIN_LONGITUDE_EAST)
+            (location.longitude > BRAZIL_MAX_LONGITUDE_WEST && location.longitude < BRAZIL_MIN_LONGITUDE_EAST)
     }
 
     private fun getShopByGeoLocation(query: Query): Query {
