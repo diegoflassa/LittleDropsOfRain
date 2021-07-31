@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-	lintOptions.isAbortOnError = false
+    lint.abortOnError = false
 
     compileSdk = Config.compileSdkVersion
     //compileSdkPreview = Config.compileSdkPreviewVersion
