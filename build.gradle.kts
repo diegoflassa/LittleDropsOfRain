@@ -1,8 +1,6 @@
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Versions
 
 buildscript {
-    var kotlin_version: String by extra
-    kotlin_version = "1.5.10"
     repositories {
         google()
         mavenCentral()

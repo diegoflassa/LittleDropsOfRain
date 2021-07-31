@@ -5,8 +5,6 @@ import com.android.build.gradle.AppExtension
 import java.io.FileInputStream
 import java.util.*
 
-val kotlin_version: String by extra
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
