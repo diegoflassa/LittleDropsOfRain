@@ -9,9 +9,9 @@ object Config {
     const val applicationId = "app.web.diegoflassa_site.littledropsofrain"
     private const val versionMajor = 1
     private const val versionMinor = 0
-    private const val versionPatch = 8
+    private const val versionPatch = 9
     private var versionClassifier = "debug"
-    const val minimumSdkVersion = 23
+    const val minimumSdkVersion = 24
     const val compileSdkVersion = 31
     const val compileSdkPreviewVersion = "S"
     const val targetSdkVersion = 31

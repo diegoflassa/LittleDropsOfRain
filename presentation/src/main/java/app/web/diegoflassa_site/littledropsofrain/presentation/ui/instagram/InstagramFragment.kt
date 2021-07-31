@@ -55,22 +55,15 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
 
     companion object {
         fun newInstance() = InstagramFragment()
+        private const val PREFERENCES_NAME = "instagram_preferences"
+        private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+            name = PREFERENCES_NAME,
+        )
     }
 
     private var isStopped: Boolean = false
     private val keyPrefsLastURL = stringPreferencesKey("KEY_PREF_LAST_URL_INSTAGRAM")
     private val ioScope = CoroutineScope(Dispatchers.IO)
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-        name = requireContext().packageName,
-        produceMigrations = {
-            listOf(
-                SharedPreferencesMigration(
-                    requireContext(),
-                    requireContext().packageName
-                )
-            )
-        }
-    )
 
     val viewModel: InstagramViewModel by stateViewModel()
     private var binding: FragmentInstagramBinding by viewLifecycle()
@@ -186,9 +179,11 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
     }
 
     private fun saveCurrentUrl() {
-        ioScope.launch {
-            requireContext().dataStore.edit { settings ->
-                settings[keyPrefsLastURL] = binding.webviewInstagram.url.toString()
+        if(isSafeToAccessViewModel()) {
+            CoroutineScope(Dispatchers.Main).launch {
+                requireContext().dataStore.edit { settings ->
+                    settings[keyPrefsLastURL] = binding.webviewInstagram.url.toString()
+                }
             }
         }
     }

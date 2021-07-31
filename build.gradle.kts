@@ -14,16 +14,12 @@ buildscript {
 				password = "AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp"
 			}
 		}
-        maven {
-            // CUTR Releases
-            url  = uri("https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/releases")
-        }
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
         classpath("com.android.tools.build:gradle:7.1.0-alpha05")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
         classpath("com.google.gms:google-services:4.3.8")
         //classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeargs_plugin}")
@@ -50,7 +46,7 @@ buildscript {
 }
 
 plugins {         
-    id("com.diffplug.spotless") version "5.14.1" apply true
+    id("com.diffplug.spotless") version "5.14.2" apply true
 	id("com.github.ben-manes.versions") version "0.38.0" apply true
 }
 
@@ -80,9 +76,5 @@ allprojects {
 				password = "AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp"
 			}
 		}
-        maven {
-            // CUTR Releases
-            url  = uri("https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/releases")
-        }
     }
 }
