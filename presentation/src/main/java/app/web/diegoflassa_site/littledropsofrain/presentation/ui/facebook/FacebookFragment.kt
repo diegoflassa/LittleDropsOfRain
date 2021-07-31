@@ -52,22 +52,15 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
 
     companion object {
         fun newInstance() = FacebookFragment()
+        private const val PREFERENCES_NAME = "facebook_preferences"
+        private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+            name = PREFERENCES_NAME,
+        )
     }
 
     private var isStopped: Boolean = false
     private val keyPrefsLastURL = stringPreferencesKey("KEY_PREF_LAST_URL_FACEBOOK")
     private val ioScope = CoroutineScope(Dispatchers.IO)
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-        name = requireContext().packageName,
-        produceMigrations = {
-            listOf(
-                SharedPreferencesMigration(
-                    requireContext(),
-                    requireContext().packageName
-                )
-            )
-        }
-    )
 
     val viewModel: FacebookViewModel by stateViewModel()
     private var binding: FragmentFacebookBinding by viewLifecycle()
@@ -116,7 +109,9 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
         fab?.visibility = View.GONE
         showProgressDialog()
         binding.webviewFacebook.loadUrl(viewModel.url)
-        saveCurrentUrl()
+        runBlocking {
+            saveCurrentUrl()
+        }
         return binding.root
     }
 
@@ -135,10 +130,10 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
     }
 
     override fun onStop() {
-        super.onStop()
         isStopped = true
         (activity as MainActivity).mOnKeyLongPressListener = null
         binding.webviewFacebook.stopLoading()
+        super.onStop()
     }
 
     @SuppressLint("ApplySharedPref")
@@ -181,9 +176,11 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
     }
 
     private fun saveCurrentUrl() {
-        ioScope.launch {
-            requireContext().dataStore.edit { settings ->
-                settings[keyPrefsLastURL] = binding.webviewFacebook.url.toString()
+        if(isSafeToAccessViewModel()) {
+            CoroutineScope(Dispatchers.Main).launch {
+                requireContext().dataStore.edit { settings ->
+                    settings[keyPrefsLastURL] = binding.webviewFacebook.url.toString()
+                }
             }
         }
     }

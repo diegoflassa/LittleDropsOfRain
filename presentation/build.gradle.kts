@@ -5,6 +5,8 @@ import com.android.build.gradle.AppExtension
 import java.io.FileInputStream
 import java.util.*
 
+val kotlin_version: String by extra
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -21,6 +23,9 @@ plugins {
     id("com.google.firebase.appdistribution")
     //id("dagger.hilt.android.plugin")
 }
+apply {
+    plugin("kotlin-android")
+}
 
 // Creates a variable called keystorePropertiesFile, and initializes it to the
 // keystore.properties file.
@@ -33,7 +38,7 @@ val keystoreProperties = Properties()
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
-    lintOptions.isAbortOnError = false
+    lint.abortOnError = false
 
     compileSdk = Config.compileSdkVersion
     //compileSdkPreview = Config.compileSdkPreviewVersion

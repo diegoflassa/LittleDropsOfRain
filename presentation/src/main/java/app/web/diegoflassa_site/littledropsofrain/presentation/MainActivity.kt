@@ -106,7 +106,8 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        bindingNavHeader = NavHeaderMainBinding.inflate(layoutInflater)
+        val headerView = binding?.navView?.getHeaderView(0)
+        bindingNavHeader = NavHeaderMainBinding.bind(headerView!!)
         viewModel.viewStateLiveData.observe(this) {
             updateUI(it)
         }
@@ -151,6 +152,7 @@ class MainActivity :
 
             override fun onDrawerOpened(drawerView: View) {
                 if (!isSetUpUserInDrawer) {
+                    Log.i(TAG, "Setting up user in drawer")
                     setUpUserInDrawer()
                     isSetUpUserInDrawer = true
                 }
@@ -166,7 +168,6 @@ class MainActivity :
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-
                 R.id.nav_home,
                 R.id.nav_facebook,
                 R.id.nav_instagram,
@@ -220,8 +221,14 @@ class MainActivity :
     }
 
     private fun setUpUserInDrawer() {
+        if (bindingNavHeader == null && bindingNavHeader?.navVwName == null) {
+            Log.i(TAG, "bindingNavHeader is null")
+        } else {
+            Log.i(TAG, "bindingNavHeader is NOT null ${bindingNavHeader?.navVwName?.text}")
+        }
         if (LoggedUser.userLiveData.value != null) {
             if (LoggedUser.userLiveData.value!!.imageUrl != null) {
+                Log.i(TAG, "Setting up user image")
                 bindingNavHeader?.navVwImage?.load(LoggedUser.userLiveData.value!!.imageUrl) {
                     placeholder(R.drawable.image_placeholder)
                     error(
@@ -232,31 +239,33 @@ class MainActivity :
                     )
                 }
             } else {
-                bindingNavHeader!!.navVwImage.setImageDrawable(
+                bindingNavHeader?.navVwImage?.setImageDrawable(
                     ContextCompat.getDrawable(
                         applicationContext,
                         R.mipmap.ic_launcher_round
                     )
                 )
             }
+            Log.i(TAG, "Setting user name and email")
             val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-            bindingNavHeader!!.navVwImage.setOnClickListener {
+            bindingNavHeader?.navVwImage?.setOnClickListener {
                 drawerLayout.close()
                 findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalUserProfileFragment())
             }
-            bindingNavHeader!!.navVwName.text =
-                LoggedUser.userLiveData.value!!.name
-            bindingNavHeader!!.navVwEmail.text =
-                LoggedUser.userLiveData.value!!.email
+            bindingNavHeader?.navVwName?.setText(LoggedUser.userLiveData.value!!.name)
+            Log.i(TAG, "Name: ${LoggedUser.userLiveData.value!!.name}")
+            bindingNavHeader?.navVwEmail?.setText(LoggedUser.userLiveData.value!!.email)
+            Log.i(TAG, "EMail: ${LoggedUser.userLiveData.value!!.email}")
         } else {
-            bindingNavHeader!!.navVwImage.setImageDrawable(
+            Log.i(TAG, "No user found!")
+            bindingNavHeader?.navVwImage?.setImageDrawable(
                 ContextCompat.getDrawable(
                     applicationContext,
                     R.mipmap.ic_launcher_round
                 )
             )
-            bindingNavHeader!!.navVwName.text = getString(R.string.not_logged_in)
-            bindingNavHeader!!.navVwEmail.text = ""
+            bindingNavHeader?.navVwName?.setText(getString(R.string.not_logged_in))
+            bindingNavHeader?.navVwEmail?.setText("")
         }
     }
 
@@ -401,9 +410,9 @@ class MainActivity :
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
-        val shoppingCart = menu.findItem(R.id.action_shopping_cart)
-        shoppingCart.icon = IconDrawable(this, SimpleLineIconsIcons.icon_bag)
-        shoppingCart.isVisible = false
+        //val shoppingCart = menu.findItem(R.id.action_shopping_cart)
+        //shoppingCart.icon = IconDrawable(this, SimpleLineIconsIcons.icon_bag)
+        //shoppingCart.isVisible = false
         // shoppingCart.icon.setTint(Color.BLACK)
         return true
     }
@@ -487,13 +496,13 @@ class MainActivity :
             navAllProductsProducts.isVisible = false
         }
         // TODO Remove after returning menu options
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        val shoppingCart = toolbar.menu.findItem(R.id.action_shopping_cart)
+        //val toolbar: Toolbar = findViewById(R.id.toolbar)
+        //val shoppingCart = toolbar.menu.findItem(R.id.action_shopping_cart)
         if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
             subscribeToAdminMessages()
-            if (shoppingCart != null) {
-                shoppingCart.isVisible = true
-            }
+            //if (shoppingCart != null) {
+            //    shoppingCart.isVisible = true
+            //}
             navAdmin.isEnabled = true
             navAdmin.isVisible = true
             navMyLikedProducts.isEnabled = true
@@ -501,9 +510,9 @@ class MainActivity :
             navAllProductsProducts.isEnabled = true
             navAllProductsProducts.isVisible = true
         } else {
-            if (shoppingCart != null) {
-                shoppingCart.isVisible = false
-            }
+            //if (shoppingCart != null) {
+            //    shoppingCart.isVisible = false
+            //}
             navAdmin.isEnabled = false
             navAdmin.isVisible = false
             navMyLikedProducts.isEnabled = false
