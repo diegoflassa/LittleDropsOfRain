@@ -211,11 +211,10 @@ class MainActivity :
 
         FirebaseAuth.getInstance().addAuthStateListener { authData ->
             val firebaseUser = authData.currentUser
-            var emailUser = ""
             if (firebaseUser != null) {
-                emailUser = firebaseUser.email!!
+                val emailUser = firebaseUser.email!!
+                UserDao.findByEMail(emailUser, this)
             }
-            UserDao.findByEMail(emailUser, this)
         }
         handleIntent()
     }
