@@ -17,7 +17,7 @@ buildscript {
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
-        classpath("com.android.tools.build:gradle:7.1.0-alpha06")
+        classpath("com.android.tools.build:gradle:7.1.0-alpha05")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
