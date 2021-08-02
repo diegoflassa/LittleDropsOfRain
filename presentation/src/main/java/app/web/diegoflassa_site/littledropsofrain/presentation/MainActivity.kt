@@ -214,7 +214,7 @@ class MainActivity :
             if (firebaseUser != null) {
                 val emailUser = firebaseUser.email!!
                 Log.i(TAG, "emailUser: $emailUser")
-                if(!emailUser.isNullOrEmpty()) {
+                if(!emailUser.isNullOrEmpty() && emailUser.contains("@")) {
                     UserDao.findByEMail(emailUser, this)
                 }
             }
