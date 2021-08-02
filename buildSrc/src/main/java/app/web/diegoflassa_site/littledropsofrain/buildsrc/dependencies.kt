@@ -3,7 +3,7 @@ package app.web.diegoflassa_site.littledropsofrain.buildsrc
 object Versions {
     const val ktlint = "0.41.0"
     const val kotlin_compiler_version = "1.5.21"
-    const val gradle = "7.1.0-alpha05"
+    const val gradle = "7.1.0-alpha06"
     const val coil = "1.3.1"
     const val data_store = "1.0.0-rc02"
     const val gson = "2.8.7"
