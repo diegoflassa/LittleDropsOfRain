@@ -31,6 +31,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataFailureListener
 import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemUserBinding
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.SendMessageFragment
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.users.UsersFragment
@@ -135,7 +136,7 @@ open class UsersAdapter(
                 }
 
                 binding.btnReplyUser.isEnabled =
-                    (user.email != app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.email)
+                    (user.email != LoggedUser.userLiveData.value?.email)
                 binding.btnReplyUser.setImageDrawable(
                     IconDrawable(
                         MyApplication.getContext(),
@@ -159,12 +160,12 @@ open class UsersAdapter(
                 )
 
                 binding.userIsAdmin.isEnabled =
-                    (user.email != app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.email)
+                    (user.email != LoggedUser.userLiveData.value?.email)
                 binding.btnDeleteUser.isEnabled =
-                    (user.email != app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.email)
+                    (user.email != LoggedUser.userLiveData.value?.email)
 
                 // Click listener
-                if (user.email != app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.email) {
+                if (user.email != LoggedUser.userLiveData.value?.email) {
                     itemView.setOnClickListener { listener?.onUserSelected(snapshot) }
                 } else {
                     itemView.setOnClickListener {

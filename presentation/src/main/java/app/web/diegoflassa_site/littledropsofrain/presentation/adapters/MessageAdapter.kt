@@ -31,6 +31,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.databinding.RecyclerviewItemMessageBinding
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.SendMessageFragment
@@ -117,13 +118,13 @@ open class MessageAdapter(
                 when (MessageType.valueOf(message.type?.uppercase(Locale.ROOT)!!)) {
                     MessageType.MESSAGE -> {
                         when {
-                            message.emailSender == app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.email -> {
+                            message.emailSender == LoggedUser.userLiveData.value?.email -> {
                                 itemView.background = ContextCompat.getDrawable(
                                     MyApplication.getContext(),
                                     android.R.color.white
                                 )
                             }
-                            message.emailTo == app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.email -> {
+                            message.emailTo == LoggedUser.userLiveData.value?.email -> {
                                 itemView.background = ContextCompat.getDrawable(
                                     MyApplication.getContext(),
                                     R.color.colorMessageMine
@@ -169,7 +170,7 @@ open class MessageAdapter(
                 }
 
                 binding.btnReply.isEnabled =
-                    (message.emailSender != app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.email)
+                    (message.emailSender != LoggedUser.userLiveData.value?.email)
                 binding.btnReply.setImageDrawable(
                     IconDrawable(
                         MyApplication.getContext(),
@@ -209,7 +210,7 @@ open class MessageAdapter(
             val messageToEdit = Message()
             messageToEdit.replyUid = message.uid
             messageToEdit.senderId = message.senderId
-            messageToEdit.emailSender = app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.email
+            messageToEdit.emailSender = LoggedUser.userLiveData.value?.email
             messageToEdit.sender = binding.msgSender.text.toString()
             messageToEdit.message = binding.msgMessage.text.toString()
             val bundle = Bundle()

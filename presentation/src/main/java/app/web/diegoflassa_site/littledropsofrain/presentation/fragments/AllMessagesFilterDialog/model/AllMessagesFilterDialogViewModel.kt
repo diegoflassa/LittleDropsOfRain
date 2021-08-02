@@ -22,7 +22,7 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMess
 import javax.inject.Inject
 
 // @HiltViewModel
-class AllMessagesFilterDialogViewModel @Inject constructor(state: SavedStateHandle) : ViewModel() {
+class AllMessagesFilterDialogViewModel /*@Inject*/ constructor(state: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
