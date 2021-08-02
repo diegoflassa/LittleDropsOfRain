@@ -206,7 +206,7 @@ class MainActivity :
             }
             fab.isEnabled = (it != null)
             isSetUpUserInDrawer = false
-            setupDrawerMenuIntems()
+            setupDrawerMenuItems()
         }
 
         FirebaseAuth.getInstance().addAuthStateListener { authData ->
@@ -403,7 +403,7 @@ class MainActivity :
         // Update he UI
         viewState.text = ""
         isSetUpUserInDrawer = false
-        setupDrawerMenuIntems()
+        setupDrawerMenuItems()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -445,7 +445,7 @@ class MainActivity :
         return ret
     }
 
-    private fun setupDrawerMenuIntems() {
+    private fun setupDrawerMenuItems() {
         val navView = findViewById<NavigationView>(R.id.nav_view)
         val navHome = navView.menu.findItem(R.id.nav_home)
         navHome.icon = IconDrawable(this, SimpleLineIconsIcons.icon_home)
@@ -615,7 +615,7 @@ class MainActivity :
             }
         }
         isSetUpUserInDrawer = false
-        setupDrawerMenuIntems()
+        setupDrawerMenuItems()
     }
 
     override fun onActivityResult(result: Int) {
