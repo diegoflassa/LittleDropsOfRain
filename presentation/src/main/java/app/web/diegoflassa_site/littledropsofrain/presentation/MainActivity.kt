@@ -251,9 +251,9 @@ class MainActivity :
                 drawerLayout.close()
                 findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalUserProfileFragment())
             }
-            bindingNavHeader?.navVwName?.setText(LoggedUser.userLiveData.value!!.name)
+            bindingNavHeader?.navVwName?.text = LoggedUser.userLiveData.value!!.name
             Log.i(TAG, "Name: ${LoggedUser.userLiveData.value!!.name}")
-            bindingNavHeader?.navVwEmail?.setText(LoggedUser.userLiveData.value!!.email)
+            bindingNavHeader?.navVwEmail?.text = LoggedUser.userLiveData.value!!.email
             Log.i(TAG, "EMail: ${LoggedUser.userLiveData.value!!.email}")
         } else {
             Log.i(TAG, "No user found!")
@@ -263,8 +263,8 @@ class MainActivity :
                     R.mipmap.ic_launcher_round
                 )
             )
-            bindingNavHeader?.navVwName?.setText(getString(R.string.not_logged_in))
-            bindingNavHeader?.navVwEmail?.setText("")
+            bindingNavHeader?.navVwName?.text = getString(R.string.not_logged_in)
+            bindingNavHeader?.navVwEmail?.text = ""
         }
     }
 
@@ -512,12 +512,6 @@ class MainActivity :
         navAllProductsProducts.isEnabled = false
         navAllProductsProducts.isVisible = false
         navHome.isChecked = true
-    }
-
-    private fun showAdminOptions() {
-    }
-
-    private fun hideAdminOptions() {
     }
 
     private fun subscribeToAdminMessages() {

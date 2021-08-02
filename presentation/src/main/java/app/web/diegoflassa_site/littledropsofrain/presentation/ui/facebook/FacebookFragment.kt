@@ -28,7 +28,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -42,9 +41,12 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecy
 import app.web.diegoflassa_site.littledropsofrain.presentation.interfaces.OnKeyLongPressListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.io.IOException
 
@@ -60,7 +62,6 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
 
     private var isStopped: Boolean = false
     private val keyPrefsLastURL = stringPreferencesKey("KEY_PREF_LAST_URL_FACEBOOK")
-    private val ioScope = CoroutineScope(Dispatchers.IO)
 
     val viewModel: FacebookViewModel by stateViewModel()
     private var binding: FragmentFacebookBinding by viewLifecycle()

@@ -28,7 +28,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -63,7 +62,6 @@ class InstagramFragment : Fragment(), OnKeyLongPressListener {
 
     private var isStopped: Boolean = false
     private val keyPrefsLastURL = stringPreferencesKey("KEY_PREF_LAST_URL_INSTAGRAM")
-    private val ioScope = CoroutineScope(Dispatchers.IO)
 
     val viewModel: InstagramViewModel by stateViewModel()
     private var binding: FragmentInstagramBinding by viewLifecycle()
