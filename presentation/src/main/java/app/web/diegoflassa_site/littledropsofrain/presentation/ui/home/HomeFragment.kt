@@ -49,6 +49,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Source
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentHomeBinding
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.presentation.adapters.ProductAdapter
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
@@ -407,7 +408,7 @@ class HomeFragment :
         if (result == AppCompatActivity.RESULT_OK) {
             // Successfully signed in
             val user =
-                app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value
+                LoggedUser.userLiveData.value
             if (user != null) {
                 val userFb = User()
                 userFb.uid = user.uid

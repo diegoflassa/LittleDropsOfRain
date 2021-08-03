@@ -3,19 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/app_bar_main.xml" value="0.22" />
+        <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/activity_main.xml" value="0.160081053698075" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_all_products.xml" value="0.1" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_all_products_filters.xml" value="0.1" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_instagram.xml" value="0.1" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_privacy.xml" value="0.1" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_send_message.xml" value="0.1" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_tos.xml" value="0.1" />
-        <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/layout/nav_header_main.xml" value="0.13645833333333332" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/menu/activity_main_drawer.xml" value="0.23809523809523808" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15_PREVIEW" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
