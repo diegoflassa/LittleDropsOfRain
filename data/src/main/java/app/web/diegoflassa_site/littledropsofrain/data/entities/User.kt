@@ -19,12 +19,14 @@
 package app.web.diegoflassa_site.littledropsofrain.data.entities
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
 import kotlinx.parcelize.Parcelize
 import java.util.*
 import kotlin.collections.HashMap
 
+@Keep
 @Parcelize
 data class User(
     var imageUrl: String? = null,
@@ -73,10 +75,10 @@ data class User(
         val user: User = other as User
         // field comparison
         return (
-            Objects.equals(uid, user.uid) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(email, user.email)
-            )
+                Objects.equals(uid, user.uid) &&
+                        Objects.equals(name, user.name) &&
+                        Objects.equals(email, user.email)
+                )
     }
 
     override fun hashCode(): Int {
