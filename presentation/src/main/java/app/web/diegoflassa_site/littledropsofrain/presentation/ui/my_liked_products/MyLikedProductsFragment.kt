@@ -41,6 +41,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMyLikedProductsBinding
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.presentation.adapters.MyLikedProductsAdapter
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
@@ -169,7 +170,7 @@ class MyLikedProductsFragment :
         var query: Query = mFirestore.collection(ProductDao.COLLECTION_PATH)
         query.whereArrayContainsAny(
             Product.LIKES,
-            listOf(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.uid!!)
+            listOf(LoggedUser.userLiveData.value?.uid!!)
         )
 
         // Category (equality filter)
@@ -276,7 +277,7 @@ class MyLikedProductsFragment :
         if (result == AppCompatActivity.RESULT_OK) {
             // Successfully signed in
             val user =
-                app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value
+                LoggedUser.userLiveData.value
             if (user != null) {
                 val userFb = User()
                 userFb.uid = user.uid

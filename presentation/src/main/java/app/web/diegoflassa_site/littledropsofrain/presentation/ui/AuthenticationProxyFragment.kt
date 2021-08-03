@@ -30,6 +30,7 @@ import androidx.preference.PreferenceManager
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentAuthenticationProxyBinding
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.presentation.contracts.AuthActivityResultContract
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import com.firebase.ui.auth.AuthUI
@@ -67,7 +68,7 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
         binding.authenticationProgress.visibility = View.VISIBLE
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.visibility = View.GONE
-        if (app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value == null) {
+        if (LoggedUser.userLiveData.value == null) {
             Log.d(TAG, "login in...")
             registerForActivityResult(AuthActivityResultContract(), this).launch(null)
         } else {
@@ -78,14 +79,14 @@ class AuthenticationProxyFragment : Fragment(), ActivityResultCallback<Int> {
     }
 
     private fun logout() {
-        Log.d(TAG, "logout: ${app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.email}")
-        app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!.lastSeen = Timestamp.now()
-        UserDao.insertOrUpdate(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value!!)
+        Log.d(TAG, "logout: ${LoggedUser.userLiveData.value!!.email}")
+        LoggedUser.userLiveData.value!!.lastSeen = Timestamp.now()
+        UserDao.insertOrUpdate(LoggedUser.userLiveData.value!!)
         AuthUI.getInstance().signOut(requireContext())
         PreferenceManager.getDefaultSharedPreferences(requireContext()).edit().putString(
             SettingsFragment.LOGGED_USER_EMAIL_KEY, ""
         ).apply()
-        app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value = null
+        LoggedUser.userLiveData.value = null
     }
 
     override fun onActivityResult(result: Int) {

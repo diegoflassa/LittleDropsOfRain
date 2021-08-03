@@ -213,7 +213,10 @@ class MainActivity :
             val firebaseUser = authData.currentUser
             if (firebaseUser != null) {
                 val emailUser = firebaseUser.email!!
-                UserDao.findByEMail(emailUser, this)
+                Log.i(TAG, "emailUser: $emailUser")
+                if(!emailUser.isNullOrEmpty() && emailUser.contains("@")) {
+                    UserDao.findByEMail(emailUser, this)
+                }
             }
         }
         handleIntent()

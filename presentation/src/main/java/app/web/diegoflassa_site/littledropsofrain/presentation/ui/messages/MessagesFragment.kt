@@ -33,6 +33,7 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMessagesBinding
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.presentation.adapters.MessageAdapter
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilterDialogFragment
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilters
@@ -161,7 +162,7 @@ class MessagesFragment :
         var query: Query = mFirestore.collection(MessageDao.COLLECTION_PATH)
         query.orderBy(Message.CREATION_DATE, Query.Direction.DESCENDING)
         val users = ArrayList<String>(1)
-        users.add(app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser.userLiveData.value?.email!!)
+        users.add(LoggedUser.userLiveData.value?.email!!)
         query = query.whereArrayContainsAny(Message.OWNERS, users)
 
         // Message Type (equality filter)
