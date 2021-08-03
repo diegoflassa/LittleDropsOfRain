@@ -93,13 +93,16 @@ object UserDao {
     }
 
     fun findByEMail(email: String?, foundListener: OnUserFoundListener): Task<QuerySnapshot>? {
-        var userFound: User? = null
         return db.get()?.collection(COLLECTION_PATH)?.whereEqualTo("email", email)
             ?.get()
             ?.addOnSuccessListener { result ->
+                var userFound: User? = null
+                Log.d(TAG, "Found ${result.size()} user(s)")
                 if (result.size() == 1) {
                     userFound = result.documents[0].toObject(User::class.java)!!
                     Log.d(TAG, "${result.documents[0].id} => ${result.documents[0].data}")
+                }else{
+                    Log.d(TAG, "No single user found!")
                 }
                 foundListener.onUserFound(userFound)
             }

@@ -540,6 +540,7 @@ class MainActivity :
     }
 
     override fun onUserFound(user: User?) {
+        Log.d(TAG, "User found: $user")
         when {
             user != null -> {
                 if (FirebaseAuth.getInstance().currentUser!!.providerData.size > 1) {
