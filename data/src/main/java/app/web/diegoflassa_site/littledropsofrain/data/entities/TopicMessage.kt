@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.annotation.Keep
 import app.web.diegoflassa_site.littledropsofrain.data.R
 
+@Keep
 data class TopicMessage(
     var title: String,
     var message: String,
