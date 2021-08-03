@@ -17,11 +17,13 @@
 package app.web.diegoflassa_site.littledropsofrain.data.entities
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@Keep
 @JacksonXmlRootElement(localName = "produto")
 data class IluriaProduct(
     @JacksonXmlProperty(localName = "id_produto")

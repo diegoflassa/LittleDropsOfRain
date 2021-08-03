@@ -19,10 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
--keep class app.web.diegoflassa_site.littledropsofrain.data.entities.IluriaProduct
--keep class app.web.diegoflassa_site.littledropsofrain.data.entities.IluriaProducts
--keep class app.web.diegoflassa_site.littledropsofrain.data.entities.Message
--keep class app.web.diegoflassa_site.littledropsofrain.data.entities.Product
--keep class app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage
--keep class app.web.diegoflassa_site.littledropsofrain.data.entities.User
