@@ -37,6 +37,7 @@ keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
     lint.abortOnError = false
+	lint.checkDependencies = true
 
     compileSdk = Config.compileSdkVersion
     //compileSdkPreview = Config.compileSdkPreviewVersion
@@ -142,7 +143,7 @@ android {
         viewBinding = true
         dataBinding = true
         // Enables Jetpack Compose for this module
-        //compose = true
+        compose = true
     }
     packagingOptions {
         resources.excludes.add("META-INF/DEPENDENCIES")
@@ -152,6 +153,11 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.androidx_jetpack_compose
     }
+}
+dependencies {
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
 }
 
 kapt {
@@ -243,12 +249,20 @@ afterEvaluate {
 
         // Coil COroutines Image Loader
         implementation("io.coil-kt:coil:${Versions.coil}")
+        implementation("io.coil-kt:coil-compose:${Versions.coil_compose}")
 
         // Preferences DataStore
         implementation("androidx.datastore:datastore-preferences:${Versions.data_store}")
 
         // Proto DataStore
         implementation("androidx.datastore:datastore-core:${Versions.data_store}")
+
+		// Compose Navigation
+        implementation("androidx.navigation:navigation-compose:${Versions.navigation_compose}")
+
+		// Gerencianet
+		// implementation("br.com.gerencianet.gnsdk:gn-api-sdk-java:${Versions.gerencianet}")
+
 
         //Retrofix 2
         implementation("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
@@ -365,6 +379,8 @@ afterEvaluate {
         implementation("androidx.appcompat:appcompat:${Versions.appcompat}")
         implementation("androidx.browser:browser:${Versions.browser}")
         implementation("androidx.constraintlayout:constraintlayout:${Versions.constraintlayout}")
+        // Compose ConstrainLayout
+        implementation("androidx.constraintlayout:constraintlayout-compose:${Versions.constraintlayout_compose}")
         implementation("androidx.core:core-ktx:${Versions.core_ktx}")
         implementation("androidx.fragment:fragment-ktx:${Versions.fragment_ktx}")
         implementation("androidx.legacy:legacy-support-v4:${Versions.legacy_support_v4}")

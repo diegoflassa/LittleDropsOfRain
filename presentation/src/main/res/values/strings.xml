@@ -176,4 +176,16 @@
     <string name="no_selection">No selection</string>
     <string name="none">None</string>
     <string name="shopping_cart">Shopping Cart</string>
+    <string name="password">Password</string>
+    <string name="signin">Signin</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="keep_me_connected">keep me connected</string>
+    <string name="does_not_have_account">Does not have account?</string>
+    <string name="continue_with">Continue with</string>
+    <string name="lets_start">Let\'s start!</string>
+    <string name="create_new_account">Create new account</string>
+    <string name="phone">Phone</string>
+    <string name="already_have_an_account">Already have an account? Enter</string>
+    <string name="register">Register</string>
+    <string name="or_enter_with">Or enter with</string>
 </resources>

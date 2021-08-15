@@ -14,6 +14,7 @@ android {
     //compileSdkPreview = Config.compileSdkPreviewVersion
     buildToolsVersion = Config.buildToolsVersion
 
+
     defaultConfig {
         minSdk = Config.minimumSdkVersion
         targetSdk = Config.targetSdkVersion

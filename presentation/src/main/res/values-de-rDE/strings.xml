@@ -141,4 +141,16 @@
     <string name="no_selection">Keine Auswahl</string>
     <string name="none">Keiner</string>
     <string name="shopping_cart">Einkaufswagen</string>
+    <string name="password">Passwort</string>
+    <string name="signin">Einloggen</string>
+    <string name="forgot_password">Passwort vergessen?</string>
+    <string name="keep_me_connected">Behalte mich</string>
+    <string name="does_not_have_account">Hat kein Konto?</string>
+    <string name="continue_with">Weitermachen mit</string>
+    <string name="lets_start">Lasst uns beginnen!</string>
+    <string name="create_new_account">Neuen Account erstellen</string>
+    <string name="phone">Telefon</string>
+    <string name="already_have_an_account">Sie haben bereits ein Konto? Einloggen</string>
+    <string name="register">Registrieren</string>
+    <string name="or_enter_with">Mit eingeben</string>
 </resources>

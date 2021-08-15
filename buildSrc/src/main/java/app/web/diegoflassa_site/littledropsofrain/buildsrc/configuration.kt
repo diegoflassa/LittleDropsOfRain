@@ -7,9 +7,9 @@ import java.util.*
 @Suppress("Unused", "MemberVisibilityCanBePrivate")
 object Config {
     const val applicationId = "app.web.diegoflassa_site.littledropsofrain"
-    private const val versionMajor = 1
+    private const val versionMajor = 2
     private const val versionMinor = 0
-    private const val versionPatch = 12
+    private const val versionPatch = 0
     private var versionClassifier = "debug"
     const val minimumSdkVersion = 24
     const val compileSdkVersion = 31

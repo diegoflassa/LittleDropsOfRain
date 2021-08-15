@@ -177,7 +177,7 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
     }
 
     private fun saveCurrentUrl() {
-        if(isSafeToAccessViewModel()) {
+        if (isSafeToAccessViewModel()) {
             CoroutineScope(Dispatchers.Main).launch {
                 requireContext().dataStore.edit { settings ->
                     settings[keyPrefsLastURL] = binding.webviewFacebook.url.toString()

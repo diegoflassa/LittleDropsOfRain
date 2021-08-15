@@ -50,4 +50,4 @@ dependencies {
     androidTestImplementation("junit:junit:${Versions.junit}")
     androidTestImplementation("androidx.test.ext:junit-ktx:${Versions.junit_ktx}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
-}
+} 

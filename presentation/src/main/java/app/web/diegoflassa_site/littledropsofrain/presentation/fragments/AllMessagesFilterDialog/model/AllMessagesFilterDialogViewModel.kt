@@ -19,7 +19,6 @@ package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.AllMessagesFilterDialogFragment
-import javax.inject.Inject
 
 // @HiltViewModel
 class AllMessagesFilterDialogViewModel /*@Inject*/ constructor(state: SavedStateHandle) : ViewModel() {

@@ -141,4 +141,16 @@
     <string name="no_selection">Sem seleção</string>
     <string name="none">Nenhum</string>
     <string name="shopping_cart">Carrinho de Compras</string>
+    <string name="password">Senha</string>
+    <string name="signin">Entrar</string>
+    <string name="forgot_password">Esqueceu a senha?</string>
+    <string name="keep_me_connected">mantenha-me conectado</string>
+    <string name="does_not_have_account">Não possui uma conta?</string>
+    <string name="continue_with">Continue com</string>
+    <string name="lets_start">Vamos iniciar!</string>
+    <string name="create_new_account">Criar nova cunta</string>
+    <string name="phone">Telefone</string>
+    <string name="already_have_an_account">Já possui uma conta? Entrar</string>
+    <string name="register">Cadastrar</string>
+    <string name="or_enter_with">Ou entre com</string>
 </resources>

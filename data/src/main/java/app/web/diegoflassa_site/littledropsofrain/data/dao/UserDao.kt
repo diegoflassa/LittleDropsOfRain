@@ -101,7 +101,7 @@ object UserDao {
                 if (result.size() == 1) {
                     userFound = result.documents[0].toObject(User::class.java)!!
                     Log.d(TAG, "${result.documents[0].id} => ${result.documents[0].data}")
-                }else{
+                } else {
                     Log.d(TAG, "No single user found!")
                 }
                 foundListener.onUserFound(userFound)
