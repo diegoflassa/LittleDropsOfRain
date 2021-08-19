@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -105,7 +106,7 @@ class RegistrationFragment : Fragment() {
                     ) {}
 
                     Text(
-                        resourceString(R.string.register),
+                        stringResource(R.string.register),
                         Modifier.wrapContentHeight(Alignment.Top),
                         style = LocalTextStyle.current.copy(
                             color = Color(1.0f, 1.0f, 1.0f, 1.0f),
@@ -116,7 +117,7 @@ class RegistrationFragment : Fragment() {
 
                 }
                 Text(
-                    resourceString(R.string.already_have_an_account),
+                    stringResource(R.string.already_have_an_account),
                     Modifier.wrapContentHeight(Alignment.Top),
                     style = LocalTextStyle.current.copy(
                         color = Color.Black,
@@ -127,7 +128,7 @@ class RegistrationFragment : Fragment() {
 
                 Box {
                     Text(
-                        resourceString(R.string.or_enter_with),
+                        stringResource(R.string.or_enter_with),
                         Modifier.wrapContentHeight(Alignment.Top),
                         style = LocalTextStyle.current.copy(
                             color = Color(0.0f, 0.0f, 0.0f, 1.0f),
@@ -182,7 +183,7 @@ class RegistrationFragment : Fragment() {
                 Box(Modifier.size(150.0.dp, 202.0.dp)) {}
 
                 Text(
-                    resourceString(R.string.register),
+                    stringResource(R.string.register),
                     Modifier.wrapContentHeight(Alignment.Top),
                     style = LocalTextStyle.current.copy(
                         color = Color(0.12f, 0.12f, 0.12f, 1.0f),
@@ -193,7 +194,7 @@ class RegistrationFragment : Fragment() {
 
                 /* raw vector icon should have an export setting */
                 Text(
-                    resourceString(R.string.lets_start),
+                    stringResource(R.string.lets_start),
                     Modifier.wrapContentHeight(Alignment.Top),
                     style = LocalTextStyle.current.copy(
                         color = Color(1.0f, 1.0f, 1.0f, 1.0f),
@@ -203,7 +204,7 @@ class RegistrationFragment : Fragment() {
                 )
 
                 Text(
-                    resourceString(R.string.create_new_account),
+                    stringResource(R.string.create_new_account),
                     Modifier.wrapContentHeight(Alignment.Top),
                     style = LocalTextStyle.current.copy(
                         color = Color(0.0f, 0.0f, 0.0f, 1.0f),
@@ -217,7 +218,7 @@ class RegistrationFragment : Fragment() {
                 top.linkTo(boxRefHeader.bottom, margin = 16.dp)
             }) {
                 Text(
-                    resourceString(R.string.phone),
+                    stringResource(R.string.phone),
                     Modifier.wrapContentHeight(Alignment.Top),
                     style = LocalTextStyle.current.copy(
                         color = Color(0.12f, 0.12f, 0.12f, 1.0f),
@@ -257,7 +258,7 @@ class RegistrationFragment : Fragment() {
                 top.linkTo(boxRefPhone.bottom, margin = 16.dp)
             }) {
                 Text(
-                    resourceString(R.string.password),
+                    stringResource(R.string.password),
                     Modifier.wrapContentHeight(Alignment.Top),
                     style = LocalTextStyle.current.copy(
                         color = Color(0.12f, 0.12f, 0.12f, 1.0f),
@@ -298,7 +299,7 @@ class RegistrationFragment : Fragment() {
                 top.linkTo(boxRefPassword.bottom, margin = 16.dp)
             })  {
                 Text(
-                    resourceString(R.string.email),
+                    stringResource(R.string.email),
                     Modifier.wrapContentHeight(Alignment.Top),
                     style = LocalTextStyle.current.copy(
                         color = Color(0.12f, 0.12f, 0.12f, 1.0f),
@@ -338,7 +339,7 @@ class RegistrationFragment : Fragment() {
                 top.linkTo(boxRefEmail.bottom, margin = 16.dp)
             }) {
                 Text(
-                    resourceString(R.string.name),
+                    stringResource(R.string.name),
                     Modifier.wrapContentHeight(Alignment.Top),
                     style = LocalTextStyle.current.copy(
                         color = Color(0.12f, 0.12f, 0.12f, 1.0f),
