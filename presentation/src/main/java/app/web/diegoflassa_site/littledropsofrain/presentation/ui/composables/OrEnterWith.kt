@@ -15,7 +15,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 
 @ExperimentalCoilApi
-class OnEnterWith {
+class OrEnterWith {
 
     @Composable
     @Preview

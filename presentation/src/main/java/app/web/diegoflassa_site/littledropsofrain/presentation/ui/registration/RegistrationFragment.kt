@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.composables.OnEnterWith
+import app.web.diegoflassa_site.littledropsofrain.presentation.ui.composables.OrEnterWith
 import coil.annotation.ExperimentalCoilApi
 
 @ExperimentalCoilApi
@@ -377,7 +377,7 @@ class RegistrationFragment : Fragment() {
             Box(modifier=Modifier.constrainAs(boxRefOrEnterWith) {
                 top.linkTo(boxRefName.bottom, margin = 16.dp)
             }) {
-                OnEnterWith().Show()
+                OrEnterWith().Show()
             }
         }
     }
