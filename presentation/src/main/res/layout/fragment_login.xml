@@ -1,22 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:tag="LoginFragment"
     tools:context=".presentation.ui.login.LoginFragment">
 
-    <!-- Progress bar -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <variable
+            name="viewmodel"
+            type="app.web.diegoflassa_site.littledropsofrain.presentation.ui.login.LoginViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ACCDC9">
+
+            <!-- Progress bar -->
+            <TextView
+                android:id="@+id/login_txt_view_welcome"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/welcome"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/login_txt_view_please_enter_yous_data"
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/please_enter_yous_data"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_txt_view_welcome" />
+
+            <TextView
+                android:id="@+id/login_txt_vw_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/email"
+                app:layout_constraintStart_toStartOf="@+id/login_edt_txt_email"
+                app:layout_constraintTop_toBottomOf="@+id/login_txt_view_please_enter_yous_data" />
+
+            <EditText
+                android:id="@+id/login_edt_txt_email"
+                android:layout_width="303dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="8dp"
+                android:autofillHints="@string/email"
+                android:background="@drawable/edit_text"
+                android:ems="10"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:text="@string/email"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_txt_vw_email"
+                tools:ignore="DuplicateSpeakableTextCheck" />
+
+            <TextView
+                android:id="@+id/login_txt_vw_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/password"
+                app:layout_constraintStart_toStartOf="@+id/login_edt_txt_password"
+                app:layout_constraintTop_toBottomOf="@+id/login_edt_txt_email" />
+
+            <EditText
+                android:id="@+id/login_edt_txt_password"
+                android:layout_width="303dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="8dp"
+                android:autofillHints="@string/password"
+                android:background="@drawable/edit_text"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:text="@string/password"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_txt_vw_password"
+                tools:ignore="TextContrastCheck,DuplicateSpeakableTextCheck" />
+
+            <ProgressBar
+                android:id="@+id/registration_progress"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/login_btn_login"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@drawable/button_background"
+                android:text="@string/login"
+                app:layout_constraintEnd_toEndOf="@+id/login_edt_txt_password"
+                app:layout_constraintStart_toStartOf="@+id/login_edt_txt_password"
+                app:layout_constraintTop_toBottomOf="@+id/login_edt_txt_password"
+                tools:ignore="TextContrastCheck" />
+
+            <TextView
+                android:id="@+id/login_txt_vw_forgot_your_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/forgot_your_password"
+                app:layout_constraintEnd_toEndOf="@+id/login_btn_login"
+                app:layout_constraintTop_toBottomOf="@+id/login_btn_login" />
+
+            <View
+                android:id="@+id/login_line_left"
+                style="@style/HorizontalLine"
+                app:layout_constraintBottom_toBottomOf="@+id/login_txt_vw_or_enter_with"
+                app:layout_constraintEnd_toStartOf="@+id/login_txt_vw_or_enter_with"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/login_txt_vw_or_enter_with" />
+
+            <TextView
+                android:id="@+id/login_txt_vw_or_enter_with"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/or_enter_with"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_txt_vw_forgot_your_password" />
+
+            <View
+                android:id="@+id/login_line_right"
+                style="@style/HorizontalLine"
+                app:layout_constraintBottom_toBottomOf="@+id/login_txt_vw_or_enter_with"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/login_txt_vw_or_enter_with"
+                app:layout_constraintTop_toTopOf="@+id/login_txt_vw_or_enter_with" />
+
+            <ImageView
+                android:id="@+id/login_img_vw_log_with_facebook"
+                android:layout_width="90dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="32dp"
+                android:contentDescription="@string/content_descriptor_log_with_facebook"
+                android:src="@drawable/image_placeholder"
+                app:layout_constraintEnd_toStartOf="@+id/login_img_vw_log_with_google"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_txt_vw_or_enter_with"
+                tools:ignore="ImageContrastCheck" />
+
+            <ImageView
+                android:id="@+id/login_img_vw_log_with_google"
+                android:layout_width="90dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="32dp"
+                android:contentDescription="@string/content_descriptor_log_with_google"
+                android:src="@drawable/image_placeholder"
+                app:layout_constraintEnd_toStartOf="@+id/login_img_vw_log_with_instagram"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/login_img_vw_log_with_facebook"
+                app:layout_constraintTop_toBottomOf="@+id/login_txt_vw_or_enter_with"
+                tools:ignore="ImageContrastCheck" />
+
+            <ImageView
+                android:id="@+id/login_img_vw_log_with_instagram"
+                android:layout_width="90dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="32dp"
+                android:contentDescription="@string/content_descriptor_log_with_instagram"
+                android:src="@drawable/image_placeholder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/login_img_vw_log_with_google"
+                app:layout_constraintTop_toBottomOf="@+id/login_txt_vw_or_enter_with"
+                tools:ignore="ImageContrastCheck,ImageContrastCheck" />
+
+            <TextView
+                android:id="@+id/login_txt_vw_already_have_an_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/already_have_an_account"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_img_vw_log_with_google" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

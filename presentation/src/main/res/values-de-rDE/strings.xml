@@ -153,4 +153,15 @@
     <string name="already_have_an_account">Sie haben bereits ein Konto? Einloggen</string>
     <string name="register">Registrieren</string>
     <string name="or_enter_with">Mit eingeben</string>
+    <string name="content_descriptor_log_with_facebook">Anmelden mit Facebook</string>
+    <string name="content_descriptor_log_with_google">Anmelden mit Google</string>
+    <string name="content_descriptor_log_with_instagram">Anmelden mit Instagram</string>
+    <string name="welcome">Welcome</string>
+    <string name="please_enter_yous_data">Bitte geben Sie Ihre Daten ein, um Ihre Registrierung einzugeben</string>
+    <string name="forgot_your_password">Passwort Vergessen?</string>
+    <string name="installation_failed">Installation Fehlgeschlagen</string>
+    <string name="installation_cancelled">Installation Abgebrochen</string>
+    <string name="empty">Leer</string>
+    <string name="content_descriptor_progress_image">Fortschrittsbild</string>
+    <string name="loading">Wird geladen</string>
 </resources>

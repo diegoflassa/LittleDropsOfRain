@@ -1,6 +1,12 @@
 <resources>
+
+    <style name="AppTheme" parent="Base.AppTheme">
+        <item name="android:forceDarkAllowed">true</item>
+        <!-- Customize your theme here. -->
+    </style>
+
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -56,6 +62,13 @@
     <style name="AppTheme.Launcher">
         <item name="colorPrimaryDark">@android:color/black</item>
         <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <!-- styles.xml -->
+    <style name="HorizontalLine">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#DADADA</item>
     </style>
 
 </resources>

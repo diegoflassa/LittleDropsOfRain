@@ -16,8 +16,10 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.login
 
+import androidx.annotation.Keep
 import androidx.lifecycle.ViewModel
 
+@Keep
 class LoginViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

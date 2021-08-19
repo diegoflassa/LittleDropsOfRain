@@ -188,4 +188,16 @@
     <string name="already_have_an_account">Already have an account? Enter</string>
     <string name="register">Register</string>
     <string name="or_enter_with">Or enter with</string>
+    <string name="content_descriptor_log_with_facebook">Log with Facebook</string>
+    <string name="content_descriptor_log_with_google">Log with Google</string>
+    <string name="content_descriptor_log_with_instagram">Log with Instagram</string>
+    <string name="welcome">Welcome</string>
+    <string name="please_enter_yous_data">Please, fill your data to enter in your registration</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="label_progress" translatable="false">Progress</string>
+    <string name="installation_failed">Installation Failed</string>
+    <string name="installation_cancelled">Installation Cancelled</string>
+    <string name="empty">Empty</string>
+    <string name="content_descriptor_progress_image">Progress Image</string>
+    <string name="loading">Loading</string>
 </resources>

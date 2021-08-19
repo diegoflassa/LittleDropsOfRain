@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@id/nav_home"
+    app:progressDestination="@id/progressFragment">
 
     <fragment
         android:id="@+id/nav_home"
@@ -185,5 +186,32 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="app.web.diegoflassa_site.littledropsofrain.presentation.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_nav_all_products"
+            app:destination="@id/nav_all_products" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="app.web.diegoflassa_site.littledropsofrain.presentation.ui.registration.RegistrationFragment"
+        android:label="fragment_registration"
+        tools:layout="@layout/fragment_registration" />
+    <activity
+        android:id="@+id/splashActivity"
+        android:name="app.web.diegoflassa_site.littledropsofrain.presentation.ui.SplashActivity"
+        android:label="SplashActivity" />
+
+    <fragment
+        android:id="@+id/progressFragment"
+        android:name="app.web.diegoflassa_site.littledropsofrain.presentation.ui.progress.ProgressFragment"
+        android:label="@string/label_progress"
+        tools:layout="@layout/fragment_progress" />
 
 </navigation>

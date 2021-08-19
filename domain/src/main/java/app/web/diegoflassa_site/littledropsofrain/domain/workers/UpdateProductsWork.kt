@@ -42,6 +42,7 @@ import app.web.diegoflassa_site.littledropsofrain.domain.helpers.MainActivityHol
 import kotlinx.coroutines.*
 
 @Suppress("DeferredResultUnused")
+@DelicateCoroutinesApi
 class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams),
     ProductParser.OnParseProgress,
@@ -154,19 +155,16 @@ class UpdateProductsWork(context: Context, workerParams: WorkerParameters) :
         }
     }
 
-    @DelicateCoroutinesApi
     override fun onParseProgressChange(progress: String) {
         val update = workDataOf(KEY_PROGRESS to progress)
         GlobalScope.async(Dispatchers.Default) { setProgress(update) }
     }
 
-    @DelicateCoroutinesApi
     override fun onProductInserted(product: Product) {
         val update = workDataOf(KEY_PRODUCT to product.uid)
         GlobalScope.async(Dispatchers.Default) { setProgress(update) }
     }
 
-    @DelicateCoroutinesApi
     override fun onTaskFinished(param: List<Product>) {
         val update = workDataOf(KEY_PRODUCTS to param.size)
         GlobalScope.async(Dispatchers.Default) { setProgress(update) }

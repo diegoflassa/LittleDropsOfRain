@@ -32,9 +32,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import app.web.diegoflassa_site.littledropsofrain.R
+
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentLoginBinding
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import coil.annotation.ExperimentalCoilApi
@@ -55,7 +57,7 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
         /*
@@ -69,6 +71,12 @@ class LoginFragment : Fragment() {
 
     @Composable
     @Preview
+    fun LoginFragmentBinding() {
+        AndroidViewBinding(FragmentLoginBinding::inflate)
+    }
+
+    @Composable
+    //@Preview
     private fun BuildUi() {
         Column {
             TextField(value = getString(R.string.email), onValueChange = { })

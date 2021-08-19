@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/large_padding"
+    android:paddingTop="@dimen/large_padding"
+    android:paddingRight="@dimen/large_padding"
+    android:paddingBottom="@dimen/large_padding"
+    android:tag="ProgressFragment"
+    tools:context=".presentation.ui.progress.ProgressFragment">
+
+    <ImageView
+        android:id="@+id/progress_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginBottom="@dimen/large_padding"
+        android:layout_gravity="center"
+        android:contentDescription="@string/content_descriptor_progress_image" />
+
+    <TextView
+        android:id="@+id/progress_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:progress="25" />
+
+</LinearLayout>

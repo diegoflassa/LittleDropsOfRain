@@ -154,11 +154,6 @@ android {
         kotlinCompilerExtensionVersion = Versions.androidx_jetpack_compose
     }
 }
-dependencies {
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
-}
 
 kapt {
 	correctErrorTypes = true
@@ -320,10 +315,12 @@ afterEvaluate {
         implementation("androidx.compose.material:material:${Versions.androidx_jetpack_compose}")
         // Material design icons
         implementation("androidx.compose.material:material-icons-core:${Versions.androidx_jetpack_compose}")
-        implementation("androidx.compose.material:material-icons-extended:${Versions.androidx_jetpack_compose}")
+        implementation("androidx.compose.material:accompanist:${Versions.androidx_jetpack_compose}")
         // Integration with observables
         implementation("androidx.compose.runtime:runtime-livedata:${Versions.androidx_jetpack_compose}")
         implementation("androidx.compose.runtime:runtime-rxjava2:${Versions.androidx_jetpack_compose}")
+        // View Binding
+        implementation("androidx.compose.ui:ui-viewbinding:${Versions.androidx_jetpack_compose}")
         // UI Tests
         androidTestImplementation("androidx.compose.ui:ui-test:${Versions.androidx_jetpack_compose}")
         debugImplementation("androidx.compose.ui:ui-tooling:${Versions.androidx_jetpack_compose}")
@@ -393,6 +390,7 @@ afterEvaluate {
         implementation("androidx.navigation:navigation-runtime-ktx:${Versions.navigation}")
         implementation("androidx.navigation:navigation-fragment-ktx:${Versions.navigation}")
         implementation("androidx.navigation:navigation-ui-ktx:${Versions.navigation}")
+        implementation("androidx.navigation:navigation-dynamic-features-fragment:${Versions.navigation}")
         implementation("androidx.preference:preference-ktx:${Versions.preference_ktx}")
         implementation("androidx.recyclerview:recyclerview:${Versions.recyclerview}")
         implementation("androidx.recyclerview:recyclerview-selection:${Versions.recyclerview_selection}")

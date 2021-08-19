@@ -23,7 +23,7 @@ buildscript {
         //classpath("com.google.gms:google-services:${Versions.google_services}")
         classpath("com.google.gms:google-services:4.3.10")
         //classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeargs_plugin}")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-alpha06")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-alpha07")
 
         // Add the Crashlytics Gradle plugin.
         //classpath("com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlytics}")

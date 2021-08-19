@@ -42,9 +42,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.util.concurrent.TimeUnit
 
+@DelicateCoroutinesApi
 class ReloadProductsFragment : Fragment() {
 
     private var wasShowed: Boolean = false

@@ -16,8 +16,10 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.registration
 
+import androidx.annotation.Keep
 import androidx.lifecycle.ViewModel
 
+@Keep
 class RegistrationViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

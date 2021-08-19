@@ -5,4 +5,5 @@
     <string name="promos_pt">Promos em Português</string>
     <string name="promos_en">Promos em Inglês</string>
     <string name="unknown">Desconhecido</string>
+    <string name="admins">Mensage para Administradores</string>
 </resources>
