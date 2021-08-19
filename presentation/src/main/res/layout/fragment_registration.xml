@@ -5,7 +5,6 @@
     tools:context=".presentation.ui.registration.RegistrationFragment">
 
     <data>
-
         <variable
             name="viewmodel"
             type="app.web.diegoflassa_site.littledropsofrain.presentation.ui.registration.RegistrationViewModel" />
@@ -150,7 +149,6 @@
                 android:layout_height="50dp"
                 android:indeterminate="true"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
