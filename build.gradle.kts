@@ -27,7 +27,7 @@ buildscript {
 
         // Add the Crashlytics Gradle plugin.
         //classpath("com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlytics}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.7.1")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.8.0")
         // Performance Monitoring plugin
         //classpath("com.google.firebase:perf-plugin:${Versions.perf}")
         classpath("com.google.firebase:perf-plugin:1.4.0")

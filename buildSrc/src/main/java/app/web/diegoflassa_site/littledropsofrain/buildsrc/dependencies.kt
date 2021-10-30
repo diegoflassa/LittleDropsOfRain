@@ -9,7 +9,7 @@ object Versions {
     const val data_store = "1.0.0"
 	const val navigation_compose = "2.4.0-beta01"
 	const val gerencianet = "1.0.2"
-    const val gson = "2.8.8"
+    const val gson = "2.8.9"
     const val retrofit = "2.0.0"
     const val retrofit_adapter = "2.9.0"
     const val converter = "2.9.0"
