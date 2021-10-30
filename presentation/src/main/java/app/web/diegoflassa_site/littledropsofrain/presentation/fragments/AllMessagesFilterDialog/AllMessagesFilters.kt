@@ -29,6 +29,7 @@ import kotlinx.parcelize.Parcelize
 /**
  * Object for passing filters around.
  */
+@ExperimentalStdlibApi
 @Parcelize
 data class AllMessagesFilters(
     var read: Boolean? = null,

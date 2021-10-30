@@ -70,6 +70,7 @@ import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.lang.ref.WeakReference
 import java.util.*
 
+@ExperimentalStdlibApi
 class HomeFragment :
     Fragment(),
     ActivityResultCallback<Int>,

@@ -40,6 +40,7 @@ import java.util.*
 /**
  * Dialog Fragment containing filter form.
  */
+@ExperimentalStdlibApi
 open class MyMessagesFilterDialogFragment :
     DialogFragment(),
     View.OnClickListener {
@@ -59,7 +60,6 @@ open class MyMessagesFilterDialogFragment :
     var binding: FragmentMyMessagesFiltersBinding by viewLifecycle()
     private var mRootView: View? = null
 
-    @ExperimentalStdlibApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -104,7 +104,6 @@ open class MyMessagesFilterDialogFragment :
         )
     }
 
-    @ExperimentalStdlibApi
     override fun onClick(v: View) {
         when (v.id) {
             R.id.button_search_messages -> onSearchClicked()

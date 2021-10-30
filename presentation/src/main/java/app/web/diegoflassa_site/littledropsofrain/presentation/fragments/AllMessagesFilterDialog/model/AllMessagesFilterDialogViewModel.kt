@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.AllMessagesFilterDialogFragment
 
 // @HiltViewModel
+@ExperimentalStdlibApi
 class AllMessagesFilterDialogViewModel /*@Inject*/ constructor(state: SavedStateHandle) : ViewModel() {
 
     companion object {

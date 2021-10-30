@@ -20,6 +20,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllProductsFilterDialog.AllProductsFilters
 
+@ExperimentalStdlibApi
 class AllProductsViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {

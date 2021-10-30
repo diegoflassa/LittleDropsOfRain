@@ -50,6 +50,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.io.IOException
 
+@ExperimentalStdlibApi
 class FacebookFragment : Fragment(), OnKeyLongPressListener {
 
     companion object {

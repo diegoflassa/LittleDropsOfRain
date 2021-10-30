@@ -20,7 +20,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.domain.auth.FirebaseAuthLiveData
-import app.web.diegoflassa_site.littledropsofrain.presentation.MainActivity
 
 @Suppress("UNUSED")
 class MainActivityViewModel(state: SavedStateHandle) : ViewModel() {
@@ -33,7 +32,7 @@ class MainActivityViewModel(state: SavedStateHandle) : ViewModel() {
 
     init {
         val viewState = MainActivityViewState().apply {
-            text = "This is ${MainActivity::class.simpleName} Activity"
+            text = "This is ${MainActivityViewModel::class.simpleName} Activity"
         }
         savedStateHandle.set(SAVE_STATE_KEY, viewState)
     }

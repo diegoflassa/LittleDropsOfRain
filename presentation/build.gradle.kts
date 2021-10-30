@@ -19,8 +19,9 @@ plugins {
     id("com.google.firebase.firebase-perf")
     // Apply the App Distribution Gradle plugin
     id("com.google.firebase.appdistribution")
-    //id("dagger.hilt.android.plugin")
+    id("dagger.hilt.android.plugin")
 }
+
 apply {
     plugin("kotlin-android")
 }
@@ -67,7 +68,7 @@ android {
     buildTypes {
         debug {
             //applicationIdSuffix '.debug'
-            //ext.ennableCrashlytics = false
+            //ext.enableCrashlytics = false
             //ext.alwaysUpdateBuildId = false
             firebaseAppDistribution {
                 releaseNotesFile = "${project.rootDir}/releaseNotes/releaseNotes.txt"
@@ -276,34 +277,17 @@ afterEvaluate {
         //GSON
         implementation("com.google.code.gson:gson:${Versions.gson}")
 
-        // Dagger Core
-        implementation("com.google.dagger:dagger:${Versions.dagger}")
-        kapt("com.google.dagger:dagger-compiler:${Versions.dagger}")
-
-        // Dagger Android
-        api("com.google.dagger:dagger-android:${Versions.dagger}")
-        api("com.google.dagger:dagger-android-support:${Versions.dagger}")
-        kapt("com.google.dagger:dagger-android-processor:${Versions.dagger}")
-
-        //Hilt
+        // Dagger & Hilt
         implementation("com.google.dagger:hilt-android:${Versions.hilt}")
         kapt("com.google.dagger:hilt-android-compiler:${Versions.hilt}")
+        implementation("androidx.hilt:hilt-common:${Versions.hilt_other}")
+        kapt("androidx.hilt:hilt-compiler:${Versions.hilt_other}")
+        implementation("androidx.hilt:hilt-navigation-fragment:${Versions.hilt_other}")
+        implementation("androidx.hilt:hilt-work:${Versions.hilt_other}")
 
         // RX Java 3
         implementation("io.reactivex.rxjava3:rxjava:${Versions.rxjava}")
         implementation("io.reactivex.rxjava3:rxandroid:${Versions.rxandroid}")
-
-        // Koin main features for Android (Scope,ViewModel ... )
-        implementation("io.insert-koin:koin-core:${Versions.koin}")
-        // Koin main features for Android (Scope,ViewModel ...)
-        implementation("io.insert-koin:koin-android:${Versions.koin}")
-        // Koin Android - experimental builder extensions
-        implementation("io.insert-koin:koin-android-ext:${Versions.koin_ext}")
-        // Koin for Jetpack WorkManager
-        implementation("io.insert-koin:koin-androidx-workmanager:${Versions.koin}")
-        // Koin for Jetpack Compose (unstable version)
-        implementation("io.insert-koin:koin-androidx-compose:${Versions.koin_compose}")
-
 
         // Jetpack Compose toolkit dependencies
         implementation("androidx.compose.ui:ui:${Versions.androidx_jetpack_compose}")
@@ -315,7 +299,7 @@ afterEvaluate {
         implementation("androidx.compose.material:material:${Versions.androidx_jetpack_compose}")
         // Material design icons
         implementation("androidx.compose.material:material-icons-core:${Versions.androidx_jetpack_compose}")
-        implementation("androidx.compose.material:accompanist:${Versions.androidx_jetpack_compose}")
+        //implementation("androidx.compose.material:accompanist:${Versions.androidx_jetpack_compose_accompanist}")
         // Integration with observables
         implementation("androidx.compose.runtime:runtime-livedata:${Versions.androidx_jetpack_compose}")
         implementation("androidx.compose.runtime:runtime-rxjava2:${Versions.androidx_jetpack_compose}")
@@ -437,7 +421,7 @@ afterEvaluate {
         androidTestImplementation("androidx.test:core:${Versions.core}")
         androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
         testImplementation("androidx.test.espresso:espresso-intents:${Versions.espresso}")
-        testImplementation("androidx.test.ext:truth:${Versions.test}")
+        testImplementation("androidx.test.ext:truth:${Versions.truth}")
         androidTestImplementation("androidx.test.ext:junit-ktx:${Versions.junit_ktx}")
         androidTestImplementation("androidx.test:rules:${Versions.test}")
         androidTestImplementation("androidx.test:runner:${Versions.test}")

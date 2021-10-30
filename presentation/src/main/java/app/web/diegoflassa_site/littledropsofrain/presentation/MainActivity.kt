@@ -77,6 +77,7 @@ import com.joanzapata.iconify.fonts.TypiconsIcons
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
 // @AndroidEntryPoint
+@ExperimentalStdlibApi
 class MainActivity :
     AppCompatActivity(),
     OnUserFoundListener,
@@ -214,7 +215,7 @@ class MainActivity :
             if (firebaseUser != null) {
                 val emailUser = firebaseUser.email!!
                 Log.i(TAG, "emailUser: $emailUser")
-                if (!emailUser.isNullOrEmpty() && emailUser.contains("@")) {
+                if (emailUser.isNotEmpty() && emailUser.contains("@")) {
                     UserDao.findByEMail(emailUser, this)
                 }
             }

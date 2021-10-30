@@ -53,6 +53,7 @@ import com.google.firebase.firestore.Query
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.lang.ref.WeakReference
 
+@ExperimentalStdlibApi
 class UsersFragment :
     Fragment(),
     UsersAdapter.OnUserSelectedListener {

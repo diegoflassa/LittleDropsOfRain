@@ -3,6 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/drawable/card_item_divider.xml" value="0.1" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/app_bar_main.xml" value="0.1" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/content_main.xml" value="0.1" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_all_messages.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_all_messages_filters.xml" value="0.1537037037037037" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_all_products.xml" value="0.1" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/recyclerview_item_product.xml" value="0.1" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/menu/activity_main_drawer.xml" value="0.29931972789115646" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/menu/main.xml" value="0.1" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/menu/nav_bottom_admin_menu.xml" value="0.15989583333333332" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/drawable/btn_register.xml" value="0.1175925925925926" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/drawable/button_background.xml" value="0.11574074074074074" />
         <entry key="..\:/users/Diego/Programming/Workspaces/Workspace.AndroidStudio/LittleDropsOfRain/presentation/src/main/res/drawable/button_hoovered.xml" value="0.13055555555555556" />
@@ -23,7 +33,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

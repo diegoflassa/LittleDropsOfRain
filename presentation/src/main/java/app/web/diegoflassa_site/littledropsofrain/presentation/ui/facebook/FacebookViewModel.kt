@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 
+@ExperimentalStdlibApi
 class FacebookViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {

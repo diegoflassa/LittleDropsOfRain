@@ -67,6 +67,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
+@ExperimentalStdlibApi
 class SendTopicMessageFragment :
     Fragment(),
     OnFileUploadedListener,
@@ -88,7 +89,6 @@ class SendTopicMessageFragment :
     val viewModel: TopicMessageViewModel by stateViewModel()
     private var binding: FragmentSendTopicMessageBinding by viewLifecycle()
 
-    @ExperimentalStdlibApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

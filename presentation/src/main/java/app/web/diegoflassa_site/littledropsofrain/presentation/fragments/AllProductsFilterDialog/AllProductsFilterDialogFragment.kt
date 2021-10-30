@@ -44,6 +44,7 @@ import org.koin.androidx.viewmodel.ext.android.stateViewModel
 /**
  * Dialog Fragment containing filter form.
  */
+@ExperimentalStdlibApi
 open class AllProductsFilterDialogFragment :
     DialogFragment(),
     View.OnClickListener,

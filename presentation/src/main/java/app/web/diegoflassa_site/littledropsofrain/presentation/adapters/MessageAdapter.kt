@@ -45,6 +45,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
+@ExperimentalStdlibApi
 open class MessageAdapter(
     context: Context,
     query: Query?,
@@ -69,7 +70,6 @@ open class MessageAdapter(
         return ViewHolder(mContext, binding.root)
     }
 
-    @ExperimentalStdlibApi
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int

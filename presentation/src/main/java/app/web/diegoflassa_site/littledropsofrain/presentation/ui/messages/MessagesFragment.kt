@@ -47,6 +47,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import java.lang.ref.WeakReference
 
+@ExperimentalStdlibApi
 class MessagesFragment :
     Fragment(),
     MessageAdapter.OnMessageSelectedListener,

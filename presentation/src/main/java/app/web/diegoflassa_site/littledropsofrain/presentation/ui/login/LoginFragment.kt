@@ -36,7 +36,6 @@ import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import app.web.diegoflassa_site.littledropsofrain.R
-
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentLoginBinding
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import coil.annotation.ExperimentalCoilApi
@@ -76,7 +75,7 @@ class LoginFragment : Fragment() {
     }
 
     @Composable
-    //@Preview
+    // @Preview
     private fun BuildUi() {
         Column {
             TextField(value = getString(R.string.email), onValueChange = { })

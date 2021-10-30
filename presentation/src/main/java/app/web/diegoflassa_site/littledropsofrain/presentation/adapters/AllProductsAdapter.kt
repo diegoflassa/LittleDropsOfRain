@@ -40,6 +40,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.DecimalFormatSymbols
 
+@ExperimentalStdlibApi
 open class AllProductsAdapter(
     private var allProductsFragment: AllProductsFragment,
     query: Query?,
@@ -69,6 +70,7 @@ open class AllProductsAdapter(
         holder.bind(getSnapshot(position), mListener)
     }
 
+    @ExperimentalStdlibApi
     class ViewHolder(private var allProductsFragment: AllProductsFragment, itemView: View) :
         RecyclerView.ViewHolder(itemView), CompoundButton.OnCheckedChangeListener {
         val binding = RecyclerviewItemProductBinding.bind(itemView)

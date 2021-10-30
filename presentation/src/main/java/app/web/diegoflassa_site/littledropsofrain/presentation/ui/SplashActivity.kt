@@ -29,6 +29,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import java.util.concurrent.TimeUnit
 
+@ExperimentalStdlibApi
 class SplashActivity : AppCompatActivity() {
 
     private val mMapper: UriToIntentMapper = UriToIntentMapper(this, IntentHelper())
@@ -37,7 +38,6 @@ class SplashActivity : AppCompatActivity() {
         var TAG = SplashActivity::class.simpleName
     }
 
-    @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         // Make sure this is before calling super.onCreate
         setTheme(R.style.AppTheme_Launcher)

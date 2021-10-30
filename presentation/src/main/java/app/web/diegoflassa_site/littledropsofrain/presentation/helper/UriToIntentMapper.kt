@@ -22,6 +22,7 @@ import android.net.Uri
 import app.web.diegoflassa_site.littledropsofrain.presentation.MainActivity
 import java.util.*
 
+@ExperimentalStdlibApi
 class UriToIntentMapper(context: Context, intentHelper: IntentHelper) {
     private val mContext: Context = context
     private val mIntents: IntentHelper = intentHelper

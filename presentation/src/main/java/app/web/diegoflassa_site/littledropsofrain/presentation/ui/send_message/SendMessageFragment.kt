@@ -52,6 +52,7 @@ import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
+@ExperimentalStdlibApi
 class SendMessageFragment :
     Fragment(),
     OnUsersLoadedListener {
@@ -73,7 +74,6 @@ class SendMessageFragment :
     private lateinit var toggle: ActionBarDrawerToggle
     private var isStopped = false
 
-    @ExperimentalStdlibApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

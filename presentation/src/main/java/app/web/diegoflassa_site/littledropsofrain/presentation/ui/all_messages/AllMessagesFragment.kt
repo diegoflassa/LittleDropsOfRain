@@ -50,6 +50,7 @@ import com.google.firebase.firestore.Query
 import java.lang.ref.WeakReference
 
 // @AndroidEntryPoint
+@ExperimentalStdlibApi
 class AllMessagesFragment :
     Fragment(),
     MessageAdapter.OnMessageSelectedListener,

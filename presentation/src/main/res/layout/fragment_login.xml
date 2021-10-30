@@ -5,6 +5,9 @@
     tools:context=".presentation.ui.login.LoginFragment">
 
     <data>
+
+        <import type="app.web.diegoflassa_site.littledropsofrain.presentation.ui.login.LoginViewModel" />
+
         <variable
             name="viewmodel"
             type="app.web.diegoflassa_site.littledropsofrain.presentation.ui.login.LoginViewModel" />

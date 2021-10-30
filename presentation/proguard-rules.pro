@@ -52,4 +52,5 @@
 -dontwarn javax.xml.stream.util.StreamReaderDelegate
 -dontwarn javax.xml.stream.util.XMLEventAllocator
 -dontwarn org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider
+-dontwarn org.bouncycastle.jce.provider.BouncyCastleProvider
 -dontwarn java.lang.instrument.ClassFileTransformer

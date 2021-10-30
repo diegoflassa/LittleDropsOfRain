@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 import app.web.diegoflassa_site.littledropsofrain.presentation.MainActivity
 
+@ExperimentalStdlibApi
 class IntentHelper {
     fun newMainActivityIntent(context: Context?): Intent {
         val i = Intent(context, MainActivity::class.java)

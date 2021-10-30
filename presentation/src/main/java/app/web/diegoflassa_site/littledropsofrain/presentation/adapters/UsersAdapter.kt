@@ -46,6 +46,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
+@ExperimentalStdlibApi
 open class UsersAdapter(
     usersFragment: UsersFragment,
     query: Query?,
@@ -91,6 +92,7 @@ open class UsersAdapter(
         holder.binding.userIsAdmin.setOnCheckedChangeListener(mOnCheckChangeListener)
     }
 
+    @ExperimentalStdlibApi
     class ViewHolder(itemView: View, usersFragment: UsersFragment) :
         RecyclerView.ViewHolder(itemView) {
         val binding = RecyclerviewItemUserBinding.bind(itemView)

@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.composables.OrEnterWith
 import coil.annotation.ExperimentalCoilApi
 
@@ -89,11 +90,9 @@ class RegistrationFragment : Fragment() {
         ) {
             val (boxRefHeader, boxRefPhone, boxRefPassword, boxRefEmail, boxRefName, boxRefOrEnterWith) = createRefs()
 
-
             Box {
                 ConstraintLayout(modifier = Modifier) {
                     val (_) = createRefs()
-
 
                     /* raw vector Vector should have an export setting */
                 }
@@ -114,7 +113,6 @@ class RegistrationFragment : Fragment() {
                             fontSize = 16.0.sp
                         )
                     )
-
                 }
                 Text(
                     stringResource(R.string.already_have_an_account),
@@ -148,7 +146,6 @@ class RegistrationFragment : Fragment() {
                             .size(90.0.dp, 1.0.dp)
                             .background(Color(0.85f, 0.85f, 0.85f, 1.0f))
                     ) {}
-
                 }
                 Box {
                     Box(
@@ -212,11 +209,12 @@ class RegistrationFragment : Fragment() {
                         fontSize = 12.0.sp
                     )
                 )
-
             }
-            Box(modifier=Modifier.constrainAs(boxRefPhone) {
-                top.linkTo(boxRefHeader.bottom, margin = 16.dp)
-            }) {
+            Box(
+                modifier = Modifier.constrainAs(boxRefPhone) {
+                    top.linkTo(boxRefHeader.bottom, margin = 16.dp)
+                }
+            ) {
                 Text(
                     stringResource(R.string.phone),
                     Modifier.wrapContentHeight(Alignment.Top),
@@ -248,15 +246,17 @@ class RegistrationFragment : Fragment() {
                                 0.85f,
                                 0.85f,
                                 1.0f
-                            ), textAlign = TextAlign.Left, fontSize = 14.0.sp
+                            ),
+                            textAlign = TextAlign.Left, fontSize = 14.0.sp
                         )
                     )
-
                 }
             }
-            Box(modifier=Modifier.constrainAs(boxRefPassword) {
-                top.linkTo(boxRefPhone.bottom, margin = 16.dp)
-            }) {
+            Box(
+                modifier = Modifier.constrainAs(boxRefPassword) {
+                    top.linkTo(boxRefPhone.bottom, margin = 16.dp)
+                }
+            ) {
                 Text(
                     stringResource(R.string.password),
                     Modifier.wrapContentHeight(Alignment.Top),
@@ -288,16 +288,17 @@ class RegistrationFragment : Fragment() {
                                 0.85f,
                                 0.85f,
                                 1.0f
-                            ), textAlign = TextAlign.Left, fontSize = 14.0.sp
+                            ),
+                            textAlign = TextAlign.Left, fontSize = 14.0.sp
                         )
                     )
-
-
                 }
             }
-            Box(modifier=Modifier.constrainAs(boxRefEmail) {
-                top.linkTo(boxRefPassword.bottom, margin = 16.dp)
-            })  {
+            Box(
+                modifier = Modifier.constrainAs(boxRefEmail) {
+                    top.linkTo(boxRefPassword.bottom, margin = 16.dp)
+                }
+            ) {
                 Text(
                     stringResource(R.string.email),
                     Modifier.wrapContentHeight(Alignment.Top),
@@ -329,15 +330,17 @@ class RegistrationFragment : Fragment() {
                                 0.85f,
                                 0.85f,
                                 1.0f
-                            ), textAlign = TextAlign.Left, fontSize = 14.0.sp
+                            ),
+                            textAlign = TextAlign.Left, fontSize = 14.0.sp
                         )
                     )
-
                 }
             }
-            Box(modifier=Modifier.constrainAs(boxRefName) {
-                top.linkTo(boxRefEmail.bottom, margin = 16.dp)
-            }) {
+            Box(
+                modifier = Modifier.constrainAs(boxRefName) {
+                    top.linkTo(boxRefEmail.bottom, margin = 16.dp)
+                }
+            ) {
                 Text(
                     stringResource(R.string.name),
                     Modifier.wrapContentHeight(Alignment.Top),
@@ -369,15 +372,17 @@ class RegistrationFragment : Fragment() {
                                 0.85f,
                                 0.85f,
                                 1.0f
-                            ), textAlign = TextAlign.Left, fontSize = 14.0.sp
+                            ),
+                            textAlign = TextAlign.Left, fontSize = 14.0.sp
                         )
                     )
-
                 }
             }
-            Box(modifier=Modifier.constrainAs(boxRefOrEnterWith) {
-                top.linkTo(boxRefName.bottom, margin = 16.dp)
-            }) {
+            Box(
+                modifier = Modifier.constrainAs(boxRefOrEnterWith) {
+                    top.linkTo(boxRefName.bottom, margin = 16.dp)
+                }
+            ) {
                 OrEnterWith().Show()
             }
         }

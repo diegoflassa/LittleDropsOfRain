@@ -23,7 +23,8 @@
         android:supportsRtl="true"
         android:targetSdkVersion="30"
         android:theme="@style/AppTheme"
-        tools:targetApi="R">
+        tools:targetApi="R"
+        android:dataExtractionRules="@xml/data_extraction_rules">
 		
 		<property
 			android:name="android.media.PROPERTY_MEDIA_CAPABILITIES"
@@ -41,7 +42,6 @@
         <activity
             android:exported="true"
             android:name=".presentation.ui.SplashActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -94,7 +94,6 @@
             android:exported="true"
             android:name=".presentation.MainActivity"
             android:configChanges="locale"
-            android:label="@string/app_name"
             android:noHistory="false"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan"

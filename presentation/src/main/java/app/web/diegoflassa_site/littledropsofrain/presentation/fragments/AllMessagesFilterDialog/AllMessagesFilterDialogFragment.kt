@@ -45,6 +45,7 @@ import kotlin.collections.ArrayList
 /**
  * Dialog Fragment containing filter form.
  */
+@ExperimentalStdlibApi
 open class AllMessagesFilterDialogFragment :
     DialogFragment(),
     View.OnClickListener,
@@ -68,7 +69,6 @@ open class AllMessagesFilterDialogFragment :
     private var mSavedInstanceState: Bundle? = null
     private var mRootView: View? = null
 
-    @ExperimentalStdlibApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -122,7 +122,6 @@ open class AllMessagesFilterDialogFragment :
         )
     }
 
-    @ExperimentalStdlibApi
     override fun onClick(v: View) {
         when (v.id) {
             R.id.button_search_messages -> onSearchClicked()
@@ -233,7 +232,6 @@ open class AllMessagesFilterDialogFragment :
             return filters
         }
 
-    @ExperimentalStdlibApi
     override fun onUsersLoaded(users: List<User>) {
         val usersWithDefault = ArrayList<User>(users.size + 1)
         val user = User()

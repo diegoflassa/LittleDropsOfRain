@@ -20,6 +20,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilters
 
+@ExperimentalStdlibApi
 class MessagesViewModel(state: SavedStateHandle) : ViewModel() {
 
     companion object {
