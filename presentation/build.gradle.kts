@@ -258,7 +258,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:${Versions.navigation_compose}")
 
     // Gerencianet
-    implementation("br.com.gerencianet.gnsdk:gn-api-sdk-java:${Versions.gerencianet}")
+    //implementation("br.com.gerencianet.gnsdk:gn-api-sdk-java:${Versions.gerencianet}")
 
 
     //Retrofix 2
