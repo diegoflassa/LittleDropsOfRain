@@ -40,6 +40,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.text.HtmlCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -66,7 +67,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -79,7 +80,7 @@ class HomeFragment :
     ProductAdapter.OnProductSelectedListener,
     DialogInterface.OnDismissListener {
 
-    val viewModel: HomeViewModel by stateViewModel()
+    val viewModel: HomeViewModel by viewModels()
     var binding: FragmentHomeBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<ProductAdapter>
     private lateinit var mFirestore: FirebaseFirestore

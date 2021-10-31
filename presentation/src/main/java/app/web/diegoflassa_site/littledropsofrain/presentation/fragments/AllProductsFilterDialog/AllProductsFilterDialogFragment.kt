@@ -28,6 +28,7 @@ import android.widget.Spinner
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
@@ -39,7 +40,7 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecy
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.firebase.firestore.Query
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+
 
 /**
  * Dialog Fragment containing filter form.
@@ -59,7 +60,7 @@ open class AllProductsFilterDialogFragment :
         fun onFilter(filters: AllProductsFilters)
     }
 
-    val viewModel: AllProductsFilterDialogViewModel by stateViewModel()
+    val viewModel: AllProductsFilterDialogViewModel by viewModels()
     var categories: LinkedHashSet<String> = LinkedHashSet()
     private lateinit var mCategoryChipGroup: ChipGroup
     private var mSortSpinner: Spinner? = null

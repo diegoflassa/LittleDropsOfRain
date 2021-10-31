@@ -28,6 +28,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -74,9 +75,9 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import com.joanzapata.iconify.fonts.TypiconsIcons
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-// @AndroidEntryPoint
+@AndroidEntryPoint
 @ExperimentalStdlibApi
 class MainActivity :
     AppCompatActivity(),
@@ -94,7 +95,7 @@ class MainActivity :
         MainActivityHolder.mainActivityClass = MainActivity::class
     }
 
-    private val viewModel: MainActivityViewModel by stateViewModel()
+    private val viewModel: MainActivityViewModel by viewModels()
     private lateinit var fab: FloatingActionButton
     private var binding: ActivityMainBinding? = null
     private var bindingNavHeader: NavHeaderMainBinding? = null

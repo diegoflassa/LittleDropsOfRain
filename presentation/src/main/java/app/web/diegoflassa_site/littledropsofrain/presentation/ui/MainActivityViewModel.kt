@@ -20,9 +20,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.domain.auth.FirebaseAuthLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 @Suppress("UNUSED")
-class MainActivityViewModel(state: SavedStateHandle) : ViewModel() {
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(state: SavedStateHandle)  : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"

@@ -29,6 +29,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.work.*
@@ -43,7 +44,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
 import kotlinx.coroutines.DelicateCoroutinesApi
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+
 import java.util.concurrent.TimeUnit
 
 @DelicateCoroutinesApi
@@ -53,7 +54,7 @@ class ReloadProductsFragment : Fragment() {
     private lateinit var observer: Observer<WorkInfo>
     private var isStopped: Boolean = false
 
-    val viewModel: ReloadProductsViewModel by stateViewModel()
+    val viewModel: ReloadProductsViewModel by viewModels()
     var binding: FragmentReloadProductsBinding by viewLifecycle()
     private lateinit var toggle: ActionBarDrawerToggle
 

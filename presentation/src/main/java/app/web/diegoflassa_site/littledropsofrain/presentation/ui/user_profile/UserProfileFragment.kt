@@ -29,6 +29,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -45,7 +46,7 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecy
 import coil.load
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+
 
 class UserProfileFragment :
     Fragment(),
@@ -59,7 +60,7 @@ class UserProfileFragment :
 
     private lateinit var toggle: ActionBarDrawerToggle
 
-    val viewModel: UserProfileViewModel by stateViewModel()
+    val viewModel: UserProfileViewModel by viewModels()
     private var binding: FragmentUserProfileBinding by viewLifecycle()
     private lateinit var getContentLauncher: ActivityResultLauncher<String>
     private lateinit var cropImageLauncher: ActivityResultLauncher<Pair<Uri, Pair<Float, Float>>>

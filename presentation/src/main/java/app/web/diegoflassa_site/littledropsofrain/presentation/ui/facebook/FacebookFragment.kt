@@ -33,6 +33,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentFacebookBinding
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.isSafeToAccessViewModel
@@ -47,7 +48,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+
 import java.io.IOException
 
 @ExperimentalStdlibApi
@@ -64,7 +65,7 @@ class FacebookFragment : Fragment(), OnKeyLongPressListener {
     private var isStopped: Boolean = false
     private val keyPrefsLastURL = stringPreferencesKey("KEY_PREF_LAST_URL_FACEBOOK")
 
-    val viewModel: FacebookViewModel by stateViewModel()
+    val viewModel: FacebookViewModel by viewModels()
     private var binding: FragmentFacebookBinding by viewLifecycle()
 
     @SuppressLint("SetJavaScriptEnabled")

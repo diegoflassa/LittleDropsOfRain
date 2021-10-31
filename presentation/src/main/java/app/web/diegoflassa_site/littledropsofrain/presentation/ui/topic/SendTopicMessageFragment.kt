@@ -34,6 +34,7 @@ import androidx.core.net.toFile
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
@@ -60,7 +61,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+
 import java.nio.charset.Charset
 import java.util.*
 import kotlin.collections.ArrayList
@@ -86,7 +87,7 @@ class SendTopicMessageFragment :
         fun newInstance() = SendTopicMessageFragment()
     }
 
-    val viewModel: TopicMessageViewModel by stateViewModel()
+    val viewModel: TopicMessageViewModel by viewModels()
     private var binding: FragmentSendTopicMessageBinding by viewLifecycle()
 
     override fun onCreateView(

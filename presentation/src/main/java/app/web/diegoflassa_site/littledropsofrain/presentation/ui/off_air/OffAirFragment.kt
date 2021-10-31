@@ -25,6 +25,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentOffAirBinding
@@ -34,7 +35,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+
 
 class OffAirFragment : Fragment() {
 
@@ -48,7 +49,7 @@ class OffAirFragment : Fragment() {
     private var toggle: ActionBarDrawerToggle? = null
     private var isStopped: Boolean = false
 
-    val viewModel: OffAirViewModel by stateViewModel()
+    val viewModel: OffAirViewModel by viewModels()
     private var binding: FragmentOffAirBinding by viewLifecycle()
 
     override fun onCreateView(

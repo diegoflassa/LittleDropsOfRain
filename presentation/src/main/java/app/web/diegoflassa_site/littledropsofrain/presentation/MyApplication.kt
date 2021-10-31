@@ -25,25 +25,7 @@ import androidx.preference.PreferenceManager
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
 import app.web.diegoflassa_site.littledropsofrain.domain.preferences.MyOnSharedPreferenceChangeListener
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.model.AllMessagesFilterDialogViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllProductsFilterDialog.model.AllProductsFilterDialogViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.model.MyMessagesFilterDialogViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.model.ProductsFilterDialogViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.MainActivityViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.SettingsFragment
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_messages.AllMessagesViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products.AllProductsViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.facebook.FacebookViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.HomeViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.instagram.InstagramViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.messages.MessagesViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.my_liked_products.MyLikedProductsViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.OffAirViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.reload_products.ReloadProductsViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.SendMessageViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.topic.TopicMessageViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.user_profile.UserProfileViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.users.model.UsersViewModel
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
@@ -56,16 +38,10 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.SimpleLineIconsModule
 import com.joanzapata.iconify.fonts.TypiconsModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.context.startKoin
-import org.koin.core.logger.Level
-import org.koin.core.module.Module
-import org.koin.dsl.module
+import dagger.hilt.android.HiltAndroidApp
 import java.lang.ref.WeakReference
 
-// @HiltAndroidApp
+@HiltAndroidApp
 @ExperimentalStdlibApi
 class MyApplication : Application() {
 
@@ -86,7 +62,6 @@ class MyApplication : Application() {
         // .with(IoniconsModule())
 
         setup()
-        setupKoin()
         setupCacheSize()
 
         subscribeToNews()
@@ -159,35 +134,6 @@ class MyApplication : Application() {
         }
         db.firestoreSettings = settings
         // [END set_firestore_settings]
-    }
-
-    private fun setupKoin() {
-        val myModules: Module = module {
-            viewModel { UsersViewModel(get()) }
-            viewModel { UserProfileViewModel(get()) }
-            viewModel { TopicMessageViewModel(get()) }
-            viewModel { ReloadProductsViewModel(get()) }
-            viewModel { ProductsFilterDialogViewModel(get()) }
-            viewModel { SendMessageViewModel(get()) }
-            viewModel { OffAirViewModel(get()) }
-            viewModel { MyMessagesFilterDialogViewModel(get()) }
-            viewModel { MyLikedProductsViewModel(get()) }
-            viewModel { AllProductsFilterDialogViewModel(get()) }
-            viewModel { MessagesViewModel(get()) }
-            viewModel { MainActivityViewModel(get()) }
-            viewModel { InstagramViewModel(get()) }
-            viewModel { HomeViewModel(get()) }
-            viewModel { FacebookViewModel(get()) }
-            viewModel { AllProductsViewModel(get()) }
-            viewModel { AllMessagesFilterDialogViewModel(get()) }
-            viewModel { AllMessagesViewModel(get()) }
-        }
-        startKoin {
-            // Fix bug of koin initialization
-            androidLogger(Level.NONE)
-            androidContext(this@MyApplication)
-            modules(myModules)
-        }
     }
 
     private fun setupCacheSize() {

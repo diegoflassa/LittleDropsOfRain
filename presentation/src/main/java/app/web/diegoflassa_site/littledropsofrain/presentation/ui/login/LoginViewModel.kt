@@ -16,10 +16,11 @@
 
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.login
 
-import androidx.annotation.Keep
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-@Keep
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor() : ViewModel() {
     // TODO: Implement the ViewModel
 }

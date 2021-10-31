@@ -30,6 +30,7 @@ import androidx.core.app.NavUtils
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
@@ -48,7 +49,7 @@ import com.google.firebase.firestore.DocumentReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -68,7 +69,7 @@ class SendMessageFragment :
         var mSavedInstanceState: Bundle? = null
     }
 
-    val viewModel: SendMessageViewModel by stateViewModel()
+    val viewModel: SendMessageViewModel by viewModels()
     private var binding: FragmentSendMessageBinding by viewLifecycle()
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private lateinit var toggle: ActionBarDrawerToggle

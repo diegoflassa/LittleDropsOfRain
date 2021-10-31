@@ -33,6 +33,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.text.HtmlCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -53,7 +54,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+
 import java.lang.ref.WeakReference
 
 @ExperimentalStdlibApi
@@ -65,7 +66,7 @@ class MyLikedProductsFragment :
     DialogInterface.OnDismissListener,
     MyLikedProductsAdapter.OnProductSelectedListener {
 
-    val viewModel: MyLikedProductsViewModel by stateViewModel()
+    val viewModel: MyLikedProductsViewModel by viewModels()
     var binding: FragmentMyLikedProductsBinding by viewLifecycle()
     private lateinit var mAdapter: WeakReference<MyLikedProductsAdapter>
     private lateinit var mFirestore: FirebaseFirestore

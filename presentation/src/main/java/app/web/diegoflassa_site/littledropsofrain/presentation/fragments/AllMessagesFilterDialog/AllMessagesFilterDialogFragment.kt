@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
@@ -38,7 +39,6 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecy
 import com.google.firebase.firestore.Query
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -64,7 +64,7 @@ open class AllMessagesFilterDialogFragment :
     private lateinit var mSpinnerType: Spinner
     var filterListener: FilterListener? = null
 
-    val viewModel: AllMessagesFilterDialogViewModel by stateViewModel()
+    val viewModel: AllMessagesFilterDialogViewModel by viewModels()
     var binding: FragmentAllMessagesFiltersBinding by viewLifecycle()
     private var mSavedInstanceState: Bundle? = null
     private var mRootView: View? = null

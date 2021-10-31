@@ -26,6 +26,7 @@ import android.widget.CompoundButton
 import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
@@ -34,7 +35,7 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
 import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.model.MyMessagesFilterDialogViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import com.google.firebase.firestore.Query
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+
 import java.util.*
 
 /**
@@ -53,7 +54,7 @@ open class MyMessagesFilterDialogFragment :
         fun onFilter(filters: MyMessagesFilters)
     }
 
-    val viewModel: MyMessagesFilterDialogViewModel by stateViewModel()
+    val viewModel: MyMessagesFilterDialogViewModel by viewModels()
     private lateinit var mSpinnerSort: Spinner
     private lateinit var mSpinnerType: Spinner
     var filterListener: FilterListener? = null

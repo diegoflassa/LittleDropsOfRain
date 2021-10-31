@@ -23,7 +23,7 @@ object Versions {
     const val hilt_common = "1.0.0"
     const val hilt_compiler = "1.0.0"
     const val hilt_navigation = "1.0.0"
-    const val rxjava = "3.1.3"
+    const val rxjava = "3.1.2"
     const val rxandroid = "3.0.0"
     const val koin = "3.1.3"
     const val koin_ext = "3.0.2"

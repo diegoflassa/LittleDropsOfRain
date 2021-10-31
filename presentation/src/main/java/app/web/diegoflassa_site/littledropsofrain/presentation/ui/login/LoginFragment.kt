@@ -34,21 +34,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentLoginBinding
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
+import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products.AllProductsViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import dagger.hilt.android.AndroidEntryPoint
 
 @ExperimentalCoilApi
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     companion object {
         fun newInstance() = LoginFragment()
     }
 
-    private lateinit var viewModel: LoginViewModel
+    val viewModel: LoginViewModel by viewModels()
     var binding: FragmentLoginBinding by viewLifecycle()
 
     override fun onCreateView(
@@ -56,7 +60,6 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
         /*

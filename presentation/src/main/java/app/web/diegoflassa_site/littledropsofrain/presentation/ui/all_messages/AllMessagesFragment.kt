@@ -60,7 +60,7 @@ class AllMessagesFragment :
 
     private var isStopped: Boolean = false
 
-    private lateinit var viewModel: AllMessagesViewModel // by stateViewModel()
+    private lateinit var viewModel: AllMessagesViewModel // by viewModels()
     private lateinit var mAdapter: WeakReference<MessageAdapter>
     var binding: FragmentAllMessagesBinding by viewLifecycle()
     private var mFilterDialog: AllMessagesFilterDialogFragment? = null
