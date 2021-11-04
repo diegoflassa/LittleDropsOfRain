@@ -52,8 +52,8 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentHomeBinding
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.presentation.adapters.ProductAdapter
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilterDialogFragment
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.productsFilterDialog.ProductsFilterDialogFragment
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.productsFilterDialog.ProductsFilters
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.off_air.OffAirFragment
 import com.google.android.gms.location.*

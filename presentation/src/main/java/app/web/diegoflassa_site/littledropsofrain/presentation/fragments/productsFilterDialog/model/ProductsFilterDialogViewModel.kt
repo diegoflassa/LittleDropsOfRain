@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.productsFilterDialog.model
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilterDialogFragment
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.productsFilterDialog.ProductsFilterDialogFragment
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 @ExperimentalStdlibApi
-class ProductsFilterDialogViewModel(state: SavedStateHandle) : ViewModel() {
+@HiltViewModel
+class ProductsFilterDialogViewModel @Inject constructor(state: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"

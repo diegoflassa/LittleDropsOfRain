@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allMessagesFilterDialog
 
 import android.content.Context
 import android.os.Parcelable
@@ -31,12 +31,17 @@ import kotlinx.parcelize.Parcelize
  */
 @ExperimentalStdlibApi
 @Parcelize
-data class MyMessagesFilters(
+data class AllMessagesFilters(
     var read: Boolean? = null,
     var type: MessageType? = null,
+    var emailSender: String? = null,
     var sortBy: String? = null,
     var sortDirection: Query.Direction? = null
 ) : Parcelable {
+
+    fun hasEMailSender(): Boolean {
+        return !emailSender.isNullOrEmpty()
+    }
 
     fun hasRead(): Boolean {
         return (read != null)
@@ -56,7 +61,19 @@ data class MyMessagesFilters(
             desc.append("<b>")
             desc.append(type.toString())
             desc.append("</b>")
-        } else {
+        }
+        if (hasEMailSender()) {
+            if (desc.count() > 0) {
+                desc.append(MyApplication.getContext().getString(R.string.and_filter))
+            }
+            desc.append("<b>")
+            desc.append(
+                MyApplication.getContext()
+                    .getString(R.string.email_sender)
+            )
+            desc.append("</b>")
+        }
+        if (desc.count() == 0) {
             desc.append("<b>")
             desc.append(
                 MyApplication.getContext()
@@ -89,6 +106,9 @@ data class MyMessagesFilters(
             Message.CREATION_DATE -> {
                 context.getString(R.string.sorted_by_creation_date)
             }
+            Message.EMAIL_SENDER -> {
+                context.getString(R.string.sorted_by_email_sender)
+            }
             else -> {
                 context.getString(R.string.sorted_by_creation_date)
             }
@@ -96,12 +116,13 @@ data class MyMessagesFilters(
     }
 
     companion object {
-        val default: MyMessagesFilters
+        val default: AllMessagesFilters
             get() {
                 val filters =
-                    MyMessagesFilters()
+                    AllMessagesFilters()
                 filters.read = null
                 filters.type = MessageType.UNKNOWN
+                filters.emailSender = null
                 filters.sortBy = Message.CREATION_DATE
                 filters.sortDirection = Query.Direction.DESCENDING
                 return filters

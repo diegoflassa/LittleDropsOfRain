@@ -18,10 +18,13 @@ package app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_messages
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.AllMessagesFilterDialog.AllMessagesFilters
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allMessagesFilterDialog.AllMessagesFilters
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 @ExperimentalStdlibApi
-class AllMessagesViewModel(state: SavedStateHandle) : ViewModel() {
+@HiltViewModel
+class AllMessagesViewModel @Inject constructor(state: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY_FILTERS = "ALL_MESSAGES_SAVE_STATE_KEY_FILTERS"

@@ -18,7 +18,7 @@ package app.web.diegoflassa_site.littledropsofrain.presentation.ui.messages
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilters
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.myMessagesFilterDialog.MyMessagesFilters
 
 @ExperimentalStdlibApi
 class MessagesViewModel(state: SavedStateHandle) : ViewModel() {

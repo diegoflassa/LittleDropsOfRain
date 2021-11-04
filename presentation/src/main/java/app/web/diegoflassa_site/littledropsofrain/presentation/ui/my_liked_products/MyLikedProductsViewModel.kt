@@ -18,7 +18,7 @@ package app.web.diegoflassa_site.littledropsofrain.presentation.ui.my_liked_prod
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.productsFilterDialog.ProductsFilters
 
 @ExperimentalStdlibApi
 class MyLikedProductsViewModel(state: SavedStateHandle) : ViewModel() {

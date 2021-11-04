@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.myMessagesFilterDialog
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -32,7 +32,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMyMessagesFiltersBinding
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.model.MyMessagesFilterDialogViewModel
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.myMessagesFilterDialog.model.MyMessagesFilterDialogViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import com.google.firebase.firestore.Query
 

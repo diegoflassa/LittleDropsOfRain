@@ -35,8 +35,8 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentMessagesBinding
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
 import app.web.diegoflassa_site.littledropsofrain.presentation.adapters.MessageAdapter
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilterDialogFragment
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilters
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.myMessagesFilterDialog.MyMessagesFilterDialogFragment
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.myMessagesFilterDialog.MyMessagesFilters
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton

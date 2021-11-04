@@ -20,8 +20,11 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class TopicMessageViewModel(state: SavedStateHandle) : ViewModel() {
+@HiltViewModel
+class TopicMessageViewModel @Inject constructor(state: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY_TITLE = "TOPIC_SAVE_STATE_KEY_TITLE"

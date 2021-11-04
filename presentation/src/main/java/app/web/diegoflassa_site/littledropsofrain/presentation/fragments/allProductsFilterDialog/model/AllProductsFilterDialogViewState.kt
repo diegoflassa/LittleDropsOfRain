@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allProductsFilterDialog.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class MyMessagesFilterDialogViewState(var text: String = "") : Parcelable
+data class AllProductsFilterDialogViewState(
+    var text: String = "",
+    var categories: LinkedHashSet<String> = LinkedHashSet(),
+    var likes: Boolean = false
+) : Parcelable

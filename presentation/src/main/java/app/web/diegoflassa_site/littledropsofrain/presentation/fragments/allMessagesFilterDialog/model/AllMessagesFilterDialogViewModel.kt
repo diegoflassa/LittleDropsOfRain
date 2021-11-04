@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.model
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allMessagesFilterDialog.model
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.MyMessagesFilterDialog.MyMessagesFilterDialogFragment
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.allMessagesFilterDialog.AllMessagesFilterDialogFragment
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
+@HiltViewModel
 @ExperimentalStdlibApi
-class MyMessagesFilterDialogViewModel(state: SavedStateHandle) : ViewModel() {
+class AllMessagesFilterDialogViewModel @Inject constructor(state: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY = "SAVE_STATE_KEY"
@@ -30,14 +33,14 @@ class MyMessagesFilterDialogViewModel(state: SavedStateHandle) : ViewModel() {
     private val savedStateHandle = state
 
     init {
-        val viewState = MyMessagesFilterDialogViewState().apply {
-            text = "This is ${MyMessagesFilterDialogFragment::class.simpleName} Fragment"
+        val viewState = AllMessagesFilterDialogViewState().apply {
+            text = "This is ${AllMessagesFilterDialogFragment::class.simpleName} Fragment"
         }
         savedStateHandle.set(SAVE_STATE_KEY, viewState)
     }
 
-    val viewState: MyMessagesFilterDialogViewState
-        get(): MyMessagesFilterDialogViewState {
+    val viewState: AllMessagesFilterDialogViewState
+        get(): AllMessagesFilterDialogViewState {
             return savedStateHandle.get(SAVE_STATE_KEY)!!
         }
 }

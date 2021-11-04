@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog
+package app.web.diegoflassa_site.littledropsofrain.presentation.fragments.productsFilterDialog
 
 import android.content.Context
 import android.os.Parcelable

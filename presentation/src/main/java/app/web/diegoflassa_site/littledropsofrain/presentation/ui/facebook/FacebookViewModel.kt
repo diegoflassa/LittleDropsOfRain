@@ -20,9 +20,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.presentation.MyApplication
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 @ExperimentalStdlibApi
-class FacebookViewModel(state: SavedStateHandle) : ViewModel() {
+@HiltViewModel
+class FacebookViewModel @Inject constructor(state: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY_URL = "FACEBOOK_SAVE_STATE_KEY_URL"

@@ -18,10 +18,13 @@ package app.web.diegoflassa_site.littledropsofrain.presentation.ui.home
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.ProductsFilterDialog.ProductsFilters
+import app.web.diegoflassa_site.littledropsofrain.presentation.fragments.productsFilterDialog.ProductsFilters
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 @ExperimentalStdlibApi
-class HomeViewModel(state: SavedStateHandle) : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(state: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val SAVE_STATE_KEY_FILTERS = "HOME_SAVE_STATE_KEY_FILTERS"
