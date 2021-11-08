@@ -23,7 +23,7 @@ buildscript {
         //classpath("com.google.gms:google-services:${Versions.google_services}")
         classpath("com.google.gms:google-services:4.3.10")
         //classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeargs_plugin}")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-beta01")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-beta02")
 
         // Add the Crashlytics Gradle plugin.
         //classpath("com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlytics}")
@@ -48,6 +48,7 @@ buildscript {
 plugins {         
     id("com.diffplug.spotless") version "5.17.1" apply true
 	id("com.github.ben-manes.versions") version "0.38.0" apply true
+	id("org.jetbrains.kotlinx.kover") version "0.4.1"
 }
 
 subprojects {
