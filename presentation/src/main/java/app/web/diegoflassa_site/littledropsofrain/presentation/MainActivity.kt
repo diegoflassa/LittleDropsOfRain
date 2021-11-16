@@ -31,12 +31,20 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -117,14 +125,38 @@ class MainActivity :
     }
 
     @Composable
-    @Preview
     private fun buildContent() {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(color = colorResource(R.color.colorAccent))
         ) {
-            //val (refB1, refB2, refB3) = createRefs()
+            val (boxTop) = createRefs()
+            val shape = RoundedCornerShape(0.dp, 0.dp, 20.dp, 20.dp)
+            val shapeSearch = RoundedCornerShape(14.dp, 14.dp, 14.dp, 14.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(231.dp)
+                    .background(color = colorResource(R.color.colorAccent))
+                    .clip(shape)
+                    .constrainAs(boxTop) {
+                        top.linkTo(parent.top)
+                    }
+            ) {
+                val paddingValues = PaddingValues(0.dp, 53.dp, 0.dp, 0.dp)
+                val textState = remember { mutableStateOf(TextFieldValue()) }
+                TextField(
+                    value = textState.value,
+                    placeholder = { Text("Procurar") },
+                    leadingIcon = { painterResource(R.drawable.ic_filter_list_white_24px) },
+                    textStyle = TextStyle(color = colorResource(R.color.hintTextColor)),
+                    onValueChange = { it: TextFieldValue -> textState.value = it },
+                    modifier = Modifier
+                        .clip(shapeSearch)
+                        .padding(paddingValues)
+                )
+            }
         }
     }
 

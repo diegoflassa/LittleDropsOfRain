@@ -6,14 +6,16 @@
     <color name="colorMessageNotification">#FFFCE4EC</color>
     <color name="colorMessageMine">#FFE8F5E9</color>
 
-    <color name="primaryColor" tools:keep="@color/primaryColor">#212121</color>
-    <color name="primaryLightColor" tools:keep="@color/primaryLightColor">#484848</color>
-    <color name="primaryDarkGreyTextColor">#424242</color>
-    <color name="primaryLightGreyTextColor">#BDBDBD</color>
+    <color name="background" tools:keep="@color/background">#FFF4F4F4</color>
+    <color name="primaryColor" tools:keep="@color/primaryColor">#FF212121</color>
+    <color name="primaryLightColor" tools:keep="@color/primaryLightColor">#FF484848</color>
+    <color name="primaryDarkGreyTextColor">#FF424242</color>
+    <color name="primaryLightGreyTextColor">#FFBDBDBD</color>
     <color name="primaryDarkColor" tools:keep="@color/primaryDarkColor">#FFCCCCCC</color>
-    <color name="secondaryColor" tools:keep="@color/secondaryColor">#00bcd4</color>
-    <color name="secondaryLightColor" tools:keep="@color/secondaryLightColor">#62efff</color>
-    <color name="secondaryDarkColor" tools:keep="@color/secondaryDarkColor">#008ba3</color>
-    <color name="primaryTextColor" tools:keep="@color/primaryTextColor">#000000</color>
-    <color name="secondaryTextColor" tools:keep="@color/secondaryTextColor">#ffffff</color>
+    <color name="secondaryColor" tools:keep="@color/secondaryColor">#FF00bcd4</color>
+    <color name="secondaryLightColor" tools:keep="@color/secondaryLightColor">#FF62efff</color>
+    <color name="secondaryDarkColor" tools:keep="@color/secondaryDarkColor">#FF008ba3</color>
+    <color name="hintTextColor" tools:keep="@color/hintTextColor">#FFC4C4C4</color>
+    <color name="primaryTextColor" tools:keep="@color/primaryTextColor">#FF000000</color>
+    <color name="secondaryTextColor" tools:keep="@color/secondaryTextColor">#ffffffff</color>
 </resources>
