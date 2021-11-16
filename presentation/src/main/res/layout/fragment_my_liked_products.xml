@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="MyLikedProductsFragment"
-    tools:context=".presentation.ui.my_liked_products.MyLikedProductsFragment">
+    tools:context=".presentation.old.ui.my_liked_products.MyLikedProductsFragment">
 
     <!-- Filter Bar -->
     <FrameLayout

@@ -2,15 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".presentation.ui.registration.RegistrationFragment">
+    tools:context=".presentation.old.ui.registration.RegistrationFragment">
 
     <data>
 
-        <import type="app.web.diegoflassa_site.littledropsofrain.presentation.ui.registration.RegistrationViewModel" />
+        <import type="app.web.diegoflassa_site.littledropsofrain.presentation.old.ui.registration.RegistrationViewModel" />
 
         <variable
             name="viewmodel"
-            type="app.web.diegoflassa_site.littledropsofrain.presentation.ui.registration.RegistrationViewModel" />
+            type="app.web.diegoflassa_site.littledropsofrain.presentation.old.ui.registration.RegistrationViewModel" />
     </data>
 
     <ScrollView

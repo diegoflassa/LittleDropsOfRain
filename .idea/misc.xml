@@ -3,12 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/drawable/button_background.xml" value="0.1085" />
         <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/drawable/card_item_divider.xml" value="0.1" />
-        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/app_bar_main.xml" value="0.1" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/drawable/ic_ldor_splash.xml" value="0.1445" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/drawable/ic_ldor_splash_bottom.xml" value="0.1445" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/drawable/ic_ldor_splash_logo.xml" value="0.1" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/drawable/splash.xml" value="0.1" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/activity_main.xml" value="0.16185410334346503" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/app_bar_main.xml" value="0.33" />
         <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/content_main.xml" value="0.1" />
         <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_all_messages.xml" value="0.15989583333333332" />
         <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_all_messages_filters.xml" value="0.1537037037037037" />
         <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_all_products.xml" value="0.1" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_instagram.xml" value="0.19157608695652173" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/fragment_login.xml" value="0.25" />
+        <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/nav_header_main.xml" value="0.29347826086956524" />
         <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/layout/recyclerview_item_product.xml" value="0.1" />
         <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/menu/activity_main_drawer.xml" value="0.29931972789115646" />
         <entry key="..\:/Users/120898/Programming/Workspaces/Workspace.AndroisStudio/LittleDropsOfRain/presentation/src/main/res/menu/main.xml" value="0.1" />

@@ -30,16 +30,14 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentLoginBinding
-import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.all_products.AllProductsViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,22 +51,21 @@ class LoginFragment : Fragment() {
     }
 
     val viewModel: LoginViewModel by viewModels()
-    var binding: FragmentLoginBinding by viewLifecycle()
+    //var binding: FragmentLoginBinding by viewLifecycle()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLoginBinding.inflate(inflater, container, false)
-        return binding.root
-        /*
+
         return ComposeView(requireContext()).apply {
             setContent {
                 BuildUi()
+                //LoginFragmentBinding()
             }
         }
-        */
+
     }
 
     @Composable
@@ -78,7 +75,7 @@ class LoginFragment : Fragment() {
     }
 
     @Composable
-    // @Preview
+    @Preview
     private fun BuildUi() {
         Column {
             TextField(value = getString(R.string.email), onValueChange = { })

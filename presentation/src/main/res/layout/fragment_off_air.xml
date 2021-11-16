@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="OffAirFragment"
-    tools:context=".presentation.ui.off_air.OffAirFragment">
+    tools:context=".presentation.old.ui.off_air.OffAirFragment">
 
 
     <CheckBox

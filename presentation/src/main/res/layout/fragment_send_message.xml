@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="FragmentSendMessage"
-    tools:context=".presentation.ui.send_message.SendMessageFragment">
+    tools:context=".presentation.old.ui.send_message.SendMessageFragment">
 
     <Spinner
         android:id="@+id/spnr_contacts"

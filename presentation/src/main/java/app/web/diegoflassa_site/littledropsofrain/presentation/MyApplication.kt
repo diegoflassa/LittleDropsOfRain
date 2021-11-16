@@ -23,9 +23,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.preference.PreferenceManager
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
-import app.web.diegoflassa_site.littledropsofrain.domain.preferences.MyOnSharedPreferenceChangeListener
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.SettingsFragment
+import app.web.diegoflassa_site.littledropsofrain.domain.old.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.domain.old.preferences.MyOnSharedPreferenceChangeListener
+import app.web.diegoflassa_site.littledropsofrain.presentation.old.ui.SettingsFragment
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
@@ -51,15 +51,8 @@ class MyApplication : Application() {
         super.onCreate()
         initializeSafetyNet()
         Iconify
-            // .with(FontAwesomeModule())
-            // .with(EntypoModule())
             .with(TypiconsModule())
-            // .with(MaterialModule())
-            // .with(MaterialCommunityModule())
-            // .with(MeteoconsModule())
-            // .with(WeathericonsModule())
             .with(SimpleLineIconsModule())
-        // .with(IoniconsModule())
 
         setup()
         setupCacheSize()

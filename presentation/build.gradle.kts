@@ -150,6 +150,8 @@ android {
         resources.excludes.add("META-INF/DEPENDENCIES")
         resources.excludes.add("META-INF/LICENSE.md")
         resources.excludes.add("META-INF/NOTICE.md")
+        resources.excludes.add("META-INF/AL2.0")
+        resources.excludes.add("META-INF/LGPL2.1")
     }
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.androidx_jetpack_compose
@@ -364,6 +366,8 @@ dependencies {
     // Compose ConstrainLayout
     implementation("androidx.constraintlayout:constraintlayout-compose:${Versions.constraintlayout_compose}")
     implementation("androidx.core:core-ktx:${Versions.core_ktx}")
+    implementation("androidx.cardview:cardview:${Versions.cardview}")
+    implementation("androidx.core:core-splashscreen:${Versions.splashscreen}")
     implementation("androidx.fragment:fragment-ktx:${Versions.fragment_ktx}")
     implementation("androidx.legacy:legacy-support-v4:${Versions.legacy_support_v4}")
     implementation("androidx.legacy:legacy-support-core-utils:${Versions.legacy_support_core_utils}")

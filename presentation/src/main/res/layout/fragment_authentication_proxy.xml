@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="AuthenticationProxyFragment"
-    tools:context=".presentation.ui.AuthenticationProxyFragment">
+    tools:context=".presentation.old.ui.AuthenticationProxyFragment">
 
     <!-- Empty list view -->
     <androidx.appcompat.widget.AppCompatTextView

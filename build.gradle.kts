@@ -5,7 +5,6 @@ buildscript {
         google()
         mavenCentral()
         maven(url = "https://jitpack.io")
-        jcenter() // Warning: this repository is going to shut down soon
 		gradlePluginPortal()
 		maven {
 			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
@@ -17,7 +16,7 @@ buildscript {
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
-        classpath("com.android.tools.build:gradle:7.2.0-alpha03")
+        classpath("com.android.tools.build:gradle:7.2.0-alpha04")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
@@ -41,14 +40,15 @@ buildscript {
         // in the individual module build.gradle files
 		classpath("com.github.ben-manes:gradle-versions-plugin:0.38.0")
         //classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.version_hilt}")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.40")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.40.1")
     }
 }
 
 plugins {         
-    id("com.diffplug.spotless") version "5.17.1" apply true
+    id("com.diffplug.spotless") version "6.0.0" apply true
 	id("com.github.ben-manes.versions") version "0.38.0" apply true
-	id("org.jetbrains.kotlinx.kover") version "0.4.1"
+    id("org.jetbrains.kotlin.android") version "1.5.31" apply false
+	id("org.jetbrains.kotlinx.kover") version "0.4.2"
 }
 
 subprojects {
@@ -69,7 +69,6 @@ allprojects {
         google()
         mavenCentral()
         maven(url = "https://jitpack.io")
-        jcenter() // Warning: this repository is going to shut down soon
 		maven {
 			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
 			credentials {

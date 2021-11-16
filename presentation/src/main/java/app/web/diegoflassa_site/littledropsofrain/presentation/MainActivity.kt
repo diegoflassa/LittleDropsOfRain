@@ -20,62 +20,54 @@ import android.app.Activity
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.*
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
-import androidx.navigation.NavController
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
+import app.web.diegoflassa_site.littledropsofrain.BuildConfig
 import app.web.diegoflassa_site.littledropsofrain.NavMainDirections
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
-import app.web.diegoflassa_site.littledropsofrain.data.entities.User
-import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUserFoundListener
-import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
-import app.web.diegoflassa_site.littledropsofrain.databinding.NavHeaderMainBinding
-import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
-import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
-import app.web.diegoflassa_site.littledropsofrain.domain.helpers.MainActivityHolder
-import app.web.diegoflassa_site.littledropsofrain.domain.preferences.MyOnSharedPreferenceChangeListener
-import app.web.diegoflassa_site.littledropsofrain.domain.services.NewMessagesService
-import app.web.diegoflassa_site.littledropsofrain.domain.services.SetupProductsUpdateWorkerService
-import app.web.diegoflassa_site.littledropsofrain.presentation.contracts.EmailLinkAuthActivityResultContract
-import app.web.diegoflassa_site.littledropsofrain.presentation.helper.IntentHelper
-import app.web.diegoflassa_site.littledropsofrain.presentation.interfaces.OnKeyLongPressListener
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.MainActivityViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.MainActivityViewState
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.SettingsFragment
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.send_message.SendMessageFragment
-import coil.load
+import app.web.diegoflassa_site.littledropsofrain.data.old.dao.UserDao
+import app.web.diegoflassa_site.littledropsofrain.data.old.entities.User
+import app.web.diegoflassa_site.littledropsofrain.data.old.interfaces.OnUserFoundListener
+import app.web.diegoflassa_site.littledropsofrain.domain.old.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.domain.old.helpers.LoggedUser
+import app.web.diegoflassa_site.littledropsofrain.domain.old.helpers.MainActivityHolder
+import app.web.diegoflassa_site.littledropsofrain.domain.old.preferences.MyOnSharedPreferenceChangeListener
+import app.web.diegoflassa_site.littledropsofrain.domain.old.services.NewMessagesService
+import app.web.diegoflassa_site.littledropsofrain.domain.old.services.SetupProductsUpdateWorkerService
+import app.web.diegoflassa_site.littledropsofrain.presentation.old.contracts.EmailLinkAuthActivityResultContract
+import app.web.diegoflassa_site.littledropsofrain.presentation.old.ui.MainActivityViewModel
+import app.web.diegoflassa_site.littledropsofrain.presentation.old.ui.MainActivityViewState
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
-import com.joanzapata.iconify.IconDrawable
-import com.joanzapata.iconify.fonts.SimpleLineIconsIcons
-import com.joanzapata.iconify.fonts.TypiconsIcons
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 @ExperimentalStdlibApi
@@ -88,188 +80,98 @@ class MainActivity :
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     companion object {
-        private val TAG = MainActivity::class.simpleName
+        private val TAG = OldMainActivity::class.simpleName
     }
 
     init {
-        MainActivityHolder.mainActivityClass = MainActivity::class
+        MainActivityHolder.mainActivityClass = OldMainActivity::class
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
-    private lateinit var fab: FloatingActionButton
-    private var binding: ActivityMainBinding? = null
-    private var bindingNavHeader: NavHeaderMainBinding? = null
-    private lateinit var toggle: ActionBarDrawerToggle
     private var authenticateOnResume = false
-    private var isSetUpUserInDrawer = false
-    private var lastIntent: Intent? = null
-    var mOnKeyLongPressListener: OnKeyLongPressListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        val headerView = binding?.navView?.getHeaderView(0)
-        bindingNavHeader = NavHeaderMainBinding.bind(headerView!!)
-        viewModel.viewStateLiveData.observe(this) {
-            updateUI(it)
+        fetchRemoteConfig()
+        setContent {
+            BuildUi()
+            //LoginFragmentBinding()
         }
-        // Initialize the singleton class
-        LoggedUser.userLiveData.value = null
-        setContentView(binding?.root)
-
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        fab = findViewById(R.id.fab)
-        fab.isEnabled = false
-        fab.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString(SendMessageFragment.ACTION_SEND_KEY, SendMessageFragment.ACTION_SEND)
-            findNavController(R.id.nav_host_fragment).navigate(R.id.send_message_fragment, bundle)
-        }
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        toggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
-        )
-        drawerLayout.addDrawerListener(toggle)
-
-        toggle.syncState()
-        drawerLayout.addDrawerListener(object : DrawerListener {
-            override fun onDrawerStateChanged(newState: Int) {
-                // Log.i(TAG, "onDrawerStateChanged: $newState")
-            }
-
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                Log.i(TAG, "onDrawerSlide")
-            }
-
-            override fun onDrawerClosed(drawerView: View) {
-                Log.i(TAG, "onDrawerClosed")
-            }
-
-            override fun onDrawerOpened(drawerView: View) {
-                if (!isSetUpUserInDrawer) {
-                    Log.i(TAG, "Setting up user in drawer")
-                    setUpUserInDrawer()
-                    isSetUpUserInDrawer = true
-                }
-                Log.i(TAG, "onDrawerOpened")
-            }
-        })
-
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController: NavController = navHostFragment.navController
-
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_home,
-                R.id.nav_facebook,
-                R.id.nav_instagram,
-                R.id.nav_messages,
-                R.id.nav_all_messages
-            ),
-            drawerLayout
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        binding?.navView?.setupWithNavController(navController)
-        val bnv = findViewById<BottomNavigationView>(R.id.nav_bottom)
-        val menu = bnv.menu
-        menu.findItem(R.id.nav_all_messages).icon = IconDrawable(
-            this,
-            SimpleLineIconsIcons.icon_envelope_letter
-        )
-        menu.findItem(R.id.nav_reload_products).icon = IconDrawable(
-            this,
-            SimpleLineIconsIcons.icon_loop
-        )
-        menu.findItem(R.id.nav_send_topic_message).icon = IconDrawable(
-            this,
-            SimpleLineIconsIcons.icon_envelope
-        )
-        menu.findItem(R.id.nav_users).icon = IconDrawable(this, SimpleLineIconsIcons.icon_users)
-        menu.findItem(R.id.nav_off_air).icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
-
-        bnv.setupWithNavController(navController)
-        bnv.visibility = View.GONE
-
-        LoggedUser.userLiveData.observe(this) {
-            if (it != null) {
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
-                    SettingsFragment.LOGGED_USER_EMAIL_KEY, it.email
-                ).apply()
-            }
-            fab.isEnabled = (it != null)
-            isSetUpUserInDrawer = false
-            setupDrawerMenuItems()
-        }
-
-        FirebaseAuth.getInstance().addAuthStateListener { authData ->
-            val firebaseUser = authData.currentUser
-            if (firebaseUser != null) {
-                val emailUser = firebaseUser.email!!
-                Log.i(TAG, "emailUser: $emailUser")
-                if (emailUser.isNotEmpty() && emailUser.contains("@")) {
-                    UserDao.findByEMail(emailUser, this)
-                }
-            }
-        }
+        subscribeToAdminMessages()
         handleIntent()
     }
 
-    private fun setUpUserInDrawer() {
-        if (bindingNavHeader == null && bindingNavHeader?.navVwName == null) {
-            Log.i(TAG, "bindingNavHeader is null")
-        } else {
-            Log.i(TAG, "bindingNavHeader is NOT null ${bindingNavHeader?.navVwName?.text}")
+    @Composable
+    @Preview
+    private fun BuildUi() {
+        val scaffoldState = rememberScaffoldState()
+        Scaffold(
+            scaffoldState = scaffoldState,
+            topBar = {
+                TopAppBar(
+                    title = { Text("Little Drops Of Rain") },
+                )
+            },
+            content = { buildContent() }
+        )
+    }
+
+    @Composable
+    @Preview
+    private fun buildContent() {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = colorResource(R.color.colorAccent))
+        ) {
+            //val (refB1, refB2, refB3) = createRefs()
         }
-        if (LoggedUser.userLiveData.value != null) {
-            if (LoggedUser.userLiveData.value!!.imageUrl != null) {
-                Log.i(TAG, "Setting up user image")
-                bindingNavHeader?.navVwImage?.load(LoggedUser.userLiveData.value!!.imageUrl) {
-                    placeholder(R.drawable.image_placeholder)
-                    error(
-                        ContextCompat.getDrawable(
-                            applicationContext,
-                            R.mipmap.ic_launcher_round
-                        )
-                    )
-                }
+    }
+
+    private fun fetchRemoteConfig() {
+        val remoteConfig = Firebase.remoteConfig
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        val configSettings =
+            FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(
+                if (BuildConfig.DEBUG) 0 else TimeUnit.HOURS.toSeconds(12)
+            ).build()
+        remoteConfig.setConfigSettingsAsync(configSettings).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.d(
+                    TAG,
+                    "Config applied successfully"
+                )
+                remoteConfig.fetchAndActivate()
+                    .addOnCompleteListener { taskFetchAndActivate ->
+                        if (taskFetchAndActivate.isSuccessful) {
+                            Log.d(
+                                TAG,
+                                "fetchRemoteConfig ${getString(R.string.configuration_fetch_successfull)}"
+                            )
+                            Toast.makeText(
+                                this, getString(R.string.configuration_fetch_successfull),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            val updated: Boolean? = taskFetchAndActivate.result
+                            Log.d(TAG, "Activation successfully. Update value is $updated")
+                        } else {
+                            taskFetchAndActivate.exception?.printStackTrace()
+                            Log.d(
+                                TAG,
+                                "fetchRemoteConfig ${getString(R.string.configuration_fetch_failed)}. Error was ${taskFetchAndActivate.exception}"
+                            )
+                            Toast.makeText(
+                                this, getString(R.string.configuration_fetch_failed),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
             } else {
-                bindingNavHeader?.navVwImage?.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        applicationContext,
-                        R.mipmap.ic_launcher_round
-                    )
+                Log.d(
+                    TAG,
+                    "Error applying config"
                 )
             }
-            Log.i(TAG, "Setting user name and email")
-            val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-            bindingNavHeader?.navVwImage?.setOnClickListener {
-                drawerLayout.close()
-                findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalUserProfileFragment())
-            }
-            bindingNavHeader?.navVwName?.text = LoggedUser.userLiveData.value!!.name
-            Log.i(TAG, "Name: ${LoggedUser.userLiveData.value!!.name}")
-            bindingNavHeader?.navVwEmail?.text = LoggedUser.userLiveData.value!!.email
-            Log.i(TAG, "EMail: ${LoggedUser.userLiveData.value!!.email}")
-        } else {
-            Log.i(TAG, "No user found!")
-            bindingNavHeader?.navVwImage?.setImageDrawable(
-                ContextCompat.getDrawable(
-                    applicationContext,
-                    R.mipmap.ic_launcher_round
-                )
-            )
-            bindingNavHeader?.navVwName?.text = getString(R.string.not_logged_in)
-            bindingNavHeader?.navVwEmail?.text = ""
         }
     }
 
@@ -332,34 +234,19 @@ class MainActivity :
         handleIntent(intent)
     }
 
-    override fun onKeyLongPress(keyCode: Int, event: KeyEvent?): Boolean {
-        mOnKeyLongPressListener?.keyLongPress(keyCode, event)
-        return super.onKeyLongPress(keyCode, event)
-    }
-
     override fun onResume() {
         super.onResume()
         if (authenticateOnResume) {
             authenticateOnResume = false
             // Navigate to the sign-in/authentication fragment
-            findNavController(R.id.nav_host_fragment).navigate(MainActivityDirections.actionGlobalAuthenticationFragment())
+            findNavController(R.id.nav_host_fragment).navigate(OldMainActivityDirections.actionGlobalAuthenticationFragment())
         }
         updateUI(viewModel.viewState)
         handleIntent()
     }
 
-    override fun onStop() {
-        if (this::toggle.isInitialized) {
-            val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-            drawerLayout.removeDrawerListener(toggle)
-        }
-        super.onStop()
-    }
-
     override fun onDestroy() {
         Log.d(TAG, "Main activity destroyed")
-        binding = null
-        bindingNavHeader = null
         super.onDestroy()
     }
 
@@ -368,26 +255,30 @@ class MainActivity :
     }
 
     private fun handleIntent(intent: Intent?) {
-        if (lastIntent != intent) {
-            if (intent != null) {
-                if (intent.extras != null && intent.extras!!.containsKey(IntentHelper.EXTRA_START_WHAT)) {
-                    when (intent.extras!!.get(IntentHelper.EXTRA_START_WHAT)) {
-                        "privacy" -> {
-                            findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
-                            intent.removeExtra(IntentHelper.EXTRA_START_WHAT)
-                        }
-                        "tos" -> {
-                            findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalTosFragment())
-                            intent.removeExtra(IntentHelper.EXTRA_START_WHAT)
-                        }
-                        "licenses" -> {
-                            showLicenses()
-                        }
+        val uri: Uri? = intent?.data
+        if (uri != null) {
+            val scheme: String = uri.scheme!!.lowercase(Locale.ROOT)
+            val host: String = uri.host!!.lowercase(Locale.ROOT)
+            if ("app" == scheme) {
+                //dispatchIntent = mapAppLink(uri)
+            } else if (("http" == scheme || "https" == scheme) &&
+                ("ldor.page.link" == host || "littledropsofrain-site.web.app" == host || "littledropsofrain.web.app" == host || "littledropsofrain" == host)
+            ) {
+                when (uri.path) {
+                    "/privacy" -> {
+                        findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
+                    }
+                    "/tos" -> {
+                        findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalTosFragment())
+                    }
+                    "/licenses" -> {
+                        showLicenses()
+                    }
+                    "/passwordless" -> {
+                        runEmailLinkAuth(intent)
                     }
                 }
-                runEmailLinkAuth(intent)
             }
-            lastIntent = intent
         }
     }
 
@@ -407,8 +298,6 @@ class MainActivity :
     private fun updateUI(viewState: MainActivityViewState) {
         // Update he UI
         viewState.text = ""
-        isSetUpUserInDrawer = false
-        setupDrawerMenuItems()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -448,75 +337,6 @@ class MainActivity :
             }
         }
         return ret
-    }
-
-    private fun setupDrawerMenuItems() {
-        val navView = findViewById<NavigationView>(R.id.nav_view)
-        val navHome = navView.menu.findItem(R.id.nav_home)
-        navHome.icon = IconDrawable(this, SimpleLineIconsIcons.icon_home)
-        val navFacebook = navView.menu.findItem(R.id.nav_facebook)
-        navFacebook.icon = IconDrawable(this, SimpleLineIconsIcons.icon_social_facebook)
-        val navInstagram = navView.menu.findItem(R.id.nav_instagram)
-        navInstagram.icon = IconDrawable(this, TypiconsIcons.typcn_social_instagram)
-        val navMessages = navView.menu.findItem(R.id.nav_messages)
-        navMessages.icon = IconDrawable(this, SimpleLineIconsIcons.icon_envelope)
-        val navAdmin = navView.menu.findItem(R.id.nav_all_messages)
-        navAdmin.icon = IconDrawable(this, SimpleLineIconsIcons.icon_wrench)
-        val navAuthentication = navView.menu.findItem(R.id.nav_authentication)
-        val navMyLikedProducts = navView.menu.findItem(R.id.nav_my_liked_products)
-        navMyLikedProducts.icon = IconDrawable(this, SimpleLineIconsIcons.icon_heart)
-        val navAllProductsProducts = navView.menu.findItem(R.id.nav_all_products)
-        navAllProductsProducts.icon = IconDrawable(this, SimpleLineIconsIcons.icon_present)
-        if (LoggedUser.userLiveData.value != null) {
-            navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_logout)
-            navAuthentication.title = getString(R.string.logout)
-        } else {
-            navAuthentication.icon = IconDrawable(this, SimpleLineIconsIcons.icon_login)
-            navAuthentication.title = getString(R.string.login)
-        }
-        if (false && LoggedUser.userLiveData.value != null) {
-            navMessages.isEnabled = true
-            navMessages.isVisible = true
-            navMyLikedProducts.isEnabled = true
-            navMyLikedProducts.isVisible = true
-        } else {
-            navMessages.isEnabled = false
-            navMessages.isVisible = false
-        }
-        if (false && LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
-            subscribeToAdminMessages()
-            navAdmin.isEnabled = true
-            navAdmin.isVisible = true
-            navAllProductsProducts.isEnabled = true
-            navAllProductsProducts.isVisible = true
-        } else {
-            navAdmin.isEnabled = false
-            navAdmin.isVisible = false
-            navAllProductsProducts.isEnabled = false
-            navAllProductsProducts.isVisible = false
-        }
-        // TODO Remove after returning menu options
-        if (LoggedUser.userLiveData.value != null && LoggedUser.userLiveData.value!!.isAdmin) {
-            subscribeToAdminMessages()
-            navAdmin.isEnabled = true
-            navAdmin.isVisible = true
-            navMyLikedProducts.isEnabled = true
-            navMyLikedProducts.isVisible = true
-            navAllProductsProducts.isEnabled = true
-            navAllProductsProducts.isVisible = true
-        } else {
-            navAdmin.isEnabled = false
-            navAdmin.isVisible = false
-            navMyLikedProducts.isEnabled = false
-            navMyLikedProducts.isVisible = false
-            navAllProductsProducts.isEnabled = false
-            navAllProductsProducts.isVisible = false
-        }
-        navMyLikedProducts.isEnabled = false
-        navMyLikedProducts.isVisible = false
-        navAllProductsProducts.isEnabled = false
-        navAllProductsProducts.isVisible = false
-        navHome.isChecked = true
     }
 
     private fun subscribeToAdminMessages() {
@@ -599,7 +419,7 @@ class MainActivity :
                 UserDao.insertOrUpdate(userFromFb)
                 LoggedUser.userLiveData.value = userFromFb
                 findNavController(R.id.nav_host_fragment).navigate(
-                    MainActivityDirections.actionGlobalUserProfileFragment()
+                    OldMainActivityDirections.actionGlobalUserProfileFragment()
                 )
                 Toast.makeText(
                     applicationContext,
@@ -614,8 +434,6 @@ class MainActivity :
                 authenticateOnResume = true
             }
         }
-        isSetUpUserInDrawer = false
-        setupDrawerMenuItems()
     }
 
     override fun onActivityResult(result: Int) {

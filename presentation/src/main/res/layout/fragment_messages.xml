@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:tag="MessagesFragment"
-    tools:context=".presentation.ui.messages.MessagesFragment">
+    tools:context=".presentation.old.ui.messages.MessagesFragment">
 
     <!-- Filter Bar -->
     <FrameLayout

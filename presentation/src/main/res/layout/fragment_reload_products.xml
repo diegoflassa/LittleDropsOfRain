@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="SendTopicMessageFragment"
-    tools:context=".presentation.ui.topic.SendTopicMessageFragment">
+    tools:context=".presentation.old.ui.topic.SendTopicMessageFragment">
 
     <TextView
         android:id="@+id/ml_txt_vw_progress"
