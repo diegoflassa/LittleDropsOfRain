@@ -14,10 +14,11 @@
     <color name="primaryDarkGreyTextColor">#FF424242</color>
     <color name="primaryLightGreyTextColor">#FFBDBDBD</color>
     <color name="primaryDarkColor" tools:keep="@color/primaryDarkColor">#FFCCCCCC</color>
-    <color name="secondaryColor" tools:keep="@color/secondaryColor">#FF00bcd4</color>
-    <color name="secondaryLightColor" tools:keep="@color/secondaryLightColor">#FF62efff</color>
-    <color name="secondaryDarkColor" tools:keep="@color/secondaryDarkColor">#FF008ba3</color>
+    <color name="secondaryColor" tools:keep="@color/secondaryColor">#FF00BCD4</color>
+    <color name="secondaryLightColor" tools:keep="@color/secondaryLightColor">#FF62EFFF</color>
+    <color name="secondaryDarkColor" tools:keep="@color/secondaryDarkColor">#FF008BA3</color>
     <color name="hintTextColor" tools:keep="@color/hintTextColor">#FFC4C4C4</color>
-    <color name="primaryTextColor" tools:keep="@color/primaryTextColor">#FF000000</color>
-    <color name="secondaryTextColor" tools:keep="@color/secondaryTextColor">#ffffffff</color>
+    <color name="primaryTextColor" tools:keep="@color/primaryTextColor">#FF1F1F1F</color>
+    <color name="secondaryTextColor" tools:keep="@color/secondaryTextColor">#FFFFFFFF</color>
+    <color name="tertiaryTextColor" tools:keep="@color/tertiaryTextColor">#FF3E4958</color>
 </resources>

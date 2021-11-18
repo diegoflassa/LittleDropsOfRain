@@ -52,7 +52,11 @@ class BlankFragment : Fragment() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(text = "Blank", fontSize = 32.sp)
+            Text(
+                text = "Blank",
+                color = colorResource(R.color.primaryTextColor),
+                fontSize = 32.sp
+            )
         }
     }
 }

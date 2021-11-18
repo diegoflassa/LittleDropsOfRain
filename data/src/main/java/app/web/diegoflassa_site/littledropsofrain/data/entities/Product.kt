@@ -16,6 +16,7 @@
 
 package app.web.diegoflassa_site.littledropsofrain.data.entities
 
+import android.net.Uri
 import android.os.Parcelable
 import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
@@ -109,5 +110,9 @@ data class Product(
         likes = map[LIKES] as MutableList<String>
         source = map[SOURCE] as String?
         categories = map[CATEGORIES] as MutableList<String>
+    }
+
+    fun getImageUrlAsUri() : Uri {
+        return Uri.parse(imageUrl)
     }
 }
