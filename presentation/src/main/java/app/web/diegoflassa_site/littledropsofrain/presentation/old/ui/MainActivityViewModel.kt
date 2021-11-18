@@ -50,4 +50,5 @@ class MainActivityViewModel @Inject constructor(state: SavedStateHandle)  : View
         get(): MainActivityViewState {
             return savedStateHandle.get(SAVE_STATE_KEY)!!
         }
+
 }

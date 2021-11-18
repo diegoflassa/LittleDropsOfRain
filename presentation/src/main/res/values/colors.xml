@@ -6,7 +6,8 @@
     <color name="colorMessageNotification">#FFFCE4EC</color>
     <color name="colorMessageMine">#FFE8F5E9</color>
 
-    <color name="background" tools:keep="@color/background">#FFF4F4F4</color>
+    <color name="background_white" tools:keep="@color/background_white">#FFF4F4F4</color>
+    <color name="white" tools:keep="@color/white">#FFFFFFFF</color>
     <color name="primaryColor" tools:keep="@color/primaryColor">#FF212121</color>
     <color name="primaryLightColor" tools:keep="@color/primaryLightColor">#FF484848</color>
     <color name="primaryDarkGreyTextColor">#FF424242</color>

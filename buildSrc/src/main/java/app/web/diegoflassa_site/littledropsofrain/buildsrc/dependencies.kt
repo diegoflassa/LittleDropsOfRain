@@ -49,6 +49,7 @@ object Versions {
     const val preference_ktx = "1.2.0-alpha02"
     const val recyclerview = "1.3.0-alpha01"
     const val recyclerview_selection = "1.2.0-alpha01"
+    const val accompanist_pager = "0.21.2-beta"
     const val room = "2.4.0-beta01"
     const val vectordrawable_animated = "1.1.0"
     const val databinding = "7.2.0-alpha04"

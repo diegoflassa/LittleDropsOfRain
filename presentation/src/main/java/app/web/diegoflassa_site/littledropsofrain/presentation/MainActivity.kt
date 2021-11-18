@@ -26,32 +26,14 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.preference.PreferenceManager
 import app.web.diegoflassa_site.littledropsofrain.BuildConfig
-import app.web.diegoflassa_site.littledropsofrain.NavMainDirections
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.old.dao.UserDao
 import app.web.diegoflassa_site.littledropsofrain.data.old.entities.User
@@ -65,6 +47,7 @@ import app.web.diegoflassa_site.littledropsofrain.domain.old.services.SetupProdu
 import app.web.diegoflassa_site.littledropsofrain.presentation.old.contracts.EmailLinkAuthActivityResultContract
 import app.web.diegoflassa_site.littledropsofrain.presentation.old.ui.MainActivityViewModel
 import app.web.diegoflassa_site.littledropsofrain.presentation.old.ui.MainActivityViewState
+import app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.HomeIluriaFragment
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.firebase.Timestamp
@@ -88,11 +71,11 @@ class MainActivity :
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     companion object {
-        private val TAG = OldMainActivity::class.simpleName
+        private val TAG = MainActivity::class.simpleName
     }
 
     init {
-        MainActivityHolder.mainActivityClass = OldMainActivity::class
+        MainActivityHolder.mainActivityClass = MainActivity::class
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
@@ -101,63 +84,9 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fetchRemoteConfig()
-        setContent {
-            BuildUi()
-            //LoginFragmentBinding()
-        }
         subscribeToAdminMessages()
         handleIntent()
-    }
-
-    @Composable
-    @Preview
-    private fun BuildUi() {
-        val scaffoldState = rememberScaffoldState()
-        Scaffold(
-            scaffoldState = scaffoldState,
-            topBar = {
-                TopAppBar(
-                    title = { Text("Little Drops Of Rain") },
-                )
-            },
-            content = { buildContent() }
-        )
-    }
-
-    @Composable
-    private fun buildContent() {
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = colorResource(R.color.colorAccent))
-        ) {
-            val (boxTop) = createRefs()
-            val shape = RoundedCornerShape(0.dp, 0.dp, 20.dp, 20.dp)
-            val shapeSearch = RoundedCornerShape(14.dp, 14.dp, 14.dp, 14.dp)
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(231.dp)
-                    .background(color = colorResource(R.color.colorAccent))
-                    .clip(shape)
-                    .constrainAs(boxTop) {
-                        top.linkTo(parent.top)
-                    }
-            ) {
-                val paddingValues = PaddingValues(0.dp, 53.dp, 0.dp, 0.dp)
-                val textState = remember { mutableStateOf(TextFieldValue()) }
-                TextField(
-                    value = textState.value,
-                    placeholder = { Text("Procurar") },
-                    leadingIcon = { painterResource(R.drawable.ic_filter_list_white_24px) },
-                    textStyle = TextStyle(color = colorResource(R.color.hintTextColor)),
-                    onValueChange = { it: TextFieldValue -> textState.value = it },
-                    modifier = Modifier
-                        .clip(shapeSearch)
-                        .padding(paddingValues)
-                )
-            }
-        }
+        supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment, HomeIluriaFragment()).commit()
     }
 
     private fun fetchRemoteConfig() {
@@ -271,7 +200,7 @@ class MainActivity :
         if (authenticateOnResume) {
             authenticateOnResume = false
             // Navigate to the sign-in/authentication fragment
-            findNavController(R.id.nav_host_fragment).navigate(OldMainActivityDirections.actionGlobalAuthenticationFragment())
+           // findNavController(R.id.nav_host_fragment).navigate(OldMainActivityDirections.actionGlobalAuthenticationFragment())
         }
         updateUI(viewModel.viewState)
         handleIntent()
@@ -298,10 +227,10 @@ class MainActivity :
             ) {
                 when (uri.path) {
                     "/privacy" -> {
-                        findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
+                        //findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
                     }
                     "/tos" -> {
-                        findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalTosFragment())
+                        //findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalTosFragment())
                     }
                     "/licenses" -> {
                         showLicenses()
@@ -352,7 +281,7 @@ class MainActivity :
                 ret = true
             }
             R.id.action_settings -> {
-                findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalSettingsFragment())
+                //findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalSettingsFragment())
                 ret = true
             }
             R.id.action_licenses -> {
@@ -360,11 +289,11 @@ class MainActivity :
                 ret = true
             }
             R.id.action_privacy -> {
-                findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
+                //findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
                 ret = true
             }
             R.id.action_tos -> {
-                findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalTosFragment())
+                //findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalTosFragment())
                 ret = true
             }
         }
@@ -450,9 +379,9 @@ class MainActivity :
                     Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
                 UserDao.insertOrUpdate(userFromFb)
                 LoggedUser.userLiveData.value = userFromFb
-                findNavController(R.id.nav_host_fragment).navigate(
-                    OldMainActivityDirections.actionGlobalUserProfileFragment()
-                )
+                //findNavController(R.id.nav_host_fragment).navigate(
+                   // OldMainActivityDirections.actionGlobalUserProfileFragment()
+                //)
                 Toast.makeText(
                     applicationContext,
                     getString(

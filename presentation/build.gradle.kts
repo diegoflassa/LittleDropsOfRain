@@ -79,6 +79,9 @@ android {
             // firebaseCrashlytics {
             //   mappingFileUploadEnabled = false
             //}
+            kotlinOptions {
+                freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
+            }
         }
         release {
             // Enables code shrinking, obfuscation, and optimization for only
@@ -106,6 +109,9 @@ android {
             // firebaseCrashlytics {
             //     mappingFileUploadEnabled = true
             // }
+            kotlinOptions {
+                freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
+            }
         }
         /*
         val extension = project.extensions.getByType(BaseAppModuleExtension::class.java)
@@ -312,6 +318,9 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test:${Versions.androidx_jetpack_compose}")
     debugImplementation("androidx.compose.ui:ui-tooling:${Versions.androidx_jetpack_compose}")
     debugImplementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin_compiler_version}")
+
+    // Accompanist libraries
+    implementation("com.google.accompanist:accompanist-pager:${Versions.accompanist_pager}")
 
 
     // Import the BoM for the Firebase platform
