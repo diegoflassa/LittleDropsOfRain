@@ -46,10 +46,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = LoginFragment()
-    }
-
     val viewModel: LoginViewModel by viewModels()
     //var binding: FragmentLoginBinding by viewLifecycle()
 

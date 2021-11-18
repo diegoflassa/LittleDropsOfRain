@@ -200,4 +200,12 @@
     <string name="empty">Empty</string>
     <string name="content_descriptor_progress_image">Progress Image</string>
     <string name="loading">Loading</string>
+    <string name="nav_messages">Messages</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_basket">Basket</string>
+    <string name="nav_profile">Profile</string>
+    <string name="label_main">Main</string>
+    <string name="label_home_iluria">Home</string>
+    <string name="label_blank">Blank</string>
 </resources>

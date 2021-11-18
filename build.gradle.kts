@@ -47,7 +47,7 @@ buildscript {
 plugins {         
     id("com.diffplug.spotless") version "6.0.0" apply true
 	id("com.github.ben-manes.versions") version "0.38.0" apply true
-    id("org.jetbrains.kotlin.android") version "1.6.0-RC2" apply false
+    id("org.jetbrains.kotlin.android") version "1.5.31" apply false
 	id("org.jetbrains.kotlinx.kover") version "0.4.2"
 }
 

@@ -66,6 +66,8 @@ object Versions {
     const val spotless = "5.8.2"
     const val junit = "4.13.2"
     const val auth = "8.0.0"
+    const val okhttp_bom = "5.0.0-alpha.2"
+    const val splitties = "3.0.0"
     const val database = "8.0.0"
     const val storage = "8.0.0"
     const val workVersion = "2.7.0"

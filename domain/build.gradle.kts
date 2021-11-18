@@ -25,6 +25,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            kotlinOptions {
+                freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
+            }
+        }
         release {
             // Enables code shrinking, obfuscation, and optimization for only
             // your project's release build type.
@@ -34,6 +39,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            kotlinOptions {
+                freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
+            }
         }
     }
     compileOptions {

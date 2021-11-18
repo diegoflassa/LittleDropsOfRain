@@ -20,7 +20,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.dynamicfeatures.fragment.ui.AbstractProgressFragment
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.presentation.old.helper.viewLifecycle
+import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
+import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentProgressBinding
 
 class ProgressFragment : AbstractProgressFragment(R.layout.fragment_progress) {
 
@@ -35,7 +36,8 @@ class ProgressFragment : AbstractProgressFragment(R.layout.fragment_progress) {
     }
 
     override fun onProgress(status: Int, bytesDownloaded: Long, bytesTotal: Long) {
-        binding.progressBar.progress = ((bytesDownloaded.toDouble() * 100 / bytesTotal.toInt()).toInt())
+        binding.progressBar.progress =
+            ((bytesDownloaded.toDouble() * 100 / bytesTotal.toInt()).toInt())
     }
 
     override fun onFailed(errorCode: Int) {

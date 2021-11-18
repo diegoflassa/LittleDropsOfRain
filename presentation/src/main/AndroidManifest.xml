@@ -142,20 +142,20 @@
             android:value="@string/default_notification_channel_id" /> <!-- [END fcm_default_channel] -->
         <!-- [START firebase_service] -->
         <service
-            android:name="app.web.diegoflassa_site.littledropsofrain.domain.old.services.MyFirebaseMessagingService"
+            android:name="app.web.diegoflassa_site.littledropsofrain.domain.services.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name="app.web.diegoflassa_site.littledropsofrain.domain.old.services.SetupProductsUpdateWorkerService"
+            android:name="app.web.diegoflassa_site.littledropsofrain.domain.services.SetupProductsUpdateWorkerService"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:stopWithTask="false" />
         <service
-            android:name="app.web.diegoflassa_site.littledropsofrain.domain.old.services.NewMessagesService"
+            android:name="app.web.diegoflassa_site.littledropsofrain.domain.services.NewMessagesService"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"

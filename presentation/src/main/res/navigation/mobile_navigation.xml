@@ -2,18 +2,21 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_main"
-    app:startDestination="@id/nav_home"
     app:progressDestination="@id/nav_progress">
     <activity
         android:id="@+id/nav_main"
         android:name="app.web.diegoflassa_site.littledropsofrain.presentation.MainActivity"
-        android:label="MainActivity" />
+        android:label="@string/label_main" />
     <fragment
-        android:id="@+id/nav_home"
-        android:name="app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.HomeIluriaFragment"
-        android:label="HomeIluriaFragment" />
+        android:id="@+id/nav_home_iluria"
+        android:name="app.web.diegoflassa_site.littledropsofrain.presentation.ui.homeIluria.HomeIluriaFragment"
+        android:label="@string/label_home_iluria" />
     <fragment
         android:id="@+id/nav_progress"
         android:name="app.web.diegoflassa_site.littledropsofrain.presentation.ui.progress.ProgressFragment"
-        android:label="ProgressFragment" />
+        android:label="@string/label_progress" />
+    <fragment
+        android:id="@+id/nav_blank"
+        android:name="app.web.diegoflassa_site.littledropsofrain.presentation.ui.blank.BlankFragment"
+        android:label="@string/label_blank" />
 </navigation>

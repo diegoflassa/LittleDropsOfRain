@@ -1,8 +1,18 @@
 <resources>
+    <string name="topic_news_pt" translatable="false">news_pt</string>
+    <string name="topic_news_en" translatable="false">news_en</string>
+    <string name="topic_promo_pt" translatable="false">promos_pt</string>
+    <string name="topic_promo_en" translatable="false">promos_en</string>
+    <string name="news_pt">News in Portuguese</string>
+    <string name="news_en">News in English</string>
+    <string name="promos_pt">Promos in Portuguese</string>
+    <string name="promos_en">Promos in English</string>
+    <string name="unknown">Unknown</string>
+    <string name="admins">Message for Administrators</string>
     <string name="new_message">New Message</string>
     <string name="worker_running">Worker Running</string>
     <string name="worker_scheduled">Products Update</string>
-    <string name="woker_notification">Worker Notification</string>
+    <string name="worker_notification">Worker Notification</string>
     <string name="notification_worker_channel_description">Notifications from Update Products Worker</string>
     <string name="email_no_clients_installed">There are no email clients installed.</string>
     <string name="email_send">Send email…</string>

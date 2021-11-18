@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="news_pt">News in Portuguese</string>
+    <string name="news_en">News in English</string>
+    <string name="promos_pt">Promos in Portuguese</string>
+    <string name="promos_en">Promos in English</string>
+    <string name="unknown">Unknown</string>
+    <string name="admins">Message for Administrators</string>
     <string name="new_message">Nova Mensagem</string>
     <string name="worker_running">Worker Executando</string>
     <string name="worker_scheduled">Atualização de Produtos</string>
-    <string name="woker_notification">Notificação do Worker</string>
+    <string name="worker_notification">Notificação do Worker</string>
     <string name="notification_worker_channel_description">Notificação do Worker de Atualização de Produtos</string>
     <string name="email_no_clients_installed">Não há clientes de email instalados.</string>
     <string name="email_send">Enviar email…</string>

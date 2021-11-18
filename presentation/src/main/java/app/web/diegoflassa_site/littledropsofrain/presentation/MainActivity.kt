@@ -29,25 +29,23 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import app.web.diegoflassa_site.littledropsofrain.BuildConfig
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.old.dao.UserDao
-import app.web.diegoflassa_site.littledropsofrain.data.old.entities.User
-import app.web.diegoflassa_site.littledropsofrain.data.old.interfaces.OnUserFoundListener
-import app.web.diegoflassa_site.littledropsofrain.domain.old.helpers.Helper
-import app.web.diegoflassa_site.littledropsofrain.domain.old.helpers.LoggedUser
-import app.web.diegoflassa_site.littledropsofrain.domain.old.helpers.MainActivityHolder
-import app.web.diegoflassa_site.littledropsofrain.domain.old.preferences.MyOnSharedPreferenceChangeListener
-import app.web.diegoflassa_site.littledropsofrain.domain.old.services.NewMessagesService
-import app.web.diegoflassa_site.littledropsofrain.domain.old.services.SetupProductsUpdateWorkerService
-import app.web.diegoflassa_site.littledropsofrain.presentation.old.contracts.EmailLinkAuthActivityResultContract
-import app.web.diegoflassa_site.littledropsofrain.presentation.old.ui.MainActivityViewModel
-import app.web.diegoflassa_site.littledropsofrain.presentation.old.ui.MainActivityViewState
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.home.HomeIluriaFragment
+import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
+import app.web.diegoflassa_site.littledropsofrain.data.entities.User
+import app.web.diegoflassa_site.littledropsofrain.data.helpers.MainActivityHolderData
+import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUserFoundListener
+import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
+import app.web.diegoflassa_site.littledropsofrain.domain.preferences.MyOnSharedPreferenceChangeListener
+import app.web.diegoflassa_site.littledropsofrain.presentation.contracts.EmailLinkAuthActivityResultContract
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.firebase.Timestamp
@@ -59,6 +57,17 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import java.util.concurrent.TimeUnit
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.MainActivityHolderDomain
+import app.web.diegoflassa_site.littledropsofrain.domain.services.NewMessagesService
+import app.web.diegoflassa_site.littledropsofrain.domain.services.SetupProductsUpdateWorkerService
+import com.google.android.material.bottomnavigation.BottomNavigationView
+
+enum class HomeType {
+    UNKNOWN,
+    HOME_ILURIA,
+}
 
 @AndroidEntryPoint
 @ExperimentalStdlibApi
@@ -69,13 +78,15 @@ class MainActivity :
     ActivityResultCallback<Int> {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityMainBinding
 
     companion object {
         private val TAG = MainActivity::class.simpleName
     }
 
     init {
-        MainActivityHolder.mainActivityClass = MainActivity::class
+        MainActivityHolderDomain.mainActivityClass = MainActivity::class
+        MainActivityHolderData.mainActivityClass = MainActivity::class
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
@@ -83,10 +94,50 @@ class MainActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setNavigationGraph()
         fetchRemoteConfig()
         subscribeToAdminMessages()
         handleIntent()
-        supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment, HomeIluriaFragment()).commit()
+    }
+
+    private fun setNavigationGraph(): NavController {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        val navView: BottomNavigationView = binding.navView
+        navView.menu.clear()
+
+        val navGraph = navController.navInflater.inflate(R.navigation.mobile_navigation)
+        when (viewModel.homeType) {
+            HomeType.HOME_ILURIA -> {
+                navView.inflateMenu(R.menu.bottom_nav_menu_iluria)
+                navGraph.setStartDestination(R.id.nav_home_iluria)
+                appBarConfiguration = AppBarConfiguration(
+                    setOf(
+                        R.id.nav_messages,
+                        R.id.nav_favorites,
+                        R.id.nav_home_iluria,
+                        R.id.nav_basket,
+                        R.id.nav_profile,
+                    )
+                )
+            }
+            else -> {
+                navView.inflateMenu(R.menu.bottom_nav_menu)
+                navGraph.setStartDestination(R.id.nav_blank)
+                appBarConfiguration = AppBarConfiguration(
+                    setOf(
+                        R.id.nav_blank,
+                    )
+                )
+            }
+        }
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
+        navHostFragment.navController.graph = navGraph
+        return navHostFragment.navController
     }
 
     private fun fetchRemoteConfig() {
@@ -200,9 +251,9 @@ class MainActivity :
         if (authenticateOnResume) {
             authenticateOnResume = false
             // Navigate to the sign-in/authentication fragment
-           // findNavController(R.id.nav_host_fragment).navigate(OldMainActivityDirections.actionGlobalAuthenticationFragment())
+            // findNavController(R.id.nav_host_fragment).navigate(OldMainActivityDirections.actionGlobalAuthenticationFragment())
         }
-        updateUI(viewModel.viewState)
+        updateUI()
         handleIntent()
     }
 
@@ -256,14 +307,14 @@ class MainActivity :
         }
     }
 
-    private fun updateUI(viewState: MainActivityViewState) {
+    private fun updateUI() {
         // Update he UI
-        viewState.text = ""
+        //viewModel.text = ""
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
+        //menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
@@ -280,6 +331,7 @@ class MainActivity :
                 onBackPressed()
                 ret = true
             }
+            /*
             R.id.action_settings -> {
                 //findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalSettingsFragment())
                 ret = true
@@ -296,6 +348,7 @@ class MainActivity :
                 //findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalTosFragment())
                 ret = true
             }
+             */
         }
         return ret
     }
@@ -331,7 +384,7 @@ class MainActivity :
                         FirebaseAuth.getInstance().currentUser!!.providerData[1].providerId
                 }
                 user.lastSeen = Timestamp.now()
-                UserDao.insertOrUpdate(user)
+                UserDao.upsert(user)
                 if (user.isAdmin) {
                     Helper.requestReadExternalStoragePermission(this)
                     val jobScheduler =
@@ -377,10 +430,10 @@ class MainActivity :
             FirebaseAuth.getInstance().currentUser != null -> {
                 val userFromFb =
                     Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
-                UserDao.insertOrUpdate(userFromFb)
+                UserDao.upsert(userFromFb)
                 LoggedUser.userLiveData.value = userFromFb
                 //findNavController(R.id.nav_host_fragment).navigate(
-                   // OldMainActivityDirections.actionGlobalUserProfileFragment()
+                // OldMainActivityDirections.actionGlobalUserProfileFragment()
                 //)
                 Toast.makeText(
                     applicationContext,
