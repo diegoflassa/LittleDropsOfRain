@@ -1,12 +1,14 @@
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.homeIluria
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import app.web.diegoflassa_site.littledropsofrain.data.entities.CategoryItem
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.helpers.DummyData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import okhttp3.internal.notify
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,30 +21,25 @@ class HomeIluriaViewModel @Inject constructor() : ViewModel() {
         getCarouselItemsRecommended()
 
     }
-    private var _carouselItemsSpotlight = MutableLiveData<List<Product>>(listOf())
-    val carouselItemsSpotlight: LiveData<List<Product>> = _carouselItemsSpotlight
-    private var _carouselItemsCategories = MutableLiveData<List<CategoryItem>>(listOf())
-    val carouselItemsCategories: LiveData<List<CategoryItem>> = _carouselItemsCategories
-    private var _carouselItemsNewCollection = MutableLiveData<List<Product>>(listOf())
-    val carouselItemsNewCollection: LiveData<List<Product>> = _carouselItemsNewCollection
-    private var _carouselItemsRecommended = MutableLiveData<List<Product>>(listOf())
-    val carouselItemsRecommended: LiveData<List<Product>> = _carouselItemsRecommended
+    private val _uiState = MutableLiveData(HomeIluriaState())
+    val uiState: LiveData<HomeIluriaState>
+        get() = _uiState
 
 
     fun getCarouselItemsSpotlight(){
-        _carouselItemsSpotlight.postValue(DummyData.getSpotlightCarouselItems())
+        uiState.value!!.carouselItemsSpotlight = DummyData.getSpotlightCarouselItems()
     }
 
     fun getCarouselItemsCategories(){
-        _carouselItemsCategories.postValue(DummyData.getCategoriesCarouselItems())
+        uiState.value!!.carouselItemsCategories = DummyData.getCategoriesCarouselItems()
     }
 
     fun getCarouselItemsNewCollection(){
-        _carouselItemsNewCollection.postValue(DummyData.getNewCollectionCarouselItems())
+        uiState.value!!.carouselItemsNewCollection = DummyData.getNewCollectionCarouselItems()
     }
 
     fun getCarouselItemsRecommended(){
-        _carouselItemsRecommended.postValue(DummyData.getRecommendationsCarouselItems())
+        uiState.value!!.carouselItemsRecommended = DummyData.getRecommendationsCarouselItems()
     }
 
 }

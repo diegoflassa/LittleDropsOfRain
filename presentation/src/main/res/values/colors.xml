@@ -6,8 +6,9 @@
     <color name="colorMessageNotification">#FFFCE4EC</color>
     <color name="colorMessageMine">#FFE8F5E9</color>
 
-    <color name="background_white" tools:keep="@color/background_white">#FFF4F4F4</color>
-    <color name="button_color" tools:keep="@color/button_color">#FFEE7ABE</color>
+    <color name="backgroundWhite" tools:keep="@color/backgroundWhite">#FFF4F4F4</color>
+    <color name="chipBackground" tools:keep="@color/chipBackground">#FFDADADA</color>
+    <color name="buttonColor" tools:keep="@color/buttonColor">#FFEE7ABE</color>
     <color name="white" tools:keep="@color/white">#FFFFFFFF</color>
     <color name="primaryColor" tools:keep="@color/primaryColor">#FF212121</color>
     <color name="primaryLightColor" tools:keep="@color/primaryLightColor">#FF484848</color>
@@ -21,4 +22,5 @@
     <color name="primaryTextColor" tools:keep="@color/primaryTextColor">#FF1F1F1F</color>
     <color name="secondaryTextColor" tools:keep="@color/secondaryTextColor">#FFFFFFFF</color>
     <color name="tertiaryTextColor" tools:keep="@color/tertiaryTextColor">#FF3E4958</color>
+    <color name="chipTextColor" tools:keep="@color/chipTextColor">#FF535252</color>
 </resources>
