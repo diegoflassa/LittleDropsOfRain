@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -24,9 +25,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.presentation.fonts.FontFamilies
+import app.web.diegoflassa_site.littledropsofrain.presentation.ui.theme.MyMaterialTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -51,7 +57,7 @@ class HomeIluriaFragment : Fragment() {
     @Composable
     @Preview
     private fun BuildUi() {
-        MaterialTheme() {
+        MyMaterialTheme.ApplyTheme {
             BuildContent()
             /*
             val scaffoldState = rememberScaffoldState()
@@ -79,7 +85,7 @@ class HomeIluriaFragment : Fragment() {
                 .fillMaxHeight()
                 .background(color = colorResource(R.color.colorAccent))
         ) {
-            val (columnTop, boxMiddle, bkImage, mainBox) = createRefs()
+            val (columnTop, boxMiddle, bkImage, carouselCategories, mainBox) = createRefs()
             val shape = RoundedCornerShape(0.dp, 0.dp, 20.dp, 20.dp)
             Column(
                 modifier = Modifier
@@ -124,14 +130,14 @@ class HomeIluriaFragment : Fragment() {
                     .width(303.dp)
                     .height(145.dp)
                     .clip(shapeBox)
-                    .background(color = colorResource(R.color.background_white))
+                    .background(color = colorResource(android.R.color.white))
                     .constrainAs(boxMiddle) {
                         top.linkTo(parent.top, 134.dp)
                         start.linkTo(parent.start, 36.dp)
                         end.linkTo(parent.end, 36.dp)
                     },
             ) {
-                GetCarouselContent()
+                GetMainCarouselContent()
             }
             Image(
                 painter = painterResource(R.drawable.ic_bk_image),
@@ -146,6 +152,16 @@ class HomeIluriaFragment : Fragment() {
                         end.linkTo(parent.end, 14.dp)
                     },
             )
+            GetCategoriesCarouselContent(
+                Modifier
+                    .fillMaxWidth()
+                    .height(55.dp)
+                    .constrainAs(carouselCategories) {
+                        top.linkTo(boxMiddle.bottom, 24.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+            )
             val mainBoxShape = RoundedCornerShape(25.dp, 25.dp, 0.dp, 0.dp)
             Box(
                 modifier = Modifier
@@ -157,13 +173,130 @@ class HomeIluriaFragment : Fragment() {
                         top.linkTo(boxMiddle.bottom, 134.dp)
                     },
             ) {
+                val paddingValuesLazyColumn = PaddingValues(0.dp, 14.dp, 0.dp, 0.dp)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(paddingValuesLazyColumn)
+                ) {
+                    item {
+                        GetNewCollectionItem()
+                    }
+                    item {
+                        GetRecommendationsItem()
+                    }
+                }
             }
         }
     }
 
     @OptIn(ExperimentalPagerApi::class)
     @Composable
-    private fun GetCarouselContent() {
+    private fun GetNewCollectionItem() {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            val paddingText = PaddingValues(36.dp, 0.dp, 0.dp, 0.dp)
+            val paddingButton = PaddingValues(0.dp, 0.dp, 36.dp, 0.dp)
+            Text(
+                text = "New Collection",
+                fontSize = 18.sp,
+                modifier = Modifier.padding(paddingText)
+            )
+            Button(
+                onClick = {}, colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(
+                        R.color.button_color
+                    )
+                ),
+                modifier = Modifier.padding(paddingButton)
+            ) {
+                Text(text = "See All")
+            }
+        }
+        GetNewCollectionCarouselContent()
+    }
+
+    @OptIn(ExperimentalPagerApi::class)
+    @Composable
+    private fun GetRecommendationsItem() {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            val paddingText = PaddingValues(36.dp, 0.dp, 0.dp, 0.dp)
+            val paddingButton = PaddingValues(0.dp, 0.dp, 36.dp, 0.dp)
+            Text(
+                text = "Recommendations",
+                fontSize = 18.sp,
+                modifier = Modifier.padding(paddingText)
+            )
+            Button(
+                onClick = {}, colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(
+                        R.color.button_color
+                    )
+                ),
+                modifier = Modifier.padding(paddingButton)
+            ) {
+                Text(text = "See All")
+            }
+        }
+        GetRecommendationsCarouselContent()
+    }
+
+    @OptIn(ExperimentalPagerApi::class)
+    @Composable
+    private fun GetCategoriesCarouselContent(modifier: Modifier) {
+        val pagerState = rememberPagerState()
+        HorizontalPager(
+            count = 2,//viewModel.carouselItems.value!!.size,
+            state = pagerState,
+            modifier = modifier
+        ) { page ->
+            GetCategoriesCarouselItemContent(page)
+        }
+    }
+
+    @OptIn(ExperimentalPagerApi::class)
+    @Composable
+    private fun GetNewCollectionCarouselContent() {
+        val pagerState = rememberPagerState()
+        HorizontalPager(
+            count = 2,//viewModel.carouselItems.value!!.size,
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(115.dp)
+                .background(color = colorResource(R.color.background_white))
+        ) { page ->
+            GetNewCollectionCarouselItemContent(page)
+        }
+    }
+
+    @OptIn(ExperimentalPagerApi::class)
+    @Composable
+    private fun GetRecommendationsCarouselContent() {
+        val pagerState = rememberPagerState()
+        HorizontalPager(
+            count = 2,//viewModel.carouselItems.value!!.size,
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(115.dp)
+                .background(color = colorResource(R.color.background_white))
+        ) { page ->
+            GetRecommendationsCarouselItemContent(page)
+        }
+    }
+
+    @OptIn(ExperimentalPagerApi::class)
+    @Composable
+    private fun GetMainCarouselContent() {
         val pagerState = rememberPagerState()
         HorizontalPager(
             count = 2,//viewModel.carouselItems.value!!.size,
@@ -173,12 +306,30 @@ class HomeIluriaFragment : Fragment() {
                 .height(115.dp)
                 .background(color = colorResource(R.color.background_white))
         ) { page ->
-            GetCarouselItemContent(page)
+            GetMainCarouselItemContent(page)
         }
     }
 
     @Composable
-    private fun GetCarouselItemContent(page: Int) {
+    private fun GetNewCollectionCarouselItemContent(page: Int) {
+        //val item = viewModel.carouselItems.value!![page]
+        Text("Carousel Item $page")
+    }
+
+    @Composable
+    private fun GetRecommendationsCarouselItemContent(page: Int) {
+        //val item = viewModel.carouselItems.value!![page]
+        Text("Carousel Item $page")
+    }
+
+    @Composable
+    private fun GetMainCarouselItemContent(page: Int) {
+        //val item = viewModel.carouselItems.value!![page]
+        Text("Carousel Item $page")
+    }
+
+    @Composable
+    private fun GetCategoriesCarouselItemContent(page: Int) {
         //val item = viewModel.carouselItems.value!![page]
         Text("Carousel Item $page")
     }

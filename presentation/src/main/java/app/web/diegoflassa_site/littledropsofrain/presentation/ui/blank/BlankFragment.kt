@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import app.web.diegoflassa_site.littledropsofrain.R
+import app.web.diegoflassa_site.littledropsofrain.presentation.ui.theme.MyMaterialTheme
 
 class BlankFragment : Fragment() {
 
@@ -33,7 +34,7 @@ class BlankFragment : Fragment() {
         Log.i(BlankFragment.tag, "onCreateView")
         return ComposeView(requireContext()).apply {
             setContent {
-                MaterialTheme() {
+                MyMaterialTheme.ApplyTheme {
                     BuildUi()
                 }
             }
