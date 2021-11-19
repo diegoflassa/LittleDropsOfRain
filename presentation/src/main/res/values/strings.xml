@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Little Drops Of Rain</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -195,8 +195,8 @@
     <string name="please_enter_yous_data">Please, fill your data to enter in your registration</string>
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="label_progress" translatable="false">Progress</string>
-    <string name="installation_failed">Installation Failed</string>
-    <string name="installation_cancelled">Installation Cancelled</string>
+    <string name="installation_failed" tools:ignore="PrivateResource">Installation Failed</string>
+    <string name="installation_cancelled" tools:ignore="PrivateResource">Installation Cancelled</string>
     <string name="empty">Empty</string>
     <string name="content_descriptor_progress_image">Progress Image</string>
     <string name="loading">Loading</string>
@@ -208,4 +208,10 @@
     <string name="label_main">Main</string>
     <string name="label_home_iluria">Home</string>
     <string name="label_blank">Blank</string>
+    <string name="new_collection">New Collection</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="see_all">See All</string>
+    <string name="buy">Buy</string>
+    <string name="search">Search</string>
+    <string name="content_description_icon_search">Search</string>
 </resources>

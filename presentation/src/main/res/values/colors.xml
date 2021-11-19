@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="colorPrimary">#FFCCCCCC</color>
-    <color name="colorPrimaryDark">#FFCCCCCC</color>
-    <color name="colorAccent">#FFACCDC9</color>
-    <color name="colorMessageNotification">#FFFCE4EC</color>
-    <color name="colorMessageMine">#FFE8F5E9</color>
-
+    <color name="surfaceColor" tools:keep="@color/surfaceColor">#FFF4F4F4</color>
+    <color name="onSurfaceColor" tools:keep="@color/onSurfaceColor">#FF3E4958</color>
     <color name="backgroundWhite" tools:keep="@color/backgroundWhite">#FFF4F4F4</color>
     <color name="chipBackground" tools:keep="@color/chipBackground">#FFDADADA</color>
     <color name="buttonColor" tools:keep="@color/buttonColor">#FFEE7ABE</color>
     <color name="white" tools:keep="@color/white">#FFFFFFFF</color>
-    <color name="primaryColor" tools:keep="@color/primaryColor">#FF212121</color>
+    <color name="primaryColor" tools:keep="@color/primaryColor">#FFD0DBDA</color>
+    <color name="primaryVariantColor" tools:keep="@color/primaryVariantColor">#FFEE7ABE</color>
     <color name="primaryLightColor" tools:keep="@color/primaryLightColor">#FF484848</color>
     <color name="primaryDarkGreyTextColor">#FF424242</color>
     <color name="primaryLightGreyTextColor">#FFBDBDBD</color>
     <color name="primaryDarkColor" tools:keep="@color/primaryDarkColor">#FFCCCCCC</color>
-    <color name="secondaryColor" tools:keep="@color/secondaryColor">#FF00BCD4</color>
+    <color name="secondaryColor" tools:keep="@color/secondaryColor">#FFACCDC9</color>
+    <color name="secondaryVariantColor" tools:keep="@color/secondaryVariantColor">#FFEC0B8C</color>
     <color name="secondaryLightColor" tools:keep="@color/secondaryLightColor">#FF62EFFF</color>
     <color name="secondaryDarkColor" tools:keep="@color/secondaryDarkColor">#FF008BA3</color>
     <color name="hintTextColor" tools:keep="@color/hintTextColor">#FFC4C4C4</color>
     <color name="primaryTextColor" tools:keep="@color/primaryTextColor">#FF1F1F1F</color>
-    <color name="secondaryTextColor" tools:keep="@color/secondaryTextColor">#FFFFFFFF</color>
+    <color name="secondaryTextColor" tools:keep="@color/secondaryTextColor">#FFF4F4F4</color>
     <color name="tertiaryTextColor" tools:keep="@color/tertiaryTextColor">#FF3E4958</color>
+    <color name="quaternaryTextColor" tools:keep="@color/tertiaryTextColor">#FF535252</color>
+    <color name="quinaryTextColor" tools:keep="@color/tertiaryTextColor">#FFC4C4C4</color>
     <color name="chipTextColor" tools:keep="@color/chipTextColor">#FF535252</color>
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="navigation_drawer_open">Navigationsschublade öffnen</string>
     <string name="navigation_drawer_close">Navigationsschublade schließen</string>
     <string name="nav_header_desc">Navigationsheader</string>
@@ -159,9 +159,23 @@
     <string name="welcome">Welcome</string>
     <string name="please_enter_yous_data">Bitte geben Sie Ihre Daten ein, um Ihre Registrierung einzugeben</string>
     <string name="forgot_your_password">Passwort Vergessen?</string>
-    <string name="installation_failed">Installation Fehlgeschlagen</string>
-    <string name="installation_cancelled">Installation Abgebrochen</string>
+    <string name="installation_failed" tools:ignore="PrivateResource">Installation Fehlgeschlagen</string>
+    <string name="installation_cancelled" tools:ignore="PrivateResource">Installation Abgebrochen</string>
     <string name="empty">Leer</string>
     <string name="content_descriptor_progress_image">Fortschrittsbild</string>
     <string name="loading">Wird geladen</string>
+    <string name="nav_messages">Mitteilungen</string>
+    <string name="nav_favorites">Favoriten</string>
+    <string name="nav_home">Heim</string>
+    <string name="nav_basket">Korb</string>
+    <string name="nav_profile">Profil</string>
+    <string name="label_main">Hauptsächlich</string>
+    <string name="label_home_iluria">Heim</string>
+    <string name="label_blank">Leer</string>
+    <string name="new_collection">Neue Kollektion</string>
+    <string name="recommendations">Empfehlungen</string>
+    <string name="see_all">Alles sehen</string>
+    <string name="buy">Besorgen</string>
+    <string name="search">Suche</string>
+    <string name="content_description_icon_search">Suche</string>
 </resources>

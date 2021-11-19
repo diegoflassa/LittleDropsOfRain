@@ -33,11 +33,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentLoginBinding
+import app.web.diegoflassa_site.littledropsofrain.presentation.ui.theme.LittleDropsOfRainTheme
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,17 +56,12 @@ class LoginFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
-                BuildUi()
-                //LoginFragmentBinding()
+                LittleDropsOfRainTheme {
+                    BuildUi()
+                }
             }
         }
 
-    }
-
-    @Composable
-    @Preview
-    fun LoginFragmentBinding() {
-        AndroidViewBinding(FragmentLoginBinding::inflate)
     }
 
     @Composable

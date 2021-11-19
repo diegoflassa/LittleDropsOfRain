@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,10 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.presentation.ui.theme.MyMaterialTheme
+import app.web.diegoflassa_site.littledropsofrain.presentation.ui.theme.LittleDropsOfRainTheme
 
 class BlankFragment : Fragment() {
 
@@ -34,7 +32,7 @@ class BlankFragment : Fragment() {
         Log.i(BlankFragment.tag, "onCreateView")
         return ComposeView(requireContext()).apply {
             setContent {
-                MyMaterialTheme.ApplyTheme {
+                LittleDropsOfRainTheme {
                     BuildUi()
                 }
             }

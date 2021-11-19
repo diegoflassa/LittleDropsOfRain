@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="message_title">Título</string>
     <string name="all">Todos</string>
     <string name="cancel">Cancelar</string>
@@ -159,9 +159,23 @@
     <string name="welcome">Welcome</string>
     <string name="please_enter_yous_data">Por favor, preencha com seus dados para entrar em seu cadastro</string>
     <string name="forgot_your_password">Esqueceu sua senha?</string>
-    <string name="installation_failed">Falha na Instalação</string>
-    <string name="installation_cancelled">Instalação Cancelada</string>
+    <string name="installation_failed" tools:ignore="PrivateResource">Falha na Instalação</string>
+    <string name="installation_cancelled" tools:ignore="PrivateResource">Instalação Cancelada</string>
     <string name="empty">Vazio</string>
     <string name="content_descriptor_progress_image">Imagem de Progresso</string>
     <string name="loading">Carregando</string>
+    <string name="nav_messages">Mensagens</string>
+    <string name="nav_favorites">Favoritos</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_basket">Carrinho</string>
+    <string name="nav_profile">Perfil</string>
+    <string name="label_main">Principal</string>
+    <string name="label_home_iluria">Home</string>
+    <string name="label_blank">Branco</string>
+    <string name="new_collection">Nova Coleção</string>
+    <string name="recommendations">Recomendados</string>
+    <string name="see_all">Ver Todos</string>
+    <string name="buy">Comprar</string>
+    <string name="search">Procurar</string>
+    <string name="content_description_icon_search">Procurar</string>
 </resources>
