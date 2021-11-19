@@ -26,8 +26,8 @@
         android:supportsRtl="true"
         android:targetSdkVersion="30"
         android:theme="@style/AppTheme.Starting"
-        tools:targetApi="R"
-        tools:ignore="UnusedAttribute">
+        tools:ignore="UnusedAttribute"
+        tools:targetApi="R">
 
         <property
             android:name="android.media.PROPERTY_MEDIA_CAPABILITIES"
@@ -46,10 +46,9 @@
             android:name=".presentation.MainActivity"
             android:configChanges="locale"
             android:exported="true"
-            android:noHistory="false"
-            android:permission="app.web.diegoflassa_site.littledropsofrain.PERM_OPEN_LINK"
-            android:theme="@style/AppTheme.Starting"
             android:launchMode="singleTop"
+            android:noHistory="false"
+            android:theme="@style/AppTheme.Starting"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

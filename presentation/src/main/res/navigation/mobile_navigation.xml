@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_main"
-    app:progressDestination="@id/nav_progress">
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/nav_home_iluria">
     <activity
         android:id="@+id/nav_main"
         android:name="app.web.diegoflassa_site.littledropsofrain.presentation.MainActivity"

@@ -25,10 +25,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -44,10 +46,16 @@ import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.data.helpers.MainActivityHolderData
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUserFoundListener
 import app.web.diegoflassa_site.littledropsofrain.databinding.ActivityMainBinding
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.MainActivityHolderDomain
 import app.web.diegoflassa_site.littledropsofrain.domain.preferences.MyOnSharedPreferenceChangeListener
+import app.web.diegoflassa_site.littledropsofrain.domain.services.NewMessagesService
+import app.web.diegoflassa_site.littledropsofrain.domain.services.SetupProductsUpdateWorkerService
 import app.web.diegoflassa_site.littledropsofrain.presentation.contracts.EmailLinkAuthActivityResultContract
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
@@ -57,12 +65,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import java.util.concurrent.TimeUnit
-import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
-import app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
-import app.web.diegoflassa_site.littledropsofrain.domain.helpers.MainActivityHolderDomain
-import app.web.diegoflassa_site.littledropsofrain.domain.services.NewMessagesService
-import app.web.diegoflassa_site.littledropsofrain.domain.services.SetupProductsUpdateWorkerService
-import com.google.android.material.bottomnavigation.BottomNavigationView
+
 
 enum class HomeType {
     UNKNOWN,
@@ -94,6 +97,7 @@ class MainActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.AppTheme_ActionBar)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setNavigationGraph()

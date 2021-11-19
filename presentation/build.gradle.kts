@@ -262,9 +262,6 @@ dependencies {
     // Proto DataStore
     implementation("androidx.datastore:datastore-core:${Versions.data_store}")
 
-    // Compose Navigation
-    implementation("androidx.navigation:navigation-compose:${Versions.navigation_compose}")
-
     // Gerencianet
     //implementation("br.com.gerencianet.gnsdk:gn-api-sdk-java:${Versions.gerencianet}")
 
@@ -291,7 +288,9 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:${Versions.hilt}")
     implementation("androidx.hilt:hilt-common:${Versions.hilt_other}")
     kapt("androidx.hilt:hilt-compiler:${Versions.hilt_other}")
+    implementation("androidx.hilt:hilt-navigation:${Versions.hilt_other}")
     implementation("androidx.hilt:hilt-navigation-fragment:${Versions.hilt_other}")
+    implementation("androidx.hilt:hilt-navigation-compose:${Versions.hilt_nav_compose}")
     implementation("androidx.hilt:hilt-work:${Versions.hilt_other}")
 
     // RX Java 3
@@ -383,8 +382,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.lifecycle}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.lifecycle}")
     implementation("androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}")
     implementation("androidx.lifecycle:lifecycle-common:${Versions.lifecycle}")
+    // Compose Navigation
+    implementation("androidx.navigation:navigation-compose:${Versions.navigation_compose}")
     implementation("androidx.navigation:navigation-runtime-ktx:${Versions.navigation}")
     implementation("androidx.navigation:navigation-fragment-ktx:${Versions.navigation}")
     implementation("androidx.navigation:navigation-ui-ktx:${Versions.navigation}")

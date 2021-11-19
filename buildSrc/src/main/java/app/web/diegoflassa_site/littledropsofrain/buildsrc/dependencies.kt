@@ -19,6 +19,7 @@ object Versions {
     const val dagger = "2.40.1"
     const val hilt = "2.40.1"
     const val hilt_other = "1.0.0"
+    const val hilt_nav_compose = "1.0.0-beta01"
     const val rxjava = "3.1.2"
     const val rxandroid = "3.0.0"
     const val safetynet = "16.0.0-beta03"

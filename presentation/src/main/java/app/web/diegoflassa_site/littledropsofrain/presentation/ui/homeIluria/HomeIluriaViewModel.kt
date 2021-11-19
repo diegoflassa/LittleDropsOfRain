@@ -10,32 +10,38 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeIluriaViewModel @Inject constructor() : ViewModel() {
 
-    init{
+    private var _uiState = MutableLiveData(HomeIluriaState())
+    val uiState: LiveData<HomeIluriaState>
+        get() = _uiState
+
+    init {
         getCarouselItemsSpotlight()
         getCarouselItemsCategories()
         getCarouselItemsNewCollection()
         getCarouselItemsRecommended()
-
     }
-    private val _uiState = MutableLiveData(HomeIluriaState())
-    val uiState: LiveData<HomeIluriaState>
-        get() = _uiState
 
-
-    fun getCarouselItemsSpotlight(){
+    fun getCarouselItemsSpotlight() {
         uiState.value!!.carouselItemsSpotlight = DummyData.getSpotlightCarouselItems()
     }
 
-    fun getCarouselItemsCategories(){
+    fun getCarouselItemsCategories() {
         uiState.value!!.carouselItemsCategories = DummyData.getCategoriesCarouselItems()
     }
 
-    fun getCarouselItemsNewCollection(){
+    fun getCarouselItemsNewCollection() {
         uiState.value!!.carouselItemsNewCollection = DummyData.getNewCollectionCarouselItems()
     }
 
-    fun getCarouselItemsRecommended(){
+    fun getCarouselItemsRecommended() {
         uiState.value!!.carouselItemsRecommended = DummyData.getRecommendationsCarouselItems()
+    }
+
+    fun refresh() {
+        getCarouselItemsSpotlight()
+        getCarouselItemsCategories()
+        getCarouselItemsNewCollection()
+        getCarouselItemsRecommended()
     }
 
 }

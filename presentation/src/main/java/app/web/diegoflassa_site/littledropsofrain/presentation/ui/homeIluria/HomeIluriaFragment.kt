@@ -1,13 +1,13 @@
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.homeIluria
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -33,7 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.CategoryItem
@@ -52,28 +52,34 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeIluriaFragment : Fragment() {
 
-    private val myViewModel: HomeIluriaViewModel by viewModels()
+    private lateinit var myViewModel: HomeIluriaViewModel// by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        myViewModel.getCarouselItemsSpotlight()
-        myViewModel.getCarouselItemsCategories()
-        myViewModel.getCarouselItemsNewCollection()
-        myViewModel.getCarouselItemsRecommended()
         return ComposeView(requireContext()).apply {
             setContent {
+                myViewModel = hiltViewModel()
+                myViewModel.refresh()
                 val uiState = myViewModel.uiState
                 BuildUi(uiState)
             }
         }
     }
 
+    @Composable
+    fun BuildUi(liveData: LiveData<HomeIluriaState>) {
+        CraneHomeContent(liveData.observeAsState())
+    }
+
     @Preview
     @Composable
-    fun BuildUi(@PreviewParameter(HomeIluriaStateProvider::class) liveData: LiveData<HomeIluriaState>) {
-        val uiState = liveData.observeAsState()
+    fun BuildUiPreview(@PreviewParameter(HomeIluriaStateProvider::class) liveData: LiveData<HomeIluriaState>?) {
+        if(liveData == null){
+            Log.i(tag, "LiveData object is null. Getting data from HomeIluriaState.getDummyData()")
+        }
+        val uiState = liveData?.observeAsState() ?: HomeIluriaState.getDummyData().observeAsState()
         CraneHomeContent(uiState)
     }
 
@@ -93,7 +99,7 @@ class HomeIluriaFragment : Fragment() {
                         title = { Text("Little Drops Of Rain") },
                     )
                 },
-                content = { buildContent() }
+                content = { buildContent(uiState) }
             )
              */
         }
@@ -101,11 +107,13 @@ class HomeIluriaFragment : Fragment() {
 
     @Composable
     private fun BuildContent(uiState: State<HomeIluriaState?>) {
+        val constrainLayoutScrollState = rememberScrollState()
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .background(color = colorResource(R.color.colorAccent))
+                .verticalScroll(constrainLayoutScrollState)
         ) {
             val (columnTop, boxMiddle, bkImage, carouselCategories, mainBox) = createRefs()
             Column(
@@ -183,7 +191,6 @@ class HomeIluriaFragment : Fragment() {
                     .horizontalScroll(scrollState),
                 uiState,
             )
-            val lazyColumnScrollState = rememberScrollState()
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -194,19 +201,14 @@ class HomeIluriaFragment : Fragment() {
                         top.linkTo(boxMiddle.bottom, 134.dp)
                     },
             ) {
-                LazyColumn(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
                         .padding(PaddingValues(0.dp, 14.dp, 0.dp, 0.dp))
-                        .verticalScroll(lazyColumnScrollState)
                 ) {
-                    item {
-                        GetNewCollectionItem(uiState)
-                    }
-                    item {
-                        GetRecommendationsItem(uiState)
-                    }
+                    GetNewCollectionItem(uiState)
+                    GetRecommendationsItem(uiState)
                 }
             }
         }
@@ -468,7 +470,10 @@ class HomeIluriaFragment : Fragment() {
                         .clip(RoundedCornerShape(12.dp))
                         .border(3.dp, Color.White),
                 )
-                Text(item.category, modifier = Modifier.padding(PaddingValues(0.dp, 8.dp, 0.dp, 0.dp)))
+                Text(
+                    item.category,
+                    modifier = Modifier.padding(PaddingValues(0.dp, 8.dp, 0.dp, 0.dp))
+                )
             }
         }
     }
