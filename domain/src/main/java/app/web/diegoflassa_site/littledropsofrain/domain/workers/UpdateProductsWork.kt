@@ -32,7 +32,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductsDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
-import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnProductInsertedListener
+import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnItemInsertedListener
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnTaskFinishedListener
 import app.web.diegoflassa_site.littledropsofrain.data.parser.ProductParser
 import app.web.diegoflassa_site.littledropsofrain.data.repository.IluriaProductsRepository
@@ -49,7 +49,7 @@ class UpdateProductsWork(
 ) :
     CoroutineWorker(context, workerParams),
     ProductParser.OnParseProgress,
-    OnProductInsertedListener,
+    OnItemInsertedListener<Product>,
     OnTaskFinishedListener<List<Product>> {
 
     companion object {
@@ -164,8 +164,8 @@ class UpdateProductsWork(
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    override fun onProductInserted(product: Product) {
-        val update = workDataOf(KEY_PRODUCT to product.uid)
+    override fun onItemInserted(item: Product) {
+        val update = workDataOf(KEY_PRODUCT to item.uid)
         GlobalScope.async(Dispatchers.Default) { setProgress(update) }
     }
 

@@ -20,7 +20,7 @@ import android.util.Log
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataChangeListener
-import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnProductInsertedListener
+import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnItemInsertedListener
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnTaskFinishedListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -211,7 +211,7 @@ object ProductsDao {
         products: List<Product>,
         removeNotFoundInFirebase: Boolean = false,
         unpublishNotFoundInFirebase: Boolean = true,
-        listener: OnProductInsertedListener? = null,
+        listener: OnItemInsertedListener<Product>? = null,
         finishListener: OnTaskFinishedListener<List<Product>>? = null
     ) {
         val hashProducts: MutableMap<String, Product> = HashMap<String, Product>(products.size)
@@ -259,7 +259,7 @@ object ProductsDao {
         data: Map<String, Any?>,
         listTasksAll: MutableList<Task<*>>,
         hashProducts: MutableMap<String, Product>,
-        listener: OnProductInsertedListener?
+        listener: OnItemInsertedListener<Product>?
     ) {
         val taskInsert: Task<*>?
         var found = false
@@ -286,7 +286,7 @@ object ProductsDao {
                             )!!
                         )
                             insertBlob(product)
-                        listener?.onProductInserted(product)
+                        listener?.onItemInserted(product)
                         Log.i(
                             TAG,
                             "Product ${product.idSource} inserted successfully"
@@ -309,7 +309,7 @@ object ProductsDao {
         data: Map<String, Any?>,
         listTasksAll: MutableList<Task<*>>,
         hashProducts: MutableMap<String, Product>,
-        listener: OnProductInsertedListener?
+        listener: OnItemInsertedListener<Product>?
     ) {
         val taskInsert: Task<*>?
         if (!product.imageUrl?.startsWith(FIREBASE_STORAGE)!! || !product.imageUrl?.startsWith(
@@ -327,7 +327,7 @@ object ProductsDao {
                         "[insert]Product ${product.uid} updated successfully"
                     )
                     hashProducts[product.uid!!] = product
-                    listener?.onProductInserted(product)
+                    listener?.onItemInserted(product)
                 }?.addOnFailureListener {
                     Log.i(TAG, "Error updating product")
                 }
@@ -367,7 +367,7 @@ object ProductsDao {
         }
     }
 
-    private fun insert(product: Product, listener: OnProductInsertedListener? = null): Task<*> {
+    private fun insert(product: Product, listener: OnItemInsertedListener<Product>? = null): Task<*> {
         val task: Task<*>
         val data = product.toMap()
         if (product.uid == null) {
@@ -383,7 +383,7 @@ object ProductsDao {
                                     )!!
                                 )
                                     insertBlob(product)
-                                listener?.onProductInserted(product)
+                                listener?.onItemInserted(product)
                                 Log.i(TAG, "Product ${product.idSource} inserted successfully")
                             }?.addOnFailureListener {
                                 Log.i(TAG, "Error inserting product")

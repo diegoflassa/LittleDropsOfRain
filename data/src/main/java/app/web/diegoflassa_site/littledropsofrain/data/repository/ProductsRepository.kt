@@ -20,7 +20,7 @@ import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductsDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataChangeListener
-import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnProductInsertedListener
+import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnItemInsertedListener
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnTaskFinishedListener
 import java.util.HashMap
 
@@ -75,7 +75,7 @@ class ProductsRepository(private val productsDao: ProductsDao) {
         products: List<Product>,
         removeNotFoundInFirebase: Boolean = false,
         unpublishNotFoundInFirebase: Boolean = true,
-        listener: OnProductInsertedListener? = null,
+        listener: OnItemInsertedListener<Product>? = null,
         finishListener: OnTaskFinishedListener<List<Product>>? = null
     ) {
         Log.i(tag, "insertAll")

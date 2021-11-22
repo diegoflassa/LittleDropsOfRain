@@ -1,9 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.data.di
 
-import app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
-import app.web.diegoflassa_site.littledropsofrain.data.dao.MessagesDao
-import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductsDao
-import app.web.diegoflassa_site.littledropsofrain.data.dao.UsersDao
+import app.web.diegoflassa_site.littledropsofrain.data.dao.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,5 +28,10 @@ object FirestoreModule {
     @Provides
     fun provideProductsDao(): ProductsDao {
         return ProductsDao
+    }
+
+    @Provides
+    fun provideCategoriesDao(): CategoriesDao {
+        return CategoriesDao
     }
 }

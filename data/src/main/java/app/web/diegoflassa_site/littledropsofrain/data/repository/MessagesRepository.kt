@@ -17,14 +17,9 @@ package app.web.diegoflassa_site.littledropsofrain.data.repository
 
 import android.util.Log
 import app.web.diegoflassa_site.littledropsofrain.data.dao.MessagesDao
-import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductsDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
-import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataFailureListener
-import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnProductInsertedListener
-import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnTaskFinishedListener
 import com.google.firebase.firestore.DocumentReference
 import java.util.*
 

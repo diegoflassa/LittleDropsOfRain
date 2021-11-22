@@ -17,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,7 +33,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.viewModels
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.CategoryItem
@@ -465,7 +463,7 @@ class HomeIluriaFragment : Fragment() {
             ) {
                 Image(
                     painter = rememberImagePainter(
-                        item.image,
+                        item.getImageUrlAsUri(),
                         builder = {
                             placeholder(R.drawable.placeholder)
                             size(OriginalSize)

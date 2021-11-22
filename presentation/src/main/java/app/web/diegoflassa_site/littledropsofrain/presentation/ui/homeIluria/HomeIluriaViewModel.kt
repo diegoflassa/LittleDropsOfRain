@@ -14,13 +14,6 @@ class HomeIluriaViewModel @Inject constructor(private val productsRepository: Pr
     ViewModel() {
     var uiState = MutableLiveData(HomeIluriaState())
 
-    init {
-        getCarouselItemsSpotlight()
-        getCarouselItemsCategories()
-        getCarouselItemsNewCollection()
-        getCarouselItemsRecommended()
-    }
-
     class CarouselItemsSpotlightListener(private val viewModel: HomeIluriaViewModel) :
         OnDataChangeListener<List<Product>> {
         override fun onDataChanged(item: List<Product>) {

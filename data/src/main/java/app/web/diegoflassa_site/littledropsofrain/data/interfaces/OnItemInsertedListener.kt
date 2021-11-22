@@ -16,8 +16,6 @@
 
 package app.web.diegoflassa_site.littledropsofrain.data.interfaces
 
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
-
-interface OnProductInsertedListener {
-    fun onProductInserted(product: Product)
+interface OnItemInsertedListener<T> {
+    fun onItemInserted(item: T)
 }

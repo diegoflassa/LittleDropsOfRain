@@ -1,9 +1,6 @@
 package app.web.diegoflassa_site.littledropsofrain.data.di
 
-import app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
-import app.web.diegoflassa_site.littledropsofrain.data.dao.MessagesDao
-import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductsDao
-import app.web.diegoflassa_site.littledropsofrain.data.dao.UsersDao
+import app.web.diegoflassa_site.littledropsofrain.data.dao.*
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.IluriaProductsService
 import app.web.diegoflassa_site.littledropsofrain.data.repository.*
 import dagger.Module
@@ -44,5 +41,11 @@ class RepositoriesModule {
     @Provides
     fun provideFilesRepository(filesDao: FilesDao): FilesRepository {
         return FilesRepository(filesDao)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCategoriesRepository(categoriesDao: CategoriesDao): CategoriesRepository {
+        return CategoriesRepository(categoriesDao)
     }
 }
