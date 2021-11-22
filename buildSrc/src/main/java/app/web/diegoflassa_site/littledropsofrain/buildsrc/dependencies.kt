@@ -51,6 +51,7 @@ object Versions {
     const val recyclerview = "1.3.0-alpha01"
     const val recyclerview_selection = "1.2.0-alpha01"
     const val accompanist_pager = "0.21.2-beta"
+    const val accompanist_swiperefresh = "0.20.2"
     const val room = "2.4.0-beta01"
     const val vectordrawable_animated = "1.1.0"
     const val databinding = "7.2.0-alpha04"
@@ -75,7 +76,6 @@ object Versions {
     const val firebaseBOM = "29.0.0"
     const val iconify = "2.2.2"
     const val androidx_jetpack_compose = "1.1.0-beta02"
-    //const val androidx_jetpack_compose_accompanist = "1.1.0-alpha02"
     const val foundation = "1.0.0-alpha11"
     const val braintree = "4.7.0"
 }

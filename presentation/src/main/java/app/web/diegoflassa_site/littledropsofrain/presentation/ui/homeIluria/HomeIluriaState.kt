@@ -11,9 +11,14 @@ data class HomeIluriaState(
     var carouselItemsCategories: List<CategoryItem> = listOf(),
     var carouselItemsNewCollection: List<Product> = listOf(),
     var carouselItemsRecommended: List<Product> = listOf(),
-){
-    companion object{
-        fun getDummyData() : LiveData<HomeIluriaState> {
+    var isRefreshingSpotlight : MutableLiveData<Boolean> = MutableLiveData(false),
+    var isRefreshingCategories : MutableLiveData<Boolean> = MutableLiveData(false),
+    var isRefreshingNewCollection : MutableLiveData<Boolean> = MutableLiveData(false),
+    var isRefreshingRecommended : MutableLiveData<Boolean> = MutableLiveData(false),
+    var isRefreshing : MutableLiveData<Boolean> = MutableLiveData(false),
+) {
+    companion object {
+        fun getDummyData(): LiveData<HomeIluriaState> {
             val ret = MutableLiveData(HomeIluriaState())
             ret.value!!.carouselItemsSpotlight = DummyData.getSpotlightCarouselItems()
             ret.value!!.carouselItemsCategories = DummyData.getCategoriesCarouselItems()
@@ -21,5 +26,12 @@ data class HomeIluriaState(
             ret.value!!.carouselItemsRecommended = DummyData.getRecommendationsCarouselItems()
             return ret
         }
+    }
+
+    fun copy(state: HomeIluriaState) {
+        carouselItemsSpotlight = state.carouselItemsSpotlight
+        carouselItemsCategories = state.carouselItemsCategories
+        carouselItemsNewCollection = state.carouselItemsNewCollection
+        carouselItemsRecommended = state.carouselItemsRecommended
     }
 }

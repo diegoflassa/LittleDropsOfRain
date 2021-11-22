@@ -31,7 +31,7 @@ import java.util.*
 
 // DFL - Classe de Acesso a dados. Aqui vc coloca as FORMAS DE ACESSAR os dados
 @Suppress("UNUSED", "BlockingMethodInNonBlockingContext", "SameParameterValue")
-object MessageDao {
+object MessagesDao {
 
     private const val TAG: String = "MessageDao"
     const val COLLECTION_PATH: String = "messages"
@@ -154,7 +154,7 @@ object MessageDao {
     }
 
     fun insertAll(
-        vararg messages: Message,
+        messages: List<Message>,
         onSuccessListener: OnDataChangeListener<DocumentReference>? = null,
         onFailureListener: OnDataFailureListener<Exception>? = null
     ): ArrayList<Task<DocumentReference>?> {

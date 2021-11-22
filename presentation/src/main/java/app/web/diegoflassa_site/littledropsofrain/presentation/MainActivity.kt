@@ -25,12 +25,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -41,7 +39,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import app.web.diegoflassa_site.littledropsofrain.BuildConfig
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
+import app.web.diegoflassa_site.littledropsofrain.data.dao.UsersDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.data.helpers.MainActivityHolderData
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUserFoundListener
@@ -388,7 +386,7 @@ class MainActivity :
                         FirebaseAuth.getInstance().currentUser!!.providerData[1].providerId
                 }
                 user.lastSeen = Timestamp.now()
-                UserDao.upsert(user)
+                UsersDao.upsert(user)
                 if (user.isAdmin) {
                     Helper.requestReadExternalStoragePermission(this)
                     val jobScheduler =
@@ -434,7 +432,7 @@ class MainActivity :
             FirebaseAuth.getInstance().currentUser != null -> {
                 val userFromFb =
                     Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
-                UserDao.upsert(userFromFb)
+                UsersDao.upsert(userFromFb)
                 LoggedUser.userLiveData.value = userFromFb
                 //findNavController(R.id.nav_host_fragment).navigate(
                 // OldMainActivityDirections.actionGlobalUserProfileFragment()

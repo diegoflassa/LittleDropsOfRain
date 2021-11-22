@@ -45,6 +45,8 @@ import coil.size.Scale
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -76,7 +78,7 @@ class HomeIluriaFragment : Fragment() {
     @Preview
     @Composable
     fun BuildUiPreview(@PreviewParameter(HomeIluriaStateProvider::class) liveData: LiveData<HomeIluriaState>?) {
-        if(liveData == null){
+        if (liveData == null) {
             Log.i(tag, "LiveData object is null. Getting data from HomeIluriaState.getDummyData()")
         }
         val uiState = liveData?.observeAsState() ?: HomeIluriaState.getDummyData().observeAsState()
@@ -107,108 +109,114 @@ class HomeIluriaFragment : Fragment() {
 
     @Composable
     private fun BuildContent(uiState: State<HomeIluriaState?>) {
-        val constrainLayoutScrollState = rememberScrollState()
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .background(color = colorResource(R.color.colorAccent))
-                .verticalScroll(constrainLayoutScrollState)
+        val isRefreshing by uiState.value!!.isRefreshing.observeAsState()
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing!!),
+            onRefresh = { myViewModel.refresh() },
         ) {
-            val (columnTop, boxMiddle, bkImage, carouselCategories, mainBox) = createRefs()
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(231.dp)
-                    .clip(RoundedCornerShape(0.dp, 0.dp, 20.dp, 20.dp))
-                    .background(color = colorResource(R.color.backgroundWhite))
-                    .constrainAs(columnTop) {
-                        top.linkTo(parent.top)
-                    },
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                val textState = remember { mutableStateOf(TextFieldValue()) }
-                TextField(
-                    value = textState.value,
-                    placeholder = { Text(stringResource(R.string.search)) },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_search),
-                            contentDescription = stringResource(R.string.content_description_icon_search),
-                            tint = colorResource(R.color.hintTextColor),
-                        )
-                    },
-                    textStyle = TextStyle(color = colorResource(R.color.hintTextColor)),
-                    onValueChange = { textState.value = it },
-                    modifier = Modifier
-                        .padding(PaddingValues(0.dp, 53.dp, 0.dp, 0.dp))
-                        .height(60.dp)
-                        .width(300.dp)
-                        .background(color = colorResource(R.color.white))
-                        .clip(RoundedCornerShape(14.dp)),
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = colorResource(android.R.color.white)
-                    )
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .width(303.dp)
-                    .height(145.dp)
-                    .clip(RoundedCornerShape(0.dp, 0.dp, 19.dp, 19.dp))
-                    .background(color = colorResource(android.R.color.white))
-                    .constrainAs(boxMiddle) {
-                        top.linkTo(parent.top, 134.dp)
-                        start.linkTo(parent.start, 36.dp)
-                        end.linkTo(parent.end, 36.dp)
-                    },
-            ) {
-                GetSpotlightCarouselContent(uiState)
-            }
-            Image(
-                painter = painterResource(R.drawable.ic_bk_image),
-                contentDescription = null,
-                modifier = Modifier
-                    .width(347.dp)
-                    .height(293.dp)
-                    .zIndex(-1F)
-                    .constrainAs(bkImage) {
-                        top.linkTo(columnTop.bottom, 11.dp)
-                        start.linkTo(parent.start, 14.dp)
-                        end.linkTo(parent.end, 14.dp)
-                    },
-            )
-            val scrollState = rememberScrollState()
-            GetCategoriesCarouselContent(
-                Modifier
-                    .fillMaxWidth()
-                    .height(55.dp)
-                    .constrainAs(carouselCategories) {
-                        top.linkTo(boxMiddle.bottom, 24.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-                    .horizontalScroll(scrollState),
-                uiState,
-            )
-            Box(
+            val constrainLayoutScrollState = rememberScrollState()
+            ConstraintLayout(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .clip(RoundedCornerShape(25.dp, 25.dp, 0.dp, 0.dp))
-                    .background(color = colorResource(R.color.backgroundWhite))
-                    .constrainAs(mainBox) {
-                        top.linkTo(boxMiddle.bottom, 134.dp)
-                    },
+                    .background(color = colorResource(R.color.colorAccent))
+                    .verticalScroll(constrainLayoutScrollState)
             ) {
+                val (columnTop, boxMiddle, bkImage, carouselCategories, mainBox) = createRefs()
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
-                        .padding(PaddingValues(0.dp, 14.dp, 0.dp, 0.dp))
+                        .height(231.dp)
+                        .clip(RoundedCornerShape(0.dp, 0.dp, 20.dp, 20.dp))
+                        .background(color = colorResource(R.color.backgroundWhite))
+                        .constrainAs(columnTop) {
+                            top.linkTo(parent.top)
+                        },
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    GetNewCollectionItem(uiState)
-                    GetRecommendationsItem(uiState)
+                    val textState = remember { mutableStateOf(TextFieldValue()) }
+                    TextField(
+                        value = textState.value,
+                        placeholder = { Text(stringResource(R.string.search)) },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_search),
+                                contentDescription = stringResource(R.string.content_description_icon_search),
+                                tint = colorResource(R.color.hintTextColor),
+                            )
+                        },
+                        textStyle = TextStyle(color = colorResource(R.color.hintTextColor)),
+                        onValueChange = { textState.value = it },
+                        modifier = Modifier
+                            .padding(PaddingValues(0.dp, 53.dp, 0.dp, 0.dp))
+                            .height(60.dp)
+                            .width(300.dp)
+                            .background(color = colorResource(R.color.white))
+                            .clip(RoundedCornerShape(14.dp)),
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = colorResource(android.R.color.white)
+                        )
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .width(303.dp)
+                        .height(145.dp)
+                        .clip(RoundedCornerShape(0.dp, 0.dp, 19.dp, 19.dp))
+                        .background(color = colorResource(android.R.color.white))
+                        .constrainAs(boxMiddle) {
+                            top.linkTo(parent.top, 134.dp)
+                            start.linkTo(parent.start, 36.dp)
+                            end.linkTo(parent.end, 36.dp)
+                        },
+                ) {
+                    GetSpotlightCarouselContent(uiState)
+                }
+                Image(
+                    painter = painterResource(R.drawable.ic_bk_image),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(347.dp)
+                        .height(293.dp)
+                        .zIndex(-1F)
+                        .constrainAs(bkImage) {
+                            top.linkTo(columnTop.bottom, 11.dp)
+                            start.linkTo(parent.start, 14.dp)
+                            end.linkTo(parent.end, 14.dp)
+                        },
+                )
+                val scrollState = rememberScrollState()
+                GetCategoriesCarouselContent(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(55.dp)
+                        .constrainAs(carouselCategories) {
+                            top.linkTo(boxMiddle.bottom, 24.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                        .horizontalScroll(scrollState),
+                    uiState,
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(25.dp, 25.dp, 0.dp, 0.dp))
+                        .background(color = colorResource(R.color.backgroundWhite))
+                        .constrainAs(mainBox) {
+                            top.linkTo(boxMiddle.bottom, 134.dp)
+                        },
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(PaddingValues(0.dp, 14.dp, 0.dp, 0.dp))
+                    ) {
+                        GetNewCollectionItem(uiState)
+                        GetRecommendationsItem(uiState)
+                    }
                 }
             }
         }
@@ -417,18 +425,20 @@ class HomeIluriaFragment : Fragment() {
                     .clip(RoundedCornerShape(10.dp)),
             )
             Column(modifier = Modifier.padding(PaddingValues(24.dp, 0.dp, 0.dp, 0.dp))) {
-                Text(
-                    item.title!!,
-                    modifier = Modifier.padding(PaddingValues(0.dp, 8.dp, 0.dp, 0.dp))
-                )
                 if (item.categories.isNotEmpty()) {
                     Text(
                         text = item.categories[0],
                         color = colorResource(R.color.secondaryTextColor),
                         fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(PaddingValues(0.dp, 8.dp, 0.dp, 0.dp))
                     )
                 }
+                Text(
+                    item.title!!,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(PaddingValues(0.dp, 8.dp, 0.dp, 0.dp))
+                )
                 Button(
                     onClick = {},
                     colors = ButtonDefaults.buttonColors(
@@ -436,7 +446,7 @@ class HomeIluriaFragment : Fragment() {
                             R.color.buttonColor
                         )
                     ),
-                    //modifier = Modifier.padding(paddingButton)
+                    modifier = Modifier.padding(PaddingValues(8.dp, 0.dp, 0.dp, 0.dp))
                 ) {
                     Text(
                         text = stringResource(R.string.buy),

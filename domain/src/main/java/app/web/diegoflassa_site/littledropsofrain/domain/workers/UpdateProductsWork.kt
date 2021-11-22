@@ -30,7 +30,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
+import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductsDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnProductInsertedListener
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnTaskFinishedListener
@@ -107,7 +107,7 @@ class UpdateProductsWork(
         var result = Result.success()
         try {
             val products = ipr.getAll().blockingFirst().products
-            ProductDao.insertAll(
+            ProductsDao.insertAll(
                 Helper.iluriaProductToProduct(products),
                 removeNotFound,
                 unpublishNotFound,

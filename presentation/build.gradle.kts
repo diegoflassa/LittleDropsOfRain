@@ -320,6 +320,7 @@ dependencies {
 
     // Accompanist libraries
     implementation("com.google.accompanist:accompanist-pager:${Versions.accompanist_pager}")
+    implementation("com.google.accompanist:accompanist-swiperefresh:${Versions.accompanist_swiperefresh}")
 
 
     // Import the BoM for the Firebase platform

@@ -38,11 +38,10 @@ import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-// DFL - Classe de Acesso a dados. Aqui vc coloca as FORMAS DE ACESSAR os dados
 @Suppress("UNUSED", "BlockingMethodInNonBlockingContext", "SameParameterValue")
-object ProductDao {
+object ProductsDao {
 
-    private val TAG: String? = ProductDao::class.simpleName
+    private val TAG: String? = ProductsDao::class.simpleName
     private const val FIREBASE_STORAGE: String = "https://firebasestorage"
     private const val LDOR_SITE: String = "gs://littledropsofrain-site.appspot.com"
     private val ioScope = CoroutineScope(Dispatchers.IO)

@@ -29,7 +29,7 @@ import com.google.firebase.firestore.SetOptions
 import java.lang.ref.WeakReference
 
 @Suppress("UNUSED", "BlockingMethodInNonBlockingContext", "SameParameterValue")
-object UserDao {
+object UsersDao {
 
     private const val TAG: String = "UserDao"
     private const val COLLECTION_PATH: String = "users"
@@ -112,7 +112,7 @@ object UserDao {
     }
 
     fun insertAll(
-        vararg users: User,
+        users: List<User>,
         onSuccessListener: OnDataChangeListener<Void?>? = null,
         onFailureListener: OnDataFailureListener<Exception>? = null
     ): ArrayList<Task<Void>?> {

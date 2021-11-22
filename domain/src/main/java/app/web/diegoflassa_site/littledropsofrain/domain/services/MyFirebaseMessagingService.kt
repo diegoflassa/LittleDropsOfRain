@@ -20,7 +20,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
+import app.web.diegoflassa_site.littledropsofrain.data.dao.MessagesDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
@@ -166,7 +166,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         messageToSave.imageUrl = imageUri?.toString()
         messageToSave.message =
             notificationTitle + System.lineSeparator() + System.lineSeparator() + notificationBody
-        MessageDao.insert(messageToSave)
+        MessagesDao.insert(messageToSave)
 
         Helper.showNotification(
             applicationContext,

@@ -20,7 +20,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
+import app.web.diegoflassa_site.littledropsofrain.data.dao.MessagesDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
@@ -53,7 +53,7 @@ class NotificationReceiver : BroadcastReceiver() {
             messageToSave.imageUrl = imageUri?.toString()
             messageToSave.message =
                 title + System.lineSeparator() + System.lineSeparator() + message
-            MessageDao.insert(messageToSave)
+            MessagesDao.insert(messageToSave)
             Helper.updateNotificationMessageSaved(
                 context,
                 imageUri,

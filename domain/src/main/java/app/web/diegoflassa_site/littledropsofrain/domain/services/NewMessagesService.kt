@@ -18,7 +18,7 @@ package app.web.diegoflassa_site.littledropsofrain.domain.services
 
 import android.app.job.JobParameters
 import android.app.job.JobService
-import app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
+import app.web.diegoflassa_site.littledropsofrain.data.dao.MessagesDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
 import app.web.diegoflassa_site.littledropsofrain.data.entities.MessageType
 import app.web.diegoflassa_site.littledropsofrain.domain.R
@@ -49,7 +49,7 @@ class NewMessagesService : JobService(), EventListener<QuerySnapshot> {
     }
 
     private fun setupListener() {
-        mQuery = mFirestore.collection(MessageDao.COLLECTION_PATH)
+        mQuery = mFirestore.collection(MessagesDao.COLLECTION_PATH)
         mQuery.whereEqualTo(Message.FETCHED, false)
             .whereEqualTo(Message.TYPE, MessageType.MESSAGE.toString())
             .addSnapshotListener(this)
@@ -78,6 +78,6 @@ class NewMessagesService : JobService(), EventListener<QuerySnapshot> {
         )
         message.uid = change.document.id
         message.fetched = true
-        MessageDao.update(message)
+        MessagesDao.update(message)
     }
 }
