@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -54,7 +55,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeIluriaFragment : Fragment() {
 
-    private lateinit var myViewModel: HomeIluriaViewModel// by viewModels()
+    private val myViewModel: HomeIluriaViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +63,6 @@ class HomeIluriaFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                myViewModel = hiltViewModel()
                 myViewModel.refresh()
                 val uiState = myViewModel.uiState
                 BuildUi(uiState)
@@ -145,7 +145,6 @@ class HomeIluriaFragment : Fragment() {
                                 tint = colorResource(R.color.hintTextColor),
                             )
                         },
-                        textStyle = TextStyle(color = colorResource(R.color.hintTextColor)),
                         onValueChange = { textState.value = it },
                         modifier = Modifier
                             .padding(PaddingValues(0.dp, 53.dp, 0.dp, 0.dp))
