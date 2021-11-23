@@ -2,15 +2,17 @@ package app.web.diegoflassa_site.littledropsofrain.presentation.ui.homeIluria
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import app.web.diegoflassa_site.littledropsofrain.data.entities.CategoryItem
 import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.helpers.DummyData
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataChangeListener
+import app.web.diegoflassa_site.littledropsofrain.data.repository.CategoriesRepository
 import app.web.diegoflassa_site.littledropsofrain.data.repository.ProductsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeIluriaViewModel @Inject constructor(private val productsRepository: ProductsRepository) :
+class HomeIluriaViewModel @Inject constructor(private val productsRepository: ProductsRepository, private val categoriesRepository: CategoriesRepository) :
     ViewModel() {
     var uiState = MutableLiveData(HomeIluriaState())
 
@@ -26,6 +28,18 @@ class HomeIluriaViewModel @Inject constructor(private val productsRepository: Pr
         }
     }
 
+    class CarouselItemsCategoriesListener(private val viewModel: HomeIluriaViewModel) :
+        OnDataChangeListener<List<CategoryItem>> {
+        override fun onDataChanged(item: List<CategoryItem>) {
+            val homeIluriaState = HomeIluriaState()
+            homeIluriaState.copy(viewModel.uiState.value!!)
+            homeIluriaState.carouselItemsCategories = item
+            viewModel.uiState.postValue(homeIluriaState)
+            viewModel.uiState.value!!.isRefreshingCategories.value = false
+            viewModel.uiState.value!!.isRefreshing.postValue(viewModel.uiState.value!!.isRefreshingSpotlight.value!! || viewModel.uiState.value!!.isRefreshingCategories.value!! || viewModel.uiState.value!!.isRefreshingNewCollection.value!! || viewModel.uiState.value!!.isRefreshingRecommended.value!!)
+        }
+    }
+
     private fun getCarouselItemsSpotlight() {
         productsRepository.loadAll(CarouselItemsSpotlightListener(this))
         uiState.value!!.isRefreshingSpotlight.postValue(true)
@@ -34,9 +48,10 @@ class HomeIluriaViewModel @Inject constructor(private val productsRepository: Pr
     }
 
     private fun getCarouselItemsCategories() {
+        categoriesRepository.loadAll(CarouselItemsCategoriesListener(this))
         uiState.value!!.isRefreshingCategories.postValue(true)
+        uiState.value!!.isRefreshing.postValue(true)
         uiState.value!!.carouselItemsCategories = DummyData.getCategoriesCarouselItems()
-        uiState.value!!.isRefreshingCategories.postValue(false)
     }
 
     private fun getCarouselItemsNewCollection() {
