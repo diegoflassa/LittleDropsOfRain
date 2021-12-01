@@ -1,44 +1,8 @@
 <resources>
-    <string-array name="send_modes_entries">
-        <item>@string/message</item>
-        <item>@string/email</item>
-    </string-array>
 
     <string-array name="send_modes_values">
         <item>message</item>
         <item>email</item>
     </string-array>
 
-    <!-- Price filters -->
-    <string-array name="prices" translatable="false">
-        <item>@string/value_any_price</item>
-
-        <item>@string/price_1</item>
-        <item>@string/price_2</item>
-        <item>@string/price_3</item>
-    </string-array>
-
-    <!-- Ways you can sort products -->
-    <string-array name="products_sort_by">
-        <item>@string/sort_by_price</item>
-        <item>@string/sort_by_likes</item>
-    </string-array>
-
-    <!-- Ways you can sort products -->
-    <string-array name="all_products_sort_by">
-        <item>@string/sort_by_price</item>
-        <item>@string/sort_by_likes</item>
-    </string-array>
-
-    <!-- Ways you can sort messages -->
-    <string-array name="messages_sort_by">
-        <item>@string/sort_by_creation_date</item>
-        <item>@string/sort_by_read</item>
-    </string-array>
-
-    <string-array name="messages_type">
-        <item>@string/message_type_any</item>
-        <item>@string/message_type_message</item>
-        <item>@string/message_type_notification</item>
-    </string-array>
 </resources>

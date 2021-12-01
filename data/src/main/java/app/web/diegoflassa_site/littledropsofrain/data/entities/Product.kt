@@ -112,7 +112,7 @@ data class Product(
         categories = map[CATEGORIES] as MutableList<String>
     }
 
-    fun getImageUrlAsUri() : Uri {
+    fun getImageUrlAsUri(): Uri {
         return Uri.parse(imageUrl)
     }
 }

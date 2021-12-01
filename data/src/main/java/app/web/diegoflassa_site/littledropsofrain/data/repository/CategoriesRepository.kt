@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package app.web.diegoflassa_site.littledropsofrain.data.repository
 
 import android.util.Log
 import app.web.diegoflassa_site.littledropsofrain.data.dao.CategoriesDao
-import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductsDao
 import app.web.diegoflassa_site.littledropsofrain.data.entities.CategoryItem
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
-import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataChangeListener
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnItemInsertedListener
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnTaskFinishedListener
-import java.util.HashMap
 
 @SuppressWarnings("deprecation", "removal")
 class CategoriesRepository(private val categoriesDao: CategoriesDao) {
@@ -34,6 +31,17 @@ class CategoriesRepository(private val categoriesDao: CategoriesDao) {
     fun loadAll(listener: OnDataChangeListener<List<CategoryItem>>) {
         Log.i(tag, "loadAll")
         categoriesDao.loadAll(listener)
+    }
+
+    fun insert(
+        category: CategoryItem,
+        listener: OnItemInsertedListener<CategoryItem>? = null
+    ) {
+        Log.i(tag, "insert")
+        categoriesDao.insert(
+            category,
+            listener
+        )
     }
 
     fun insertAll(

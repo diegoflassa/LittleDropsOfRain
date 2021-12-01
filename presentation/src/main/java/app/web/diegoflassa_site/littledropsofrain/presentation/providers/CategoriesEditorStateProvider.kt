@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.data
+package app.web.diegoflassa_site.littledropsofrain.presentation.providers
 
-import splitties.resources.appStr
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.lifecycle.LiveData
+import app.web.diegoflassa_site.littledropsofrain.presentation.ui.admin.categories.CategoriesEditorState
 
-object Config {
-    val BASE_URL_API_DEVELOP by lazy { appStr(R.string.API_URL_API_DEBUG) }
-    val BASE_URL_API_RELEASE by lazy { appStr(R.string.API_URL_API_RELEASE) }
+class CategoriesEditorStateProvider : PreviewParameterProvider<LiveData<CategoriesEditorState>> {
+    override val values = sequenceOf(CategoriesEditorState.getDummyData())
+    override val count: Int = values.count()
 }

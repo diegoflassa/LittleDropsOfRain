@@ -37,8 +37,7 @@ val keystoreProperties = Properties()
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
-    lint.abortOnError = false
-    lint.checkDependencies = true
+    //lint.checkDependencies = true
 
     compileSdk = Config.compileSdkVersion
     //compileSdkPreview = Config.compileSdkPreviewVersion
@@ -162,6 +161,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.androidx_jetpack_compose
     }
+    lint {
+        isAbortOnError = false
+    }
 }
 
 kapt {
@@ -213,6 +215,7 @@ afterEvaluate {
     // Avoid build error
     //tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     tasks.withType<KotlinCompile>().configureEach {
+        //tasks.withType().configureEach {
         // Sets Java compatibility to Java 11
         sourceCompatibility = JavaVersion.VERSION_11.toString()
         targetCompatibility = JavaVersion.VERSION_11.toString()

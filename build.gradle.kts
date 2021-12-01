@@ -16,7 +16,7 @@ buildscript {
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
-        classpath("com.android.tools.build:gradle:7.2.0-alpha04")
+        classpath("com.android.tools.build:gradle:7.0.3")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
@@ -40,7 +40,7 @@ buildscript {
         // in the individual module build.gradle files
 		classpath("com.github.ben-manes:gradle-versions-plugin:0.38.0")
         //classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.version_hilt}")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.40.1")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.40.3")
     }
 }
 

@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/large_padding"
     android:paddingBottom="@dimen/large_padding"
     android:tag="ProgressFragment"
-    tools:context=".presentation.old.ui.progress.ProgressFragment">
+    tools:context=".presentation.ui.progress.ProgressFragment">
 
     <ImageView
         android:id="@+id/progress_image"

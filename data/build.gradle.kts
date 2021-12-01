@@ -1,6 +1,5 @@
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Config
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Versions
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 
 plugins {
     id("com.android.library")
@@ -10,8 +9,6 @@ plugins {
 }
 
 android {
-    lint.abortOnError = false
-
     compileSdk = Config.compileSdkVersion
     //compileSdkPreview = Config.compileSdkPreviewVersion
     buildToolsVersion = Config.buildToolsVersion
@@ -46,6 +43,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
+    }
+    lint {
+        isAbortOnError = false
     }
 }
 

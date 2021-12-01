@@ -38,5 +38,4 @@ class MainActivityViewModel @Inject constructor(state: SavedStateHandle) : ViewM
     }
 
     var firebaseAuthLiveData: FirebaseAuthLiveData = FirebaseAuthLiveData()
-
 }

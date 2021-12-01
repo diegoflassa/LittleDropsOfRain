@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.data
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.admin.categories
 
-import splitties.resources.appStr
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import app.web.diegoflassa_site.littledropsofrain.data.entities.CategoryItem
 
-object Config {
-    val BASE_URL_API_DEVELOP by lazy { appStr(R.string.API_URL_API_DEBUG) }
-    val BASE_URL_API_RELEASE by lazy { appStr(R.string.API_URL_API_RELEASE) }
+data class CategoriesEditorState(
+    var category: CategoryItem = CategoryItem(),
+) {
+    companion object {
+        fun getDummyData(): LiveData<CategoriesEditorState> {
+            return MutableLiveData(CategoriesEditorState())
+        }
+    }
+
+    fun copy(state: CategoriesEditorState) {
+        category = state.category
+    }
 }

@@ -24,7 +24,7 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 
 @Suppress("Unused", "MemberVisibilityCanBePrivate")
-object FIleUtils {
+object FileUtils {
 
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access

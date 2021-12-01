@@ -64,7 +64,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-
 enum class HomeType {
     UNKNOWN,
     HOME_ILURIA,
@@ -122,7 +121,7 @@ class MainActivity :
                         R.id.nav_favorites,
                         R.id.nav_home_iluria,
                         R.id.nav_basket,
-                        R.id.nav_profile,
+                        R.id.nav_categories_editor,
                     )
                 )
             }
@@ -274,16 +273,16 @@ class MainActivity :
             val scheme: String = uri.scheme!!.lowercase(Locale.ROOT)
             val host: String = uri.host!!.lowercase(Locale.ROOT)
             if ("app" == scheme) {
-                //dispatchIntent = mapAppLink(uri)
+                // dispatchIntent = mapAppLink(uri)
             } else if (("http" == scheme || "https" == scheme) &&
                 ("ldor.page.link" == host || "littledropsofrain-site.web.app" == host || "littledropsofrain.web.app" == host || "littledropsofrain" == host)
             ) {
                 when (uri.path) {
                     "/privacy" -> {
-                        //findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
+                        // findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalPrivacyFragment())
                     }
                     "/tos" -> {
-                        //findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalTosFragment())
+                        // findNavController(R.id.nav_host_fragment).navigate(NavMainDirections.actionGlobalTosFragment())
                     }
                     "/licenses" -> {
                         showLicenses()
@@ -311,12 +310,12 @@ class MainActivity :
 
     private fun updateUI() {
         // Update he UI
-        //viewModel.text = ""
+        // viewModel.text = ""
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //menuInflater.inflate(R.menu.main, menu)
+        // menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
@@ -434,9 +433,9 @@ class MainActivity :
                     Helper.firebaseUserToUser(FirebaseAuth.getInstance().currentUser!!)
                 UsersDao.upsert(userFromFb)
                 LoggedUser.userLiveData.value = userFromFb
-                //findNavController(R.id.nav_host_fragment).navigate(
+                // findNavController(R.id.nav_host_fragment).navigate(
                 // OldMainActivityDirections.actionGlobalUserProfileFragment()
-                //)
+                // )
                 Toast.makeText(
                     applicationContext,
                     getString(

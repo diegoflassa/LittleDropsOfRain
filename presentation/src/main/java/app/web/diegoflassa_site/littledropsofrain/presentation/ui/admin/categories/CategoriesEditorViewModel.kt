@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.data
+package app.web.diegoflassa_site.littledropsofrain.presentation.ui.admin.categories
 
-import splitties.resources.appStr
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
-object Config {
-    val BASE_URL_API_DEVELOP by lazy { appStr(R.string.API_URL_API_DEBUG) }
-    val BASE_URL_API_RELEASE by lazy { appStr(R.string.API_URL_API_RELEASE) }
+class CategoriesEditorViewModel : ViewModel() {
+    var uiState = MutableLiveData(CategoriesEditorState())
+    fun refresh() {
+    }
 }

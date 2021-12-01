@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 The Little Drops of Rain Project
+ * Copyright $YEAR The Little Drops of Rain Project
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,3 @@
  * limitations under the License.
  */
 
-package app.web.diegoflassa_site.littledropsofrain.data
-
-import splitties.resources.appStr
-
-object Config {
-    val BASE_URL_API_DEVELOP by lazy { appStr(R.string.API_URL_API_DEBUG) }
-    val BASE_URL_API_RELEASE by lazy { appStr(R.string.API_URL_API_RELEASE) }
-}

@@ -51,4 +51,5 @@
 -dontwarn javax.xml.stream.XMLStreamWriter
 -dontwarn javax.xml.stream.util.StreamReaderDelegate
 -dontwarn javax.xml.stream.util.XMLEventAllocator
+-dontwarn java.lang.invoke.StringConcatFactory
 -dontwarn org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider

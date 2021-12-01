@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package app.web.diegoflassa_site.littledropsofrain.data.repository
 
 import android.util.Log
-import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductsDao
 import app.web.diegoflassa_site.littledropsofrain.data.dao.UsersDao
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
 import app.web.diegoflassa_site.littledropsofrain.data.entities.User
-import app.web.diegoflassa_site.littledropsofrain.data.interfaces.*
-import java.util.HashMap
+import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataChangeListener
+import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataFailureListener
+import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUserFoundListener
+import app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUsersLoadedListener
 
 @SuppressWarnings("deprecation", "removal")
 class UsersRepository(private val usersDao: UsersDao) {

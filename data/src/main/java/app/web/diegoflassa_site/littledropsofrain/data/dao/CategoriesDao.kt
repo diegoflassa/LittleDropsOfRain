@@ -44,7 +44,7 @@ object CategoriesDao {
     private const val FIREBASE_STORAGE: String = "https://firebasestorage"
     private const val LDOR_SITE: String = "gs://littledropsofrain-site.appspot.com"
     private val ioScope = CoroutineScope(Dispatchers.IO)
-    const val COLLECTION_PATH: String = "categories"
+    private const val COLLECTION_PATH: String = "categories"
     private var db: WeakReference<FirebaseFirestore> =
         WeakReference(FirebaseFirestore.getInstance())
     private var storage = Firebase.storage
@@ -189,7 +189,7 @@ object CategoriesDao {
         listTasksAll.add(taskInsert!!)
     }
 
-    private fun insert(category: CategoryItem, listener: OnItemInsertedListener<CategoryItem>? = null): Task<*> {
+    fun insert(category: CategoryItem, listener: OnItemInsertedListener<CategoryItem>? = null): Task<*> {
         val task: Task<*>
         val data = category.toMap()
         if (category.uid == null) {

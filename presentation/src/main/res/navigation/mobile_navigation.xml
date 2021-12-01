@@ -19,4 +19,14 @@
         android:id="@+id/nav_blank"
         android:name="app.web.diegoflassa_site.littledropsofrain.presentation.ui.blank.BlankFragment"
         android:label="@string/label_blank" />
+    <fragment
+        android:id="@+id/nav_categories_editor"
+        android:name="app.web.diegoflassa_site.littledropsofrain.presentation.ui.admin.categories.CategoriesEditorFragment"
+        android:label="CategoriesEditorFragment" >
+        <argument
+            android:name="category"
+            app:argType="app.web.diegoflassa_site.littledropsofrain.data.entities.CategoryItem"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

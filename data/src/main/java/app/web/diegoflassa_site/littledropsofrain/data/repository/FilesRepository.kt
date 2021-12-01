@@ -13,33 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package app.web.diegoflassa_site.littledropsofrain.data.repository
 
 import android.net.Uri
 import android.util.Log
 import app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
-import app.web.diegoflassa_site.littledropsofrain.data.dao.MessagesDao
-import app.web.diegoflassa_site.littledropsofrain.data.dao.ProductsDao
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Message
-import app.web.diegoflassa_site.littledropsofrain.data.entities.Product
-import app.web.diegoflassa_site.littledropsofrain.data.entities.User
 import app.web.diegoflassa_site.littledropsofrain.data.interfaces.*
-import com.google.firebase.firestore.DocumentReference
-import java.util.*
 
 class FilesRepository(private val filesDao: FilesDao) {
 
     private val tag: String? = FilesRepository::class.simpleName
 
-    fun remove(image: Uri,
-               listener: OnFileUploadedListener? = null,
-               failureListener: OnFileUploadedFailureListener? = null,
-               isUserAvatar: Boolean = false) {
+    fun insert(
+        image: Uri,
+        listener: OnFileUploadedListener? = null,
+        failureListener: OnFileUploadedFailureListener? = null,
+        isUserAvatar: Boolean = false
+    ) {
         Log.i(tag, "remove")
         filesDao.insert(image, listener, failureListener, isUserAvatar)
     }
 
-    fun insert(image: Uri?) {
+    fun remove(image: Uri?) {
         Log.i(tag, "insert")
         filesDao.remove(image)
     }

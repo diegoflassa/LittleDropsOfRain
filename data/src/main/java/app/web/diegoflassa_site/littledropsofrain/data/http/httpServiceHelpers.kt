@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.data.http
 
 import android.annotation.SuppressLint
@@ -5,14 +21,12 @@ import app.web.diegoflassa_site.littledropsofrain.data.BuildConfig
 import app.web.diegoflassa_site.littledropsofrain.data.Config
 import app.web.diegoflassa_site.littledropsofrain.data.http.interceptors.TimeoutInterceptor
 import app.web.diegoflassa_site.littledropsofrain.data.parser.JsonOrXmlConverterFactory
-import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
@@ -42,9 +56,9 @@ internal fun buildHttpClient(): OkHttpClient {
 }
 
 internal fun buildRetrofitClientApi(client: OkHttpClient): Retrofit {
-    val baseUrl = if(BuildConfig.DEBUG){
+    val baseUrl = if (BuildConfig.DEBUG) {
         Config.BASE_URL_API_DEVELOP
-    }else{
+    } else {
         Config.BASE_URL_API_RELEASE
     }
     return Retrofit.Builder()

@@ -75,10 +75,10 @@ data class User(
         val user: User = other as User
         // field comparison
         return (
-                Objects.equals(uid, user.uid) &&
-                        Objects.equals(name, user.name) &&
-                        Objects.equals(email, user.email)
-                )
+            Objects.equals(uid, user.uid) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(email, user.email)
+            )
     }
 
     override fun hashCode(): Int {

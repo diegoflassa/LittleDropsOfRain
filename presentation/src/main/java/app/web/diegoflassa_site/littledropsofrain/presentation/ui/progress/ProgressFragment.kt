@@ -20,8 +20,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.dynamicfeatures.fragment.ui.AbstractProgressFragment
 import app.web.diegoflassa_site.littledropsofrain.R
-import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 import app.web.diegoflassa_site.littledropsofrain.databinding.FragmentProgressBinding
+import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecycle
 
 class ProgressFragment : AbstractProgressFragment(R.layout.fragment_progress) {
 

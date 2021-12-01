@@ -32,9 +32,9 @@ import java.util.*
  * See the adapter classes in FirebaseUI (https://github.com/firebase/FirebaseUI-Android/tree/master/firestore) for a
  * more efficient implementation of a Firestore RecyclerView Adapter.
  */
-abstract class FirestoreAdapter(private var query: Query?, var changeListener : ChangeListener?) : EventListener<QuerySnapshot> {
+abstract class FirestoreAdapter(private var query: Query?, private var changeListener: ChangeListener?) : EventListener<QuerySnapshot> {
     private var mRegistration: ListenerRegistration? = null
-    val snapshots = ArrayList<DocumentSnapshot>()
+    private val snapshots = ArrayList<DocumentSnapshot>()
 
     companion object {
         private val TAG = FirestoreAdapter::class.simpleName
@@ -42,10 +42,10 @@ abstract class FirestoreAdapter(private var query: Query?, var changeListener : 
 
     interface ChangeListener {
         fun notifyDataSetChanged(data: ArrayList<DocumentSnapshot>)
-        fun notifyItemRemoved(index : Int)
-        fun notifyItemChanged(index : Int)
-        fun notifyItemInserted(index : Int)
-        fun notifyItemMoved(oldIndex : Int, newIndex : Int)
+        fun notifyItemRemoved(index: Int)
+        fun notifyItemChanged(index: Int)
+        fun notifyItemInserted(index: Int)
+        fun notifyItemMoved(oldIndex: Int, newIndex: Int)
     }
 
     fun startListening() {

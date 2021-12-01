@@ -22,7 +22,7 @@
         android:title="@string/nav_basket" />
 
     <item
-        android:id="@+id/nav_profile"
+        android:id="@+id/nav_categories_editor"
         android:icon="@drawable/nav_profile"
         android:title="@string/nav_profile" />
 

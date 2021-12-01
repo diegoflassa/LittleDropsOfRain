@@ -19,7 +19,6 @@ package app.web.diegoflassa_site.littledropsofrain.presentation.ui
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat

@@ -1,8 +1,23 @@
+/*
+ * Copyright 2021 The Little Drops of Rain Project
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package app.web.diegoflassa_site.littledropsofrain.presentation.ui.homeIluria
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,27 +26,28 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import app.web.diegoflassa_site.littledropsofrain.R
@@ -56,7 +72,8 @@ class HomeIluriaFragment : Fragment() {
     private val myViewModel: HomeIluriaViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
@@ -70,7 +87,7 @@ class HomeIluriaFragment : Fragment() {
 
     @Composable
     fun BuildUi(liveData: LiveData<HomeIluriaState>) {
-        CraneHomeContent(liveData.observeAsState())
+        HomeIluriaContent(liveData.observeAsState())
     }
 
     @Preview
@@ -80,11 +97,11 @@ class HomeIluriaFragment : Fragment() {
             Log.i(tag, "LiveData object is null. Getting data from HomeIluriaState.getDummyData()")
         }
         val uiState = liveData?.observeAsState() ?: HomeIluriaState.getDummyData().observeAsState()
-        CraneHomeContent(uiState)
+        HomeIluriaContent(uiState)
     }
 
     @Composable
-    private fun CraneHomeContent(uiState: State<HomeIluriaState?>) {
+    private fun HomeIluriaContent(uiState: State<HomeIluriaState?>) {
         LittleDropsOfRainTheme {
             BuildContent(uiState)
             /*
@@ -235,7 +252,8 @@ class HomeIluriaFragment : Fragment() {
                 modifier = Modifier.padding(PaddingValues(36.dp, 0.dp, 0.dp, 0.dp))
             )
             Button(
-                onClick = {}, colors = ButtonDefaults.buttonColors(
+                onClick = {},
+                colors = ButtonDefaults.buttonColors(
                     backgroundColor = colorResource(
                         R.color.buttonColor
                     )
@@ -268,7 +286,8 @@ class HomeIluriaFragment : Fragment() {
                 modifier = Modifier.padding(PaddingValues(36.dp, 0.dp, 0.dp, 0.dp))
             )
             Button(
-                onClick = {}, colors = ButtonDefaults.buttonColors(
+                onClick = {},
+                colors = ButtonDefaults.buttonColors(
                     backgroundColor = colorResource(
                         R.color.buttonColor
                     )
@@ -385,7 +404,8 @@ class HomeIluriaFragment : Fragment() {
                         placeholder(R.drawable.placeholder)
                         size(OriginalSize)
                         scale(Scale.FILL)
-                    }),
+                    }
+                ),
                 contentDescription = null,
                 contentScale = ContentScale.Companion.FillWidth,
                 modifier = Modifier
@@ -413,7 +433,8 @@ class HomeIluriaFragment : Fragment() {
                         placeholder(R.drawable.placeholder)
                         size(OriginalSize)
                         scale(Scale.FILL)
-                    }),
+                    }
+                ),
                 contentDescription = null,
                 contentScale = ContentScale.Companion.FillWidth,
                 modifier = Modifier

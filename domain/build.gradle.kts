@@ -7,8 +7,6 @@ plugins {
 }
 
 android {
-    lint.abortOnError = false
-
     compileSdk = Config.compileSdkVersion
     //compileSdkPreview = Config.compileSdkPreviewVersion
     buildToolsVersion = Config.buildToolsVersion
@@ -50,6 +48,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
+    }
+    lint {
+        isAbortOnError = false
     }
 }
 

@@ -45,7 +45,7 @@ object ProductsDao {
     private const val FIREBASE_STORAGE: String = "https://firebasestorage"
     private const val LDOR_SITE: String = "gs://littledropsofrain-site.appspot.com"
     private val ioScope = CoroutineScope(Dispatchers.IO)
-    const val COLLECTION_PATH: String = "products"
+    private const val COLLECTION_PATH: String = "products"
     private var db: WeakReference<FirebaseFirestore> =
         WeakReference(FirebaseFirestore.getInstance())
     private var storage = Firebase.storage

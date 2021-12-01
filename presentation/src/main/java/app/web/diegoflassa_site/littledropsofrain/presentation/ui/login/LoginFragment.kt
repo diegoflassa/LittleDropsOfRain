@@ -46,7 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     val viewModel: LoginViewModel by viewModels()
-    //var binding: FragmentLoginBinding by viewLifecycle()
+    // var binding: FragmentLoginBinding by viewLifecycle()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,7 +61,6 @@ class LoginFragment : Fragment() {
                 }
             }
         }
-
     }
 
     @Composable
