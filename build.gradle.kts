@@ -16,7 +16,7 @@ buildscript {
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
-        classpath("com.android.tools.build:gradle:7.0.3")
+        classpath("com.android.tools.build:gradle:7.0.4")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
@@ -26,7 +26,7 @@ buildscript {
 
         // Add the Crashlytics Gradle plugin.
         //classpath("com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlytics}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.8.0")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.8.1")
         // Performance Monitoring plugin
         //classpath("com.google.firebase:perf-plugin:${Versions.perf}")
         classpath("com.google.firebase:perf-plugin:1.4.0")
@@ -38,17 +38,17 @@ buildscript {
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.4")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-		classpath("com.github.ben-manes:gradle-versions-plugin:0.38.0")
+		classpath("com.github.ben-manes:gradle-versions-plugin:0.40.0")
         //classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.version_hilt}")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.40.3")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.40.5")
     }
 }
 
 plugins {         
-    id("com.diffplug.spotless") version "6.0.0" apply true
-	id("com.github.ben-manes.versions") version "0.38.0" apply true
+    id("com.diffplug.spotless") version "6.1.0" apply true
+	id("com.github.ben-manes.versions") version "0.40.0" apply true
     id("org.jetbrains.kotlin.android") version "1.5.31" apply false
-	id("org.jetbrains.kotlinx.kover") version "0.4.2"
+	id("org.jetbrains.kotlinx.kover") version "0.5.0-RC"
 }
 
 subprojects {
