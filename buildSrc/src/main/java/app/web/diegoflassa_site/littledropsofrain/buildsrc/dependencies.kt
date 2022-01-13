@@ -27,7 +27,7 @@ object Versions {
     const val ucrop = "2.2.7"
     const val oss = "17.0.0"
     const val oauth2 = "1.3.0"
-    const val leakcanary = "2.7"
+    const val leakcanary = "2.8"
     const val play_services_auth = "20.0.0"
     const val material = "1.6.0-alpha01"
     const val play_services_location = "19.0.0"
