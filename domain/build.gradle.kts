@@ -7,6 +7,7 @@ plugins {
 }
 
 android {
+    namespace = "app.web.diegoflassa_site.littledropsofrain.domain"
     compileSdk = Config.compileSdkVersion
     //compileSdkPreview = Config.compileSdkPreviewVersion
     buildToolsVersion = Config.buildToolsVersion

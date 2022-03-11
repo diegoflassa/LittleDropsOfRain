@@ -9,6 +9,7 @@ plugins {
 }
 
 android {
+    namespace = "app.web.diegoflassa_site.littledropsofrain.data"
     compileSdk = Config.compileSdkVersion
     //compileSdkPreview = Config.compileSdkPreviewVersion
     buildToolsVersion = Config.buildToolsVersion
@@ -51,7 +52,7 @@ android {
 
 dependencies {
 
-	// Misc
+    // Misc
     // Kotlin + coroutines
     implementation("androidx.work:work-runtime-ktx:${Versions.workVersion}")
     implementation("androidx.core:core-ktx:${Versions.core_ktx}")
@@ -65,29 +66,29 @@ dependencies {
     // Room
     implementation("androidx.room:room-runtime:${Versions.room}")
     implementation("androidx.room:room-ktx:${Versions.room}")
-	
-	// Retrofix 2
-	implementation("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
-	implementation("com.squareup.retrofit2:adapter-rxjava3:${Versions.retrofit_adapter}")
-	implementation("com.squareup.retrofit2:converter-jackson:${Versions.converter_jackson}")
-	implementation("com.squareup.retrofit2:converter-gson:${Versions.converter}")
+
+    // Retrofix 2
+    implementation("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
+    implementation("com.squareup.retrofit2:adapter-rxjava3:${Versions.retrofit_adapter}")
+    implementation("com.squareup.retrofit2:converter-jackson:${Versions.converter_jackson}")
+    implementation("com.squareup.retrofit2:converter-gson:${Versions.converter}")
 
     implementation(platform("com.squareup.okhttp3:okhttp-bom:${Versions.okhttp_bom}"))
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
 
-	// Jackson
-	implementation("com.fasterxml.jackson.core:jackson-core:${Versions.jackson}")
-	implementation("com.fasterxml.jackson.core:jackson-annotations:${Versions.jackson}")
-	implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}")
-	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${Versions.jackson}")
+    // Jackson
+    implementation("com.fasterxml.jackson.core:jackson-core:${Versions.jackson}")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:${Versions.jackson}")
+    implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${Versions.jackson}")
 
-	// GSON
-	implementation("com.google.code.gson:gson:${Versions.gson}")
-	
-	// RX Java 3
-	implementation("io.reactivex.rxjava3:rxjava:${Versions.rxjava}")
-	implementation("io.reactivex.rxjava3:rxandroid:${Versions.rxandroid}")
+    // GSON
+    implementation("com.google.code.gson:gson:${Versions.gson}")
+
+    // RX Java 3
+    implementation("io.reactivex.rxjava3:rxjava:${Versions.rxjava}")
+    implementation("io.reactivex.rxjava3:rxandroid:${Versions.rxandroid}")
 
     // Dagger & Hilt
     implementation("com.google.dagger:hilt-android:${Versions.hilt}")

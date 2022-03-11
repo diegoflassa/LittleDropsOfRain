@@ -37,6 +37,7 @@ val keystoreProperties = Properties()
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
+    namespace = "app.web.diegoflassa_site.littledropsofrain"
     //lint.checkDependencies = true
 
     compileSdk = Config.compileSdkVersion
@@ -443,8 +444,8 @@ dependencies {
     testImplementation("androidx.test.espresso:espresso-intents:${Versions.espresso}")
     testImplementation("androidx.test.ext:truth:${Versions.truth}")
     androidTestImplementation("androidx.test.ext:junit-ktx:${Versions.junit_ktx}")
-    androidTestImplementation("androidx.test:rules:${Versions.test}")
-    androidTestImplementation("androidx.test:runner:${Versions.test}")
+    androidTestImplementation("androidx.test:rules:${Versions.rules}")
+    androidTestImplementation("androidx.test:runner:${Versions.runner}")
 
     androidTestImplementation("junit:junit:${Versions.junit}")
 }

@@ -16,7 +16,7 @@ buildscript {
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
-        classpath("com.android.tools.build:gradle:7.1.2")
+        classpath("com.android.tools.build:gradle:7.3.0-alpha05")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
@@ -32,7 +32,7 @@ buildscript {
         classpath("com.google.firebase:perf-plugin:1.4.1")
         // Add the App Distribution Gradle plugin
         //classpath("com.google.firebase:firebase-appdistribution-gradle:${Versions.app_distribution}")
-        classpath("com.google.firebase:firebase-appdistribution-gradle:3.0.0")
+        classpath("com.google.firebase:firebase-appdistribution-gradle:3.0.1")
 
         //classpath("com.google.android.gms:oss-licenses-plugin:${Versions.oss_plugin}")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.5")
