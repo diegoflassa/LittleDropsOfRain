@@ -38,7 +38,7 @@ keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
     namespace = "app.web.diegoflassa_site.littledropsofrain"
-    //lint.checkDependencies = true
+    lint.checkDependencies = true
 
     compileSdk = Config.compileSdkVersion
     //compileSdkPreview = Config.compileSdkPreviewVersion
@@ -55,7 +55,6 @@ android {
     }
 
     signingConfigs {
-        // DFL - Configuração para assinar o APK. Nao se preocupe agora
         create("release") {
             storeFile = file(keystoreProperties.getProperty("KEYSTORE_FILE"))
             storePassword = keystoreProperties.getProperty("KEYSTORE_PASSWORD")
@@ -144,7 +143,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
-        //freeCompilerArgs = freeCompilerArgs + "-Xallow-jvm-ir-dependencies"
     }
     buildFeatures {
         viewBinding = true
@@ -169,16 +167,7 @@ android {
 
 kapt {
     correctErrorTypes = true
-    javacOptions {
-        // These options are normally set automatically via the Hilt Gradle plugin, but we
-        // set them manually to workaround a bug in the Kotlin 1.5.20
-        //option("-Adagger.fastInit=ENABLED")
-        //option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation=true")
-    }
 }
-//hilt {
-//    enableAggregatingTask = true
-//}
 
 // Avoid build error
 gradle.taskGraph.whenReady {
@@ -444,8 +433,8 @@ dependencies {
     testImplementation("androidx.test.espresso:espresso-intents:${Versions.espresso}")
     testImplementation("androidx.test.ext:truth:${Versions.truth}")
     androidTestImplementation("androidx.test.ext:junit-ktx:${Versions.junit_ktx}")
-    androidTestImplementation("androidx.test:rules:${Versions.rules}")
-    androidTestImplementation("androidx.test:runner:${Versions.runner}")
+    androidTestImplementation("androidx.test:rules:${Versions.test}")
+    androidTestImplementation("androidx.test:runner:${Versions.test}")
 
     androidTestImplementation("junit:junit:${Versions.junit}")
 }
