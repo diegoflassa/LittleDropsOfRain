@@ -38,7 +38,7 @@ import androidx.fragment.app.viewModels
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.theme.LittleDropsOfRainTheme
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import dagger.hilt.android.AndroidEntryPoint
 
 @ExperimentalCoilApi
@@ -79,17 +79,17 @@ class LoginFragment : Fragment() {
             Text(getString(R.string.does_not_have_account))
             Row {
                 Image(
-                    painter = rememberImagePainter(R.drawable.image_placeholder),
+                    painter = rememberAsyncImagePainter(R.drawable.image_placeholder),
                     contentDescription = null,
                     modifier = Modifier.size(64.dp)
                 )
                 Image(
-                    painter = rememberImagePainter(R.drawable.image_placeholder),
+                    painter = rememberAsyncImagePainter(R.drawable.image_placeholder),
                     contentDescription = null,
                     modifier = Modifier.size(64.dp)
                 )
                 Image(
-                    painter = rememberImagePainter(R.drawable.image_placeholder),
+                    painter = rememberAsyncImagePainter(R.drawable.image_placeholder),
                     contentDescription = null,
                     modifier = Modifier.size(64.dp)
                 )

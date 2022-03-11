@@ -18,7 +18,7 @@ buildscript {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
         classpath("com.android.tools.build:gradle:7.1.2")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.20-RC")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
         classpath("com.google.gms:google-services:4.3.10")
         //classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeargs_plugin}")
@@ -47,7 +47,7 @@ buildscript {
 plugins {         
     id("com.diffplug.spotless") version "6.3.0" apply true
 	id("com.github.ben-manes.versions") version "0.41.0" apply true
-    id("org.jetbrains.kotlin.android") version "1.6.20-RC" apply false
+    id("org.jetbrains.kotlin.android") version "1.6.10" apply false
 	id("org.jetbrains.kotlinx.kover") version "0.5.0"
 }
 

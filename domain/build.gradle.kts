@@ -25,7 +25,7 @@ android {
     buildTypes {
         debug {
             kotlinOptions {
-                freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
+                freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
             }
         }
         release {
@@ -38,7 +38,7 @@ android {
                 "proguard-rules.pro"
             )
             kotlinOptions {
-                freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
+                freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
             }
         }
     }

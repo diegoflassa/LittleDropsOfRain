@@ -22,7 +22,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContract
 import app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
-import app.web.diegoflassa_site.littledropsofrain.domain.helpers.FIleUtils
+import app.web.diegoflassa_site.littledropsofrain.domain.helpers.FileUtils
 import com.yalantis.ucrop.UCrop
 import java.io.File
 
@@ -50,7 +50,7 @@ class CropImageResultContract : ActivityResultContract<Pair<Uri, Pair<Float, Flo
     }
 
     private fun createCropIntent(context: Context, data: Pair<Uri, Pair<Float, Float>>): Intent {
-        val pathUri = Uri.parse("file:/" + FIleUtils.getPath(context, data.first))
+        val pathUri = Uri.parse("file:/" + FileUtils.getPath(context, data.first))
         val lastIndex = pathUri.toString().lastIndexOf(".")
         var fileExtension: String? = ""
         val fileNameLastIndex = pathUri.toString().lastIndexOf("/")

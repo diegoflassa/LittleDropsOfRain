@@ -68,8 +68,8 @@ import app.web.diegoflassa_site.littledropsofrain.data.repository.FilesRepositor
 import app.web.diegoflassa_site.littledropsofrain.presentation.contracts.CropImageResultContract
 import app.web.diegoflassa_site.littledropsofrain.presentation.providers.CategoriesEditorStateProvider
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.theme.LittleDropsOfRainTheme
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 
 class CategoriesEditorFragment(private val category: CategoryItem?) :
     Fragment(),
@@ -161,7 +161,7 @@ class CategoriesEditorFragment(private val category: CategoryItem?) :
             ) {
                 val (image, loading, buttonOpen, buttonCrop, textCategory, buttonSave, buttonDelete) = createRefs()
                 imagePainter = if (uiState.value?.category?.getImageUrlAsUri() != null) {
-                    rememberImagePainter(uiState.value?.category?.getImageUrlAsUri())
+                    rememberAsyncImagePainter(uiState.value?.category?.getImageUrlAsUri())
                 } else {
                     painterResource(R.drawable.placeholder)
                 }
@@ -200,7 +200,7 @@ class CategoriesEditorFragment(private val category: CategoryItem?) :
                         .constrainAs(buttonOpen) {
                             top.linkTo(image.bottom, 16.dp)
                             start.linkTo(parent.start)
-                            if (imagePainter is ImagePainter) {
+                            if (imagePainter is AsyncImagePainter) {
                                 end.linkTo(buttonCrop.start)
                             } else {
                                 end.linkTo(parent.end)
@@ -213,7 +213,7 @@ class CategoriesEditorFragment(private val category: CategoryItem?) :
                         fontSize = 12.sp
                     )
                 }
-                if (imagePainter is ImagePainter) {
+                if (imagePainter is AsyncImagePainter) {
                     Button(
                         onClick = {
                             if (uiState.value?.category?.getImageUrlAsUri() != null) {

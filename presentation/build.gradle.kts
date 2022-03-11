@@ -79,7 +79,7 @@ android {
             //   mappingFileUploadEnabled = false
             //}
             kotlinOptions {
-                //freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
+                freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
             }
         }
         release {
@@ -109,7 +109,7 @@ android {
             //     mappingFileUploadEnabled = true
             // }
             kotlinOptions {
-                //freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
+                freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
             }
         }
         /*
@@ -171,8 +171,8 @@ kapt {
     javacOptions {
         // These options are normally set automatically via the Hilt Gradle plugin, but we
         // set them manually to workaround a bug in the Kotlin 1.5.20
-        option("-Adagger.fastInit=ENABLED")
-        option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation=true")
+        //option("-Adagger.fastInit=ENABLED")
+        //option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation=true")
     }
 }
 //hilt {

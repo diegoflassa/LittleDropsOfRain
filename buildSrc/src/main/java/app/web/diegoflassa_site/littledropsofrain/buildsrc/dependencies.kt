@@ -57,7 +57,7 @@ object Versions {
     const val databinding = "7.3.0-alpha05"
     const val core = "1.4.1-alpha04"
     const val espresso = "3.5.0-alpha04"
-    const val test = "1.5.0-alpha01"
+    const val test = "1.4.1-alpha03"
 	const val truth = "1.5.0-alpha04"
     const val junit_ktx = "1.1.4-alpha04"
     const val safeargs_plugin = "2.4.0-alpha08"

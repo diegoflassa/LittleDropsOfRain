@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,9 +55,10 @@ import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.data.entities.CategoryItem
 import app.web.diegoflassa_site.littledropsofrain.presentation.providers.HomeIluriaStateProvider
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.theme.LittleDropsOfRainTheme
-import coil.compose.rememberImagePainter
-import coil.size.OriginalSize
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import coil.size.Scale
+import coil.size.Size
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -398,13 +400,13 @@ class HomeIluriaFragment : Fragment() {
         val item = uiState.value!!.carouselItemsNewCollection[page]
         Column {
             Image(
-                painter = rememberImagePainter(
-                    item.getImageUrlAsUri(),
-                    builder = {
-                        placeholder(R.drawable.placeholder)
-                        size(OriginalSize)
-                        scale(Scale.FILL)
-                    }
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(item.getImageUrlAsUri())
+                        .apply(block = fun ImageRequest.Builder.() {
+                            placeholder(R.drawable.placeholder)
+                            size(Size.ORIGINAL)
+                            scale(Scale.FILL)
+                        }).build()
                 ),
                 contentDescription = null,
                 contentScale = ContentScale.Companion.FillWidth,
@@ -427,13 +429,13 @@ class HomeIluriaFragment : Fragment() {
         val item = uiState.value!!.carouselItemsSpotlight[page]
         Row {
             Image(
-                painter = rememberImagePainter(
-                    item.getImageUrlAsUri(),
-                    builder = {
-                        placeholder(R.drawable.placeholder)
-                        size(OriginalSize)
-                        scale(Scale.FILL)
-                    }
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(item.getImageUrlAsUri())
+                        .apply(block = fun ImageRequest.Builder.() {
+                            placeholder(R.drawable.placeholder)
+                            size(Size.ORIGINAL)
+                            scale(Scale.FILL)
+                        }).build()
                 ),
                 contentDescription = null,
                 contentScale = ContentScale.Companion.FillWidth,
@@ -483,13 +485,13 @@ class HomeIluriaFragment : Fragment() {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
-                    painter = rememberImagePainter(
-                        item.getImageUrlAsUri(),
-                        builder = {
-                            placeholder(R.drawable.placeholder)
-                            size(OriginalSize)
-                            scale(Scale.FILL)
-                        }
+                    painter = rememberAsyncImagePainter(
+                        ImageRequest.Builder(LocalContext.current).data(item.getImageUrlAsUri())
+                            .apply(block = fun ImageRequest.Builder.() {
+                                placeholder(R.drawable.placeholder)
+                                size(Size.ORIGINAL)
+                                scale(Scale.FILL)
+                            }).build()
                     ),
                     contentDescription = null,
                     modifier = Modifier

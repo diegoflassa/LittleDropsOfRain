@@ -25,7 +25,7 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.helper.viewLifecy
 
 class ProgressFragment : AbstractProgressFragment(R.layout.fragment_progress) {
 
-    var binding: FragmentProgressBinding by viewLifecycle()
+    private var binding: FragmentProgressBinding by viewLifecycle()
 
     override fun onViewCreated(
         view: View,
