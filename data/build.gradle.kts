@@ -45,7 +45,7 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
     lint {
-        isAbortOnError = false
+        abortOnError = false
     }
 }
 

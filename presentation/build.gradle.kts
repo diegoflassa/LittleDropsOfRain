@@ -79,7 +79,7 @@ android {
             //   mappingFileUploadEnabled = false
             //}
             kotlinOptions {
-                freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
+                //freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
             }
         }
         release {
@@ -109,7 +109,7 @@ android {
             //     mappingFileUploadEnabled = true
             // }
             kotlinOptions {
-                freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
+                //freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
             }
         }
         /*
@@ -143,7 +143,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
-        // freeCompilerArgs = freeCompilerArgs + "-Xallow-jvm-ir-dependencies"
+        //freeCompilerArgs = freeCompilerArgs + "-Xallow-jvm-ir-dependencies"
     }
     buildFeatures {
         viewBinding = true
@@ -162,7 +162,7 @@ android {
         kotlinCompilerExtensionVersion = Versions.androidx_jetpack_compose
     }
     lint {
-        isAbortOnError = false
+        abortOnError = false
     }
 }
 
@@ -417,19 +417,19 @@ dependencies {
     // to offer card payments
     implementation("com.braintreepayments.api:card:${Versions.braintree}")
     // to collect device data
-    implementation("com.braintreepayments.api:data-collector:${Versions.braintree}")
+    //implementation("com.braintreepayments.api:data-collector:${Versions.braintree}")
     // to offer PayPal
-    implementation("com.braintreepayments.api:paypal:${Versions.braintree}")
+    //implementation("com.braintreepayments.api:paypal:${Versions.braintree}")
     // to offer local payments
-    implementation("com.braintreepayments.api:local-payment:${Versions.braintree}")
+    //implementation("com.braintreepayments.api:local-payment:${Versions.braintree}")
     // to offer Google Pay
-    implementation("com.braintreepayments.api:google-pay:${Versions.braintree}")
+    //implementation("com.braintreepayments.api:google-pay:${Versions.braintree}")
     // to offer Union Pay
-    implementation("com.braintreepayments.api:union-pay:${Versions.braintree}")
+    //implementation("com.braintreepayments.api:union-pay:${Versions.braintree}")
     // to perform 3DS verification
-    implementation("com.braintreepayments.api:three-d-secure:${Versions.braintree}")
+    //implementation("com.braintreepayments.api:three-d-secure:${Versions.braintree}")
     // to offer Venmo
-    implementation("com.braintreepayments.api:venmo:${Versions.braintree}")
+    //implementation("com.braintreepayments.api:venmo:${Versions.braintree}")
 
     // Annotation processor
     kapt("androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}")
