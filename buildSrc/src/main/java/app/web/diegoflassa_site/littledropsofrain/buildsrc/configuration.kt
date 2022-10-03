@@ -12,11 +12,11 @@ object Config {
     private const val versionPatch = 0
     private var versionClassifier = "debug"
     const val minimumSdkVersion = 24
-    const val compileSdkVersion = 31
-    const val compileSdkPreviewVersion = "S"
-    const val targetSdkVersion = 31
-    const val targetSdkPreviewVersion = "S"
-    const val buildToolsVersion = "32.0.0"
+    const val compileSdkVersion = 33
+    const val targetSdkVersion = 33
+    const val compileSdkPreviewVersion = "Tiramisu"
+    const val targetSdkPreviewVersion = "Tiramisu"
+    const val buildToolsVersion = "33.0.0"
     val versionCode = buildVersionCode()
     val versionName = buildVersionName()
 

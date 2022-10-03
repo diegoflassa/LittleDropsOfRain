@@ -4,8 +4,8 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
         maven(url = "https://jitpack.io")
-		gradlePluginPortal()
 		//maven {
 		//	url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
 		//	credentials {
@@ -15,40 +15,31 @@ buildscript {
 		//}
     }
     dependencies {
-        //classpath("com.android.tools.build:gradle:${Versions.gradle}")
-        classpath("com.android.tools.build:gradle:7.3.0-alpha05")
-        //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
-        //classpath("com.google.gms:google-services:${Versions.google_services}")
-        classpath("com.google.gms:google-services:4.3.10")
-        //classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeargs_plugin}")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.0-alpha03")
+        classpath("com.android.tools.build:gradle:7.3.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
+        classpath("com.google.gms:google-services:4.3.14")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.6.0-alpha01")
 
         // Add the Crashlytics Gradle plugin.
-        //classpath("com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlytics}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.8.1")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.2")
         // Performance Monitoring plugin
-        //classpath("com.google.firebase:perf-plugin:${Versions.perf}")
         classpath("com.google.firebase:perf-plugin:1.4.1")
         // Add the App Distribution Gradle plugin
-        //classpath("com.google.firebase:firebase-appdistribution-gradle:${Versions.app_distribution}")
-        classpath("com.google.firebase:firebase-appdistribution-gradle:3.0.1")
+        classpath("com.google.firebase:firebase-appdistribution-gradle:3.0.3")
 
-        //classpath("com.google.android.gms:oss-licenses-plugin:${Versions.oss_plugin}")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.5")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-		classpath("com.github.ben-manes:gradle-versions-plugin:0.41.0")
-        //classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.version_hilt}")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.41")
+		classpath("com.github.ben-manes:gradle-versions-plugin:0.42.0")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.44")
     }
 }
 
 plugins {         
-    id("com.diffplug.spotless") version "6.3.0" apply true
-	id("com.github.ben-manes.versions") version "0.41.0" apply true
-    id("org.jetbrains.kotlin.android") version "1.6.10" apply false
-	id("org.jetbrains.kotlinx.kover") version "0.5.0"
+    id("com.diffplug.spotless") version "6.11.0" apply true
+	id("com.github.ben-manes.versions") version "0.42.0" apply true
+    id("org.jetbrains.kotlin.android") version "1.7.10" apply false
+	id("org.jetbrains.kotlinx.kover") version "0.6.0"
 }
 
 subprojects {
@@ -68,6 +59,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
         maven(url = "https://jitpack.io")
 		//maven {
 		//	url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")

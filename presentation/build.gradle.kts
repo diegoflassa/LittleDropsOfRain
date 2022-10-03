@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Config
 import app.web.diegoflassa_site.littledropsofrain.buildsrc.Versions
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -158,7 +160,7 @@ android {
         resources.excludes.add("META-INF/LGPL2.1")
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.androidx_jetpack_compose
+        kotlinCompilerExtensionVersion = Versions.androidx_jetpack_compose_compiler
     }
     lint {
         abortOnError = false
@@ -207,8 +209,8 @@ afterEvaluate {
     tasks.withType<KotlinCompile>().configureEach {
         //tasks.withType().configureEach {
         // Sets Java compatibility to Java 11
-        sourceCompatibility = JavaVersion.VERSION_11.toString()
-        targetCompatibility = JavaVersion.VERSION_11.toString()
+        //sourceCompatibility = JavaVersion.VERSION_11
+        //targetCompatibility = JavaVersion.VERSION_11
 
         kotlinOptions {
             // Treat all Kotlin warnings as errors
@@ -262,16 +264,15 @@ dependencies {
     //Retrofix 2
     implementation("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
     implementation("com.squareup.retrofit2:adapter-rxjava3:${Versions.retrofit_adapter}")
-    implementation("com.squareup.retrofit2:converter-jackson:${Versions.converter_jackson}")
-    implementation("com.squareup.retrofit2:converter-gson:${Versions.converter}")
+    implementation("com.squareup.retrofit2:converter-moshi:${Versions.retrofit_adapter}")
 
-    // Jackson
-    implementation("com.fasterxml.jackson.core:jackson-core:${Versions.jackson}")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:${Versions.jackson}")
-    implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${Versions.jackson}")
-    // Fix bug of XMLInputFactory not found
-    implementation("javax.xml.stream:stax-api:${Versions.stax_api}")
+    // RX Java 3
+    implementation("io.reactivex.rxjava3:rxjava:${Versions.rxjava}")
+    implementation("io.reactivex.rxjava3:rxandroid:${Versions.rxandroid}")
+
+    // Moshi
+    implementation("com.squareup.moshi:moshi-kotlin:${Versions.moshi}")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}")
 
     //GSON
     implementation("com.google.code.gson:gson:${Versions.gson}")
@@ -286,16 +287,12 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:${Versions.hilt_nav_compose}")
     implementation("androidx.hilt:hilt-work:${Versions.hilt_other}")
 
-    // RX Java 3
-    implementation("io.reactivex.rxjava3:rxjava:${Versions.rxjava}")
-    implementation("io.reactivex.rxjava3:rxandroid:${Versions.rxandroid}")
-
     // Jetpack Compose toolkit dependencies
     implementation("androidx.compose.ui:ui:${Versions.androidx_jetpack_compose}")
     // Tooling support (Previews, etc.)
     implementation("androidx.compose.ui:ui-tooling:${Versions.androidx_jetpack_compose}")
     // Foundation(Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation("androidx.compose.foundation:foundation:${Versions.foundation}")
+    implementation("androidx.compose.foundation:foundation:${Versions.androidx_jetpack_compose}")
     // Material Design
     implementation("androidx.compose.material:material:${Versions.androidx_jetpack_compose}")
     // Material design icons
@@ -317,7 +314,7 @@ dependencies {
 
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:${Versions.firebaseBOM}"))
+    implementation(platform("com.google.firebase:firebase-bom:${Versions.firebase_bom}"))
     // com.google.firebase
     implementation("com.google.firebase:firebase-iid")
     // Add the Firebase SDK for Google Analytics
@@ -433,8 +430,8 @@ dependencies {
     testImplementation("androidx.test.espresso:espresso-intents:${Versions.espresso}")
     testImplementation("androidx.test.ext:truth:${Versions.truth}")
     androidTestImplementation("androidx.test.ext:junit-ktx:${Versions.junit_ktx}")
-    androidTestImplementation("androidx.test:rules:${Versions.test}")
-    androidTestImplementation("androidx.test:runner:${Versions.test}")
+    androidTestImplementation("androidx.test:rules:${Versions.rules}")
+    androidTestImplementation("androidx.test:runner:${Versions.runner}")
 
     androidTestImplementation("junit:junit:${Versions.junit}")
 }

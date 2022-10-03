@@ -70,18 +70,15 @@ dependencies {
     // Retrofix 2
     implementation("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
     implementation("com.squareup.retrofit2:adapter-rxjava3:${Versions.retrofit_adapter}")
-    implementation("com.squareup.retrofit2:converter-jackson:${Versions.converter_jackson}")
-    implementation("com.squareup.retrofit2:converter-gson:${Versions.converter}")
+    implementation("com.squareup.retrofit2:converter-moshi:${Versions.retrofit_adapter}")
 
     implementation(platform("com.squareup.okhttp3:okhttp-bom:${Versions.okhttp_bom}"))
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
 
-    // Jackson
-    implementation("com.fasterxml.jackson.core:jackson-core:${Versions.jackson}")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:${Versions.jackson}")
-    implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${Versions.jackson}")
+    // Moshi
+    implementation("com.squareup.moshi:moshi-kotlin:${Versions.moshi}")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}")
 
     // GSON
     implementation("com.google.code.gson:gson:${Versions.gson}")
@@ -97,13 +94,8 @@ dependencies {
     kapt("androidx.hilt:hilt-compiler:${Versions.hilt_other}")
     implementation("androidx.hilt:hilt-work:${Versions.hilt_other}")
 
-    // Splitties
-    implementation("com.louiscad.splitties:splitties-resources:${Versions.splitties}")
-    implementation("com.louiscad.splitties:splitties-systemservices:${Versions.splitties}")
-    implementation("com.louiscad.splitties:splitties-appctx:${Versions.splitties}")
-
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:${Versions.firebaseBOM}"))
+    implementation(platform("com.google.firebase:firebase-bom:${Versions.firebase_bom}"))
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
 }

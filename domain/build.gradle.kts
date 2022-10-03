@@ -77,7 +77,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:${Versions.navigation}")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:${Versions.firebaseBOM}"))
+    implementation(platform("com.google.firebase:firebase-bom:${Versions.firebase_bom}"))
     implementation("com.google.firebase:firebase-firestore-ktx")
     // Firebase Authentication(Kotlin)
     implementation("com.google.firebase:firebase-auth-ktx")
