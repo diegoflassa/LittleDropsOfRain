@@ -8,12 +8,12 @@ plugins {
 }
 
 android {
-    compileSdk = Config.compileSdkVersion
+    compileSdk = Config.COMPILE_SDK_VERSION
     //compileSdkPreview = Config.compileSdkPreviewVersion
-    buildToolsVersion = Config.buildToolsVersion
+    buildToolsVersion = Config.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdk = Config.minimumSdkVersion
+        minSdk = Config.MINIMUM_SDK_VERSION
         //targetSdk = Config.targetSdkVersion
         //targetSdkPreview = Config.targetSdkPreviewVersion
         //versionCode = Config.versionCode
@@ -44,10 +44,10 @@ android {
 dependencies {
     implementation(project(mapOf("path" to ":presentation")))
 
-    implementation("androidx.core:core-ktx:${Versions.core_ktx}")
-    implementation("androidx.appcompat:appcompat:${Versions.appcompat}")
-    implementation("com.google.android.material:material:${Versions.material}")
-    androidTestImplementation("junit:junit:${Versions.junit}")
-    androidTestImplementation("androidx.test.ext:junit-ktx:${Versions.junit_ktx}")
-    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
+    implementation("androidx.core:core-ktx:${Versions.CORE_KTX}")
+    implementation("androidx.appcompat:appcompat:${Versions.APPCOMPAT}")
+    implementation("com.google.android.material:material:${Versions.MATERIAL}")
+    androidTestImplementation("junit:junit:${Versions.JUNIT}")
+    androidTestImplementation("androidx.test.ext:junit-ktx:${Versions.JUNIT_KTX}")
+    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.ESPRESSO}")
 }

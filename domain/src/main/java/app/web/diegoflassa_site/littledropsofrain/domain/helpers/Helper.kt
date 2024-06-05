@@ -51,12 +51,12 @@ import app.web.diegoflassa_site.littledropsofrain.domain.receivers.NotificationR
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.messaging.FirebaseMessaging
-import com.squareup.okhttp.OkHttpClient
-import com.squareup.okhttp.Request
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -268,20 +268,19 @@ class Helper {
                 notificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(body))
             } else {
                 notificationBuilder.setContentText(body)
-                var imageNotif: Bitmap?
+                var imageNotif: Bitmap
                 runBlocking {
                     val job: Job = launch(context = Dispatchers.IO) {
                         val client = OkHttpClient()
-                        client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
-                        client.setReadTimeout(30, TimeUnit.SECONDS) // socket timeout
+                        //client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
+                        //client.setReadTimeout(30, TimeUnit.SECONDS) // socket timeout
                         val request = Request.Builder().url(imageUri.toString()).build()
                         val response = client.newCall(request).execute()
-                        imageNotif = BitmapFactory.decodeStream(response.body().byteStream())
+                        imageNotif = BitmapFactory.decodeStream(response.body()!!.byteStream())
 
                         notificationBuilder
                             .setStyle(
                                 NotificationCompat.BigPictureStyle().bigPicture(imageNotif)
-                                    .bigLargeIcon(null)
                             )
                         notificationBuilder.setLargeIcon(imageNotif)
                     }
@@ -300,6 +299,20 @@ class Helper {
                 notificationManagerCompat.createNotificationChannel(channel)
             }
 
+            if (checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return
+            }
             notificationManagerCompat.notify(
                 notificationId ?: NOTIFICATION_ID++,
                 notificationBuilder.build()

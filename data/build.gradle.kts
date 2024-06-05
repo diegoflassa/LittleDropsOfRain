@@ -5,18 +5,19 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-parcelize")
+    id("com.google.devtools.ksp") version "2.0.0-1.0.21"
 }
 
 android {
     lint.abortOnError = false
+    namespace = "app.web.diegoflassa_site.littledropsofrain.data"
 
-    compileSdk = Config.compileSdkVersion
+    compileSdk = Config.COMPILE_SDK_VERSION
     //compileSdkPreview = Config.compileSdkPreviewVersion
-    buildToolsVersion = Config.buildToolsVersion
+    buildToolsVersion = Config.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdk = Config.minimumSdkVersion
-        targetSdk = Config.targetSdkVersion
+        minSdk = Config.MINIMUM_SDK_VERSION
         //targetSdkPreview = Config.targetSdkPreviewVersion
         //versionCode = Config.versionCode
         //versionName = Config.versionName
@@ -42,7 +43,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 }
 
@@ -50,35 +51,35 @@ dependencies {
 
 	// Misc
     // Kotlin + coroutines
-    implementation("androidx.work:work-runtime-ktx:${Versions.workVersion}")
-    implementation("androidx.core:core-ktx:${Versions.core_ktx}")
-    implementation("androidx.appcompat:appcompat:${Versions.appcompat}")
-    implementation("com.google.android.material:material:${Versions.material}")
-    testImplementation("junit:junit:${Versions.junit}")
-    androidTestImplementation("androidx.test.ext:junit:${Versions.junit_ktx}")
-    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
+    implementation("androidx.work:work-runtime-ktx:${Versions.WORK_VERSION}")
+    implementation("androidx.core:core-ktx:${Versions.CORE_KTX}")
+    implementation("androidx.appcompat:appcompat:${Versions.APPCOMPAT}")
+    implementation("com.google.android.material:material:${Versions.MATERIAL}")
+    testImplementation("junit:junit:${Versions.JUNIT}")
+    androidTestImplementation("androidx.test.ext:junit:${Versions.JUNIT_KTX}")
+    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.ESPRESSO}")
 	
 	//Retrofix 2
-	implementation("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
-	implementation("com.squareup.retrofit2:adapter-rxjava3:${Versions.retrofit_adapter}")
-	implementation("com.squareup.retrofit2:converter-jackson:${Versions.converter_jackson}")
-	implementation("com.squareup.retrofit2:converter-gson:${Versions.converter}")
+	implementation("com.squareup.retrofit2:retrofit:${Versions.RETROFIT}")
+	implementation("com.squareup.retrofit2:adapter-rxjava3:${Versions.RETROFIT_ADAPTER}")
+	implementation("com.squareup.retrofit2:converter-jackson:${Versions.CONVERTER_JACKSON}")
+	implementation("com.squareup.retrofit2:converter-gson:${Versions.CONVERTER}")
 
 	// Jackson
-	implementation("com.fasterxml.jackson.core:jackson-core:${Versions.jackson}")
-	implementation("com.fasterxml.jackson.core:jackson-annotations:${Versions.jackson}")
-	implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}")
-	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${Versions.jackson}")
+	implementation("com.fasterxml.jackson.core:jackson-core:${Versions.JACKSON}")
+	implementation("com.fasterxml.jackson.core:jackson-annotations:${Versions.JACKSON}")
+	implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.JACKSON}")
+	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${Versions.JACKSON}")
 
 	//GSON
-	implementation("com.google.code.gson:gson:${Versions.gson}")
+	implementation("com.google.code.gson:gson:${Versions.GSON}")
 	
 	// RX Java 3
-	implementation("io.reactivex.rxjava3:rxjava:${Versions.rxjava}")
-	implementation("io.reactivex.rxjava3:rxandroid:${Versions.rxandroid}")
+	implementation("io.reactivex.rxjava3:rxjava:${Versions.RX_JAVA}")
+	implementation("io.reactivex.rxjava3:rxandroid:${Versions.RX_ANDROID}")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:${Versions.firebaseBOM}"))
+    implementation(platform("com.google.firebase:firebase-bom:${Versions.FIREBASE_BOM}"))
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
 }

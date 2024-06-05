@@ -5,7 +5,6 @@ buildscript {
         google()
         mavenCentral()
         maven(url = "https://jitpack.io")
-        jcenter() // Warning: this repository is going to shut down soon
 		gradlePluginPortal()
 		maven {
 			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
@@ -17,37 +16,37 @@ buildscript {
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
-        classpath("com.android.tools.build:gradle:7.1.0-alpha05")
+        classpath("com.android.tools.build:gradle:8.4.1")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
-        classpath("com.google.gms:google-services:4.3.8")
+        classpath("com.google.gms:google-services:4.4.2")
         //classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeargs_plugin}")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-alpha05")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.7")
 
         // Add the Crashlytics Gradle plugin.
         //classpath("com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlytics}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.7.1")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.1")
         // Performance Monitoring plugin
         //classpath("com.google.firebase:perf-plugin:${Versions.perf}")
-        classpath("com.google.firebase:perf-plugin:1.4.0")
+        classpath("com.google.firebase:perf-plugin:1.4.2")
         // Add the App Distribution Gradle plugin
         //classpath("com.google.firebase:firebase-appdistribution-gradle:${Versions.app_distribution}")
-        classpath("com.google.firebase:firebase-appdistribution-gradle:2.1.3")
+        classpath("com.google.firebase:firebase-appdistribution-gradle:5.0.0")
 
         //classpath("com.google.android.gms:oss-licenses-plugin:${Versions.oss_plugin}")
-        classpath("com.google.android.gms:oss-licenses-plugin:0.10.4")
+        classpath("com.google.android.gms:oss-licenses-plugin:0.10.6")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-		classpath("com.github.ben-manes:gradle-versions-plugin:0.38.0")
+		classpath("com.github.ben-manes:gradle-versions-plugin:0.50.0")
         //classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.version_hilt}")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.38.1")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.51.1")
     }
 }
 
 plugins {         
-    id("com.diffplug.spotless") version "5.14.2" apply true
-	id("com.github.ben-manes.versions") version "0.38.0" apply true
+    id("com.diffplug.spotless") version "6.22.0" apply true
+	id("com.github.ben-manes.versions") version "0.51.0" apply true
 }
 
 subprojects {
@@ -55,9 +54,9 @@ subprojects {
     spotless {
         kotlin {
            target("**/*.kt")
-            targetExclude("$buildDir/**/*.kt")
+            targetExclude("${layout.buildDirectory}/**/*.kt")
             targetExclude("bin/**/*.kt")
-            ktlint(Versions.ktlint).userData(mapOf("disabled_rules" to "no-wildcard-imports"))
+            ktlint(Versions.KT_LINT).userData(mapOf("disabled_rules" to "no-wildcard-imports"))
             licenseHeaderFile("${project.rootProject.projectDir}/spotless/copyright.kt")
         }
     }
@@ -68,7 +67,6 @@ allprojects {
         google()
         mavenCentral()
         maven(url = "https://jitpack.io")
-        jcenter() // Warning: this repository is going to shut down soon
 		maven {
 			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
 			credentials {

@@ -20,10 +20,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import app.web.diegoflassa_site.littledropsofrain.BuildConfig
 import app.web.diegoflassa_site.littledropsofrain.R
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.IntentHelper
 import app.web.diegoflassa_site.littledropsofrain.presentation.helper.UriToIntentMapper
+import com.google.firebase.crashlytics.internal.model.CrashlyticsReport
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.ktx.remoteConfig
@@ -46,10 +46,7 @@ class SplashActivity : AppCompatActivity() {
         try {
             mMapper.dispatchIntent(intent)
         } catch (iae: IllegalArgumentException) {
-            // Malformed URL
-            if (BuildConfig.DEBUG) {
-                Log.e("Deep links", "Invalid URI", iae)
-            }
+            Log.i("SplashActivity", "$iae")
         } finally {
             // Always finish the activity so that it doesn't stay in our history
             finish()
@@ -60,7 +57,8 @@ class SplashActivity : AppCompatActivity() {
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
         val configSettings =
-            FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(if (BuildConfig.DEBUG) 0 else TimeUnit.HOURS.toSeconds(12)).build()
+            FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(TimeUnit.HOURS.toSeconds(12)).build()
         remoteConfig.setConfigSettingsAsync(configSettings).addOnCompleteListener {
             if (it.isSuccessful) {
                 Log.d(

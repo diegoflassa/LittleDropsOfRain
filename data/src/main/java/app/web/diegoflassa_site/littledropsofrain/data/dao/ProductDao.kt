@@ -29,14 +29,13 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.squareup.okhttp.OkHttpClient
-import com.squareup.okhttp.Request
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.lang.ref.WeakReference
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 // DFL - Classe de Acesso a dados. Aqui vc coloca as FORMAS DE ACESSAR os dados
 @Suppress("UNUSED", "BlockingMethodInNonBlockingContext", "SameParameterValue")
@@ -426,29 +425,31 @@ object ProductDao {
         ioScope.launch {
             val reference = storage.reference.child("$COLLECTION_PATH/${product.uid}.jpg")
             val client = OkHttpClient()
-            client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
-            client.setReadTimeout(30, TimeUnit.SECONDS) // socket timeout
+            //client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
+            //client.setReadTimeout(30, TimeUnit.SECONDS) // socket timeout
             val request = Request.Builder().url(product.imageUrl!!).build()
             val response = client.newCall(request).execute()
-            reference.putStream(response.body().byteStream()).continueWithTask { task ->
-                if (!task.isSuccessful) {
-                    task.exception.let {
-                        throw it!!
+            if (response.body() != null) {
+                reference.putStream(response.body()!!.byteStream()).continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception.let {
+                            throw it!!
+                        }
                     }
+                    reference.downloadUrl
+                }.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        product.imageUrl = task.result.toString()
+                        update(product, false)
+                        Log.d(
+                            TAG,
+                            "[insertBlob]Image successfully saved for product ${product.uid} at ${product.imageUrl}"
+                        )
+                    } else {
+                        Log.d(TAG, "Unable to upload image ${product.uid}")
+                    }
+                    response.body()?.close()
                 }
-                reference.downloadUrl
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    product.imageUrl = task.result.toString()
-                    update(product, false)
-                    Log.d(
-                        TAG,
-                        "[insertBlob]Image successfully saved for product ${product.uid} at ${product.imageUrl}"
-                    )
-                } else {
-                    Log.d(TAG, "Unable to upload image ${product.uid}")
-                }
-                response.body().close()
             }
         }
     }
@@ -458,10 +459,10 @@ object ProductDao {
         return db.get()?.collection(COLLECTION_PATH)?.document(product.uid.toString())?.set(data)
             ?.addOnSuccessListener {
                 if (checkForUrl && (
-                    !product.imageUrl?.startsWith(FIREBASE_STORAGE)!! || !product.imageUrl?.startsWith(
-                            LDOR_SITE
-                        )!!
-                    )
+                            !product.imageUrl?.startsWith(FIREBASE_STORAGE)!! || !product.imageUrl?.startsWith(
+                                LDOR_SITE
+                            )!!
+                            )
                 )
                     insertBlob(product)
                 Log.d(

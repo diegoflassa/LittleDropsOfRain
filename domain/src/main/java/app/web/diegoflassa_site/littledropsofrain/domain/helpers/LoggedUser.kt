@@ -48,7 +48,6 @@ object LoggedUser : OnUserFoundListener, LifecycleOwner {
         userLiveData.value = user
     }
 
-    override fun getLifecycle(): Lifecycle {
-        return lifecycleRegistry
-    }
+    override val lifecycle: Lifecycle
+        get() = lifecycleRegistry
 }

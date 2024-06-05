@@ -15,4 +15,8 @@
     <string name="msg_subscribed">Subscribed</string>
     <string name="msg_subscribe_failed">Subscription failed</string>
     <string name="topic_admin_messages" translatable="false">admins</string>
+    <string name="topic_news_pt">newsPt</string>
+    <string name="topic_news_en">newsEn</string>
+    <string name="topic_promo_pt">promoPt</string>
+    <string name="topic_promo_en">promoEn</string>
 </resources>

@@ -18,9 +18,9 @@ package app.web.diegoflassa_site.littledropsofrain.data.parser
 
 import android.util.Log
 import app.web.diegoflassa_site.littledropsofrain.data.entities.IluriaProduct
-import com.squareup.okhttp.OkHttpClient
-import com.squareup.okhttp.Request
-import com.squareup.okhttp.Response
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.ByteArrayInputStream
@@ -55,13 +55,16 @@ class ProductParser(listener: OnParseProgress? = null) {
     private var products = ArrayList<IluriaProduct>()
     fun parse(): List<IluriaProduct> {
         val client = OkHttpClient()
-        client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
-        client.setReadTimeout(30, TimeUnit.SECONDS) // socket timeout
+        //client.setConnectTimeout(30, TimeUnit.SECONDS) // connect timeout
+        //client.setReadTimeout(30, TimeUnit.SECONDS) // socket timeout
         val request: Request = Request.Builder()
             .url(xmlIluriaSource)
             .build()
         val response: Response = client.newCall(request).execute()
-        val inputStream: InputStream = ByteArrayInputStream(response.body().bytes())
+        val inputStream: InputStream? = null
+        if (response.body() != null) {
+            val inputStream: InputStream = ByteArrayInputStream(response.body()!!.bytes())
+        }
         return parse(inputStream)
     }
 
@@ -89,6 +92,7 @@ class ProductParser(listener: OnParseProgress? = null) {
                             Log.i(TAG, "Created new product object")
                             product = IluriaProduct()
                         }
+
                     XmlPullParser.END_TAG ->
                         when (tagname) {
                             PRODUTOS -> {
@@ -97,6 +101,7 @@ class ProductParser(listener: OnParseProgress? = null) {
                                 progressBuilder.clear()
                                 Log.i(TAG, "Ending parsing products")
                             }
+
                             PRODUTO -> {
                                 progressBuilder.append("Added product ${product.idProduct} to the list${System.lineSeparator()}")
                                 mListener?.onParseProgressChange(progressBuilder.toString())
@@ -104,47 +109,56 @@ class ProductParser(listener: OnParseProgress? = null) {
                                 Log.i(TAG, "Added product ${product.idProduct} to the list")
                                 products.add(product)
                             }
+
                             ID_PRODUTO -> {
                                 product.idProduct = text.toString()
                                 progressBuilder.append("Setted product ${product.idProduct} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.idProduct} to the object")
                             }
+
                             LINK_PRODUTO -> {
                                 product.linkProduct = text
                                 progressBuilder.append("Setted product ${product.linkProduct} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.linkProduct} to the object")
                             }
+
                             TITULO -> {
                                 product.title = text
                                 progressBuilder.append("Setted product ${product.title} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.title} to the object")
                             }
+
                             PRECO -> {
                                 product.price = text
                                 progressBuilder.append("Setted product ${product.price} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.price} to the object")
                             }
+
                             PARCELAMENTO -> {
                                 product.installment = text
                                 progressBuilder.append("Setted product ${product.installment} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.installment} to the object")
                             }
+
                             DISPONIBILIDADE -> {
                                 product.disponibility = text
                                 progressBuilder.append("Setted product ${product.disponibility} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.disponibility} to the object")
                             }
+
                             IMAGEM -> {
                                 product.image = text
                                 progressBuilder.append("Setted product ${product.image} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.image} to the object")
                             }
+
                             CATEGORIA -> {
                                 product.category = text
                                 progressBuilder.append("Setted product ${product.category} to the object${System.lineSeparator()}")
                                 Log.i(TAG, "Setted product ${product.category} to the object")
                             }
                         }
+
                     else -> {
                         Log.i(TAG, "Unknown tag : $tagname")
                         progressBuilder.append("Unknown tag : $tagname")

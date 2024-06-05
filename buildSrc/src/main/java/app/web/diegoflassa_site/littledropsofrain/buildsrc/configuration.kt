@@ -6,22 +6,20 @@ import java.util.*
 
 @Suppress("Unused", "MemberVisibilityCanBePrivate")
 object Config {
-    const val applicationId = "app.web.diegoflassa_site.littledropsofrain"
-    private const val versionMajor = 1
-    private const val versionMinor = 0
-    private const val versionPatch = 12
+    const val APPLICATION_ID = "app.web.diegoflassa_site.littledropsofrain"
+    private const val VERSION_MAJOR = 1
+    private const val VERSION_MINOR = 0
+    private const val VERSION_PATCH = 12
     private var versionClassifier = "debug"
-    const val minimumSdkVersion = 24
-    const val compileSdkVersion = 31
-    const val compileSdkPreviewVersion = "S"
-    const val targetSdkVersion = 31
-    const val targetSdkPreviewVersion = "S"
-    const val buildToolsVersion = "31.0.0"
-    val versionCode = buildVersionCode()
-    val versionName = buildVersionName()
+    const val MINIMUM_SDK_VERSION = 24
+    const val COMPILE_SDK_VERSION = 34
+    const val TARGET_SDK_VERSION = 34
+    const val BUILD_TOOLS_VERSION = "34.0.0"
+    const val VERSION_CODE = 240010014
+    const val VERSION_NAME = "240010014"
 
     private fun buildVersionCode(): Int {
-        return minimumSdkVersion * 10000000 + versionMajor * 10000 + versionMinor * 100 + versionPatch
+        return MINIMUM_SDK_VERSION * 10000000 + VERSION_MAJOR * 10000 + VERSION_MINOR * 100 + VERSION_PATCH
     }
 
     private fun buildVersionNameWithoutClassifier(): String {
@@ -31,7 +29,7 @@ object Config {
     @Suppress("Unused")
     fun buildVersionName(): String {
         val versionProps = Properties()
-        val versionPropsFile = File("version.properties")
+            val versionPropsFile = File("version.properties")
         val fileInputStream = FileInputStream(versionPropsFile)
         fileInputStream.use { fis ->
             if (versionPropsFile.exists()) {
@@ -48,6 +46,6 @@ object Config {
                 versionName += "-Build:${code}"
             }
         }
-        return versionName
+        return VERSION_NAME
     }
 }

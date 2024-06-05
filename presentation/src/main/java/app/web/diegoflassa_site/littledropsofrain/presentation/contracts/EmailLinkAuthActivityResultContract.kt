@@ -24,8 +24,8 @@ import com.firebase.ui.auth.AuthUI
 
 class EmailLinkAuthActivityResultContract : ActivityResultContract<Intent, Int>() {
 
-    override fun createIntent(context: Context, input: Intent?): Intent {
-        return createSignInIntent(input!!)
+    override fun createIntent(context: Context, input: Intent): Intent {
+        return createSignInIntent(input)
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): Int {

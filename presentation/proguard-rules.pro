@@ -34,6 +34,36 @@
 -keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.
 
 # For supressing the warnings
+#Data
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.dao.ProductDao
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.dao.UserDao
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.entities.TopicMessage$Topic$Companion
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataChangeListener
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnDataFailureListener
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnFileUploadedFailureListener
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnFileUploadedListener
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnProductInsertedListener
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnTaskFinishedListener
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUserFoundListener
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.interfaces.OnUsersLoadedListener
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.parser.ProductParser$OnParseProgress
+-dontwarn app.web.diegoflassa_site.littledropsofrain.data.repository.IluriaProductsRepository
+
+#Domain
+-dontwarn app.web.diegoflassa_site.littledropsofrain.domain.auth.FirebaseAuthLiveData
+-dontwarn app.web.diegoflassa_site.littledropsofrain.domain.auth.UserLiveData
+-dontwarn app.web.diegoflassa_site.littledropsofrain.domain.helpers.ExtensionsKt
+-dontwarn app.web.diegoflassa_site.littledropsofrain.domain.helpers.FIleUtils
+-dontwarn app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper$Companion
+-dontwarn app.web.diegoflassa_site.littledropsofrain.domain.helpers.Helper
+-dontwarn app.web.diegoflassa_site.littledropsofrain.domain.helpers.LoggedUser
+-dontwarn app.web.diegoflassa_site.littledropsofrain.domain.helpers.MainActivityHolder$Companion
+-dontwarn app.web.diegoflassa_site.littledropsofrain.domain.helpers.MainActivityHolder
+-dontwarn app.web.diegoflassa_site.littledropsofrain.domain.preferences.MyOnSharedPreferenceChangeListener
+
+#Other
 -dontwarn com.sun.activation.registries.LogSupport
 -dontwarn com.sun.activation.registries.MailcapFile
 -dontwarn java.awt.datatransfer.DataFlavor

@@ -36,6 +36,7 @@ class NotificationReceiver : BroadcastReceiver() {
         const val EXTRA_MESSAGE = "EXTRA_MESSAGE"
     }
 
+    @Suppress("DEPRECATION")
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action.equals(ACTION_SAVE)) {
             val notificationId = intent.extras?.getInt(EXTRA_NID)

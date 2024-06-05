@@ -51,7 +51,7 @@ class SetupProductsUpdateWorkerService : JobService() {
             .setInitialDelay(11, TimeUnit.HOURS)
             .setBackoffCriteria(
                 BackoffPolicy.LINEAR,
-                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                WorkRequest.MIN_BACKOFF_MILLIS,
                 TimeUnit.MILLISECONDS
             )
             .build()
