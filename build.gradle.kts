@@ -10,7 +10,7 @@ buildscript {
 			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
 			credentials {
 				username = "braintree_team_sdk"
-				password = "AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp"
+				password = ""
 			}
 		}
     }
@@ -38,7 +38,7 @@ buildscript {
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.6")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-		classpath("com.github.ben-manes:gradle-versions-plugin:0.50.0")
+		classpath("com.github.ben-manes:gradle-versions-plugin:0.51.0")
         //classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.version_hilt}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.51.1")
     }
@@ -71,7 +71,7 @@ allprojects {
 			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
 			credentials {
 				username = "braintree_team_sdk"
-				password = "AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp"
+				password = ""
 			}
 		}
     }
