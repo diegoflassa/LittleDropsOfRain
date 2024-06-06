@@ -214,7 +214,7 @@ class MainActivity :
             if (firebaseUser != null) {
                 val emailUser = firebaseUser.email!!
                 Log.i(TAG, "emailUser: $emailUser")
-                if(!emailUser.isNullOrEmpty() && emailUser.contains("@")) {
+                if(emailUser.isNotEmpty() && emailUser.contains("@")) {
                     UserDao.findByEMail(emailUser, this)
                 }
             }
@@ -276,6 +276,7 @@ class MainActivity :
      * @param level the memory-related event that was raised.
      */
     override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
 
         // Determine which lifecycle or system event was raised.
         when (level) {

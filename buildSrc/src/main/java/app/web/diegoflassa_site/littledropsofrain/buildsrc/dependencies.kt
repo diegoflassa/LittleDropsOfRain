@@ -19,7 +19,7 @@ object Versions {
     const val KOIN = "3.1.2"
     const val KOIN_EXT = "3.0.2"
     const val KOIN_COMPOSE = "3.1.2"
-    const val SAFETYNET = "16.1.2"
+    const val INTEGRITY = "1.3.0"
     const val VOLLEY = "1.2.1"
     const val UCROP = "2.2.7"
     const val OSS = "17.1.0"
@@ -28,7 +28,6 @@ object Versions {
     const val PLAY_SERVICES_AUTH = "21.2.0"
     const val MATERIAL = "1.12.0"
     const val PLAY_SERVICES_LOCATION = "21.3.0"
-	const val PLAY_CORE = "1.8.1"
     const val GOOGLE_SERVICES = "4.4.2"
     const val ACTIVITY_KTX = "1.9.0"
     const val ANNOTATION = "1.8.0"
@@ -58,5 +57,4 @@ object Versions {
     const val FIREBASE_BOM = "33.1.0"
     const val ICONIFY = "2.2.2"
     const val ANDROIDX_JETPACK_COMPOSE = "1.6.7"
-    const val BRAINTREE = "4.3.0"
 }

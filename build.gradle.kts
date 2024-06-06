@@ -6,13 +6,6 @@ buildscript {
         mavenCentral()
         maven(url = "https://jitpack.io")
 		gradlePluginPortal()
-		maven {
-			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
-			credentials {
-				username = "braintree_team_sdk"
-				password = ""
-			}
-		}
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
@@ -67,12 +60,5 @@ allprojects {
         google()
         mavenCentral()
         maven(url = "https://jitpack.io")
-		maven {
-			url = uri("https://cardinalcommerceprod.jfrog.io/artifactory/android")
-			credentials {
-				username = "braintree_team_sdk"
-				password = ""
-			}
-		}
     }
 }

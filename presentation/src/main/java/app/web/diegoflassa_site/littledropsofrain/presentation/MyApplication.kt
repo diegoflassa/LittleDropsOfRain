@@ -46,7 +46,6 @@ import app.web.diegoflassa_site.littledropsofrain.presentation.ui.user_profile.U
 import app.web.diegoflassa_site.littledropsofrain.presentation.ui.users.model.UsersViewModel
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
-import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
@@ -72,7 +71,6 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        initializeSafetyNet()
         Iconify
             // .with(FontAwesomeModule())
             // .with(EntypoModule())
@@ -92,14 +90,6 @@ class MyApplication : Application() {
         subscribeToPromotions()
         updateSubscribedLanguage()
         context = WeakReference(this)
-    }
-
-    private fun initializeSafetyNet() {
-        FirebaseApp.initializeApp(/*context=*/ this)
-        val firebaseAppCheck = FirebaseAppCheck.getInstance()
-        firebaseAppCheck.installAppCheckProviderFactory(
-            SafetyNetAppCheckProviderFactory.getInstance()
-        )
     }
 
     @Suppress("DEPRECATION")

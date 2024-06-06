@@ -226,7 +226,7 @@ afterEvaluate {
         implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
         //SafetyNet
-        implementation("com.google.firebase:firebase-appcheck-safetynet:${Versions.SAFETYNET}")
+        implementation("com.google.android.play:integrity:${Versions.INTEGRITY}")
 
         // Volley
         implementation("com.android.volley:volley:${Versions.VOLLEY}")
@@ -353,7 +353,6 @@ afterEvaluate {
         implementation("com.google.android.gms:play-services-auth:${Versions.PLAY_SERVICES_AUTH}")
         implementation("com.google.android.material:material:${Versions.MATERIAL}")
         implementation("com.google.android.gms:play-services-location:${Versions.PLAY_SERVICES_LOCATION}")
-        implementation("com.google.android.play:core-ktx:${Versions.PLAY_CORE}")
         implementation("com.google.gms:google-services:${Versions.GOOGLE_SERVICES}")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.KOTLIN_COMPILER_VERSION}")
         implementation("androidx.activity:activity-ktx:${Versions.ACTIVITY_KTX}")
@@ -394,24 +393,6 @@ afterEvaluate {
             exclude(group = "com.android.support", module = "support-v4")
         }
         //implementation("com.joanzapata.iconify:android-iconify-ionicons:${Versions.iconify}") // (v2.0.1)
-
-        // Braintree
-        // to offer card payments
-        implementation("com.braintreepayments.api:card:${Versions.BRAINTREE}")
-        // to collect device data
-        implementation("com.braintreepayments.api:data-collector:${Versions.BRAINTREE}")
-        // to offer PayPal
-        implementation("com.braintreepayments.api:paypal:${Versions.BRAINTREE}")
-        // to offer local payments
-        implementation("com.braintreepayments.api:local-payment:${Versions.BRAINTREE}")
-        // to offer Google Pay
-        implementation("com.braintreepayments.api:google-pay:${Versions.BRAINTREE}")
-        // to offer Union Pay
-        implementation("com.braintreepayments.api:union-pay:${Versions.BRAINTREE}")
-        // to perform 3DS verification
-        implementation("com.braintreepayments.api:three-d-secure:${Versions.BRAINTREE}")
-        // to offer Venmo
-        implementation("com.braintreepayments.api:venmo:${Versions.BRAINTREE}")
 
         // Annotation processor
         ksp("androidx.lifecycle:lifecycle-common-java8:${Versions.LIFECYCLE}")
