@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit
 class ReloadProductsFragment : Fragment() {
 
     private var wasShowed: Boolean = false
-    private lateinit var observer: Observer<WorkInfo>
+    private lateinit var observer: Observer<WorkInfo?>
     private var isStopped: Boolean = false
 
     val viewModel: ReloadProductsViewModel by stateViewModel()
@@ -125,7 +125,7 @@ class ReloadProductsFragment : Fragment() {
     }
 
     private fun addObserver() {
-        observer = Observer<WorkInfo> {
+        observer = Observer {
             if (it != null) {
                 when (it.state) {
                     WorkInfo.State.SUCCEEDED -> {

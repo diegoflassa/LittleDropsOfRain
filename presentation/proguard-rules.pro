@@ -34,6 +34,10 @@
 -keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.
 
 # For supressing the warnings
+#Presentation
+-dontwarn app.web.diegoflassa_site.littledropsofrain.domain.workers.UpdateProductsWork
+-dontwarn io.grpc.InternalGlobalInterceptors
+
 #Data
 -dontwarn app.web.diegoflassa_site.littledropsofrain.data.dao.FilesDao
 -dontwarn app.web.diegoflassa_site.littledropsofrain.data.dao.MessageDao

@@ -149,6 +149,7 @@ android {
         resources.excludes.add("META-INF/DEPENDENCIES")
         resources.excludes.add("META-INF/LICENSE.md")
         resources.excludes.add("META-INF/NOTICE.md")
+        resources.excludes.add("META-INF/INDEX.LIST")
     }
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.ANDROIDX_JETPACK_COMPOSE
