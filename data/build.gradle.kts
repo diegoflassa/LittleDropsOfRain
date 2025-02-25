@@ -5,7 +5,7 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-parcelize")
-    id("com.google.devtools.ksp") version "2.0.0-1.0.21"
+    id("com.google.devtools.ksp") version "2.1.10-1.0.30"
 }
 
 android {
@@ -39,11 +39,11 @@ android {
         }
     }
     compileOptions {
-        targetCompatibility = JavaVersion.VERSION_11
-        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_21.toString()
     }
 }
 

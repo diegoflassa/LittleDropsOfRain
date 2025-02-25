@@ -10,7 +10,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-parcelize")
-    id("com.google.devtools.ksp") version "2.0.0-1.0.21"
+    id("com.google.devtools.ksp") version "2.1.10-1.0.30"
     // Google Services plugin
     id("com.google.gms.google-services")
     // Apply the Crashlytics Gradle plugin
@@ -127,8 +127,8 @@ android {
     }
     compileOptions {
         // Sets Java compatibility to Java 11
-        targetCompatibility = JavaVersion.VERSION_11
-        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_21
     }
     testOptions {
         emulatorSnapshots {
@@ -137,7 +137,7 @@ android {
         }
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_21.toString()
         // freeCompilerArgs = freeCompilerArgs + "-Xallow-jvm-ir-dependencies"
     }
     buildFeatures {
@@ -406,7 +406,7 @@ afterEvaluate {
         testImplementation("androidx.test.espresso:espresso-intents:${Versions.ESPRESSO}")
         testImplementation("androidx.test.ext:truth:${Versions.TEST}")
         androidTestImplementation("androidx.test.ext:junit-ktx:${Versions.JUNIT_KTX}")
-        androidTestImplementation("androidx.test:rules:${Versions.TEST}")
+        androidTestImplementation("androidx.test:rules:${Versions.RULES}")
         androidTestImplementation("androidx.test:runner:${Versions.TEST_RUNNER}")
 
         androidTestImplementation("junit:junit:${Versions.JUNIT}")

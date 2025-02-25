@@ -9,23 +9,23 @@ buildscript {
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
-        classpath("com.android.tools.build:gradle:8.4.1")
+        classpath("com.android.tools.build:gradle:8.8.1")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.10")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
         classpath("com.google.gms:google-services:4.4.2")
         //classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeargs_plugin}")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.7")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.8.7")
 
         // Add the Crashlytics Gradle plugin.
         //classpath("com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlytics}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.1")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.3")
         // Performance Monitoring plugin
         //classpath("com.google.firebase:perf-plugin:${Versions.perf}")
         classpath("com.google.firebase:perf-plugin:1.4.2")
         // Add the App Distribution Gradle plugin
         //classpath("com.google.firebase:firebase-appdistribution-gradle:${Versions.app_distribution}")
-        classpath("com.google.firebase:firebase-appdistribution-gradle:5.0.0")
+        classpath("com.google.firebase:firebase-appdistribution-gradle:5.1.1")
 
         //classpath("com.google.android.gms:oss-licenses-plugin:${Versions.oss_plugin}")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.6")

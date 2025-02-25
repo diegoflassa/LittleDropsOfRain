@@ -12,8 +12,8 @@ object Config {
     private const val VERSION_PATCH = 12
     private var versionClassifier = "debug"
     const val MINIMUM_SDK_VERSION = 24
-    const val COMPILE_SDK_VERSION = 34
-    const val TARGET_SDK_VERSION = 34
+    const val COMPILE_SDK_VERSION = 35
+    const val TARGET_SDK_VERSION = 35
     const val BUILD_TOOLS_VERSION = "34.0.0"
     const val VERSION_CODE = 240010016
     const val VERSION_NAME = "240010016"

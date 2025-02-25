@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="app.web.diegoflassa_site.littledropsofrain" />
+                  <option name="mobileSdkAppId" value="1:923841905975:android:47c2b66c051bd4324f06b2" />
+                  <option name="projectId" value="littledropsofrain-site" />
+                  <option name="projectNumber" value="923841905975" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
