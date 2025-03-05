@@ -9,13 +9,13 @@ buildscript {
     }
     dependencies {
         //classpath("com.android.tools.build:gradle:${Versions.gradle}")
-        classpath("com.android.tools.build:gradle:8.8.1")
+        classpath("com.android.tools.build:gradle:8.9.0")
         //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_compiler_version}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.10")
         //classpath("com.google.gms:google-services:${Versions.google_services}")
         classpath("com.google.gms:google-services:4.4.2")
         //classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeargs_plugin}")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.8.7")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.8.8")
 
         // Add the Crashlytics Gradle plugin.
         //classpath("com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlytics}")
